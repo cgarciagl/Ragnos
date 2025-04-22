@@ -1,0 +1,7 @@
+writable/*
+writable/*
+phpunit.phar
+phpunit.xml
+build/*
+.phpunit*
+.vscode/*

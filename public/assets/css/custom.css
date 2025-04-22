@@ -1,0 +1,26 @@
+.post:not(:first-of-type) {
+  margin-top: 15px;
+}
+
+.post .direct-chat-img {
+  margin: 0.5em;
+}
+
+.post .username {
+  font-weight: bold;
+}
+.post .description {
+  font-style: italic;
+}
+
+.main-header {
+  border-top-right-radius: 8px;
+}
+
+.main-sidebar {
+  border-top-left-radius: 8px;
+}
+
+.app-main .app-content-header {
+  padding: 0;
+}
