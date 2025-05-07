@@ -1,5 +1,8 @@
-writable/*
-writable/*
+writable/cache/*
+writable/debugbar/*
+writable/logs/*
+writable/session/*
+writable/uploads/*
 phpunit.phar
 phpunit.xml
 build/*
