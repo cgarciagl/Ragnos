@@ -86,12 +86,13 @@
                                                 <td class="text-success"><?= moneyFormat($item['Comprado']) ?></td>
                                                 <td class="text-primary"><?= moneyFormat($item['Pagado']) ?></td>
                                                 <td class="text-danger"><?= moneyFormat($item['Deuda']) ?></td>
-                                                <td><?= moneyFormat($item['LimiteDeCredito']) ?>
-                                                    <?php if ($item['Deuda'] > $item['LimiteDeCredito']) {
-                                                        echo '<span class="badge rounded-pill text-bg-warning">Sobregiro</span>';
-                                                    } elseif ($item['Deuda'] < 0) {
-                                                        echo '<span class="badge rounded-pill text-bg-success">Saldo a favor</span>';
-                                                    } ?>
+                                                <td>
+                                                    <?= moneyFormat($item['LimiteDeCredito']) ?>
+                                                    <?php if ($item['Deuda'] > $item['LimiteDeCredito']): ?>
+                                                        <span class="badge rounded-pill text-bg-warning">Sobregiro</span>
+                                                    <?php elseif ($item['Deuda'] < 0): ?>
+                                                        <span class="badge rounded-pill text-bg-success">Saldo a favor</span>
+                                                    <?php endif; ?>
                                                 </td>
                                             </tr>
                                         <?php endforeach; ?>
