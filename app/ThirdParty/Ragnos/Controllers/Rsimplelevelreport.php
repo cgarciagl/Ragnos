@@ -3,226 +3,254 @@
 namespace App\ThirdParty\Ragnos\Controllers;
 
 use App\ThirdParty\Ragnos\Controllers\Ragnos;
+use CodeIgniter\View\RendererInterface; // Para tipar el retorno de view()
+use CodeIgniter\HTTP\IncomingRequest; // Si se necesitara inyectar
 
 class RSimpleLevelReport
 {
-    private $title = '';
-    private $descfilter = '';
-    private $encab = '';
-    private $groups = [];
-    private $totalrecords = 0;
-    private $grouprecords = 0;
-    private $listfields = [];
-    private $data = [];
-    private $showTotals = TRUE;
+    private string $title = '';
+    private string $descfilter = '';
+    private string $encab = '';
+    private array $groups = [];
+    private int $totalrecords = 0;
+    private int $grouprecords = 0;
+    private array $listfields = [];
+    private array $data = [];
+    private bool $showTotals = true; //
 
-    public function setShowTotals($showTotals)
+    private bool $showldwritelevelheader = false; //
+    private bool $showldwritelevelfooter = true; //
+
+    // Opcional: Inyectar el servicio de Request si se fuera a usar getPost, getGet, etc.
+    // protected IncomingRequest $request;
+
+    public function __construct()
     {
-        $this->showTotals = (bool) $showTotals;
+        // Si no se usa request()->getPost/getGet en la clase, no es estrictamente necesario inyectarlo aquí.
+        // Pero si se necesitara, sería: $this->request = service('request');
+
+        // Cargar el helper de Ragnos una sola vez si se usa en la clase
+        helper('App\ThirdParty\Ragnos\Helpers\Ragnos_helper'); // Cargar el helper aquí o en app/Config/Autoload.php
     }
 
-    public function __get($attr)
+    public function setShowTotals(bool $showTotals): void //
     {
-        $CI = Ragnos::get_CI();
-        if (isset($CI->$attr)) {
-            return $CI->$attr;
-        } else
-            return NULL;
+        $this->showTotals = $showTotals; //
     }
 
-    public function getData()
+    // El método __get() se mantiene dado el contexto de su framework Ragnos.
+    public function __get(string $attr)
     {
-        return $this->data;
+        $CI = Ragnos::get_CI(); //
+        if (isset($CI->$attr)) { //
+            return $CI->$attr; //
+        }
+        return NULL; //
     }
 
-    public function setData($data)
+    public function getData(): array //
     {
-        $this->data = $data;
+        return $this->data; //
     }
 
-    private $showldwritelevelheader = FALSE;
-    private $showldwritelevelfooter = TRUE;
-
-    public function getDescfilter()
+    public function setData(array $data): void //
     {
-        return $this->descfilter;
+        $this->data = $data; //
     }
 
-    public function setDescfilter($descfilter)
+    public function getDescfilter(): string //
     {
-        $this->descfilter = $descfilter;
+        return $this->descfilter; //
     }
 
-    public function getGroups()
+    public function setDescfilter(string $descfilter): void //
     {
-        return $this->groups;
+        $this->descfilter = $descfilter; //
     }
 
-    public function setGroups($groups)
+    public function getGroups(): array //
     {
-        $this->groups = $groups;
+        return $this->groups; //
     }
 
-    public function getListFields()
+    public function setGroups(array $groups): void //
     {
-        return $this->listfields;
+        $this->groups = $groups; //
     }
 
-    public function setListFields($listfields)
+    public function getListFields(): array //
     {
-        $this->listfields = $listfields;
+        return $this->listfields; //
     }
 
-    public function getTitle()
+    public function setListFields(array $listfields): void //
     {
-        return $this->title;
+        $this->listfields = $listfields; //
     }
 
-    public function setTitle($title)
+    public function getTitle(): string //
     {
-        $this->title = $title;
+        return $this->title; //
     }
 
-    public function quickSetup($title, $data, $listfields, $groups = [], $desc_filter = '')
+    public function setTitle(string $title): void //
     {
-        $this->title        = $title;
-        $this->data         = $data;
-        $this->listfields   = $listfields;
-        $this->groups       = $groups;
-        $this->descfilter   = $desc_filter;
-        $this->totalrecords = 0;
+        $this->title = $title; //
     }
 
-    function generateTableHeader()
+    public function quickSetup(string $title, array $data, array $listfields, array $groups = [], string $desc_filter = ''): void //
     {
-        $this->grouprecords = 0;
-        $output             = '<table>';
-        $output .= '<thead><tr>';
+        $this->title        = $title; //
+        $this->data         = $data; //
+        $this->listfields   = $listfields; //
+        $this->groups       = $groups; //
+        $this->descfilter   = $desc_filter; //
+        $this->totalrecords = 0; //
+    }
 
-        $percentagePerField = (int) (100 / count($this->listfields));
+    public function generateTableHeader(): string //
+    {
+        $this->grouprecords = 0; //
+        $output             = '<table>'; //
+        $output .= '<thead><tr>'; //
 
-        foreach ($this->listfields as $f => $fieldLabel) {
-            $output .= '<th width="' . $percentagePerField . '%">' . htmlspecialchars($fieldLabel) . '</th>';
+        // Asegurarse de que $this->listfields no esté vacío para evitar división por cero.
+        $numFields          = count($this->listfields); //
+        $percentagePerField = $numFields > 0 ? (int) (100 / $numFields) : 0; //
+
+        foreach ($this->listfields as $fieldIndex => $fieldLabel) { //
+            $output .= '<th width="' . $percentagePerField . '%">' . htmlspecialchars($fieldLabel) . '</th>'; //
         }
 
-        $output .= '</tr></thead><tbody>';
+        $output .= '</tr></thead><tbody>'; //
 
-        return $output;
+        return $output; //
     }
 
-
-    function generateTableFooter()
+    public function generateTableFooter(): string //
     {
-        $output = '</tbody><tfoot><tr>';
-        $output .= '<td colspan="' . count($this->listfields) . '">';
+        $output = '</tbody><tfoot><tr>'; //
+        $output .= '<td colspan="' . count($this->listfields) . '">'; //
 
-        if ($this->showTotals) {
-            $output .= '<h5 style="float:right"> Total = ' . htmlspecialchars($this->grouprecords) . ' ' . htmlspecialchars($this->title) . '</h5>';
+        if ($this->showTotals) { //
+            $output .= '<h5 style="float:right"> Total = ' . htmlspecialchars($this->grouprecords) . ' ' . htmlspecialchars($this->title) . '</h5>'; //
         }
 
-        $output .= '</td></tr></tfoot></table>';
+        $output .= '</td></tr></tfoot></table>'; //
 
-        return $output;
+        return $output; //
     }
 
-
-    function generateTableRow($row)
+    public function generateTableRow(array $row): string //
     {
-        $temp_string = "<tr>";
-        foreach ($this->listfields as $fieldIndex => $listFieldLabel) {
-            $value       = isset($row[$fieldIndex]) ? $row[$fieldIndex] : $row[$listFieldLabel];
-            $temp_string .= "<td> {$value} </td>";
+        $temp_string = "<tr>"; //
+        foreach ($this->listfields as $fieldIndex => $listFieldLabel) { //
+            // Mejorar la lógica para obtener el valor del campo
+            // Primero intentar con $fieldIndex (nombre de la columna real)
+            // Luego con $listFieldLabel (etiqueta, si se usa como clave en $row)
+            $value       = $row[$fieldIndex] ?? ($row[$listFieldLabel] ?? ''); // Usar operador de coalescencia nula doblemente
+            $temp_string .= "<td> " . htmlspecialchars((string) $value) . " </td>"; // Escapar HTML y asegurar que sea string
         }
-        $temp_string .= "</tr>";
-        $this->totalrecords++;
-        $this->grouprecords++;
-        return $temp_string;
+        $temp_string .= "</tr>"; //
+        $this->totalrecords++; //
+        $this->grouprecords++; //
+        return $temp_string; //
     }
 
-    function generateRowOrLevel($row)
+    public function generateRowOrLevel(array $row): string //
     {
-        $this->showldwritelevelheader = FALSE;
-        $this->showldwritelevelfooter = TRUE;
-        $this->encab                  = '';
-        $this->calculateEncab($row);
-        return $this->generateEncabAndDetail($row);
+        $this->showldwritelevelheader = FALSE; //
+        $this->showldwritelevelfooter = TRUE; //
+        $this->encab                  = ''; //
+        $this->calculateEncab($row); //
+        return $this->generateEncabAndDetail($row); //
     }
 
-    function calculateEncab($row)
+    private function calculateEncab(array $row): void //
     {
-        $i = 2;
-        if ($this->groups) {
-            foreach ($this->groups as $f => &$g) {
-                $i++;
+        $i = 2; //
+        if (!empty($this->groups)) { // // Verificar si hay grupos
+            foreach ($this->groups as $f => &$g) { //
+                $i++; //
 
-                if ((@$g['current'] != $row[$f]) || ($this->showldwritelevelheader)) {
-                    if (@$g['current'] == '') {
-                        $this->showldwritelevelfooter = FALSE;
+                // Asegurar que la clave $f existe en $row
+                $currentGroupValue = $row[$f] ?? null; // Usar coalescencia nula
+
+                // La condición @$g['current'] es problemática. Es mejor inicializar $g['current']
+                // o manejar su ausencia de forma explícita. Asumiremos que $g['current'] existe o es null.
+                $gCurrent = $g['current'] ?? null;
+
+                if (($gCurrent !== $currentGroupValue) || ($this->showldwritelevelheader)) { //
+                    if ($gCurrent === null || $gCurrent === '') { // // Si no tiene un valor previo
+                        $this->showldwritelevelfooter = FALSE; //
                     }
-                    $g['current']                 = $row[$f];
-                    $this->showldwritelevelheader = TRUE;
-                    helper('App\ThirdParty\Ragnos\Helpers\Ragnos_helper');
-                    $this->encab .= "<h{$i}> " . ifSet($g['label'], $f) . ": {$row[$f]} </h{$i}>";
+                    $g['current']                 = $currentGroupValue; //
+                    $this->showldwritelevelheader = TRUE; //
+                    // El helper 'App\ThirdParty\Ragnos\Helpers\Ragnos_helper' ya se carga en el constructor.
+                    $labelToUse  = isset($g['label']) ? $g['label'] : $f; // Usar isset para $g['label']
+                    $this->encab .= "<h{$i}> " . htmlspecialchars($labelToUse) . ": " . htmlspecialchars((string) $currentGroupValue) . " </h{$i}>"; // Escapar HTML
                 }
             }
         }
     }
 
-    function generateEncabAndDetail($row)
+    public function generateEncabAndDetail(array $row): string //
     {
-        $summary = '';
-        if ($this->showldwritelevelheader) {
-            if ($this->showldwritelevelfooter) {
-                $summary .= $this->generateTableFooter();
+        $summary = ''; //
+        if ($this->showldwritelevelheader) { //
+            if ($this->showldwritelevelfooter) { //
+                $summary .= $this->generateTableFooter(); //
             }
-            $summary .= $this->encab;
-            $summary .= $this->generateTableHeader();
+            $summary .= $this->encab; //
+            $summary .= $this->generateTableHeader(); //
         }
-        $summary .= $this->generateTableRow($row);
-        return $summary;
+        $summary .= $this->generateTableRow($row); //
+        return $summary; //
     }
 
-    function generate()
+    public function generate(): string //
     {
-        $output = '<div id="imprimible" class="row">';
-        $output .= '<h1>' . htmlspecialchars($this->title) . '</h1>';
+        $output = '<div id="imprimible" class="row">'; //
+        $output .= '<h1>' . htmlspecialchars($this->title) . '</h1>'; //
 
-        if (!empty($this->descfilter)) {
-            $output .= '<h4 style="text-align: center">' . htmlspecialchars($this->descfilter) . '</h4>';
+        if (!empty($this->descfilter)) { //
+            $output .= '<h4 style="text-align: center">' . htmlspecialchars($this->descfilter) . '</h4>'; //
         }
 
-        if (empty($this->groups)) {
-            $output .= $this->generateTableHeader();
+        if (empty($this->groups)) { //
+            $output .= $this->generateTableHeader(); //
         }
 
-        foreach ($this->data as $row) {
-            $output .= $this->generateRowOrLevel($row);
+        foreach ($this->data as $row) { //
+            $output .= $this->generateRowOrLevel($row); //
         }
 
-        $output .= $this->generateTableFooter();
-        $output .= '<hr />';
+        $output .= $this->generateTableFooter(); //
+        $output .= '<hr />'; //
 
-        if ($this->showTotals) {
-            $output .= '<h3 style="text-align:right">Total: ' . htmlspecialchars($this->totalrecords) . ' ' . htmlspecialchars($this->title) . '</h3>';
+        if ($this->showTotals) { //
+            $output .= '<h3 style="text-align:right">Total: ' . htmlspecialchars((string) $this->totalrecords) . ' ' . htmlspecialchars($this->title) . '</h3>'; // // Castear a string y escapar
         }
 
-        $output .= '</div>';
+        $output .= '</div>'; //
 
-        return $output;
+        return $output; //
     }
 
-
-    function showSimpleView($rutadevuelta = 'admin/index')
+    public function showSimpleView(string $rutadevuelta = 'admin/index'): void //
     {
-        $data['rutadevuelta'] = $rutadevuelta;
-        $data['yo']           = $this;
-        echo view('App\ThirdParty\Ragnos\Views\rreportlib/ysimplelevelreport', $data);
+        $data['rutadevuelta'] = $rutadevuelta; //
+        $data['yo']           = $this; //
+        // Se recomienda devolver la vista en lugar de hacer echo aquí.
+        // El controlador debería ser responsable de enviar la respuesta HTTP.
+        echo view('App\ThirdParty\Ragnos\Views\rreportlib/ysimplelevelreport', $data); //
     }
 
-    function render($rutadevuelta = 'admin/index')
+    public function render(string $rutadevuelta = 'admin/index'): string //
     {
-        $data['rutadevuelta'] = $rutadevuelta;
-        $data['yo']           = $this;
-        return view('App\ThirdParty\Ragnos\Views\rreportlib/ysimplelevelreport', $data);
+        $data['rutadevuelta'] = $rutadevuelta; //
+        $data['yo']           = $this; //
+        // Este método ya devuelve la vista, lo cual es la práctica preferida en CI4.
+        return view('App\ThirdParty\Ragnos\Views\rreportlib/ysimplelevelreport', $data); //
     }
 }

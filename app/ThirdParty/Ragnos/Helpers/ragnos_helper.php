@@ -30,29 +30,66 @@ function fieldHasChanged($fieldname)
     return (newValue($fieldname) != oldValue($fieldname));
 }
 
+use CodeIgniter\Model; // Importar la clase Model
+
 /**
- * Import model from a controller by controller name
+ * Intenta recuperar una instancia de modelo de la propiedad pública 'modelo' de otro controlador.
  *
- * @param string $controllername The name of the controller class (without namespace)
- * @return object The model instance associated with the controller
- * @throws \Exception If controller class doesn't exist or has no model property
+ * Esta función está diseñada para un patrón arquitectónico específico donde los controladores son
+ * responsables de instanciar y configurar su modelo principal, y otras partes de la aplicación
+ * necesitan acceder a ese modelo preconfigurado a través del controlador.
+ *
+ * @param string $controllername El nombre de la clase del controlador (sin espacio de nombres, por ejemplo, 'Users', 'Products').
+ * Se espera que esté en el espacio de nombres 'App\Controllers\'.
+ * @return Model La instancia de modelo configurada por el controlador especificado.
+ * @throws \RuntimeException Si la clase del controlador no existe, no se puede instanciar,
+ * o si su propiedad pública 'modelo' no es una instancia válida de CodeIgniter Model.
  */
-function importModelFromController(string $controllername): object
+function importModelFromController(string $controllername): Model
 {
-    $fullClassName = "App\\Controllers\\" . $controllername;
+    $fullClassName = "App\\Controllers\\" . $controllername; // Construir el nombre completo de la clase.
 
+    // 1. Verificar si la clase del controlador existe
     if (!class_exists($fullClassName)) {
-        throw new \Exception("Controller class '{$fullClassName}' not found");
+        $errorMessage = "La clase del controlador '{$fullClassName}' no se encontró. No se puede importar el modelo.";
+        log_message('error', $errorMessage); // Registrar el error para depuración.
+        throw new \RuntimeException($errorMessage);
     }
 
-    $controller = new $fullClassName();
-
-    if (!isset($controller->modelo)) {
-        throw new \Exception("Controller '{$controllername}' does not have a 'modelo' property");
+    $controllerInstance = null;
+    try {
+        // 2. Intentar instanciar el controlador.
+        // Esto es necesario para acceder a su propiedad 'modelo' configurada.
+        $controllerInstance = new $fullClassName();
+    } catch (\Throwable $e) {
+        // Capturar cualquier excepción durante la instanciación del controlador (por ejemplo, errores de constructor).
+        $errorMessage = "No se pudo instanciar el controlador '{$fullClassName}'. Error: " . $e->getMessage();
+        log_message('error', $errorMessage);
+        throw new \RuntimeException($errorMessage, $e->getCode(), $e); // Relanzar con la excepción anterior.
     }
 
-    $model = $controller->modelo;
-    unset($controller);
+    // 3. Verificar que la propiedad 'modelo' exista y sea accesible.
+    // Verificamos la accesibilidad pública implícitamente al intentar acceder a ella.
+    if (!property_exists($controllerInstance, 'modelo')) {
+        $errorMessage = "El controlador '{$controllername}' no tiene una propiedad pública 'modelo' inicializada.";
+        log_message('error', $errorMessage);
+        throw new \RuntimeException($errorMessage);
+    }
+
+    // 4. Asegurarse de que la propiedad 'modelo' contiene una instancia válida de CodeIgniter Model.
+    if (!($controllerInstance->modelo instanceof Model)) {
+        $errorMessage = "La propiedad 'modelo' del controlador '{$controllername}' no es una instancia de CodeIgniter\\Model.";
+        log_message('error', $errorMessage);
+        throw new \RuntimeException($errorMessage);
+    }
+
+    // 5. Recuperar la instancia del modelo.
+    $model = $controllerInstance->modelo;
+
+    // 6. Limpieza: Desestablecer explícitamente la instancia del controlador.
+    // Aunque el recolector de basura de PHP lo manejaría eventualmente,
+    // esto puede ser una buena práctica si el controlador pudiera retener recursos significativos.
+    unset($controllerInstance);
 
     return $model;
 }
@@ -73,16 +110,17 @@ function mapClassToURL(string $class): string
 }
 
 use App\ThirdParty\Ragnos\Controllers\Ragnos;
-function moneyFormat($amt)
+function moneyFormat(float $amt): string
 {
-    $locale    = Ragnos::config()->locale ?? 'es_MX';
+    // Use CodeIgniter's Config system for locale or pass it as a parameter
+    $locale    = Ragnos::config()->locale ?? 'es_MX'; // Assuming Ragnos::config() returns a config object
     $formatter = new NumberFormatter($locale, NumberFormatter::CURRENCY);
-    $formatter->setAttribute(NumberFormatter::FRACTION_DIGITS, 2); // Adjust decimal places as needed
-    $formatter->setTextAttribute(NumberFormatter::CURRENCY_SYMBOL, '$'); // Set currency symbol
+    $formatter->setAttribute(NumberFormatter::FRACTION_DIGITS, 2);
+    $formatter->setTextAttribute(NumberFormatter::CURRENCY_SYMBOL, '$');
     return $formatter->format($amt);
 }
 
-function moneyToNumber($amt)
+function moneyToNumber(string $amt): float
 {
     // Eliminar todos los caracteres no numéricos ni el punto decimal (si existe)
     $amt = preg_replace('/[^0-9\.-]/', '', $amt);
