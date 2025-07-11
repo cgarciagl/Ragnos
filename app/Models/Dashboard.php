@@ -7,23 +7,6 @@ use CodeIgniter\Model;
 class Dashboard extends Model
 {
 
-    private function getCachedData($cacheKey, $sql)
-    {
-        $cache      = \Config\Services::cache();
-        $cachedData = $cache->get($cacheKey);
-
-        if ($cachedData) {
-            return $cachedData;
-        }
-
-        $db     = db_connect();
-        $query  = $db->query($sql);
-        $result = $query->getResultArray();
-
-        $cache->save($cacheKey, $result, 86400); // Cache for 24 hours (86400 seconds)
-        return $result;
-    }
-
     function ventasultimos12meses()
     {
         $sql = "SELECT
@@ -34,7 +17,7 @@ class Dashboard extends Model
             GROUP BY 1
             ORDER BY o.orderDate DESC
             LIMIT 12";
-        return $this->getCachedData('ventasultimos12meses', $sql);
+        return getCachedData('ventasultimos12meses', $sql);
     }
 
     function estadosDeCuenta()
@@ -74,7 +57,7 @@ class Dashboard extends Model
                 FROM Deudas
                 WHERE Deuda <> 0
                 ORDER BY Deuda DESC;";
-        return $this->getCachedData('estadosdecuenta', $sql);
+        return getCachedData('estadosdecuenta', $sql);
     }
 
     function ventasPorLinea()
@@ -95,7 +78,7 @@ class Dashboard extends Model
             INNER JOIN products p ON p.productCode = od.productCode
             INNER JOIN  Last12Months l12m ON concat(MONTHNAME(o.orderDate),'/', YEAR(o.orderDate)) = l12m.Mes
             GROUP BY  1, 2;";
-        return $this->getCachedData('ventasporlinea', $sql);
+        return getCachedData('ventasporlinea', $sql);
     }
 
 }

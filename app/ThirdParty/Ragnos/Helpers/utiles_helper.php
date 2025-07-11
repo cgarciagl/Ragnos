@@ -333,3 +333,29 @@ function queryToAssocArray(string $sql, string $index_key, string $column_key): 
         throw $e; // Re-throw the exception for the calling code to handle
     }
 }
+
+/**
+ * Retrieves data from cache if available; otherwise, executes the provided SQL query,
+ * caches the result, and returns the data.
+ *
+ * @param string $cacheKey The unique key used to identify the cached data.
+ * @param string $sql The SQL query to execute if the data is not found in the cache.
+ * @param int $ttl The time-to-live for the cached data in seconds. Defaults to 86400 (24 hours).
+ * @return mixed The cached data or the result of the SQL query.
+ */
+function getCachedData($cacheKey, $sql, $ttl = 86400)
+{
+    $cache      = \Config\Services::cache();
+    $cachedData = $cache->get($cacheKey);
+
+    if ($cachedData) {
+        return $cachedData;
+    }
+
+    $db     = db_connect();
+    $query  = $db->query($sql);
+    $result = $query->getResultArray();
+
+    $cache->save($cacheKey, $result, $ttl);
+    return $result;
+}
