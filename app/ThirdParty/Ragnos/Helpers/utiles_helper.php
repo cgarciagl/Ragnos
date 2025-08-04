@@ -250,8 +250,29 @@ function sessionObject()
 function redirectAndDie($url, $statusCode = 302)
 {
     $url = strpos($url, 'http') === 0 ? $url : site_url($url);
-    service('response')->redirect($url, 'auto', $statusCode)->send();
-    exit(); // Important to exit after send()
+
+    // Use CodeIgniter's built-in redirect for 3xx status codes
+    if ($statusCode >= 300 && $statusCode < 400) {
+        return redirect()->to($url, 'auto', $statusCode)->send();
+    }
+
+    // For non-redirect status codes, create a custom response
+    $response = service('response');
+    $response->setStatusCode($statusCode)
+        ->setHeader('Location', $url)
+        ->setContentType('text/html')
+        ->setBody(sprintf(
+            '<html><head><meta http-equiv="refresh" content="0;url=%s">
+                <script>window.location.href="%s";</script></head>
+                <body>Redirecting to <a href="%s">%s</a>...</body></html>',
+            $url,
+            $url,
+            $url,
+            htmlspecialchars($url)
+        ))
+        ->send();
+
+    exit;
 }
 
 function checkAjaxRequest(\CodeIgniter\HTTP\IncomingRequest $request)

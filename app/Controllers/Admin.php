@@ -9,9 +9,9 @@ class Admin extends BaseController
 {
     public function index()
     {
-        $this->checklogin();
         //cargar el helper utiles
         helper('App\ThirdParty\Ragnos\Helpers\Ragnos_helper');
+        $this->checklogin();
         $model                        = new \App\Models\Dashboard();
         $data['ventasultimos12meses'] = $model->ventasultimos12meses();
         $data['estadosDeCuenta']      = $model->estadosDeCuenta();
