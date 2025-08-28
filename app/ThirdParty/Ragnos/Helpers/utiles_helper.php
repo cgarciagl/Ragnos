@@ -364,9 +364,10 @@ function queryToAssocArray(string $sql, string $index_key, string $column_key): 
  * @param int $ttl The time-to-live for the cached data in seconds. Defaults to 86400 (24 hours).
  * @return mixed The cached data or the result of the SQL query.
  */
-function getCachedData($cacheKey, $sql, $ttl = 86400)
+function getCachedData($sql, $ttl = 86400)
 {
     $cache      = \Config\Services::cache();
+    $cacheKey   = md5($sql);
     $cachedData = $cache->get($cacheKey);
 
     if ($cachedData) {

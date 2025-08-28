@@ -17,7 +17,7 @@ class Dashboard extends Model
             GROUP BY 1
             ORDER BY o.orderDate DESC
             LIMIT 12";
-        return getCachedData('ventasultimos12meses', $sql);
+        return getCachedData($sql);
     }
 
     function estadosDeCuenta()
@@ -57,7 +57,7 @@ class Dashboard extends Model
                 FROM Deudas
                 WHERE Deuda <> 0
                 ORDER BY Deuda DESC;";
-        return getCachedData('estadosdecuenta', $sql);
+        return getCachedData( $sql);
     }
 
     function ventasPorLinea()
@@ -78,7 +78,7 @@ class Dashboard extends Model
             INNER JOIN products p ON p.productCode = od.productCode
             INNER JOIN  Last12Months l12m ON concat(MONTHNAME(o.orderDate),'/', YEAR(o.orderDate)) = l12m.Mes
             GROUP BY  1, 2;";
-        return getCachedData('ventasporlinea', $sql);
+        return getCachedData( $sql);
     }
 
 }
