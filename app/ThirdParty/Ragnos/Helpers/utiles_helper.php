@@ -222,6 +222,9 @@ function arrayToDropdown($array, $valueField, $textField = null)
 
 function arrayToSelect($name, $options, $valueField, $textField = null, $selectedValue = null, $extra = [])
 {
+    // Determina si es un select múltiple si $selectedValue es un array o si 'multiple' está en $extra.
+    $isMultiple = is_array($selectedValue) || isset($extra['multiple']);
+
     $textField       = $textField ?? $valueField;
     $dropdownOptions = arrayToDropdown($options, $valueField, $textField);
 
@@ -229,16 +232,35 @@ function arrayToSelect($name, $options, $valueField, $textField = null, $selecte
     foreach ($extra as $key => $val) {
         $attributes .= " {$key}=\"{$val}\"";
     }
+
     if (!isset($extra['class'])) {
         $attributes .= ' class="form-control"';
     }
 
+    // Si es múltiple, agrega el atributo y ajusta el nombre del campo.
+    if ($isMultiple) {
+        $attributes .= ' multiple';
+        // Si el nombre no termina en [], se añade para que PHP lo reciba como array.
+        if (substr($name, -2) !== '[]') {
+            $name .= '[]';
+        }
+    }
+
+    // Si $selectedValue no es un array, se convierte a uno para unificar la lógica.
+    if (!is_array($selectedValue)) {
+        $selectedValue = [$selectedValue];
+    }
+
     $html = "<select name=\"{$name}\"{$attributes}>";
+
     foreach ($dropdownOptions as $value => $text) {
-        $selected = ($value == $selectedValue) ? ' selected' : '';
+        // Usa in_array() para verificar si el valor está seleccionado.
+        $selected = in_array($value, $selectedValue) ? ' selected' : '';
         $html .= "<option value=\"{$value}\"{$selected}>" . htmlspecialchars($text) . "</option>";
     }
+
     $html .= "</select>";
+
     return $html;
 }
 
@@ -359,7 +381,6 @@ function queryToAssocArray(string $sql, string $index_key, string $column_key): 
  * Retrieves data from cache if available; otherwise, executes the provided SQL query,
  * caches the result, and returns the data.
  *
- * @param string $cacheKey The unique key used to identify the cached data.
  * @param string $sql The SQL query to execute if the data is not found in the cache.
  * @param int $ttl The time-to-live for the cached data in seconds. Defaults to 86400 (24 hours).
  * @return mixed The cached data or the result of the SQL query.
