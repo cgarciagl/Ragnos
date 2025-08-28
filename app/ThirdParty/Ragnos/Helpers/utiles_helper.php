@@ -253,7 +253,7 @@ function redirectAndDie($url, $statusCode = 302)
 
     // Use CodeIgniter's built-in redirect for 3xx status codes
     if ($statusCode >= 300 && $statusCode < 400) {
-        return redirect()->to($url, 'auto', $statusCode)->send();
+        return redirect()->to($url, null, $statusCode)->send();
     }
 
     // For non-redirect status codes, create a custom response
