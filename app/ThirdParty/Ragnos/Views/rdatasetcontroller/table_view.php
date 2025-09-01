@@ -43,17 +43,35 @@ $clase              = mapClassToURL($controller_class);
                     <span>
                         <?= lang('Ragnos.Ragnos_in') ?>:
                     </span>
-                    <select name="<?= $controllerUniqueID ?>_sel" id="<?= $controllerUniqueID ?>_sel"
-                        class="form-control-sm">
-                        <option value="">
-                            <?= lang('Ragnos.Ragnos_all') ?>
-                        </option>
-                        <?php foreach ($tablefields as $fieldItem): ?>
-                            <option value="<?= $fieldItem ?>">
-                                <?= $fieldlist[$fieldItem]->getLabel(); ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
+                    <?php
+                    // Primero, construye el array de opciones a partir de tus datos
+                    $options = [];
+                    foreach ($tablefields as $fieldItem) {
+                        // Cada elemento del array de opciones debe tener el 'valueField' y el 'textField'
+                        $options[] = [
+                            'value' => $fieldItem,
+                            'label' => $fieldlist[$fieldItem]->getLabel()
+                        ];
+                    }
+
+                    // Opcional: añade la opción 'all' al inicio del array
+                    array_unshift($options, [
+                        'value' => '',
+                        'label' => lang('Ragnos.Ragnos_all')
+                    ]);
+
+                    echo arrayToSelect(
+                        $controllerUniqueID . '_sel', // Nombre del campo
+                        $options,                     // El array de opciones que creamos
+                        'value',                      // La clave para el valor de la opción
+                        'label',                      // La clave para el texto de la opción
+                        null,                         // No hay valor preseleccionado
+                        [
+                            'id'    => $controllerUniqueID . '_sel',
+                            'class' => 'form-control-sm'
+                        ]
+                    );
+                    ?>
                 </div>
                 <div class="btn-toolbar" style="margin-top:10px;margin-bottom:10px;">
 

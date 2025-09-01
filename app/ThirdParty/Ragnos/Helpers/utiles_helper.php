@@ -211,6 +211,27 @@ function isJson($string)
     return (json_last_error() == JSON_ERROR_NONE);
 }
 
+/**
+ * Convierte una colección en un arreglo asociativo listo para poblar un control select (dropdown).
+ *
+ * Acepta elementos tipo array u objeto. Usa $valueField como clave (value) y $textField como etiqueta visible (texto).
+ * Si $textField es null, se intenta inferir la etiqueta a partir del propio elemento (por ejemplo, usando $valueField
+ * o convirtiendo el elemento a string, según la implementación).
+ *
+ * Ejemplo:
+ *   // Dado:
+ *   // $data = [
+ *   //   ['id' => 1, 'nombre' => 'Opción A'],
+ *   //   ['id' => 2, 'nombre' => 'Opción B'],
+ *   // ];
+ *   // Resultado:
+ *   // arrayToDropdown($data, 'id', 'nombre') => [1 => 'Opción A', 2 => 'Opción B']
+ *
+ * @param array<int, array|object|scalar> $array Colección de elementos fuente.
+ * @param string|int $valueField Clave o propiedad cuyo valor será usado como value en cada opción.
+ * @param string|null $textField Clave o propiedad cuyo valor será usado como texto visible; null para intentar inferirlo.
+ * @return array<string|int, string> Mapa valor => etiqueta, apto para construir listas desplegables.
+ */
 function arrayToDropdown($array, $valueField, $textField = null)
 {
     $textField = $textField ?? $valueField;
@@ -220,43 +241,63 @@ function arrayToDropdown($array, $valueField, $textField = null)
     return [];
 }
 
-function arrayToSelect($name, $options, $valueField, $textField = null, $selectedValue = null, $extra = [])
+/**
+ * Genera un elemento HTML <select> a partir de un array de opciones.
+ *
+ * @param string $name         El nombre del campo <select>.
+ * @param array  $options      El array de opciones.
+ * @param string $valueField   El nombre de la clave para el valor de la opción.
+ * @param string $textField    El nombre de la clave para el texto visible de la opción. Por defecto, es igual a $valueField.
+ * @param mixed  $selectedValue El valor o array de valores que deben estar preseleccionados.
+ * @param array  $extra        Un array asociativo de atributos HTML adicionales para el <select>.
+ *
+ * @return string El HTML del elemento <select> generado.
+ */
+function arrayToSelect(string $name, array $options, string $valueField, string $textField = null, $selectedValue = null, array $extra = []): string
 {
-    // Determina si es un select múltiple si $selectedValue es un array o si 'multiple' está en $extra.
-    $isMultiple = is_array($selectedValue) || isset($extra['multiple']);
-
-    $textField       = $textField ?? $valueField;
-    $dropdownOptions = arrayToDropdown($options, $valueField, $textField);
+    // Normaliza los valores y sanitiza los atributos
+    $textField     = $textField ?? $valueField;
+    $selectedValue = (array) $selectedValue;
 
     $attributes = '';
     foreach ($extra as $key => $val) {
-        $attributes .= " {$key}=\"{$val}\"";
+        $sanitizedKey = htmlspecialchars($key, ENT_QUOTES, 'UTF-8');
+        $sanitizedVal = htmlspecialchars($val, ENT_QUOTES, 'UTF-8');
+        $attributes .= " {$sanitizedKey}=\"{$sanitizedVal}\"";
     }
 
     if (!isset($extra['class'])) {
         $attributes .= ' class="form-control"';
     }
 
-    // Si es múltiple, agrega el atributo y ajusta el nombre del campo.
+    // Lógica para selecciones múltiples
+    $isMultiple = isset($extra['multiple']) && $extra['multiple'];
     if ($isMultiple) {
         $attributes .= ' multiple';
-        // Si el nombre no termina en [], se añade para que PHP lo reciba como array.
         if (substr($name, -2) !== '[]') {
             $name .= '[]';
         }
     }
 
-    // Si $selectedValue no es un array, se convierte a uno para unificar la lógica.
-    if (!is_array($selectedValue)) {
-        $selectedValue = [$selectedValue];
-    }
+    // Sanitiza el nombre del campo para evitar inyecciones
+    $sanitizedName = htmlspecialchars($name, ENT_QUOTES, 'UTF-8');
 
-    $html = "<select name=\"{$name}\"{$attributes}>";
+    // Inicia la construcción del string HTML
+    $html = "<select name=\"{$sanitizedName}\"{$attributes}>";
 
-    foreach ($dropdownOptions as $value => $text) {
-        // Usa in_array() para verificar si el valor está seleccionado.
-        $selected = in_array($value, $selectedValue) ? ' selected' : '';
-        $html .= "<option value=\"{$value}\"{$selected}>" . htmlspecialchars($text) . "</option>";
+    // Genera las opciones
+    foreach ($options as $option) {
+        // Asegúrate de que el valor y el texto existen
+        $value = $option[$valueField] ?? '';
+        $text  = $option[$textField] ?? '';
+
+        // Sanitiza los valores de la opción
+        $sanitizedValue = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+        $sanitizedText  = htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
+
+        $isSelected = in_array($value, $selectedValue, true) ? ' selected' : '';
+
+        $html .= "<option value=\"{$sanitizedValue}\"{$isSelected}>{$sanitizedText}</option>";
     }
 
     $html .= "</select>";
