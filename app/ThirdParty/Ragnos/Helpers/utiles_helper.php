@@ -212,36 +212,6 @@ function isJson($string)
 }
 
 /**
- * Convierte una colección en un arreglo asociativo listo para poblar un control select (dropdown).
- *
- * Acepta elementos tipo array u objeto. Usa $valueField como clave (value) y $textField como etiqueta visible (texto).
- * Si $textField es null, se intenta inferir la etiqueta a partir del propio elemento (por ejemplo, usando $valueField
- * o convirtiendo el elemento a string, según la implementación).
- *
- * Ejemplo:
- *   // Dado:
- *   // $data = [
- *   //   ['id' => 1, 'nombre' => 'Opción A'],
- *   //   ['id' => 2, 'nombre' => 'Opción B'],
- *   // ];
- *   // Resultado:
- *   // arrayToDropdown($data, 'id', 'nombre') => [1 => 'Opción A', 2 => 'Opción B']
- *
- * @param array<int, array|object|scalar> $array Colección de elementos fuente.
- * @param string|int $valueField Clave o propiedad cuyo valor será usado como value en cada opción.
- * @param string|null $textField Clave o propiedad cuyo valor será usado como texto visible; null para intentar inferirlo.
- * @return array<string|int, string> Mapa valor => etiqueta, apto para construir listas desplegables.
- */
-function arrayToDropdown($array, $valueField, $textField = null)
-{
-    $textField = $textField ?? $valueField;
-    if (is_array($array) && !empty($array)) {
-        return array_column($array, $textField, $valueField);
-    }
-    return [];
-}
-
-/**
  * Genera un elemento HTML <select> a partir de un array de opciones.
  *
  * @param string $name         El nombre del campo <select>.

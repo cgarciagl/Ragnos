@@ -149,7 +149,7 @@ class Admin extends BaseController
 
     function sess()
     {
-       // checkAjaxRequest($this->request);
+        checkAjaxRequest($this->request);
 
         //devolvemos el arreglo de la sesion como un objeto json
         return $this->response->setStatusCode(200)->setJSON(session()->get());
