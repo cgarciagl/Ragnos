@@ -58,7 +58,7 @@ abstract class RDatasetController extends RDataset
     {
         checkAjaxRequest(request());
         $tableData['content'] = $this->renderTable();
-        return view('App\ThirdParty\Ragnos\Views\Ragnos/template', $tableData);
+        return view('App\ThirdParty\Ragnos\Views\ragnos/template', $tableData);
     }
 
     /**
@@ -203,9 +203,9 @@ abstract class RDatasetController extends RDataset
         checkAjaxRequest(request());
 
         $formSubmissionData = $this->modelo->getFormData($id);
-        echo view('App\ThirdParty\Ragnos\Views\Ragnos/justecho', ['content' => $formSubmissionData]);
+        echo view('App\ThirdParty\Ragnos\Views\ragnos/justecho', ['content' => $formSubmissionData]);
         $formSubmissionData = $this->_customFormDataFooter();
-        echo view('App\ThirdParty\Ragnos\Views\Ragnos/justecho', ['content' => $formSubmissionData]);
+        echo view('App\ThirdParty\Ragnos\Views\ragnos/justecho', ['content' => $formSubmissionData]);
     }
 
     /**
@@ -246,7 +246,7 @@ abstract class RDatasetController extends RDataset
     function search()
     {
         $data['content'] = $this->renderSearchResults();
-        echo view('App\ThirdParty\Ragnos\Views\Ragnos/template', $data);
+        echo view('App\ThirdParty\Ragnos\Views\ragnos/template', $data);
     }
 
     /**
@@ -273,7 +273,7 @@ abstract class RDatasetController extends RDataset
     function report()
     {
         $data['content'] = $this->renderReport();
-        echo view('App\ThirdParty\Ragnos\Views\Ragnos/template', $data);
+        echo view('App\ThirdParty\Ragnos\Views\ragnos/template', $data);
     }
 
     /**

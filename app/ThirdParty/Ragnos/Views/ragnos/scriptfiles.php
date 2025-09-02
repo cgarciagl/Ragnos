@@ -19,9 +19,9 @@
 <script src="<?= base_url(); ?>/assets/js/select2.min.js"></script>
 
 <script src="<?= base_url(); ?>/assets/js/utiles.js" type="text/javascript"></script>
-<script src="<?= base_url(); ?>/assets/js/Ragnos.js" type="text/javascript"></script>
+<script src="<?= base_url(); ?>/assets/js/ragnos.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="<?= base_url(); ?>/assets/css/datatables.min.css?v=2.1.6" type="text/css" media="all" />
 
-<link rel="stylesheet" href="<?= base_url(); ?>/assets/css/Ragnos.min.css?v=3.2" type="text/css" />
+<link rel="stylesheet" href="<?= base_url(); ?>/assets/css/ragnos.min.css?v=3.2" type="text/css" />
 <link rel="stylesheet" href="<?= base_url(); ?>/assets/css/custom.css" type="text/css" />

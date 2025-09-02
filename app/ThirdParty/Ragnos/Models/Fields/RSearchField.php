@@ -2,7 +2,7 @@
 
 namespace App\ThirdParty\Ragnos\Models\Fields;
 
-use App\ThirdParty\Ragnos\Models\Fields\rfieldDecorator;
+use App\ThirdParty\Ragnos\Models\Fields\RFieldDecorator;
 use CodeIgniter\HTTP\IncomingRequest;
 
 class RSearchField extends RFieldDecorator

@@ -10,7 +10,7 @@ class Admin extends BaseController
     public function index()
     {
         //cargar el helper utiles
-        helper('App\ThirdParty\Ragnos\Helpers\Ragnos_helper');
+        helper('App\ThirdParty\Ragnos\Helpers\ragnos_helper');
         $this->checklogin();
         $model                        = new \App\Models\Dashboard();
         $data['ventasultimos12meses'] = $model->ventasultimos12meses();

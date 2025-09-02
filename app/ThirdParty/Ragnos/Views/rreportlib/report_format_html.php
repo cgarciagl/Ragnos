@@ -8,7 +8,7 @@
 
     <?php if (in_array($request->getPost('typeofreport'), ['htm'])): ?>
         <link rel="stylesheet" href="./assets/css/bootstrap.min.css" type="text/css" />
-        <link rel="stylesheet" href="./assets/css/Ragnos.min.css" type="text/css" />
+        <link rel="stylesheet" href="./assets/css/ragnos.min.css" type="text/css" />
     <?php endif; ?>
 
     <link rel="stylesheet" href="./assets/css/forprint.min.css" type="text/css" />

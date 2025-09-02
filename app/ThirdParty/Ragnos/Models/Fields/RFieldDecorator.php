@@ -2,7 +2,7 @@
 
 namespace App\ThirdParty\Ragnos\Models\Fields;
 
-use App\ThirdParty\Ragnos\Models\Fields\rfield;
+use App\ThirdParty\Ragnos\Models\Fields\RField;
 
 abstract class RFieldDecorator extends RField
 {

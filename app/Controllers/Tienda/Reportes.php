@@ -13,7 +13,7 @@ class Reportes extends BaseController
     {
         $this->checklogin();
         //cargar el helper utiles
-        helper('App\ThirdParty\Ragnos\Helpers\Ragnos_helper');
+        helper('App\ThirdParty\Ragnos\Helpers\ragnos_helper');
         $model = new \App\Models\Dashboard();
         $datos = $model->ventasultimos12meses();
         //recorremos los datos y formateamos como moneda el Total

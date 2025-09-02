@@ -30,7 +30,7 @@ class RSimpleLevelReport
         // Pero si se necesitara, sería: $this->request = service('request');
 
         // Cargar el helper de Ragnos una sola vez si se usa en la clase
-        helper('App\ThirdParty\Ragnos\Helpers\Ragnos_helper'); // Cargar el helper aquí o en app/Config/Autoload.php
+        helper('App\ThirdParty\Ragnos\Helpers\ragnos_helper'); // Cargar el helper aquí o en app/Config/Autoload.php
     }
 
     public function setShowTotals(bool $showTotals): void //
@@ -186,7 +186,7 @@ class RSimpleLevelReport
                     }
                     $g['current']                 = $currentGroupValue; //
                     $this->showldwritelevelheader = TRUE; //
-                    // El helper 'App\ThirdParty\Ragnos\Helpers\Ragnos_helper' ya se carga en el constructor.
+                    // El helper 'App\ThirdParty\Ragnos\Helpers\ragnos_helper' ya se carga en el constructor.
                     $labelToUse  = isset($g['label']) ? $g['label'] : $f; // Usar isset para $g['label']
                     $this->encab .= "<h{$i}> " . htmlspecialchars($labelToUse) . ": " . htmlspecialchars((string) $currentGroupValue) . " </h{$i}>"; // Escapar HTML
                 }
