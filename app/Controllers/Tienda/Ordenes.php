@@ -96,17 +96,4 @@ class Ordenes extends RDatasetController
             return $this->respondWithError(500, 'Failed to calculate total');
         }
     }
-
-    /**
-     * Helper method to return error responses with a consistent format
-     * 
-     * @param int $statusCode HTTP status code
-     * @param string $message Error message
-     * @return \CodeIgniter\HTTP\Response
-     */
-    private function respondWithError(int $statusCode, string $message)
-    {
-        return $this->response->setStatusCode($statusCode)
-            ->setJSON(['success' => false, 'error' => $message]);
-    }
 }
