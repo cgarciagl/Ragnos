@@ -70,7 +70,7 @@ class LocalizationFinder extends BaseCommand
             if (! in_array($optionLocale, config(App::class)->supportedLocales, true)) {
                 CLI::error(
                     'Error: "' . $optionLocale . '" is not supported. Supported locales: '
-                    . implode(', ', config(App::class)->supportedLocales)
+                    . implode(', ', config(App::class)->supportedLocales),
                 );
 
                 return EXIT_USER_INPUT;
@@ -116,7 +116,7 @@ class LocalizationFinder extends BaseCommand
         [
             'foundLanguageKeys' => $foundLanguageKeys,
             'badLanguageKeys'   => $badLanguageKeys,
-            'countFiles'        => $countFiles
+            'countFiles'        => $countFiles,
         ] = $this->findLanguageKeysInFiles($files);
 
         ksort($foundLanguageKeys);
@@ -361,8 +361,7 @@ class LocalizationFinder extends BaseCommand
     /**
      * @param list<SplFileInfo> $files
      *
-     * @return         array<string, array|int>
-     * @phpstan-return array{'foundLanguageKeys': array<string, array<string, string>>, 'badLanguageKeys': array<int, array<int, string>>, 'countFiles': int}
+     * @return array{'foundLanguageKeys': array<string, array<string, string>>, 'badLanguageKeys': array<int, array<int, string>>, 'countFiles': int}
      */
     private function findLanguageKeysInFiles(array $files): array
     {

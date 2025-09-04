@@ -14,6 +14,8 @@ declare(strict_types=1);
 namespace CodeIgniter\Security;
 
 use CodeIgniter\Cookie\Cookie;
+use CodeIgniter\Exceptions\InvalidArgumentException;
+use CodeIgniter\Exceptions\LogicException;
 use CodeIgniter\HTTP\IncomingRequest;
 use CodeIgniter\HTTP\Method;
 use CodeIgniter\HTTP\Request;
@@ -24,8 +26,6 @@ use CodeIgniter\Session\Session;
 use Config\Cookie as CookieConfig;
 use Config\Security as SecurityConfig;
 use ErrorException;
-use InvalidArgumentException;
-use LogicException;
 
 /**
  * Class Security
@@ -307,13 +307,13 @@ class Security implements SecurityInterface
         // Does the token exist in POST, HEADER or optionally php:://input - json data or PUT, DELETE, PATCH - raw data.
 
         if ($tokenValue = $request->getPost($this->config->tokenName)) {
-            return $tokenValue;
+            return is_string($tokenValue) ? $tokenValue : null;
         }
 
-        if ($request->hasHeader($this->config->headerName)
-            && $request->header($this->config->headerName)->getValue() !== ''
-            && $request->header($this->config->headerName)->getValue() !== []) {
-            return $request->header($this->config->headerName)->getValue();
+        if ($request->hasHeader($this->config->headerName)) {
+            $tokenValue = $request->header($this->config->headerName)->getValue();
+
+            return (is_string($tokenValue) && $tokenValue !== '') ? $tokenValue : null;
         }
 
         $body = (string) $request->getBody();
@@ -321,12 +321,15 @@ class Security implements SecurityInterface
         if ($body !== '') {
             $json = json_decode($body);
             if ($json !== null && json_last_error() === JSON_ERROR_NONE) {
-                return $json->{$this->config->tokenName} ?? null;
+                $tokenValue = $json->{$this->config->tokenName} ?? null;
+
+                return is_string($tokenValue) ? $tokenValue : null;
             }
 
             parse_str($body, $parsed);
+            $tokenValue = $parsed[$this->config->tokenName] ?? null;
 
-            return $parsed[$this->config->tokenName] ?? null;
+            return is_string($tokenValue) ? $tokenValue : null;
         }
 
         return null;
@@ -377,7 +380,7 @@ class Security implements SecurityInterface
             return bin2hex(hex2bin($value) ^ hex2bin($key));
         } catch (ErrorException $e) {
             // "hex2bin(): Hexadecimal input string must have an even length"
-            throw new InvalidArgumentException($e->getMessage());
+            throw new InvalidArgumentException($e->getMessage(), $e->getCode(), $e);
         }
     }
 
@@ -422,61 +425,18 @@ class Security implements SecurityInterface
      *
      * If it is acceptable for the user input to include relative paths,
      * e.g. file/in/some/approved/folder.txt, you can set the second optional
-     * parameter, $relative_path to TRUE.
+     * parameter, $relativePath to TRUE.
+     *
+     * @deprecated 4.6.2 Use `sanitize_filename()` instead
      *
      * @param string $str          Input file name
      * @param bool   $relativePath Whether to preserve paths
      */
     public function sanitizeFilename(string $str, bool $relativePath = false): string
     {
-        // List of sanitize filename strings
-        $bad = [
-            '../',
-            '<!--',
-            '-->',
-            '<',
-            '>',
-            "'",
-            '"',
-            '&',
-            '$',
-            '#',
-            '{',
-            '}',
-            '[',
-            ']',
-            '=',
-            ';',
-            '?',
-            '%20',
-            '%22',
-            '%3c',
-            '%253c',
-            '%3e',
-            '%0e',
-            '%28',
-            '%29',
-            '%2528',
-            '%26',
-            '%24',
-            '%3f',
-            '%3b',
-            '%3d',
-        ];
+        helper('security');
 
-        if (! $relativePath) {
-            $bad[] = './';
-            $bad[] = '/';
-        }
-
-        $str = remove_invisible_characters($str, false);
-
-        do {
-            $old = $str;
-            $str = str_replace($bad, '', $str);
-        } while ($old !== $str);
-
-        return stripslashes($str);
+        return sanitize_filename($str, $relativePath);
     }
 
     /**
@@ -530,7 +490,7 @@ class Security implements SecurityInterface
             $this->hash,
             [
                 'expires' => $this->config->expires === 0 ? 0 : Time::now()->getTimestamp() + $this->config->expires,
-            ]
+            ],
         );
 
         $response = service('response');

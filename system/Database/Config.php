@@ -14,12 +14,10 @@ declare(strict_types=1);
 namespace CodeIgniter\Database;
 
 use CodeIgniter\Config\BaseConfig;
+use CodeIgniter\Exceptions\InvalidArgumentException;
 use Config\Database as DbConfig;
-use InvalidArgumentException;
 
 /**
- * Class Config
- *
  * @see \CodeIgniter\Database\ConfigTest
  */
 class Config extends BaseConfig
@@ -141,6 +139,8 @@ class Config extends BaseConfig
 
     /**
      * Ensures the database Connection Manager/Factory is loaded and ready to use.
+     *
+     * @return void
      */
     protected static function ensureFactory()
     {

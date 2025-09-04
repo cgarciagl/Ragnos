@@ -29,7 +29,13 @@ class RedisHandler extends BaseHandler
     /**
      * Default config
      *
-     * @var array
+     * @var array{
+     *   host: string,
+     *   password: string|null,
+     *   port: int,
+     *   timeout: int,
+     *   database: int,
+     * }
      */
     protected $config = [
         'host'     => '127.0.0.1',
@@ -108,7 +114,7 @@ class RedisHandler extends BaseHandler
     public function get(string $key)
     {
         $key  = static::validateKey($key, $this->prefix);
-        $data = $this->redis->hMGet($key, ['__ci_type', '__ci_value']);
+        $data = $this->redis->hMget($key, ['__ci_type', '__ci_value']);
 
         if (! isset($data['__ci_type'], $data['__ci_value']) || $data['__ci_value'] === false) {
             return null;
@@ -147,7 +153,7 @@ class RedisHandler extends BaseHandler
                 return false;
         }
 
-        if (! $this->redis->hMSet($key, ['__ci_type' => $dataType, '__ci_value' => $value])) {
+        if (! $this->redis->hMset($key, ['__ci_type' => $dataType, '__ci_value' => $value])) {
             return false;
         }
 
@@ -181,7 +187,7 @@ class RedisHandler extends BaseHandler
         $iterator    = null;
 
         do {
-            /** @var false|list<string>|Redis $keys */
+            /** @var false|list<string> $keys */
             $keys = $this->redis->scan($iterator, $pattern);
 
             if (is_array($keys)) {

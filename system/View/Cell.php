@@ -17,7 +17,6 @@ use CodeIgniter\Cache\CacheInterface;
 use CodeIgniter\Config\Factories;
 use CodeIgniter\View\Cells\Cell as BaseCell;
 use CodeIgniter\View\Exceptions\ViewException;
-use Config\Services;
 use ReflectionException;
 use ReflectionMethod;
 
@@ -88,12 +87,14 @@ class Cell
         // Is the output cached?
         $cacheName ??= str_replace(['\\', '/'], '', $class) . $method . md5(serialize($params));
 
-        if ($output = $this->cache->get($cacheName)) {
+        $output = $this->cache->get($cacheName);
+
+        if (is_string($output) && $output !== '') {
             return $output;
         }
 
         if (method_exists($instance, 'initController')) {
-            $instance->initController(Services::request(), service('response'), service('logger'));
+            $instance->initController(service('request'), service('response'), service('logger'));
         }
 
         if (! method_exists($instance, $method)) {
@@ -117,8 +118,7 @@ class Cell
      * If a string, it should be in the format "key1=value key2=value".
      * It will be split and returned as an array.
      *
-     * @param         array<string, string>|string|null       $params
-     * @phpstan-param array<string, string>|string|float|null $params
+     * @param array<string, string>|float|string|null $params
      *
      * @return array<string, string>
      */

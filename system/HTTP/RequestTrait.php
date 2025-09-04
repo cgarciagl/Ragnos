@@ -59,7 +59,7 @@ trait RequestTrait
      */
     public function getIPAddress(): string
     {
-        if ($this->ipAddress) {
+        if ($this->ipAddress !== '') {
             return $this->ipAddress;
         }
 
@@ -72,7 +72,7 @@ trait RequestTrait
 
         if (! empty($proxyIPs) && (! is_array($proxyIPs) || is_int(array_key_first($proxyIPs)))) {
             throw new ConfigException(
-                'You must set an array with Proxy IP address key and HTTP header name value in Config\App::$proxyIPs.'
+                'You must set an array with Proxy IP address key and HTTP header name value in Config\App::$proxyIPs.',
             );
         }
 
@@ -224,9 +224,8 @@ trait RequestTrait
     /**
      * Allows manually setting the value of PHP global, like $_GET, $_POST, etc.
      *
-     * @param         string                                   $name  Supergrlobal name (lowercase)
-     * @phpstan-param 'get'|'post'|'request'|'cookie'|'server' $name
-     * @param         mixed                                    $value
+     * @param 'cookie'|'get'|'post'|'request'|'server' $name  Superglobal name (lowercase)
+     * @param mixed                                    $value
      *
      * @return $this
      */
@@ -247,11 +246,10 @@ trait RequestTrait
      *
      * http://php.net/manual/en/filter.filters.sanitize.php
      *
-     * @param         string                                   $name   Supergrlobal name (lowercase)
-     * @phpstan-param 'get'|'post'|'request'|'cookie'|'server' $name
-     * @param         array|string|null                        $index
-     * @param         int|null                                 $filter Filter constant
-     * @param         array|int|null                           $flags  Options
+     * @param 'cookie'|'get'|'post'|'request'|'server' $name   Superglobal name (lowercase)
+     * @param array|int|string|null                    $index
+     * @param int|null                                 $filter Filter constant
+     * @param array|int|null                           $flags  Options
      *
      * @return array|bool|float|int|object|string|null
      */
@@ -290,7 +288,7 @@ trait RequestTrait
         }
 
         // Does the index contain array notation?
-        if (($count = preg_match_all('/(?:^[^\[]+)|\[[^]]*\]/', $index, $matches)) > 1) {
+        if (is_string($index) && ($count = preg_match_all('/(?:^[^\[]+)|\[[^]]*\]/', $index, $matches)) > 1) {
             $value = $this->globals[$name];
 
             for ($i = 0; $i < $count; $i++) {
@@ -341,8 +339,7 @@ trait RequestTrait
      * Saves a copy of the current state of one of several PHP globals,
      * so we can retrieve them later.
      *
-     * @param         string                                   $name Superglobal name (lowercase)
-     * @phpstan-param 'get'|'post'|'request'|'cookie'|'server' $name
+     * @param 'cookie'|'get'|'post'|'request'|'server' $name Superglobal name (lowercase)
      *
      * @return void
      */

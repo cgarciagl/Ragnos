@@ -42,7 +42,7 @@ class ImageMagickHandler extends BaseHandler
     {
         parent::__construct($config);
 
-        if (! (extension_loaded('imagick') || class_exists(Imagick::class))) {
+        if (! extension_loaded('imagick') && ! class_exists(Imagick::class)) {
             throw ImageException::forMissingExtension('IMAGICK'); // @codeCoverageIgnore
         }
 
@@ -81,9 +81,9 @@ class ImageMagickHandler extends BaseHandler
             $escape = '';
         }
 
-        $action = $maintainRatio === true
-            ? ' -resize ' . ($this->width ?? 0) . 'x' . ($this->height ?? 0) . ' "' . $source . '" "' . $destination . '"'
-            : ' -resize ' . ($this->width ?? 0) . 'x' . ($this->height ?? 0) . "{$escape}! \"" . $source . '" "' . $destination . '"';
+        $action = $maintainRatio
+            ? ' -resize ' . ($this->width ?? 0) . 'x' . ($this->height ?? 0) . ' ' . escapeshellarg($source) . ' ' . escapeshellarg($destination)
+            : ' -resize ' . ($this->width ?? 0) . 'x' . ($this->height ?? 0) . "{$escape}! " . escapeshellarg($source) . ' ' . escapeshellarg($destination);
 
         $this->process($action);
 
@@ -329,8 +329,6 @@ class ImageMagickHandler extends BaseHandler
     /**
      * Handler-specific method for overlaying text on an image.
      *
-     * @return void
-     *
      * @throws Exception
      */
     protected function _text(string $text, array $options = [])
@@ -356,7 +354,7 @@ class ImageMagickHandler extends BaseHandler
 
         // Font
         if (! empty($options['fontPath'])) {
-            $cmd .= " -font '{$options['fontPath']}'";
+            $cmd .= ' -font ' . escapeshellarg($options['fontPath']);
         }
 
         if (isset($options['hAlign'], $options['vAlign'])) {
@@ -395,28 +393,28 @@ class ImageMagickHandler extends BaseHandler
             $xAxis = $xAxis >= 0 ? '+' . $xAxis : $xAxis;
             $yAxis = $yAxis >= 0 ? '+' . $yAxis : $yAxis;
 
-            $cmd .= " -gravity {$gravity} -geometry {$xAxis}{$yAxis}";
+            $cmd .= ' -gravity ' . escapeshellarg($gravity) . ' -geometry ' . escapeshellarg("{$xAxis}{$yAxis}");
         }
 
         // Color
         if (isset($options['color'])) {
             [$r, $g, $b] = sscanf("#{$options['color']}", '#%02x%02x%02x');
 
-            $cmd .= " -fill 'rgba({$r},{$g},{$b},{$options['opacity']})'";
+            $cmd .= ' -fill ' . escapeshellarg("rgba({$r},{$g},{$b},{$options['opacity']})");
         }
 
         // Font Size - use points....
         if (isset($options['fontSize'])) {
-            $cmd .= " -pointsize {$options['fontSize']}";
+            $cmd .= ' -pointsize ' . escapeshellarg((string) $options['fontSize']);
         }
 
         // Text
-        $cmd .= " -annotate 0 '{$text}'";
+        $cmd .= ' -annotate 0 ' . escapeshellarg($text);
 
         $source      = ! empty($this->resource) ? $this->resource : $this->image()->getPathname();
         $destination = $this->getResourcePath();
 
-        $cmd = " '{$source}' {$cmd} '{$destination}'";
+        $cmd = ' ' . escapeshellarg($source) . ' ' . $cmd . ' ' . escapeshellarg($destination);
 
         $this->process($cmd);
     }

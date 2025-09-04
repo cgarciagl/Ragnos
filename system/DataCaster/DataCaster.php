@@ -26,7 +26,7 @@ use CodeIgniter\DataCaster\Cast\TimestampCast;
 use CodeIgniter\DataCaster\Cast\URICast;
 use CodeIgniter\Entity\Cast\CastInterface as EntityCastInterface;
 use CodeIgniter\Entity\Exceptions\CastException;
-use InvalidArgumentException;
+use CodeIgniter\Exceptions\InvalidArgumentException;
 
 final class DataCaster
 {
@@ -68,7 +68,7 @@ final class DataCaster
         ?array $castHandlers = null,
         ?array $types = null,
         private readonly ?object $helper = null,
-        private readonly bool $strict = true
+        private readonly bool $strict = true,
     ) {
         $this->castHandlers = array_merge($this->castHandlers, $castHandlers);
 
@@ -83,7 +83,7 @@ final class DataCaster
                     && ! is_subclass_of($handler, EntityCastInterface::class)
                 ) {
                     throw new InvalidArgumentException(
-                        'Invalid class type. It must implement CastInterface. class: ' . $handler
+                        'Invalid class type. It must implement CastInterface. class: ' . $handler,
                     );
                 }
             }
@@ -113,10 +113,9 @@ final class DataCaster
      * Add ? at the beginning of the type (i.e. ?string) to get `null`
      * instead of casting $value when $value is null.
      *
-     * @param         mixed       $value  The value to convert
-     * @param         string      $field  The field name
-     * @param         string      $method Allowed to "get" and "set"
-     * @phpstan-param 'get'|'set' $method
+     * @param mixed       $value  The value to convert
+     * @param string      $field  The field name
+     * @param 'get'|'set' $method Allowed to "get" and "set"
      */
     public function castAs(mixed $value, string $field, string $method = 'get'): mixed
     {
@@ -169,7 +168,7 @@ final class DataCaster
 
         if (! isset($handlers[$type])) {
             throw new InvalidArgumentException(
-                'No such handler for "' . $field . '". Invalid type: ' . $type
+                'No such handler for "' . $field . '". Invalid type: ' . $type,
             );
         }
 

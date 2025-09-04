@@ -54,10 +54,10 @@ class Filters extends BaseFilters
             'forcehttps', // Force Global Secure Requests
             'pagecache',  // Web Page Caching
         ],
-        'after'  => [
+        'after' => [
             'pagecache',   // Web Page Caching
             'performance', // Performance Metrics
-            //'toolbar',     // Debug Toolbar
+            'toolbar',     // Debug Toolbar
         ],
     ];
 
@@ -65,7 +65,10 @@ class Filters extends BaseFilters
      * List of filter aliases that are always
      * applied before and after every request.
      *
-     * @var array<string, array<string, array<string, string>>>|array<string, list<string>>
+     * @var array{
+     *     before: array<string, array{except: list<string>|string}>|list<string>,
+     *     after: array<string, array{except: list<string>|string}>|list<string>
+     * }
      */
     public array $globals = [
         'before' => [
@@ -73,7 +76,7 @@ class Filters extends BaseFilters
             // 'csrf',
             // 'invalidchars',
         ],
-        'after'  => [
+        'after' => [
             // 'honeypot',
             // 'secureheaders',
         ],

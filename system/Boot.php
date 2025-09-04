@@ -16,6 +16,7 @@ namespace CodeIgniter;
 use CodeIgniter\Cache\FactoriesCache;
 use CodeIgniter\CLI\Console;
 use CodeIgniter\Config\DotEnv;
+use Config\App;
 use Config\Autoload;
 use Config\Modules;
 use Config\Optimize;
@@ -73,6 +74,34 @@ class Boot
         // Exits the application, setting the exit code for CLI-based
         // applications that might be watching.
         return EXIT_SUCCESS;
+    }
+
+    /**
+     * Used by command line scripts other than
+     * * `spark`
+     * * `php-cli`
+     * * `phpunit`
+     *
+     * @used-by `system/util_bootstrap.php`
+     */
+    public static function bootConsole(Paths $paths): void
+    {
+        static::definePathConstants($paths);
+        static::loadConstants();
+        static::checkMissingExtensions();
+
+        static::loadDotEnv($paths);
+        static::loadEnvironmentBootstrap($paths);
+
+        static::loadCommonFunctions();
+        static::loadAutoloader();
+        static::setExceptionHandler();
+        static::initializeKint();
+        static::autoloadHelpers();
+
+        // We need to force the request to be a CLIRequest since we're in console
+        Services::createRequest(new App(), true);
+        service('routes')->loadRoutes();
     }
 
     /**
@@ -196,7 +225,16 @@ class Boot
 
         // The path to the writable directory.
         if (! defined('WRITEPATH')) {
-            define('WRITEPATH', realpath(rtrim($paths->writableDirectory, '\\/ ')) . DIRECTORY_SEPARATOR);
+            $writePath = realpath(rtrim($paths->writableDirectory, '\\/ '));
+
+            if ($writePath === false) {
+                header('HTTP/1.1 503 Service Unavailable.', true, 503);
+                echo 'The WRITEPATH is not set correctly.';
+
+                // EXIT_ERROR is not yet defined
+                exit(1);
+            }
+            define('WRITEPATH', $writePath . DIRECTORY_SEPARATOR);
         }
 
         // The path to the tests directory
@@ -246,12 +284,12 @@ class Boot
 
     protected static function autoloadHelpers(): void
     {
-        Services::autoloader()->loadHelpers();
+        service('autoloader')->loadHelpers();
     }
 
     protected static function setExceptionHandler(): void
     {
-        Services::exceptions()->initialize();
+        service('exceptions')->initialize();
     }
 
     protected static function checkMissingExtensions(): void
@@ -279,7 +317,7 @@ class Boot
 
         $message = sprintf(
             'The framework needs the following extension(s) installed and loaded: %s.',
-            implode(', ', $missingExtensions)
+            implode(', ', $missingExtensions),
         );
 
         header('HTTP/1.1 503 Service Unavailable.', true, 503);
@@ -290,7 +328,7 @@ class Boot
 
     protected static function initializeKint(): void
     {
-        Services::autoloader()->initializeKint(CI_DEBUG);
+        service('autoloader')->initializeKint(CI_DEBUG);
     }
 
     protected static function loadConfigCache(): FactoriesCache
@@ -308,7 +346,7 @@ class Boot
      */
     protected static function initializeCodeIgniter(): CodeIgniter
     {
-        $app = Config\Services::codeigniter();
+        $app = service('codeigniter');
         $app->initialize();
         $context = is_cli() ? 'php-cli' : 'web';
         $app->setContext($context);
@@ -335,9 +373,8 @@ class Boot
         $console = new Console();
 
         // Show basic information before we do anything else.
-        // @phpstan-ignore-next-line
         if (is_int($suppress = array_search('--no-header', $_SERVER['argv'], true))) {
-            unset($_SERVER['argv'][$suppress]); // @phpstan-ignore-line
+            unset($_SERVER['argv'][$suppress]);
             $suppress = true;
         }
 

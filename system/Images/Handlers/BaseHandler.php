@@ -13,11 +13,11 @@ declare(strict_types=1);
 
 namespace CodeIgniter\Images\Handlers;
 
+use CodeIgniter\Exceptions\InvalidArgumentException;
 use CodeIgniter\Images\Exceptions\ImageException;
 use CodeIgniter\Images\Image;
 use CodeIgniter\Images\ImageHandlerInterface;
 use Config\Images;
-use InvalidArgumentException;
 
 /**
  * Base image handling implementation
@@ -34,7 +34,7 @@ abstract class BaseHandler implements ImageHandlerInterface
     /**
      * The image/file instance
      *
-     * @var Image
+     * @var Image|null
      */
     protected $image;
 
@@ -138,6 +138,8 @@ abstract class BaseHandler implements ImageHandlerInterface
      * Sets another image for this handler to work on.
      * Keeps us from needing to continually instantiate the handler.
      *
+     * @phpstan-assert Image $this->image
+     *
      * @return $this
      */
     public function withFile(string $path)
@@ -176,7 +178,7 @@ abstract class BaseHandler implements ImageHandlerInterface
     /**
      * Verifies that a file has been supplied and it is an image.
      *
-     * @return Image The image instance
+     * @phpstan-assert Image $this->image
      *
      * @throws ImageException
      */
@@ -187,7 +189,7 @@ abstract class BaseHandler implements ImageHandlerInterface
         }
 
         // Verify withFile has been called
-        if (empty($this->image)) {
+        if ($this->image === null) {
             throw ImageException::forMissingImage();
         }
 
@@ -396,23 +398,6 @@ abstract class BaseHandler implements ImageHandlerInterface
      */
     abstract protected function _flip(string $direction);
 
-    /**
-     * Overlays a string of text over the image.
-     *
-     * Valid options:
-     *
-     *  - color         Text Color (hex number)
-     *  - shadowColor   Color of the shadow (hex number)
-     *  - hAlign        Horizontal alignment: left, center, right
-     *  - vAlign        Vertical alignment: top, middle, bottom
-     *  - hOffset
-     *  - vOffset
-     *  - fontPath
-     *  - fontSize
-     *  - shadowOffset
-     *
-     * @return $this
-     */
     public function text(string $text, array $options = [])
     {
         $options                = array_merge($this->textDefaults, $options);
@@ -426,6 +411,21 @@ abstract class BaseHandler implements ImageHandlerInterface
 
     /**
      * Handler-specific method for overlaying text on an image.
+     *
+     * @param array{
+     *     color?: string,
+     *     shadowColor?: string,
+     *     hAlign?: string,
+     *     vAlign?: string,
+     *     hOffset?: int,
+     *     vOffset?: int,
+     *     fontPath?: string,
+     *     fontSize?: int,
+     *     shadowOffset?: int,
+     *     opacity?: float,
+     *     padding?: int,
+     *     withShadow?: bool|string
+     * } $options
      *
      * @return void
      */
@@ -702,6 +702,8 @@ abstract class BaseHandler implements ImageHandlerInterface
         if (method_exists($this->image(), $name)) {
             return $this->image()->{$name}(...$args);
         }
+
+        return null;
     }
 
     /**
