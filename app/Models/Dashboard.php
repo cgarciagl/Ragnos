@@ -57,7 +57,7 @@ class Dashboard extends Model
                 FROM Deudas
                 WHERE Deuda <> 0
                 ORDER BY Deuda DESC;";
-        return getCachedData( $sql);
+        return getCachedData($sql);
     }
 
     function ventasPorLinea()
@@ -78,7 +78,7 @@ class Dashboard extends Model
             INNER JOIN products p ON p.productCode = od.productCode
             INNER JOIN  Last12Months l12m ON concat(MONTHNAME(o.orderDate),'/', YEAR(o.orderDate)) = l12m.Mes
             GROUP BY  1, 2;";
-        return getCachedData( $sql);
+        return getCachedData($sql);
     }
 
 }
