@@ -103,7 +103,7 @@
                                     $(function () {
                                         $('.ligacliente').on('click', function () {
                                             let cliente = $(this).text().trim();
-                                            redirectByPost('<?= base_url('/catalogos/clientes') ?>', { RagnosPreSearch: cliente }, false);
+                                            redirectByPost('<?= site_url('/catalogos/clientes') ?>', { RagnosPreSearch: cliente }, false);
                                         }).css('cursor', 'pointer').css('color', 'blue').css('text-decoration', 'underline');
                                     });
                                 </script>

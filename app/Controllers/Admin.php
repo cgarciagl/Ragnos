@@ -45,7 +45,7 @@ class Admin extends BaseController
                 static function ($value, $data, &$error, $field) {
                     $request  = request();
                     $session  = session();
-                    $usuario  = $request->getPost('usuario');
+                    $usuario  = strtoupper($request->getPost('usuario'));
                     $password = md5(strtoupper($request->getPost('pword')));
                     $db       = db_connect();
                     $query    = $db->table('gen_usuarios')
