@@ -31,7 +31,7 @@ class RQueryController extends RDatasetController
     {
         $this->baseQuery = $query;
 
-        $this->setTableName('Yquery');
+        $this->setTableName('ragnosquerycte');
         $this->setCanInsert(false);
         $this->setCanUpdate(false);
         $this->setCanDelete(false);

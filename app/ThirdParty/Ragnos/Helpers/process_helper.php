@@ -22,6 +22,10 @@ function sseSend($eventName, $data)
     // Escape newline characters within the data
     $data = str_replace(["\n", "\r"], ['\n', '\r'], $data);
 
+    if (ob_get_level() == 0) {
+        ob_start();
+    }
+
     echo "event: $eventName\n";
     echo "data: $data\n\n";
 
