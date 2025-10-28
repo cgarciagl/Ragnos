@@ -45,12 +45,25 @@ trait SearchFilterTrait
     {
         $textForSearch = str_replace("'", "''", $textForSearch); // Escape single quotes
         $sql           = $field->getQuery() ?: ($field instanceof RSearchField ? $field->getSqlForSearch() : '');
+
         if ($sql) {
-            return "($sql) LIKE '%$textForSearch%'";
+            // Usar CAST según el motor de base de datos
+            return $this->isPostgres()
+                ? "LOWER(CAST(($sql) AS TEXT)) LIKE LOWER('%$textForSearch%')"
+                : "($sql) LIKE '%$textForSearch%'";
         } else {
-            $table = $field instanceof RSearchField ? $field->tablesearch : $this->table;
-            return "$table.{$this->realField($field->getFieldName())} LIKE '%$textForSearch%'";
+            $table     = $field instanceof RSearchField ? $field->tablesearch : $this->table;
+            $fieldName = $this->realField($field->getFieldName());
+            return $this->isPostgres()
+                ? "LOWER(CAST($table.$fieldName AS TEXT)) LIKE LOWER('%$textForSearch%')"
+                : "$table.$fieldName LIKE '%$textForSearch%'";
         }
+    }
+
+    function isPostgres()
+    {
+        $db = db_connect();
+        return $db->getPlatform() === 'Postgre';
     }
 
     private function performSearchForJson()
