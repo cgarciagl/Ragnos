@@ -43,20 +43,30 @@ trait SearchFilterTrait
 
     private function buildTextCondition($field, $textForSearch)
     {
-        $textForSearch = str_replace("'", "''", $textForSearch); // Escape single quotes
-        $sql           = $field->getQuery() ?: ($field instanceof RSearchField ? $field->getSqlForSearch() : '');
+        // 1. Obtener la conexión a la base de datos de CodeIgniter 4
+        $db = \Config\Database::connect();
 
-        if ($sql) {
-            // Usar CAST según el motor de base de datos
-            return $this->isPostgres()
-                ? "LOWER(CAST(($sql) AS TEXT)) LIKE LOWER('%$textForSearch%')"
-                : "($sql) LIKE '%$textForSearch%'";
+        // 2. Escapar el valor de búsqueda para evitar inyección SQL
+        // $db->escape() envuelve la cadena entre comillas y escapa el contenido.
+        // También maneja la función de escape específica del driver (p. ej., mysqli_real_escape_string).
+        $escapedText = $db->escape('%' . $textForSearch . '%');
+
+        // 3. Determinar la columna/expresión a buscar (igual que antes)
+        $sqlExpression = $field->getQuery() ?: ($field instanceof RSearchField ? $field->getSqlForSearch() : '');
+
+        if (empty($sqlExpression)) {
+            $table         = $field instanceof RSearchField ? $field->tablesearch : $this->table;
+            $fieldName     = $this->realField($field->getFieldName());
+            $sqlExpression = "$table.$fieldName";
+        }
+
+        // 4. Construir la condición concatenando el valor **escapado**
+        if ($this->isPostgres()) {
+            // La función LOWER se aplica solo al valor de búsqueda en el LIKE
+            return "LOWER(CAST(($sqlExpression) AS TEXT)) LIKE LOWER($escapedText)";
         } else {
-            $table     = $field instanceof RSearchField ? $field->tablesearch : $this->table;
-            $fieldName = $this->realField($field->getFieldName());
-            return $this->isPostgres()
-                ? "LOWER(CAST($table.$fieldName AS TEXT)) LIKE LOWER('%$textForSearch%')"
-                : "$table.$fieldName LIKE '%$textForSearch%'";
+            // El texto escapado ya incluye las comillas simples
+            return "($sqlExpression) LIKE $escapedText";
         }
     }
 

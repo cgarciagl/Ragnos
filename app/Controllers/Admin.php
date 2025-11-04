@@ -72,12 +72,18 @@ class Admin extends BaseController
                 'errors' => $validation->getErrors(),
             ]);
         } else {
-            $sessionBeforeUri = session('bef_uri');
-            if ($sessionBeforeUri) {
-                return redirect()->to($sessionBeforeUri);
-            } else {
-                return redirect()->to('admin/index');
+            $defaultRoute     = 'admin/index';
+            $sessionBeforeUri = session('bef_uri') ?? $defaultRoute;
+            $restrictedPaths  = ['getFormData', 'getAjaxGridData'];
+
+            foreach ($restrictedPaths as $path) {
+                if (strpos($sessionBeforeUri, $path) !== false) {
+                    $sessionBeforeUri = $defaultRoute;
+                    break;
+                }
             }
+
+            return redirect()->to($sessionBeforeUri);
         }
     }
 
@@ -127,8 +133,8 @@ class Admin extends BaseController
     public function testusuarios()
     {
         $searchTerm = $this->request->getPost('searchTerm');
-        $limit      = $this->request->getPost('iDisplayLength') ?: 10;
-        $offset     = $this->request->getPost('iDisplayStart') ?: 0;
+        $limit      = (int) $this->request->getPost('iDisplayLength') ?: 10;
+        $offset     = (int) $this->request->getPost('iDisplayStart') ?: 0;
 
         return $this->search(
             'gen_usuarios',

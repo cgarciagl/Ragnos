@@ -59,25 +59,24 @@ trait JsonResultTrait
 
     private function setOrderByForJsonResult()
     {
-        $request = request();
-        if (($request->getPost('order[0][column]') != '')) {
-            $col = $request->getPost('order[0][column]');
-            $dir = $request->getPost('order[0][dir]');
-            if ($col <= (count($this->tablefields) - 1)) {
-                $this->builder()->orderBy($this->realField($this->tablefields[$col]), $dir);
+        $request     = request();
+        $orderColumn = $request->getPost('order[0][column]');
+        $orderDir    = $request->getPost('order[0][dir]');
+
+        if (!empty($orderColumn)) {
+            if ($orderColumn < count($this->tablefields)) {
+                $this->builder()->orderBy($this->realField($this->tablefields[$orderColumn]), $orderDir);
             }
-        } else {
-            if ($this->defaultSortingField) {
-                $this->builder()->orderBy($this->realField($this->defaultSortingField), $this->defaultSortingDir);
-            }
+        } elseif (!empty($this->defaultSortingField)) {
+            $this->builder()->orderBy($this->realField($this->defaultSortingField), $this->defaultSortingDir);
         }
     }
 
     private function setLimitForJsonResult()
     {
         $request = request();
-        $limit   = $request->getPost('length');
-        $offset  = $request->getPost('start');
+        $limit   = (int) $request->getPost('length') ?: 10; // Default limit
+        $offset  = (int) $request->getPost('start') ?: 0;   // Default offset
         $this->builder()->limit($limit, $offset);
     }
 }
