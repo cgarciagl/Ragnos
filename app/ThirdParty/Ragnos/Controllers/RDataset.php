@@ -132,9 +132,9 @@ abstract class RDataset extends RController
      *
      * @param string $fieldName
      * @param string $controllerclassname
-     * @param string $SQLfilter
+     * @param string $Jsonfilter
      */
-    function addSearch($fieldName, $controllerclassname, $SQLfilter = '', $callback = '')
+    function addSearch($fieldName, $controllerclassname, $Jsonfilter = '', $callback = '')
     {
         if (!array_key_exists($fieldName, $this->modelo->ofieldlist)) {
             $this->modelo->ofieldlist[$fieldName] = new RSimpleTextField($fieldName);
@@ -142,7 +142,7 @@ abstract class RDataset extends RController
         $field                                = $this->modelo->ofieldlist[$fieldName];
         $this->modelo->ofieldlist[$fieldName] = new RSearchField($field);
         $this->modelo->ofieldlist[$fieldName]->setController($controllerclassname);
-        $this->modelo->ofieldlist[$fieldName]->setFilter($SQLfilter);
+        $this->modelo->ofieldlist[$fieldName]->setFilter($Jsonfilter);
         $this->modelo->ofieldlist[$fieldName]->setCallback($callback);
         return $this->modelo->ofieldlist[$fieldName];
     }
