@@ -67,18 +67,15 @@ abstract class RTableModel extends Model
         return $this;
     }
 
-    /**
-     * Asigna un orden para los resultados a mostrar
-     *
-     * @param string $orderby critero de ordenamiento
-     */
-    function setOrderBy($orderby)
+
+    public function setOrderByField(string $field, string $direction = 'ASC')
     {
-        //revisa que $orderby esté en la lista de campos permitidos
-        if (in_array($orderby, $this->allowedFields)) {
-            $this->builder()->orderBy($orderby);
+        $allowedDirections = ['ASC', 'DESC'];
+        if (in_array($field, $this->allowedFields) && in_array(strtoupper($direction), $allowedDirections)) {
+            $this->builder()->orderBy($field, strtoupper($direction));
+        } else {
+            throw new \InvalidArgumentException("Campo o dirección de ordenamiento no válidos.");
         }
-        return $this;
     }
 
     /**

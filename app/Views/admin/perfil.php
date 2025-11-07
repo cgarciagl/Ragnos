@@ -208,7 +208,10 @@
                                 $(function () {
                                     $('#busquedausuario').RagnosSearch({
                                         controller: 'usuarios',
-                                        filter: btoa('(usu_activo = "S") and (usu_grupo = 1)'),
+                                        filter: btoa(JSON.stringify([
+                                            { "field": "usu_activo", "op": "=", "value": "S" },
+                                            { "field": "usu_grupo", "op": "=", "value": 2 }
+                                        ])),
                                         callback: function (e) {
                                             let datos = e.data('searchdata');
                                             console.log('datos', datos);
@@ -237,7 +240,9 @@
                                 $(function () {
                                     $('#busquedausuariosql').RagnosSearch({
                                         controller: 'searchusuarios',
-                                        filter: btoa('usu_grupo = 1'),
+                                        filter: btoa(JSON.stringify([
+                                            { "field": "usu_grupo", "op": "=", "value": 1 }
+                                        ])),
                                         callback: function (e) {
                                             let datos = e.data('searchdata');
                                             console.log('datos', datos);

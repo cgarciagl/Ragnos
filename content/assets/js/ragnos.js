@@ -201,24 +201,50 @@ class RagnosSearch {
    */
   processFilter() {
     let originalFilter = this.params.filter;
-    try {
-      const filter = atob(originalFilter);
 
-      // Replace placeholders with element values
-      const processedFilter = filter.replace(/\[([^\]]+)]/g, (_, elementId) => {
-        const element = $(`#${elementId}`);
-        return element.length ? element.val() ?? "" : "";
+    try {
+      // 1. Decodificar la cadena Base64
+      const filterBase64Decoded = atob(originalFilter);
+
+      // 2. Parsear la cadena decodificada como un arreglo JSON
+      let filterArray = JSON.parse(filterBase64Decoded);
+
+      // 3. Procesar el arreglo de filtros
+      const processedFilterArray = filterArray.map((filterObject) => {
+        // Solo procesamos si el valor es una cadena
+        if (typeof filterObject.value === "string") {
+          // Reemplaza el marcador de posición [elementId] si existe
+          const processedValue = filterObject.value.replace(
+            /\[([^\]]+)]/g,
+            (_, elementId) => {
+              const element = $(`#${elementId}`);
+
+              // Si el elemento existe, devuelve su valor. De lo contrario, cadena vacía.
+              // Nota: El uso de ?? "" asegura que se manejen valores nulos/indefinidos del elemento.
+              return element.length ? element.val() ?? "" : "";
+            }
+          );
+
+          // Retorna un nuevo objeto con el valor actualizado
+          return {
+            ...filterObject, // Copia todas las demás propiedades (field, op, etc.)
+            value: processedValue,
+          };
+        }
+
+        // Si no es una cadena (es un número, booleano, etc.), retorna el objeto sin cambios
+        return filterObject;
       });
 
-      if (processedFilter.startsWith("function")) {
-        const func = new Function(`return (${processedFilter})();`);
-        return btoa(func());
-      }
+      // 4. Convertir el arreglo procesado de nuevo a una cadena JSON
+      const finalFilterString = JSON.stringify(processedFilterArray);
 
-      return btoa(processedFilter);
+      // 5. Volver a codificar el resultado final en Base64 y devolverlo
+      return btoa(finalFilterString);
     } catch (error) {
-      console.error("Error processing filter:", error);
-      return btoa("");
+      // Manejo de errores si atob o JSON.parse fallan
+      console.error("Error processing JSON filter:", error);
+      return btoa(JSON.stringify([])); // Devuelve un arreglo vacío codificado como fallback seguro
     }
   }
 

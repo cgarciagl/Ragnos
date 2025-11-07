@@ -86,9 +86,35 @@ trait SearchFilterTrait
             $this->setWhereForSearchInMultipleFields($searchValue, $field);
         }
 
-        $filter = base64_decode($request->getPost('sFilter'));
-        if ($filter) {
-            $this->builder()->where($filter, NULL, FALSE);
+        $filterJson = $request->getPost('sFilter');
+        if ($filterJson) {
+            $filters = json_decode(base64_decode($filterJson), true);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                $this->parseStructuredFilters($filters);
+            } else {
+                throw new \InvalidArgumentException("Formato de filtro JSON inválido.");
+            }
+        }
+    }
+
+    private function parseStructuredFilters(array $filters)
+    {
+        $allowedFields    = $this->tablefields; // Lista blanca de campos permitidos
+        $allowedOperators = ['=', '!=', '<', '<=', '>', '>=', 'like']; // Operadores soportados
+
+        foreach ($filters as $filter) {
+            if (
+                isset($filter['field'], $filter['op'], $filter['value']) &&
+                in_array($filter['field'], $allowedFields) &&
+                in_array($filter['op'], $allowedOperators)
+            ) {
+                $this->builder()->where(
+                    $filter['field'] . ' ' . $filter['op'],
+                    $filter['value']
+                );
+            } else {
+                throw new \InvalidArgumentException("Filtro inválido: " . json_encode($filter));
+            }
         }
     }
 

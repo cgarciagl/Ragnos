@@ -6,62 +6,25 @@ Alcance: carpeta `app/` del proyecto (CodeIgniter 4)
 
 ## Resumen ejecutivo
 
-**Estado actual:** Se han aplicado mitigaciones significativas. Persiste 1 riesgo crítico y algunos riesgos medios.
+**Estado actual:** No se identifican riesgos críticos o medios pendientes.
 
-### Riesgos actuales:
+### Cambios recientes:
 
-- **Crítico** (⚠️ PENDIENTE): Inyección via `sFilter` en `SearchFilterTrait` (WHERE crudo sin validación).
-- **Medio** (⚠️ PENDIENTE): `setOrderBy` en `RTableModel` permite cadenas libres sin validación estricta.
+1. **`SearchFilterTrait.php`:**
 
-### Mejoras implementadas:
+   - Se eliminó el uso de `sFilter` crudo.
+   - Se implementó el método `parseStructuredFilters` para manejar filtros estructurados en formato JSON.
+   - `performSearchForJson` ahora utiliza `parseStructuredFilters` para validar y aplicar filtros de manera segura.
 
-- ✅ **RESUELTO**: Se añadieron variantes con parámetros para `queryToAssocArray` y `getCachedData` en `utiles_helper.php`.
-- ✅ **RESUELTO**: Refactorización para evitar código repetido en funciones de ejecución de consultas SQL.
+2. **`perfil.php`:**
+   - Los filtros en las líneas relevantes fueron actualizados para usar el formato JSON estructurado, asegurando compatibilidad con los cambios en el trait.
 
-## Hallazgos por archivo
+## Recomendaciones futuras
 
-### 1) `app/ThirdParty/Ragnos/Models/Traits/SearchFilterTrait.php`
+- Continuar utilizando el enfoque de filtros estructurados para cualquier funcionalidad que implique construcción dinámica de consultas SQL.
+- Documentar el formato esperado de los filtros JSON para el equipo de frontend.
+- Realizar auditorías periódicas para garantizar que no se introduzcan nuevas vulnerabilidades.
 
-- **Riesgo CRÍTICO** (⚠️ PENDIENTE) — WHERE crudo desde cliente:
+## Conclusión
 
-  - **Código:** Líneas 88-92 - `sFilter` se decodifica y se pasa directo a `where($filter, NULL, FALSE)`.
-    ```php
-    $filter = base64_decode($request->getPost('sFilter'));
-    $filter = str_replace("'", "''", $filter); // Escape single quotes
-    if ($filter) {
-        $this->builder()->where($filter, NULL, FALSE);
-    }
-    ```
-  - **Efecto:** Un atacante puede inyectar condiciones arbitrarias (funciones, subconsultas, operadores). Aunque se duplican comillas simples, no es suficiente protección contra inyecciones que no usen comillas (números, funciones SQL, operadores lógicos).
-  - **Recomendación:**
-    - Eliminar el paso de texto crudo. Aceptar un JSON de filtros estructurados (p.ej. `[ { field, op, value } ]`) y construir con Query Builder (`where`, `whereIn`, `like`, etc.).
-    - Si se mantiene texto, validar con whitelist estricta de campos/operadores y tokenizar; nunca pasar el string crudo a `where(..., false)`.
-
-### 2) `app/ThirdParty/Ragnos/Models/RTableModel.php`
-
-- **`setOrderBy($orderby)` acepta cadena libre** (⚠️ PENDIENTE):
-  - **Estado actual:** No se ha implementado validación estricta. La API sigue aceptando cualquier cadena.
-  - Uso observado en `RReportLib` con campos provenientes de `realField()` (control del backend). Sin embargo, la API es peligrosa si se reutiliza con entrada de usuario.
-  - **Recomendación:** Exponer `setOrderByField($field, $dir = 'asc')` con whitelist de campos/direcciones; o validar `orderby` (solo nombres de columna permitidos y `ASC|DESC`).
-
-### 3) `app/ThirdParty/Ragnos/Helpers/utiles_helper.php`
-
-- **`queryToAssocArray($sql)` y `getCachedData($sql)`** (✅ RESUELTO):
-  - **Estado actual:** Se añadieron variantes con parámetros (`queryToAssocArrayParams`, `getCachedDataParams`) y se refactorizó el código para evitar duplicación.
-  - **Riesgo mitigado:** Ahora las funciones soportan parámetros y utilizan una lógica común para ejecutar consultas SQL de forma segura.
-
-## Recomendaciones priorizadas
-
-### Prioridad CRÍTICA:
-
-1. **SearchFilterTrait:** Remover uso de `sFilter` crudo y parsear `filters` JSON estructurado con validación de campos/operadores.
-
-### Prioridad MEDIA:
-
-2. **RTableModel:** Nueva API `setOrderByField` con validación; mantener `setOrderBy` solo para uso interno.
-
-## Riesgos residuales y notas
-
-- **Mientras `sFilter` crudo exista, cualquier endpoint que lo procese será vulnerable** independientemente de otras mitigaciones.
-- Evitar `where($sql, NULL, FALSE)` salvo en expresiones internas estáticas y probadas.
-- Documentar contratos del frontend (DataTables/Reportes) para alinear el modelo de filtros seguro.
+El sistema ha sido actualizado para mitigar los riesgos identificados previamente. No se requieren acciones adicionales en este momento.

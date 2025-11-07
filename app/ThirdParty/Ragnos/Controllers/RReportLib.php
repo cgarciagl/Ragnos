@@ -125,7 +125,7 @@ abstract class RReportLib
         }
         $ordertoapply[] = $modelo->tablefields[0]; //
         if (sizeof($ordertoapply) > 0) { //
-            $this->modelo->setOrderBy(implode(',', $ordertoapply)); //
+            $this->modelo->setOrderByField(implode(',', $ordertoapply)); //
         }
     }
 
