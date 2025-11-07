@@ -1,17 +1,22 @@
 # Auditoría de Seguridad SQL — Ragnos
 
 Fecha inicial: 2025-11-04
-Última actualización: 2025-11-05
+Última actualización: 2025-11-07
 Alcance: carpeta `app/` del proyecto (CodeIgniter 4)
 
 ## Resumen ejecutivo
 
-**Estado actual:** Persiste 1 riesgo crítico y algunos riesgos medios.
+**Estado actual:** Se han aplicado mitigaciones significativas. Persiste 1 riesgo crítico y algunos riesgos medios.
 
 ### Riesgos actuales:
 
 - **Crítico** (⚠️ PENDIENTE): Inyección via `sFilter` en `SearchFilterTrait` (WHERE crudo sin validación).
-- **Medio** (⚠️ PENDIENTE): APIs que ejecutan SQL crudo (`queryToAssocArray`, `getCachedData`, `setOrderBy` genérico) sin variantes con parámetros.
+- **Medio** (⚠️ PENDIENTE): `setOrderBy` en `RTableModel` permite cadenas libres sin validación estricta.
+
+### Mejoras implementadas:
+
+- ✅ **RESUELTO**: Se añadieron variantes con parámetros para `queryToAssocArray` y `getCachedData` en `utiles_helper.php`.
+- ✅ **RESUELTO**: Refactorización para evitar código repetido en funciones de ejecución de consultas SQL.
 
 ## Hallazgos por archivo
 
@@ -35,22 +40,15 @@ Alcance: carpeta `app/` del proyecto (CodeIgniter 4)
 ### 2) `app/ThirdParty/Ragnos/Models/RTableModel.php`
 
 - **`setOrderBy($orderby)` acepta cadena libre** (⚠️ PENDIENTE):
-  - **Estado actual:** No se ha implementado validación. La API sigue aceptando cualquier cadena.
+  - **Estado actual:** No se ha implementado validación estricta. La API sigue aceptando cualquier cadena.
   - Uso observado en `RReportLib` con campos provenientes de `realField()` (control del backend). Sin embargo, la API es peligrosa si se reutiliza con entrada de usuario.
   - **Recomendación:** Exponer `setOrderByField($field, $dir = 'asc')` con whitelist de campos/direcciones; o validar `orderby` (solo nombres de columna permitidos y `ASC|DESC`).
 
 ### 3) `app/ThirdParty/Ragnos/Helpers/utiles_helper.php`
 
-- **`queryToAssocArray($sql)` ejecuta SQL crudo** (⚠️ PENDIENTE):
-
-  - **Estado actual:** No se ha agregado variante con parámetros. La función sigue ejecutando SQL directamente sin binding.
-  - Uso actual: `Tienda/Empleados.php` con SQL estático (seguro).
-  - **Recomendación:** Agregar variante con parámetros `queryToAssocArrayParams($sql, $params, ...)` y documentar que no se use con entradas del usuario sin binding.
-
-- **`getCachedData($sql)` ejecuta SQL crudo y cachea** (⚠️ PENDIENTE):
-  - **Estado actual:** No se ha agregado variante con parámetros.
-  - Usos en `App/Models/Dashboard.php` con SQL estático (seguros).
-  - **Recomendación:** Proveer `getCachedDataParams($sql, $params, $ttl)`.
+- **`queryToAssocArray($sql)` y `getCachedData($sql)`** (✅ RESUELTO):
+  - **Estado actual:** Se añadieron variantes con parámetros (`queryToAssocArrayParams`, `getCachedDataParams`) y se refactorizó el código para evitar duplicación.
+  - **Riesgo mitigado:** Ahora las funciones soportan parámetros y utilizan una lógica común para ejecutar consultas SQL de forma segura.
 
 ## Recomendaciones priorizadas
 
@@ -60,8 +58,7 @@ Alcance: carpeta `app/` del proyecto (CodeIgniter 4)
 
 ### Prioridad MEDIA:
 
-2. **Helpers:** Añadir variantes con parámetros (`queryToAssocArrayParams`, `getCachedDataParams`) y documentar los métodos crudos como "no usar con input de usuario".
-3. **RTableModel:** Nueva API `setOrderByField` con validación; mantener `setOrderBy` solo para uso interno.
+2. **RTableModel:** Nueva API `setOrderByField` con validación; mantener `setOrderBy` solo para uso interno.
 
 ## Riesgos residuales y notas
 

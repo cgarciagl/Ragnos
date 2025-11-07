@@ -208,7 +208,7 @@
                                 $(function () {
                                     $('#busquedausuario').RagnosSearch({
                                         controller: 'usuarios',
-                                        // filter: btoa('usu_grupo = 1'),
+                                        filter: btoa('(usu_activo = "S") and (usu_grupo = 1)'),
                                         callback: function (e) {
                                             let datos = e.data('searchdata');
                                             console.log('datos', datos);

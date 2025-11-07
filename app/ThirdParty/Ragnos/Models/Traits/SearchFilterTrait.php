@@ -87,7 +87,6 @@ trait SearchFilterTrait
         }
 
         $filter = base64_decode($request->getPost('sFilter'));
-        $filter = str_replace("'", "''", $filter); // Escape single quotes
         if ($filter) {
             $this->builder()->where($filter, NULL, FALSE);
         }

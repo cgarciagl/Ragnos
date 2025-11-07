@@ -40,7 +40,7 @@ function dbgDie($data, int $statusCode = 200): never
 
     // Si estamos en entorno de desarrollo, hacer la salida JSON más legible
     if (ENVIRONMENT === 'development') {
-        $options |= JSON_PRETTY_PRINT;
+        $options  |= JSON_PRETTY_PRINT;
     }
 
     try {
@@ -183,7 +183,7 @@ function returnAsJSON($data, $statusCode = 200)
     $options = JSON_UNESCAPED_UNICODE;
 
     if (ENVIRONMENT === 'development') {
-        $options |= JSON_PRETTY_PRINT;
+        $options  |= JSON_PRETTY_PRINT;
     }
 
     if (is_array($data) || is_object($data)) {
@@ -231,21 +231,21 @@ function arrayToSelect(string $name, array $options, string $valueField, string 
 
     $attributes = '';
     foreach ($extra as $key => $val) {
-        $sanitizedKey = htmlspecialchars($key, ENT_QUOTES, 'UTF-8');
-        $sanitizedVal = htmlspecialchars($val, ENT_QUOTES, 'UTF-8');
-        $attributes .= " {$sanitizedKey}=\"{$sanitizedVal}\"";
+        $sanitizedKey  = htmlspecialchars($key, ENT_QUOTES, 'UTF-8');
+        $sanitizedVal  = htmlspecialchars($val, ENT_QUOTES, 'UTF-8');
+        $attributes   .= " {$sanitizedKey}=\"{$sanitizedVal}\"";
     }
 
     if (!isset($extra['class'])) {
-        $attributes .= ' class="form-control"';
+        $attributes  .= ' class="form-control"';
     }
 
     // Lógica para selecciones múltiples
     $isMultiple = isset($extra['multiple']) && $extra['multiple'];
     if ($isMultiple) {
-        $attributes .= ' multiple';
+        $attributes  .= ' multiple';
         if (substr($name, -2) !== '[]') {
-            $name .= '[]';
+            $name  .= '[]';
         }
     }
 
@@ -267,10 +267,10 @@ function arrayToSelect(string $name, array $options, string $valueField, string 
 
         $isSelected = in_array($value, $selectedValue, true) ? ' selected' : '';
 
-        $html .= "<option value=\"{$sanitizedValue}\"{$isSelected}>{$sanitizedText}</option>";
+        $html  .= "<option value=\"{$sanitizedValue}\"{$isSelected}>{$sanitizedText}</option>";
     }
 
-    $html .= "</select>";
+    $html  .= "</select>";
 
     return $html;
 }
@@ -349,6 +349,24 @@ HTML;
     return true;
 }
 
+function executeQuery(string $sql, array $params = []): array
+{
+    try {
+        $db    = \Config\Database::connect();
+        $query = $db->query($sql, $params);
+
+        if (!$query) {
+            log_message('error', 'Database query failed for SQL: ' . $sql);
+            return [];
+        }
+
+        return $query->getResultArray();
+    } catch (\Exception $e) {
+        log_message('error', "Database query error: " . $e->getMessage() . " SQL: " . $sql);
+        throw $e;
+    }
+}
+
 /**
  * Convert a SQL query to an associative array
  * 
@@ -360,32 +378,26 @@ HTML;
  */
 function queryToAssocArray(string $sql, string $index_key, string $column_key): array
 {
-    try {
-        $db    = \Config\Database::connect(); // Or use db_connect() wrapper
-        $query = $db->query($sql);
+    $records = executeQuery($sql);
 
-        if (!$query) {
-            // Log a more specific error or return empty array if query failed
-            log_message('error', 'Database query failed for SQL: ' . $sql);
-            return [];
-        }
-
-        $records = $query->getResultArray();
-
-        if (empty($records)) {
-            return [];
-        }
-
-        if (!isset($records[0][$index_key]) || !isset($records[0][$column_key])) {
-            log_message('error', "queryToAssocArray: Keys '$index_key' or '$column_key' not found in query results for SQL: " . $sql);
-            return [];
-        }
-
-        return array_column($records, $column_key, $index_key);
-    } catch (\Exception $e) {
-        log_message('error', "Database query error in queryToAssocArray: " . $e->getMessage() . " SQL: " . $sql);
-        throw $e; // Re-throw the exception for the calling code to handle
+    if (empty($records) || !isset($records[0][$index_key]) || !isset($records[0][$column_key])) {
+        log_message('error', "queryToAssocArray: Keys '$index_key' or '$column_key' not found in query results for SQL: " . $sql);
+        return [];
     }
+
+    return array_column($records, $column_key, $index_key);
+}
+
+function queryToAssocArrayParams(string $sql, array $params, string $index_key, string $column_key): array
+{
+    $records = executeQuery($sql, $params);
+
+    if (empty($records) || !isset($records[0][$index_key]) || !isset($records[0][$column_key])) {
+        log_message('error', "queryToAssocArrayParams: Keys '$index_key' or '$column_key' not found in query results for SQL: " . $sql);
+        return [];
+    }
+
+    return array_column($records, $column_key, $index_key);
 }
 
 /**
@@ -406,10 +418,24 @@ function getCachedData($sql, $ttl = 86400)
         return $cachedData;
     }
 
-    $db     = db_connect();
-    $query  = $db->query($sql);
-    $result = $query->getResultArray();
-
+    $result = executeQuery($sql);
     $cache->save($cacheKey, $result, $ttl);
+
+    return $result;
+}
+
+function getCachedDataParams(string $sql, array $params, int $ttl = 86400)
+{
+    $cache      = \Config\Services::cache();
+    $cacheKey   = md5($sql . serialize($params));
+    $cachedData = $cache->get($cacheKey);
+
+    if ($cachedData) {
+        return $cachedData;
+    }
+
+    $result = executeQuery($sql, $params);
+    $cache->save($cacheKey, $result, $ttl);
+
     return $result;
 }

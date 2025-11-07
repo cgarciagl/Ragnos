@@ -74,7 +74,10 @@ abstract class RTableModel extends Model
      */
     function setOrderBy($orderby)
     {
-        $this->builder()->orderBy($orderby);
+        //revisa que $orderby esté en la lista de campos permitidos
+        if (in_array($orderby, $this->allowedFields)) {
+            $this->builder()->orderBy($orderby);
+        }
         return $this;
     }
 
