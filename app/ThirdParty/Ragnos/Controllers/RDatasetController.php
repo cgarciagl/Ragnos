@@ -203,9 +203,9 @@ abstract class RDatasetController extends RDataset
         checkAjaxRequest(request());
 
         $formSubmissionData = $this->modelo->getFormData($id);
-        echo view('App\ThirdParty\Ragnos\Views\ragnos/justecho', ['content' => $formSubmissionData]);
-        $formSubmissionData = $this->_customFormDataFooter();
-        echo view('App\ThirdParty\Ragnos\Views\ragnos/justecho', ['content' => $formSubmissionData]);
+        echo $formSubmissionData;
+        $customFormDataFooter = $this->_customFormDataFooter();
+        echo $customFormDataFooter;
     }
 
     /**
