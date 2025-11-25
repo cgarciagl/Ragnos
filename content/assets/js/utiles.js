@@ -163,94 +163,18 @@ function refreshPage() {
   location.reload();
 }
 
-$.fn.serializeObject = function () {
-  if (!this.is("form")) {
-    console.warn("serializeObject called on non-form element");
-    return {};
+function serializeForm(formElement) {
+  if (!(formElement instanceof HTMLFormElement)) return {};
+  return Object.fromEntries(new FormData(formElement));
+}
+
+function shakeElement(el) {
+  if (el instanceof jQuery) {
+    el = el[0];
   }
-
-  const formData = {};
-  const $form = $(this);
-
-  // Handle regular form inputs
-  $form.find("input, select, textarea").each(function () {
-    const $input = $(this);
-    const name = $input.attr("name");
-
-    if (!name) return;
-
-    const type = $input.attr("type");
-    let value;
-
-    // Handle different input types
-    switch (type) {
-      case "checkbox":
-        value = $input.prop("checked");
-        break;
-      case "radio":
-        if ($input.prop("checked")) {
-          value = $input.val();
-        }
-        break;
-      default:
-        value = $input.val() || "";
-    }
-
-    // Handle multiple values for same name
-    if (formData[name] !== undefined) {
-      if (!Array.isArray(formData[name])) {
-        formData[name] = [formData[name]];
-      }
-      if (value !== undefined) {
-        formData[name].push(value);
-      }
-    } else if (value !== undefined) {
-      formData[name] = value;
-    }
-  });
-
-  return formData;
-};
-
-$.fn.shake = function (options) {
-  let settings = {
-    shakes: 2,
-    distance: 10,
-    duration: 400,
-  };
-  if (options) {
-    $.extend(settings, options);
-  }
-  let pos;
-  return this.each(function () {
-    let $this = $(this);
-    pos = $this.css("position");
-    if (!pos || pos === "static") {
-      $this.css("position", "relative");
-    }
-    for (let x = 1; x <= settings.shakes; x++) {
-      $this
-        .animate(
-          {
-            left: settings.distance * -1,
-          },
-          settings.duration / settings.shakes / 4
-        )
-        .animate(
-          {
-            left: settings.distance,
-          },
-          settings.duration / settings.shakes / 2
-        )
-        .animate(
-          {
-            left: 0,
-          },
-          settings.duration / settings.shakes / 4
-        );
-    }
-  });
-};
+  el.classList.add("shake");
+  setTimeout(() => el.classList.remove("shake"), 400);
+}
 
 $(document)
   .ajaxStart(function () {
@@ -268,26 +192,31 @@ $(document)
  * @param {boolean} [enColumnaFinal=true] - If true, adds a total column at the end of each row.
  */
 function ponTotalesEnTabla(
-  targetTable,
+  table,
   enRenglonFinal = false,
   enColumnaFinal = true
 ) {
-  if (!targetTable || !targetTable.length) {
+  if (
+    !table ||
+    (!(table instanceof HTMLTableElement) && !(table instanceof jQuery))
+  ) {
     console.error("Invalid table element");
     return;
   }
 
-  const $tbody = targetTable.find("tbody");
-  const $rows = $tbody.find("tr");
-  let columnCount = $rows.first().find("td").length;
+  if (table instanceof jQuery) {
+    table = table[0]; // Convert jQuery object to native HTMLTableElement
+  }
+  const tbody = table.querySelector("tbody");
+  const rows = Array.from(tbody.querySelectorAll("tr"));
+  let columnCount = rows[0] ? rows[0].querySelectorAll("td").length : 0;
 
   if (enColumnaFinal) {
-    agregarColumnaTotal(targetTable, $rows, columnCount);
+    agregarColumnaTotal(table, rows, columnCount);
     columnCount += 1;
   }
-
   if (enRenglonFinal) {
-    agregarRenglonTotal($tbody, $rows, columnCount);
+    agregarRenglonTotal(tbody, rows, columnCount);
   }
 }
 
@@ -298,19 +227,17 @@ function ponTotalesEnTabla(
  * @param {jQuery} $rows - Filas de la tabla usadas para calcular los totales.
  * @param {number} columnCount - Número de columnas en la tabla.
  */
-function agregarRenglonTotal($tbody, $rows, columnCount) {
-  if ($rows.length <= 1) return;
-
-  const $totalRow = $("<tr>").appendTo($tbody);
-
+function agregarRenglonTotal(tbody, rows, columnCount) {
+  if (rows.length < 1) return;
+  const totalRow = document.createElement("tr");
   for (let i = 0; i < columnCount; i++) {
-    const cellContent = i === 0 ? "Total" : calcularColumnaTotal($rows, i);
-    $("<td>")
-      .addClass("totalt")
-      .css("font-weight", "bold")
-      .text(cellContent)
-      .appendTo($totalRow);
+    const td = document.createElement("td");
+    td.classList.add("total");
+    td.style.fontWeight = "bold";
+    td.textContent = i === 0 ? "Total" : calcularColumnaTotal(rows, i);
+    totalRow.appendChild(td);
   }
+  tbody.appendChild(totalRow);
 }
 
 /**
@@ -320,24 +247,26 @@ function agregarRenglonTotal($tbody, $rows, columnCount) {
  * @param {jQuery} $rows - Filas de la tabla usadas para calcular los totales.
  * @param {number} columnCount - Número de columnas en la tabla.
  */
-function agregarColumnaTotal(targetTable, $rows, columnCount) {
-  if (columnCount <= 2) return;
-
-  // Agregar encabezado "Total" en la última columna
-  targetTable
-    .find("thead tr")
-    .append(
-      $("<th>").addClass("totalt").css("font-weight", "bold").text("Total")
-    );
-
-  // Calcular y agregar el total para cada fila
-  $rows.each(function () {
-    const $row = $(this);
-    const total = calcularFilaTotal($row, columnCount);
-
-    $row.append(
-      $("<td>").addClass("totalt").css("font-weight", "bold").text(total)
-    );
+function agregarColumnaTotal(table, rows, columnCount) {
+  if (columnCount < 2) return;
+  // Agregar encabezado "Total"
+  const theadRow = table.querySelector("thead tr");
+  if (theadRow) {
+    const th = document.createElement("th");
+    th.classList.add("total");
+    th.style.fontWeight = "bold";
+    th.textContent = "Total";
+    theadRow.appendChild(th);
+  }
+  // Calcular y agregar el total por fila
+  rows.forEach((row) => {
+    const cells = row.querySelectorAll("td");
+    const total = calcularFilaTotal(row, columnCount);
+    const td = document.createElement("td");
+    td.classList.add("total");
+    td.style.fontWeight = "bold";
+    td.textContent = total;
+    row.appendChild(td);
   });
 }
 
@@ -348,15 +277,17 @@ function agregarColumnaTotal(targetTable, $rows, columnCount) {
  * @param {number} colIndex - Índice de la columna a calcular.
  * @returns {string|number} El total de la columna, formateado si aplica.
  */
-function calcularColumnaTotal($rows, colIndex) {
+function calcularColumnaTotal(rows, colIndex) {
   let esDinero = false;
-  const total = $rows.toArray().reduce((sum, row) => {
-    const valor = $(row).find(`td:eq(${colIndex})`).text();
+  let sum = 0;
+  rows.forEach((row) => {
+    const cell = row.querySelectorAll("td")[colIndex];
+    if (!cell) return;
+    let valor = cell.textContent.trim();
     if (valor.startsWith("$")) esDinero = true;
-    return sum + (moneyToNumber(valor) || 0);
-  }, 0);
-
-  return formatearTotal(total, esDinero);
+    sum += moneyToNumber(valor) || 0;
+  });
+  return formatearTotal(sum, esDinero);
 }
 
 /**
@@ -366,19 +297,19 @@ function calcularColumnaTotal($rows, colIndex) {
  * @param {number} columnCount - Número de columnas en la tabla.
  * @returns {string|number} El total de la fila, formateado si aplica.
  */
-function calcularFilaTotal($row, columnCount) {
+function calcularFilaTotal(row, columnCount) {
   let esDinero = false;
-  const total = $row
-    .find("td")
-    .toArray()
-    .slice(1, columnCount - 1) // Ignorar la primera y última columna si aplica
-    .reduce((sum, cell) => {
-      const valor = $(cell).text();
-      if (valor.startsWith("$")) esDinero = true;
-      return sum + (moneyToNumber(valor) || 0);
-    }, 0);
-
-  return formatearTotal(total, esDinero);
+  let sum = 0;
+  const cells = Array.from(row.querySelectorAll("td")).slice(
+    1,
+    columnCount - 1
+  ); // Ignora primera/última si aplica
+  cells.forEach((cell) => {
+    let valor = cell.textContent.trim();
+    if (valor.startsWith("$")) esDinero = true;
+    sum += moneyToNumber(valor) || 0;
+  });
+  return formatearTotal(sum, esDinero);
 }
 
 /**
@@ -707,6 +638,7 @@ function showModal(html, encabezado = "", id = "miModal", onClose = null) {
     const $title = $(`#${modalId}-modaltitle`);
 
     $content.html(html);
+
     $title.text(encabezado || "");
 
     // Handle modal events
@@ -892,111 +824,137 @@ function inArray(element, array) {
   return array.includes(element);
 }
 
+function serializeParams(obj, prefix) {
+  let str = [];
+  for (let p in obj) {
+    if (!obj.hasOwnProperty(p)) continue;
+    let k = prefix ? `${prefix}[${p}]` : p,
+      v = obj[p];
+    // Si el valor es null o undefined, lo fuerza a ""
+    if (v === null || v === undefined) v = "";
+    if (typeof v === "object" && !Array.isArray(v)) {
+      str.push(serializeParams(v, k));
+    } else if (Array.isArray(v)) {
+      v.forEach((val, idx) => {
+        if (val === null || val === undefined) val = "";
+        // Para arrays, usa [0], [1], etc.
+        str.push(serializeParams(val, `${k}[${idx}]`));
+      });
+    } else {
+      str.push(encodeURIComponent(k) + "=" + encodeURIComponent(v));
+    }
+  }
+  return str.join("&");
+}
+
 /**
- * Performs an asynchronous AJAX POST request to the specified URL with the given parameters.
- *
- * @async
- * @function getValue
- * @param {string} url - The URL to which the request is sent.
- * @param {Object} [params={}] - The parameters to be sent with the request.
- * @param {number} [params.timeout=1200000] - The timeout for the request in milliseconds.
- * @param {function} callback - The callback function to handle the response or error.
- * @param {string} callback.response - The response text from the server.
- * @param {Object} [callback.errorInfo] - The error information if the request fails.
- * @param {string} [callback.errorInfo.error] - The error message.
- * @param {number} [callback.errorInfo.status] - The HTTP status code.
- * @param {Object} [callback.errorInfo.jqXHR] - The jQuery XMLHttpRequest object.
- * @throws {Error} If the AJAX request fails.
+ * Realiza petición POST asíncrona utilizando fetch, con reintentos y timeout.
+ * @param {string} url - URL destino.
+ * @param {Object} params - Parámetros a enviar.
+ * @param {function} [callback] - Si se pasa, modo callback.
+ * @returns {Promise|string} - Si no se pasa callback, retorna una promesa.
  */
 async function getValue(url, params = {}, callback) {
-  // Configuración por defecto
   const config = {
-    timeout: params.timeout || 1200000,
+    timeout: params.timeout || 12000,
     retryAttempts: params.retryAttempts || 1,
     retryDelay: params.retryDelay || 1000,
   };
 
-  // Función principal que realiza la petición
+  // Clona los params, sin los especiales de control.
+  const cleanParams = { ...params };
+  delete cleanParams.timeout;
+  delete cleanParams.retryAttempts;
+  delete cleanParams.retryDelay;
+
+  // Convierte a x-www-form-urlencoded
+  const body = serializeParams(params);
+
   const makeRequest = async () => {
     let attempts = 0;
     let lastError = null;
 
     while (attempts < config.retryAttempts) {
       try {
-        const response = await $.ajax({
-          url: fixUrl(url),
-          type: "POST",
-          data: params,
-          dataType: "text",
-          timeout: config.timeout,
+        const resPromise = fetch(fixUrl(url), {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "X-Requested-With": "XMLHttpRequest",
+          },
+          body: body,
         });
-
-        return { response, error: null };
-      } catch (error) {
-        lastError = {
-          error: error.statusText || "Error desconocido",
-          status: error.status || 0,
-          jqXHR: error,
-        };
-
-        attempts++;
-
-        if (attempts < config.retryAttempts) {
-          console.warn(`Reintento ${attempts} de ${config.retryAttempts}`);
-          await new Promise((resolve) =>
-            setTimeout(resolve, config.retryDelay * attempts)
-          );
-          continue;
+        // Timeout usando Promise.race
+        const response = await Promise.race([
+          resPromise,
+          new Promise((_, reject) =>
+            setTimeout(() => reject(new Error("Timeout")), config.timeout)
+          ),
+        ]);
+        const text = await response.text();
+        if (!response.ok) {
+          throw {
+            status: response.status,
+            statusText: response.statusText,
+            response: text,
+          };
         }
 
-        console.error("Error al realizar la solicitud AJAX:", lastError);
+        return { response: text, error: null };
+      } catch (error) {
+        lastError = {
+          error: error.message || "Error desconocido",
+          status: error.status || 0,
+        };
         manejaError(error);
-        return { response: null, error: lastError };
+        attempts++;
+        if (attempts < config.retryAttempts) {
+          await new Promise((res) => setTimeout(res, config.retryDelay));
+        }
       }
     }
+    return { response: null, error: lastError };
   };
 
-  // Si se proporciona callback, usamos el estilo callback
   if (typeof callback === "function") {
     const result = await makeRequest();
     callback(result.response, result.error);
     return;
   }
-
-  // Si no hay callback, retornamos una promesa
   const result = await makeRequest();
-  if (result.error) {
-    throw result.error;
-  }
+  if (result.error) throw result.error;
   return result.response;
 }
 
-/**
- * Maneja los errores de las solicitudes AJAX y muestra mensajes apropiados.
- *
- * @param {Object} jqXHR - El objeto jqXHR de la solicitud AJAX.
- * @param {number} jqXHR.status - El código de estado HTTP de la respuesta.
- */
-function manejaError(jqXHR) {
+function manejaError(responseOrError) {
   const errorMessages = {
-    401: "Su sesión ha expirado, por favor inicie sesión nuevamente",
-    403: "No tiene permiso para realizar esta acción",
-    404: "No se encontró la página solicitada",
-    500: "Error interno del servidor",
+    401: "Su sesión ha expirado, por favor inicie sesión nuevamente.",
+    403: "No tiene permiso para realizar esta acción.",
+    404: "No se encontró la página solicitada.",
+    500: "Error interno del servidor.",
   };
-  const message = errorMessages[jqXHR.status] || "Error desconocido";
+  let status = responseOrError && responseOrError.status;
+  let message = errorMessages[status] || "Error desconocido";
+
+  // showToast es tu función propia (puedes cambiar por alert si haces debug)
   showToast(message, "error");
 
-  if (jqXHR.status == 401) {
-    Swal.fire({
-      icon: "error",
-      title: "Error",
-      text: errorMessages[jqXHR.status],
-      timer: 2000,
-      didClose: () => {
-        window.location.href = fixUrl("admin/login");
-      },
-    });
+  if (status === 401) {
+    // Usando sweetalert2, si deseas reemplazar por confirm/alert, cambia aquí
+    if (window.Swal) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: errorMessages[401],
+        timer: 2000,
+        didClose: () => {
+          window.location.href = fixUrl("admin/login");
+        },
+      });
+    } else {
+      alert(errorMessages[401]);
+      window.location.href = fixUrl("admin/login");
+    }
   }
 }
 

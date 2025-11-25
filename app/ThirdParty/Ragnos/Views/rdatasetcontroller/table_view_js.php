@@ -26,7 +26,10 @@
                 $(this).val(moneyToNumber($(this).val()));
             });
 
-            var a = forma.first().serializeObject();
+            var forma2 = document.querySelector('#<?= $controllerUniqueID ?>_FormContent form');
+
+            var a = serializeForm(forma2);
+
             /* get the previous values for the controls*/
             var f = forma.first().find('[data-valueant]');
             $.each(f, function () {
@@ -52,7 +55,12 @@
                         gi.append('<span class="ui-state-error badge text-bg-danger">' +
                             val + '</span>');
                         $('#' + i).focus();
-                        gi.addClass('has-error').shake();
+                        gi.addClass('has-error');
+                        const elements = document.querySelectorAll('#<?= $controllerUniqueID ?> .has-error');
+                        elements.forEach(el => {
+                            shakeElement(el);
+                        });
+
                     });
                     if (obj.errors['general_error']) {
                         Swal.fire({

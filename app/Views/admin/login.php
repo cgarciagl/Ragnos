@@ -41,7 +41,7 @@
 
                     <script>
                         $(function () {
-                            $("#formlogin").shake();
+                            shakeElement(document.getElementById('formlogin'));
                         });
                     </script>
                 <?php endif; ?>
