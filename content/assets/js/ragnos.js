@@ -206,6 +206,10 @@ class RagnosSearch {
       // 1. Decodificar la cadena Base64
       const filterBase64Decoded = atob(originalFilter);
 
+      if (!filterBase64Decoded) {
+        return btoa(JSON.stringify([])); // Retorna un arreglo vacío codificado si no hay filtro
+      }
+
       // 2. Parsear la cadena decodificada como un arreglo JSON
       let filterArray = JSON.parse(filterBase64Decoded);
 

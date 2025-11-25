@@ -57,9 +57,9 @@ class RSearchField extends RFieldDecorator
         return $this->callback ?? '';
     }
 
-    public function setCallback($callback)
+    public function setCallback($Jscallback)
     {
-        $this->callback = $callback;
+        $this->callback = $Jscallback;
     }
 
 
