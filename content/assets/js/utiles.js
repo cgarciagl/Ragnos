@@ -1054,6 +1054,34 @@ function ocultarCargando() {
 }
 
 /**
+ * Convierte una cadena de dinero formateada a un número.
+ *
+ * @param {any} amt - El valor de dinero a convertir. Puede ser cadena, número, null, o undefined.
+ * @returns {number} El valor numérico del dinero, o 0 si la entrada es nula o inválida.
+ */
+function moneyToNumber(amt) {
+  // Paso 1: Manejar valores nulos o indefinidos inmediatamente.
+  if (amt === null || typeof amt === "undefined" || amt === "") {
+    return 0;
+  }
+
+  // Paso 2: Convertir forzadamente el valor a una cadena de texto.
+  // Esto resuelve el error "replace is not a function".
+  const strAmt = String(amt);
+
+  // Paso 3: Limpiar la cadena y convertir a número.
+  // Usamos un String() limpio para evitar errores de NaN si la entrada es "null" o "undefined".
+  const cleanStr = strAmt.replace(/[^0-9.-]+/g, "");
+
+  // Si la cadena resultante está vacía, devuelve 0 para evitar NaN
+  if (cleanStr === "" || cleanStr === ".") {
+    return 0;
+  }
+
+  return parseFloat(cleanStr);
+}
+
+/**
  * Formats a number as USD currency string
  * @param {number|string} amt - The amount to format
  * @returns {string} The formatted amount with USD currency symbol ($)
@@ -1063,23 +1091,13 @@ function ocultarCargando() {
  * moneyFormat("$123.45") // Returns "$123.45" (unchanged)
  */
 function moneyFormat(amt, currency = "USD") {
-  // If the amount already has a currency symbol, return it as is
-  if (amt && amt.toString().includes("$")) {
-    return amt;
+  let numAmt = moneyToNumber(amt);
+  if (isNaN(numAmt)) {
+    numAmt = 0;
   }
 
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: currency,
-  }).format(amt);
-}
-
-/**
- * Converts a formatted money string to a number.
- *
- * @param {string} amt - The money string to be converted. It may contain currency symbols, commas, or other non-numeric characters.
- * @returns {number} The numeric value of the money string.
- */
-function moneyToNumber(amt) {
-  return parseFloat(amt.replace(/[^0-9.-]+/g, ""));
+  }).format(numAmt);
 }

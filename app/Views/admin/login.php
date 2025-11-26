@@ -5,7 +5,7 @@
 
 <div class="login-box">
     <div class="login-logo">
-        <img src="./img/logo.png" alt="Logo de la empresa" class="img-fluid" style="max-width: 75%;">
+        <img src="./img/logo.webp" alt="Logo de la empresa" class="img-fluid" style="max-width: 75%;">
     </div>
     <div class="card card-outline card-primary shadow-lg">
         <div class="card-body login-card-body">
