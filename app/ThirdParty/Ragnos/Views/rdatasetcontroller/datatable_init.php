@@ -35,15 +35,12 @@ $fnServerData2 = "fnData2{$controllerUniqueID}";
 
 echo "var tabla = $('#{$controllerUniqueID}_table');";
 
-//si en el post viene la variable RagnosPreSearch, es porque se hizo una busqueda
-//y se debe cargar la tabla con los datos filtrados
-if (request()->getPost('RagnosPreSearch')) {
-    $RagnosPreSearch = request()->getPost('RagnosPreSearch');
-    $RagnosPreSearch = json_encode($RagnosPreSearch);
+if (request()->getPost('sSearch')) {
+    $sSearch = request()->getPost('sSearch');
+    $sSearch = json_encode($sSearch);
 } else {
-    $RagnosPreSearch = 'null';
+    $sSearch = 'null';
 }
-
 
 echo <<<EOT
 tabla.DataTable({
@@ -55,7 +52,7 @@ tabla.DataTable({
     ajax: $fnServerData2,
     search: {
         return: true,
-        search: $RagnosPreSearch
+        search: $sSearch
     },
     oLanguage: $olanguage,
 });
