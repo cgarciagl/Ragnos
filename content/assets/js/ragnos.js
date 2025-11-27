@@ -74,9 +74,13 @@ class RagnosSearch {
     };
 
     // Configurar eventos
-    $elemento.attr("autocomplete", "off").on("keyup", (e) => {
-      if (e.key === "Enter" && $elemento.val().trim().length > 0) {
-        executeSearch($elemento.val());
+    $elemento.attr("autocomplete", "off").on("input", function () {
+      const input = $(this);
+      const value = input.val();
+      if (value.trim().length > 0) {
+        debounce(function () {
+          executeSearch(value);
+        }, 400);
       }
     });
 
@@ -184,8 +188,12 @@ class RagnosSearch {
       return;
     }
 
-    this.control.on("change", () => {
-      this.search(this.control.val(), false);
+    this.control.on("input", () => {
+      const input = this.control;
+      const value = input.val();
+      debounce(() => {
+        this.search(value, false);
+      }, 400);
     });
 
     button.on("click", (e) => {

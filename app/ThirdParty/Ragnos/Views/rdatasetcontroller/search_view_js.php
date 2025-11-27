@@ -135,7 +135,7 @@
         });
 
         // Configurar búsqueda en el filtro de DataTable
-        $('#<?= $controllerUniqueID ?>_Tablediv .dataTables_filter input')
+      /*  $('#<?= $controllerUniqueID ?>_Tablediv.dataTables_filter input')
             .data('objtable', $('#<?= $controllerUniqueID ?>_table'))
             .off('keyup change')
             .on('keyup', function (e) {
@@ -145,7 +145,8 @@
             })
             .on('change', function () {
                 $(this).data('objtable').fnFilter($(this).val());
-            });
+            });*/
+
 
         // Función para agregar datos extra a la petición Ajax
         function fnData2<?= $controllerUniqueID ?>(data, fnCallback) {

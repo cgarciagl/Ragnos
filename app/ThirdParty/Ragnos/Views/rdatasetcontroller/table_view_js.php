@@ -78,14 +78,14 @@
                     // Handle successful form submission
                     <?php if ($hasdetails): ?>
                         if (response.insertedid) {
-                                    <?= $controllerUniqueID ?>getform(response.insertedid);
+                                                                        <?= $controllerUniqueID ?>getform(response.insertedid);
                         } else {
                             $('#tab_<?= $controllerUniqueID ?>_Table').click();
-                                    <?= $controllerUniqueID ?>refreshAjax();
+                                                                        <?= $controllerUniqueID ?>refreshAjax();
                         }
                     <?php else: ?>
                         $('#tab_<?= $controllerUniqueID ?>_Table').click();
-                                <?= $controllerUniqueID ?>refreshAjax();
+                                                                    <?= $controllerUniqueID ?>refreshAjax();
                     <?php endif; ?>
 
                     // Show success message
@@ -224,7 +224,7 @@
         };
 
         //event for search on enter keyup or on blur
-        $('#<?= $controllerUniqueID ?>_Tablediv .dataTables_filter input').data('objtable', $('#<?= $controllerUniqueID ?>_table')).unbind('keyup')
+      /*  $('#<?= $controllerUniqueID ?>_Tablediv.dataTables_filter input').data('objtable', $('#<?= $controllerUniqueID ?>_table')).unbind('keyup')
             .unbind('keypress')
             .unbind('input')
             .bind('keyup', function (e) {
@@ -234,7 +234,7 @@
 
             }).bind('change', function () {
                 $(this).data('objtable').fnFilter($(this).val());
-            });
+            });*/
 
         $('#btn_<?= $controllerUniqueID ?>_New').click(
             function (e) {

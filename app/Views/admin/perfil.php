@@ -183,9 +183,13 @@
                                 $(function () {
                                     RagnosSearch.setupSimpleSearch($('#editusuario'), 'admin/testusuarios', {}, function (e) {
                                         let datos = e.data('searchdata');
-                                        if (datos.Nombre) {
+                                        if (datos && datos.Nombre) {
                                             e.val(datos.Nombre);
-                                            e.data('usu_id', (datos.usu_id));
+                                            e.data('usu_id', datos.usu_id || null);
+                                            console.log('Usuario seleccionado:', {
+                                                id: datos.usu_id,
+                                                nombre: datos.Nombre
+                                            });
                                         }
                                     });
                                 });

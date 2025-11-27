@@ -12,10 +12,8 @@
 <script>
     $(function () {
 
-        $('#buscando').keyup(function (e) {
-            if (e.keyCode != 13)
-                return;
-            buscar();
+        $('#buscando').on('input', function () {
+            debounce(function () { buscar() }, 400);
         });
 
         function buscar() {

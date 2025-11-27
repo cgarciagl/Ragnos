@@ -19,35 +19,54 @@ if (!base_url || typeof base_url !== "string") {
   }
 }
 
+// Variable para almacenar el ID del temporizador
+let debounceTimer;
+
+/**
+ * Función de Debounce para retrasar la ejecución de una función.
+ * @param {Function} func - La función a ejecutar después del retraso.
+ * @param {number} delay - El tiempo de espera en milisegundos.
+ */
+function debounce(func, delay) {
+  // 1. Limpia cualquier temporizador anterior
+  clearTimeout(debounceTimer);
+
+  // 2. Establece un nuevo temporizador
+  debounceTimer = setTimeout(() => {
+    // 3. Ejecuta la función después del retraso
+    func();
+  }, delay);
+}
+
 /**
  * Ajusta una URL para que sea absoluta, combinándola con base_url si es necesario.
  *
- * @param {string} purl - La URL a procesar.
+ * @param {string} relativeUrl - La URL a procesar.
  * @returns {string} La URL completa y válida.
  */
-function fixUrl(purl) {
+function fixUrl(relativeUrl) {
   try {
     // Validar que purl sea una cadena no vacía
-    if (typeof purl !== "string" || !purl.trim()) {
+    if (typeof relativeUrl !== "string" || !relativeUrl.trim()) {
       console.warn("fixUrl: purl es inválido o está vacío.");
       return "";
     }
 
     // Verificar si la URL ya es absoluta
-    const isAbsolute = /^https?:\/\//i.test(purl);
+    const isAbsolute = /^https?:\/\//i.test(relativeUrl);
     if (isAbsolute || typeof base_url === "undefined") {
-      return purl;
+      return relativeUrl;
     }
 
     // Asegurar que base_url esté definido correctamente
     if (typeof base_url !== "string" || !base_url.trim()) {
       console.error("fixUrl: base_url no está definido o es inválido.");
-      return purl;
+      return relativeUrl;
     }
 
     // Normalizar base_url y purl para evitar duplicados de '/'
     const normalizedBaseUrl = base_url.replace(/\/+$/, ""); // Remover '/' al final
-    const normalizedPath = purl.replace(/^\/+/, ""); // Remover '/' al inicio
+    const normalizedPath = relativeUrl.replace(/^\/+/, ""); // Remover '/' al inicio
 
     // Combinar base_url y purl con el separador adecuado
     return `${normalizedBaseUrl}/index.php/${normalizedPath}`;
@@ -57,19 +76,19 @@ function fixUrl(purl) {
   }
 }
 
-function redirectTo(purl) {
+function redirectTo(urlToRedirect) {
   setTimeout(function () {
-    window.location.href = fixUrl(purl);
+    window.location.href = fixUrl(urlToRedirect);
   }, 0);
 }
 
 /**
  * Opens a given URL in a new browser window.
  *
- * @param {string} purl - The URL to be opened.
+ * @param {string} urlToOpen - The URL to be opened.
  */
-function openInNew(purl) {
-  window.open(fixUrl(purl), "_new");
+function openInNew(urlToOpen) {
+  window.open(fixUrl(urlToOpen), "_new");
 }
 
 /**
@@ -192,27 +211,28 @@ $(document)
  * @param {boolean} [enColumnaFinal=true] - If true, adds a total column at the end of each row.
  */
 function ponTotalesEnTabla(
-  table,
+  targetTable,
   enRenglonFinal = false,
   enColumnaFinal = true
 ) {
   if (
-    !table ||
-    (!(table instanceof HTMLTableElement) && !(table instanceof jQuery))
+    !targetTable ||
+    (!(targetTable instanceof HTMLTableElement) &&
+      !(targetTable instanceof jQuery))
   ) {
     console.error("Invalid table element");
     return;
   }
 
-  if (table instanceof jQuery) {
-    table = table[0]; // Convert jQuery object to native HTMLTableElement
+  if (targetTable instanceof jQuery) {
+    targetTable = targetTable[0]; // Convert jQuery object to native HTMLTableElement
   }
-  const tbody = table.querySelector("tbody");
+  const tbody = targetTable.querySelector("tbody");
   const rows = Array.from(tbody.querySelectorAll("tr"));
   let columnCount = rows[0] ? rows[0].querySelectorAll("td").length : 0;
 
   if (enColumnaFinal) {
-    agregarColumnaTotal(table, rows, columnCount);
+    agregarColumnaTotal(targetTable, rows, columnCount);
     columnCount += 1;
   }
   if (enRenglonFinal) {
@@ -315,15 +335,17 @@ function calcularFilaTotal(row, columnCount) {
 /**
  * Formatea un valor total como texto, manejando números y valores monetarios.
  *
- * @param {number} total - El valor total a formatear.
- * @param {boolean} esDinero - Si el valor debe ser formateado como dinero.
+ * @param {number} totalAmount - El valor total a formatear.
+ * @param {boolean} isCurrency - Si el valor debe ser formateado como dinero.
  * @returns {string} El total formateado.
  */
-function formatearTotal(total, esDinero) {
-  if (esDinero) {
-    return moneyFormat(total);
+function formatearTotal(totalAmount, isCurrency) {
+  if (isCurrency) {
+    return moneyFormat(totalAmount);
   }
-  return Number.isInteger(total) ? total.toFixed(0) : total.toFixed(2);
+  return Number.isInteger(totalAmount)
+    ? totalAmount.toFixed(0)
+    : totalAmount.toFixed(2);
 }
 
 /**
@@ -406,26 +428,26 @@ function exportToExcel(fileName, htmlContent) {
 /**
  * Generates a complete HTML table from a DataTable instance.
  *
- * @param {string} tablae - The selector for the table element.
+ * @param {string} tableElement - The selector for the table element.
  * @returns {string} The generated HTML table as a string.
  * @throws {Error} If the table element is invalid or the DataTable is not initialized.
  */
-function tablaCompleta(tablae) {
+function tablaCompleta(tableElement) {
   try {
     // Validate input
-    if (!tablae || !$(tablae).length) {
+    if (!tableElement || !$(tableElement).length) {
       throw new Error("Invalid table element");
     }
 
     // Get DataTable instance
-    const table = $(tablae).DataTable();
-    if (!table) {
+    const dataTableInstance = $(tableElement).DataTable();
+    if (!dataTableInstance) {
       throw new Error("DataTable not initialized");
     }
 
     // Get table data and headers
-    const data = table.rows().data().toArray();
-    const columnHeaders = table.columns().header().toArray();
+    const extractedRows = dataTableInstance.rows().data().toArray();
+    const columnHeaders = dataTableInstance.columns().header().toArray();
     const fieldNames = columnHeaders.map((header) => $(header).text().trim());
 
     // Build table HTML with template literals
@@ -442,7 +464,7 @@ function tablaCompleta(tablae) {
 
     // Add data rows
     tableHtml += "<tbody>";
-    data.forEach((row) => {
+    extractedRows.forEach((row) => {
       tableHtml += "<tr>";
       Object.values(row).forEach((value) => {
         tableHtml += `<td style="padding: 6px;">${escapeHtml(
