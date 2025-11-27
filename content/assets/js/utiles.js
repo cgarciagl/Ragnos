@@ -670,7 +670,22 @@ function showModal(html, encabezado = "", id = "miModal", onClose = null) {
  * @param {string} modalId - The ID of the modal to close.
  */
 function cierraModal(modalId) {
-  $("#" + modalId).modal("hide");
+  const $modal = $("#" + modalId);
+
+  if (!$modal.length) {
+    console.warn(`Modal with ID "${modalId}" does not exist.`);
+    return;
+  }
+
+  const hideModal = () => {
+    if ($modal.hasClass("show")) {
+      $modal.modal("hide");
+    } else {
+      setTimeout(hideModal, 10); // Retry after 10ms if not visible yet
+    }
+  };
+
+  hideModal();
 }
 
 /**

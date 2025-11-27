@@ -1,233 +1,209 @@
 <script type="text/javascript">
 
-    $("#<?= $controllerUniqueID ?>admin_div").hide();
+    $(function () {
 
-    function <?= $controllerUniqueID ?>refreshAjax() {
-        var oTable = $("#<?= $controllerUniqueID ?>_table").DataTable();
-        var sel = $('.Ragnos_selected_row').index();
-        $("#<?= $controllerUniqueID ?>").data('preselect', sel);
-        oTable.draw(false);
-    }
+        // Ocultar el div de administración al cargar
+        $("#<?= $controllerUniqueID ?>admin_div").hide();
 
-    $("#<?= $controllerUniqueID ?>btn_search_admin").click(function (e) {
-        e.preventDefault();
-        $("#<?= $controllerUniqueID ?>").hide('slide');
-        getValue('<?= $clase ?>/tableByAjax/', Ragnos_csrf,
-            function (s) {
+        // Refrescar la tabla mediante Ajax
+        function <?= $controllerUniqueID ?>refreshAjax() {
+            const oTable = $("#<?= $controllerUniqueID ?>_table").DataTable();
+            const sel = $('.Ragnos_selected_row').index();
+            $("#<?= $controllerUniqueID ?>").data('preselect', sel);
+            oTable.draw(false);
+        }
+
+        // Botón para buscar en administración
+        $("#<?= $controllerUniqueID ?>btn_search_admin").click(function (e) {
+            e.preventDefault();
+            $("#<?= $controllerUniqueID ?>").hide('slide');
+            getValue('<?= $clase ?>/tableByAjax/', Ragnos_csrf, function (s) {
                 $("#<?= $controllerUniqueID ?>admin_div").hide();
                 $("#<?= $controllerUniqueID ?>admin_container").html(s);
                 $("#<?= $controllerUniqueID ?>admin_div").show('slide');
             });
-    });
+        });
 
-    $("#<?= $controllerUniqueID ?>btn_search_admin_back").click(function (e) {
-        e.preventDefault();
-        $("#<?= $controllerUniqueID ?>").show('slide');
-        $("#<?= $controllerUniqueID ?>admin_div").hide('slide');;
-        ;<?= $controllerUniqueID ?>refreshAjax();
-    });
+        // Botón para regresar de la búsqueda en administración
+        $("#<?= $controllerUniqueID ?>btn_search_admin_back").click(function (e) {
+            e.preventDefault();
+            $("#<?= $controllerUniqueID ?>").show('slide');
+            $("#<?= $controllerUniqueID ?>admin_div").hide('slide');
+        <?= $controllerUniqueID ?>refreshAjax();
+        });
 
-    $("#<?= $controllerUniqueID ?>btn_ok_search").click(function (e) {
-        e.preventDefault();
-        let tds = $("#<?= $controllerUniqueID ?>_table tbody tr.Ragnos_selected_row").first().find("td");
-        let fid = tds.last().attr('idr');
-        let fname = tds.first().text();
-        let ResultData = {
-            id: fid || '',
-            name: fname || ''
-        };
-        $(this).closest('.Ragnos-widget').first().remove();
-        //let t = stacksearches.pop();
-        let t = RagnosSearch.searchStack.pop();
-        if (t) {
-            t.val(ResultData.name);
-            t.data('id', ResultData.id);
-            t.data('name', ResultData.name);
-            t.closest(".input-group").next('input[type=hidden]').val(ResultData.id);
+        // Botón para confirmar la selección
+        $("#<?= $controllerUniqueID ?>btn_ok_search").click(function (e) {
+            e.preventDefault();
+            const tds = $("#<?= $controllerUniqueID ?>_table tbody tr.Ragnos_selected_row").first().find("td");
+            const fid = tds.last().attr('idr');
+            const fname = tds.first().text();
+            const ResultData = { id: fid || '', name: fname || '' };
 
-            let campostabla = <?= json_encode($tablefields) ?>;
+            $(this).closest('.Ragnos-widget').first().remove();
+            const t = RagnosSearch.searchStack.pop();
 
-            let campoprimary = '<?= $primaryKey ?>';
+            if (t) {
+                t.val(ResultData.name);
+                t.data('id', ResultData.id);
+                t.data('name', ResultData.name);
+                t.closest(".input-group").next('input[type=hidden]').val(ResultData.id);
 
-            //tds son las celdas de la fila seleccionada, convierte sus valores a un objeto
-            var obj = { y_id: ResultData.id, y_name: ResultData.name };
-            obj[campoprimary] = ResultData.id;
-            tds.each(function () {
-                obj[campostabla[$(this).index()]] = $(this).text();
-            });
-            t.data('searchdata', obj);
-            //si hay un callback javascript y si es una función valida lo ejecutamos y 
-            //le pasamos el control que disparó la busqueda
-            let funcioncallback = '_' + t.attr('id') + 'OnSearch';
-            if ((typeof window[funcioncallback] === 'function')) {
-                window[funcioncallback](t);
+                const tableFields = <?= json_encode($tablefields) ?>;
+                const primaryKey = '<?= $primaryKey ?>';
+
+                // Convertir las celdas seleccionadas en un objeto
+                const obj = { y_id: ResultData.id, y_name: ResultData.name };
+                obj[primaryKey] = ResultData.id;
+                tds.each(function () {
+                    obj[tableFields[$(this).index()]] = $(this).text();
+                });
+                t.data('searchdata', obj);
+
+                // Ejecutar callback si existe
+                const callbackFunction = `_${t.attr('id')}OnSearch`;
+                if (typeof window[callbackFunction] === 'function') {
+                    window[callbackFunction](t);
+                }
             }
-        }
-        //stackwidgets.pop().show();
-        cierraModal('YSearchModal');
-        //ponemos el foco en el siguiente control de input...
-        t.closest('.divfield').nextAll('.divfield').first().find('input, textarea, select').first().focus();
-    });
 
-    $("#<?= $controllerUniqueID ?>btn_cancel_search").click(function (e) {
-        e.preventDefault();
-        $(this).closest('.Ragnos-widget').first().remove();
-        // stackwidgets.pop().show();
-        //var t = stacksearches.pop();
-        let t = RagnosSearch.searchStack.pop();
-        if (t.data('name')) {
-            t.val(t.data('name'));
-        }
-        cierraModal('YSearchModal');
-    });
+            cierraModal('YSearchModal');
+            t.closest('.divfield').nextAll('.divfield').first().find('input, textarea, select').first().focus();
 
-    <?= view('App\ThirdParty\Ragnos\Views\rdatasetcontroller/datatable_init', ['controllerUniqueID' => $controllerUniqueID, 'tableController' => $tableController]); ?>
+        });
 
-    $('#<?= $controllerUniqueID ?>_Tablediv .dt-search').append($('#<?= $controllerUniqueID ?>_combo'));
-
-    var bodytable = $("#<?= $controllerUniqueID ?>_table tbody");
-
-    bodytable.closest('.modal').removeAttr('data-bs-keyboard');
-    bodytable.closest('.modal').removeClass('fade');
-
-    bodytable.closest('.modal').on('keydown', function (event) {
-        if (['ArrowDown', 'ArrowUp', ' ', 'Enter'].includes(event.key)) {
-            event.preventDefault();
-            var trsel = bodytable.find('.Ragnos_selected_row');
-            if (trsel.length > 0) {
-                var actions = {
-                    'ArrowDown': function () {
-                        var trnext = trsel.next('tr');
-                        if (trnext.length > 0) {
-                            trsel.removeClass('Ragnos_selected_row');
-                            trnext.addClass('Ragnos_selected_row');
-                        }
-                    },
-                    'ArrowUp': function () {
-                        var trprev = trsel.prev('tr');
-                        if (trprev.length > 0) {
-                            trsel.removeClass('Ragnos_selected_row');
-                            trprev.addClass('Ragnos_selected_row');
-                        }
-                    },
-                    ' ': function () {
-                        trsel.trigger('dblclick');
-                    },
-                    'Enter': function () {
-                        let controlbusqueda = $('#<?= $controllerUniqueID ?>_Tablediv .dt-search input');
-                        if (controlbusqueda.val() == '') {
-                            trsel.trigger('dblclick');
-                        }
-                    }
-                };
-                actions[event.key] && actions[event.key]();
+        // Botón para cancelar la búsqueda
+        $("#<?= $controllerUniqueID ?>btn_cancel_search").click(function (e) {
+            e.preventDefault();
+            $(this).closest('.Ragnos-widget').first().remove();
+            const t = RagnosSearch.searchStack.pop();
+            if (t.data('name')) {
+                t.val(t.data('name'));
             }
-            return false;
-        }
-    });
+            cierraModal('YSearchModal');
+        });
 
-    bodytable.delegate('tr', 'dblclick',
-        function (ev) {
+        // Inicializar DataTable
+        <?= view('App\ThirdParty\Ragnos\Views\rdatasetcontroller/datatable_init', ['controllerUniqueID' => $controllerUniqueID, 'tableController' => $tableController]); ?>
+
+        // Configurar búsqueda en DataTable
+        $('#<?= $controllerUniqueID ?>_Tablediv .dt-search').append($('#<?= $controllerUniqueID ?>_combo'));
+
+        const bodyTable = $("#<?= $controllerUniqueID ?>_table tbody");
+
+        // Configurar eventos de teclado en el modal
+        bodyTable.closest('.modal').removeAttr('data-bs-keyboard').removeClass('fade').on('keydown', function (event) {
+            if (['ArrowDown', 'ArrowUp', ' ', 'Enter'].includes(event.key)) {
+                event.preventDefault();
+                const trSelected = bodyTable.find('.Ragnos_selected_row');
+                if (trSelected.length > 0) {
+                    const actions = {
+                        'ArrowDown': () => trSelected.next('tr').addClass('Ragnos_selected_row').siblings().removeClass('Ragnos_selected_row'),
+                        'ArrowUp': () => trSelected.prev('tr').addClass('Ragnos_selected_row').siblings().removeClass('Ragnos_selected_row'),
+                        ' ': () => trSelected.trigger('dblclick'),
+                        'Enter': () => {
+                            const searchInput = $('#<?= $controllerUniqueID ?>_Tablediv .dt-search input');
+                            if (searchInput.val() === '') {
+                                trSelected.trigger('dblclick');
+                            }
+                        }
+                    };
+                    actions[event.key]?.();
+                }
+                return false;
+            }
+        });
+
+        // Doble clic en una fila
+        bodyTable.on('dblclick', 'tr', function (ev) {
             ev.preventDefault();
-            var op = $(this).find("td").last();
-            if (op.attr('idr')) {
-                $("#<?= $controllerUniqueID ?>").data('idactivo', op.attr('idr'));
-            } else {
-                $("#<?= $controllerUniqueID ?>").data('idactivo', '');
-            }
-            //devolvemos los datos del registro(s) seleccionado(s)
+            const op = $(this).find("td").last();
+            $("#<?= $controllerUniqueID ?>").data('idactivo', op.attr('idr') || '');
             if (!op.hasClass('dataTables_empty')) {
                 $("#<?= $controllerUniqueID ?>btn_ok_search").trigger('click');
             }
             return false;
         });
 
-    bodytable.delegate('tr', 'mousedown',
-        function (ev) {
+        // Selección de fila con clic
+        bodyTable.on('mousedown', 'tr', function (ev) {
             ev.preventDefault();
-            var op = $(this).find("td").last();
-            if (op.attr('idr')) {
-                $("#<?= $controllerUniqueID ?>").data('idactivo', op.attr('idr'));
-            } else {
-                $("#<?= $controllerUniqueID ?>").data('idactivo', '');
-            }
-            $("#<?= $controllerUniqueID ?>_table tbody tr").removeClass('Ragnos_selected_row');
+            const op = $(this).find("td").last();
+            $("#<?= $controllerUniqueID ?>").data('idactivo', op.attr('idr') || '');
+            bodyTable.find('tr').removeClass('Ragnos_selected_row');
             $(this).addClass('Ragnos_selected_row');
         });
 
-    //event for search on enter keyup or on blur
+        // Configurar búsqueda en el filtro de DataTable
+        $('#<?= $controllerUniqueID ?>_Tablediv .dataTables_filter input')
+            .data('objtable', $('#<?= $controllerUniqueID ?>_table'))
+            .off('keyup change')
+            .on('keyup', function (e) {
+                if (e.keyCode === 13) {
+                    $('#<?= $controllerUniqueID ?>_sel').focus();
+                }
+            })
+            .on('change', function () {
+                $(this).data('objtable').fnFilter($(this).val());
+            });
 
-    $('#<?= $controllerUniqueID ?>_Tablediv .dataTables_filter input').data('objtable', $('#<?= $controllerUniqueID ?>_table')).unbind('keyup')
-        .unbind('keypress')
-        .unbind('input')
-        .bind('keyup', function (e) {
-            if (e.keyCode != 13)
-                return;
-            $('#<?= $controllerUniqueID ?>_sel').focus();
-        }).bind('change', function () {
-            $(this).data('objtable').fnFilter($(this).val());
-        });
+        // Función para agregar datos extra a la petición Ajax
+        function fnData2<?= $controllerUniqueID ?>(data, fnCallback) {
+            const onlyField = $('#<?= $controllerUniqueID ?>_sel').val();
+            if (onlyField) {
+                data.sOnlyField = onlyField;
+            }
 
-    function fnData2<?= $controllerUniqueID ?>(data, fnCallback, settings) {
-        /* se agregan datos extras a la petición ajax */
-        var sonlyfield = $('#<?= $controllerUniqueID ?>_sel').val();
-        if (sonlyfield != '') {
-            data.sOnlyField = sonlyfield;
-        }
+            const source = '<?= site_url($clase . '/getAjaxGridData'); ?>';
+            const searchValue = "<?= $sSearch ?>";
+            const filterValue = "<?= $sFilter ?>";
 
-        sSource = '<?= site_url($clase . '/getAjaxGridData'); ?>';
+            if (searchValue && !data.search.value) {
+                data.search.value = searchValue;
+            }
+            if (filterValue) {
+                data.sFilter = filterValue;
+            }
 
-        var lookingfor = "<?= $sSearch ?>";
-
-        if (lookingfor != '' && !(data.search.value)) {
-            data.search.value = lookingfor;
-        }
-
-        var sfilter = "<?= $sFilter ?>";
-        if (sfilter != '') {
-            data.sFilter = sfilter;
-        }
-
-        getObject(sSource, data, function (json) {
-            fnCallback(json);
-            $("#<?= $controllerUniqueID ?>").data('idactivo', '');
-            if (json.data.length > 0) {
-                $("#<?= $controllerUniqueID ?>_table tbody tr").each(
-                    function () {
-                        var op = $(this).find("td").last();
-                        var id = op.text();
-                        op.attr('idr', id);
-                        op.html('');
+            getObject(source, data, function (json) {
+                fnCallback(json);
+                $("#<?= $controllerUniqueID ?>").data('idactivo', '');
+                if (json.data.length > 0) {
+                    $("#<?= $controllerUniqueID ?>_table tbody tr").each(function () {
+                        const op = $(this).find("td").last();
+                        const id = op.text();
+                        op.attr('idr', id).html('');
                     });
-            }
-            if (json.sSearch.value != '') {
-                $("#<?= $controllerUniqueID ?>_searching_title").text("<?= lang('Ragnos.Ragnos_searching') ?>" + " (" + json.sSearch.value + ") ...").show();;
-            } else {
-                $("#<?= $controllerUniqueID ?>_searching_title").text("").hide();
-            }
+                }
+                const searchTitle = $("#<?= $controllerUniqueID ?>_searching_title");
+                if (json.sSearch.value) {
+                    searchTitle.text("<?= lang('Ragnos.Ragnos_searching') ?>" + " (" + json.sSearch.value + ") ...").show();
+                } else {
+                    searchTitle.text("").hide();
+                }
 
-            var primerodelatabla = $("#<?= $controllerUniqueID ?>_table tbody tr").first();
-            primerodelatabla.addClass('Ragnos_selected_row');
+                const firstRow = $("#<?= $controllerUniqueID ?>_table tbody tr").first();
+                firstRow.addClass('Ragnos_selected_row');
 
-            if ((json.data.length == 1) && (json.recordsTotal == 1) && (json.sSearch.value != '')) {
-                //devolvemos los datos del registro(s) seleccionado(s)
+                if (json.data.length === 1 && json.recordsTotal === 1 && json.sSearch.value) {
+                    $("#<?= $controllerUniqueID ?>btn_ok_search").trigger('click');
+                }
+            });
+        }
+
+        // Eventos de teclado en la tabla
+        $('#<?= $controllerUniqueID ?>_table').on('keydown', function (event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
                 $("#<?= $controllerUniqueID ?>btn_ok_search").trigger('click');
+                return false;
+            }
+            if (event.key === 'Escape') {
+                event.preventDefault();
+                $("#<?= $controllerUniqueID ?>btn_cancel_search").trigger('click');
+                return false;
             }
         });
 
-    }
-
-    $('#<?= $controllerUniqueID ?>_table').on('keydown', function (event) {
-        if (event.key === 'Enter') {
-            event.preventDefault();
-            $("#<?= $controllerUniqueID ?>btn_ok_search").trigger('click');
-            return false;
-        }
-        if (event.key === 'Escape') {
-            event.preventDefault();
-            $("#<?= $controllerUniqueID ?>btn_cancel_search").trigger('click');
-            return false;
-        }
-    })
-
+    });
 </script>
