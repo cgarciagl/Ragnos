@@ -104,7 +104,9 @@
                         'Enter': () => {
                             const searchInput = $('#<?= $controllerUniqueID ?>_Tablediv .dt-search input');
                             if (searchInput.val() === '') {
-                                trSelected.trigger('dblclick');
+                                if (!$(document.activeElement).is('input')) {
+                                    trSelected.trigger('dblclick');
+                                }
                             }
                         }
                     };
