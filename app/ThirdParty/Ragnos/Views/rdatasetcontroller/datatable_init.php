@@ -56,4 +56,6 @@ tabla.DataTable({
     },
     oLanguage: $olanguage,
 });
+
+aplicarDebounceABusqueda(tabla.DataTable(), 400);
 EOT;

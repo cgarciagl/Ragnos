@@ -38,6 +38,24 @@ function debounce(func, delay) {
   }, delay);
 }
 
+function aplicarDebounceABusqueda(datatableInstance, delay = 500) {
+  // Selector para el input de búsqueda global de DataTables
+  const searchInput = $("div.dt-search input");
+
+  // Adjuntar el evento 'input' y aplicar el debounce
+  // Usamos .off().on() para asegurar un solo listener
+  searchInput.off("input.dt").on("input.dt", function () {
+    const searchTerm = this.value;
+
+    // Ejecuta la búsqueda de DataTables DESPUÉS del retraso
+    debounce(() => {
+      // Establece el nuevo término y fuerza un redibujado,
+      // lo que dispara la nueva solicitud AJAX (si serverSide es true)
+      datatableInstance.search(searchTerm).draw();
+    }, delay);
+  });
+}
+
 /**
  * Ajusta una URL para que sea absoluta, combinándola con base_url si es necesario.
  *
