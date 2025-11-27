@@ -36,8 +36,14 @@
         $("#<?= $controllerUniqueID ?>btn_ok_search").click(function (e) {
             e.preventDefault();
             const tds = $("#<?= $controllerUniqueID ?>_table tbody tr.Ragnos_selected_row").first().find("td");
-            const fid = tds.last().attr('idr');
-            const fname = tds.first().text();
+            let fid = tds.last().attr('idr');
+            let fname = tds.first().text();
+
+            if (tds.first().hasClass('dt-empty')) {
+                fid = '';
+                fname = '';
+            }
+
             const ResultData = { id: fid || '', name: fname || '' };
 
             $(this).closest('.Ragnos-widget').first().remove();
@@ -121,7 +127,7 @@
             ev.preventDefault();
             const op = $(this).find("td").last();
             $("#<?= $controllerUniqueID ?>").data('idactivo', op.attr('idr') || '');
-            if (!op.hasClass('dataTables_empty')) {
+            if (!op.hasClass('dt-empty')) {
                 $("#<?= $controllerUniqueID ?>btn_ok_search").trigger('click');
             }
             return false;

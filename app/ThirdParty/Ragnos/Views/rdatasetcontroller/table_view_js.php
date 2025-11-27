@@ -78,14 +78,14 @@
                     // Handle successful form submission
                     <?php if ($hasdetails): ?>
                         if (response.insertedid) {
-                                                                        <?= $controllerUniqueID ?>getform(response.insertedid);
+                            ;<?= $controllerUniqueID ?>getform(response.insertedid);
                         } else {
                             $('#tab_<?= $controllerUniqueID ?>_Table').click();
-                                                                        <?= $controllerUniqueID ?>refreshAjax();
+                            ;<?= $controllerUniqueID ?>refreshAjax();
                         }
                     <?php else: ?>
                         $('#tab_<?= $controllerUniqueID ?>_Table').click();
-                                                                    <?= $controllerUniqueID ?>refreshAjax();
+                        ;<?= $controllerUniqueID ?>refreshAjax();
                     <?php endif; ?>
 
                     // Show success message
@@ -151,7 +151,7 @@
             var recordId = lastCell.attr('idr') || '';
             $("#<?= $controllerUniqueID ?>").data('idactivo', recordId);
 
-            if (!lastCell.hasClass('dataTables_empty')) {
+            if (!lastCell.hasClass('dt-empty')) {
                 $('#tab_<?= $controllerUniqueID ?>_Form').click();
             }
         });
