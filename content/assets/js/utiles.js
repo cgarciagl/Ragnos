@@ -702,6 +702,7 @@ function cierraModal(modalId) {
   const hideModal = () => {
     if ($modal.hasClass("show")) {
       $modal.modal("hide");
+      $modal.remove();
     } else {
       setTimeout(hideModal, 10); // Retry after 10ms if not visible yet
     }

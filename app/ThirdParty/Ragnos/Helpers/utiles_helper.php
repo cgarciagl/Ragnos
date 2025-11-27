@@ -40,7 +40,7 @@ function dbgDie($data, int $statusCode = 200): never
 
     // Si estamos en entorno de desarrollo, hacer la salida JSON más legible
     if (ENVIRONMENT === 'development') {
-        $options  |= JSON_PRETTY_PRINT;
+        $options |= JSON_PRETTY_PRINT;
     }
 
     try {
@@ -183,7 +183,7 @@ function returnAsJSON($data, $statusCode = 200)
     $options = JSON_UNESCAPED_UNICODE;
 
     if (ENVIRONMENT === 'development') {
-        $options  |= JSON_PRETTY_PRINT;
+        $options |= JSON_PRETTY_PRINT;
     }
 
     if (is_array($data) || is_object($data)) {
@@ -237,15 +237,15 @@ function arrayToSelect(string $name, array $options, string $valueField, string 
     }
 
     if (!isset($extra['class'])) {
-        $attributes  .= ' class="form-control"';
+        $attributes .= ' class="form-control"';
     }
 
     // Lógica para selecciones múltiples
     $isMultiple = isset($extra['multiple']) && $extra['multiple'];
     if ($isMultiple) {
-        $attributes  .= ' multiple';
+        $attributes .= ' multiple';
         if (substr($name, -2) !== '[]') {
-            $name  .= '[]';
+            $name .= '[]';
         }
     }
 
@@ -267,10 +267,10 @@ function arrayToSelect(string $name, array $options, string $valueField, string 
 
         $isSelected = in_array($value, $selectedValue, true) ? ' selected' : '';
 
-        $html  .= "<option value=\"{$sanitizedValue}\"{$isSelected}>{$sanitizedText}</option>";
+        $html .= "<option value=\"{$sanitizedValue}\"{$isSelected}>{$sanitizedText}</option>";
     }
 
-    $html  .= "</select>";
+    $html .= "</select>";
 
     return $html;
 }
@@ -408,23 +408,7 @@ function queryToAssocArrayParams(string $sql, array $params, string $index_key, 
  * @param int $ttl The time-to-live for the cached data in seconds. Defaults to 86400 (24 hours).
  * @return mixed The cached data or the result of the SQL query.
  */
-function getCachedData($sql, $ttl = 86400)
-{
-    $cache      = \Config\Services::cache();
-    $cacheKey   = md5($sql);
-    $cachedData = $cache->get($cacheKey);
-
-    if ($cachedData) {
-        return $cachedData;
-    }
-
-    $result = executeQuery($sql);
-    $cache->save($cacheKey, $result, $ttl);
-
-    return $result;
-}
-
-function getCachedDataParams(string $sql, array $params, int $ttl = 86400)
+function getCachedData(string $sql, array $params = [], int $ttl = 86400)
 {
     $cache      = \Config\Services::cache();
     $cacheKey   = md5($sql . serialize($params));
