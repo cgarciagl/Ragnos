@@ -1,11 +1,11 @@
-<div class="divfield col-sm-4 mb-1">
+<div class="divfield col-sm-12 mb-1">
     <div class='form-control shadow-sm' id='group_<?= $name ?>'>
         <label class="control-label">
             <?= $label; ?> :
         </label>
 
         <div class='input-group'>
-            <textarea name="<?= $name ?>" id="<?= $name ?>">
+            <textarea name="<?= $name ?>" id="<?= $name ?>" width="100%">
             <?= $value ?>
         </textarea>
         </div>
@@ -20,7 +20,8 @@
             onkeyup: function (e) {
                 $("textarea[name='<?= $name ?>']").val($("#divsummernote<?= $name ?>").code().trim());
             },
-            height: 100
+            height: 100,
+            width: '100%',
         });
     });
 </script>
