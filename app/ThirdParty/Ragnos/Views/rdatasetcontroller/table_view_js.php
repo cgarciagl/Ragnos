@@ -171,12 +171,12 @@
     $("#<?= $controllerUniqueID ?>_table tbody").on('click', '.<?= $controllerUniqueID ?>deleteme', function (ev) {
         const row = $(this).closest('tr');
         const recordId = $(this).attr('idr');
-        row.addClass('todelete');
+        row.addClass('Ragnostodelete');
 
         function deleteAction() {
-            var y = $(' #<?= $controllerUniqueID ?>_table').find('.todelete').first();
+            var y = $(' #<?= $controllerUniqueID ?>_table').find('.Ragnostodelete').first();
             var todelete = y.find('td').last().attr('idr');
-            y.removeClass('borrar');
+            y.removeClass('Ragnostodelete');
             obj = {
                 id: todelete
             };
@@ -215,9 +215,9 @@
             if (result.isConfirmed) {
                 deleteAction();
             } else {
-                row.removeClass('todelete');
+                row.removeClass('Ragnostodelete');
             }
-            $('#<?= $controllerUniqueID ?>_table').find('.todelete').removeClass('todelete');
+            $('#<?= $controllerUniqueID ?>_table').find('.Ragnostodelete').removeClass('Ragnostodelete');
         });
 
         return false;
