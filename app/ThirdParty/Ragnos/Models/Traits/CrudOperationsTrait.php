@@ -31,7 +31,14 @@ trait CrudOperationsTrait
                 $inputDataArray = $this->createInputDataArray();
                 if (sizeof($inputDataArray) > 0) {
                     $this->controller->_beforeUpdate($inputDataArray);
+
                     $id = $request->getPost($this->primaryKey);
+
+                    if (fieldHasChanged($this->primaryKey)) {
+                        $id                                = oldValue($this->primaryKey);
+                        $inputDataArray[$this->primaryKey] = newValue($this->primaryKey);
+                    }
+
                     $this->update($id, $inputDataArray);
                     $this->controller->_afterUpdate();
                 }

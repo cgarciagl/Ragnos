@@ -26,9 +26,4 @@ class Lineas extends RDatasetController
         raise('No se pueden eliminar líneas de productos');
     }
 
-    function _beforeUpdate(&$a)
-    {
-        raise('No se pueden modificar líneas de productos');
-    }
-
 }
