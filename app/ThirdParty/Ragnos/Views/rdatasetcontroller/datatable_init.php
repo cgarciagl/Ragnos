@@ -44,10 +44,12 @@ if (request()->getPost('sSearch')) {
 
 echo <<<EOT
 tabla.DataTable({
-    pagingType: 'numbers',
-    responsive: true,
-    processing: true,
-    serverSide: true,
+    pagingType:  'numbers',
+    responsive:  true,
+    processing:  true,
+    serverSide:  true,
+    autoWidth:   false, 
+    deferRender: true,
     order: $aaSorting,
     ajax: $fnServerData2,
     search: {

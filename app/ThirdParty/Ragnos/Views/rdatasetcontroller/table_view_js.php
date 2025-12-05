@@ -4,7 +4,7 @@
         const oTable = $("#<?= $controllerUniqueID ?>_table").DataTable();
         const selectedRowIndex = $('#<?= $controllerUniqueID ?> .Ragnos_selected_row').index();
         $("#<?= $controllerUniqueID ?>").data('preselect', selectedRowIndex);
-        oTable.draw(false);
+        oTable.ajax.reload(null, false);
 
         if (typeof window['_<?= $controller_name ?>OnChange'] === 'function') {
             window['_<?= $controller_name ?>OnChange'](oTable);
@@ -23,14 +23,14 @@
         const form = $('#<?= $controllerUniqueID ?>_FormContent form');
         const formElement = document.querySelector('#<?= $controllerUniqueID ?>_FormContent form');
 
-        // Convert money inputs to numeric values
-        form.find('input[money]').each(function () {
-            const rawValue = $(this).val();
-            const numericValue = moneyToNumber($(this).val())
-            $(this).val(numericValue);
-        });
-
         const formData = serializeForm(formElement);
+
+        //convertimos los valores monetarios antes de enviarlos
+        form.find('input[money]').each(function () {
+            const name = $(this).attr('name');
+            const rawValue = $(this).val();
+            formData[name] = moneyToNumber(rawValue);
+        })
 
         // Add previous values for controls
         form.find('[data-valueant]').each(function () {
@@ -40,13 +40,6 @@
 
         // Add CSRF token
         $.extend(formData, Ragnos_csrf);
-
-        // Format money inputs back to currency
-        <?php use App\ThirdParty\Ragnos\Controllers\Ragnos; ?>
-        const currency = '<?= Ragnos::config()->currency ?? 'USD' ?>';
-        form.find('input[money]').each(function () {
-            $(this).val(moneyFormat($(this).val(), currency));
-        });
 
         // Clear previous errors
         form.find('.ui-state-error').remove();
@@ -144,8 +137,6 @@
     ); ?>
 
     $('#<?= $controllerUniqueID ?>_Tablediv .dt-search').append($('#<?= $controllerUniqueID ?>_combo'));
-
-    //const bodytable = $("#<?= $controllerUniqueID ?>_table tbody");
 
     $("#<?= $controllerUniqueID ?>_table tbody").on('dblclick', 'tr', function () {
         var lastCell = $(this).find("td").last();

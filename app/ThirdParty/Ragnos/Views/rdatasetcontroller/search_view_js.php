@@ -8,7 +8,7 @@
         const oTable = $("#<?= $controllerUniqueID ?>_table").DataTable();
         const sel = $('.Ragnos_selected_row').index();
         $("#<?= $controllerUniqueID ?>").data('preselect', sel);
-        oTable.draw(false);
+        oTable.ajax.reload(null, false);
     }
 
     // Botón para buscar en administración
@@ -73,7 +73,6 @@
 
         cierraModal('YSearchModal');
         t.closest('.divfield').nextAll('.divfield').first().find('input, textarea, select').first().focus();
-
     });
 
     // Botón para cancelar la búsqueda
@@ -92,8 +91,6 @@
 
     // Configurar búsqueda en DataTable
     $('#<?= $controllerUniqueID ?>_Tablediv .dt-search').append($('#<?= $controllerUniqueID ?>_combo'));
-
-    //const bodyTable = $("#<?= $controllerUniqueID ?>_table tbody");
 
     // Configurar eventos de teclado en el modal
     $("#<?= $controllerUniqueID ?>_table tbody").closest('.modal').removeAttr('data-bs-keyboard').removeClass('fade').on('keydown', function (event) {
@@ -147,7 +144,7 @@
             data.sOnlyField = onlyField;
         }
 
-        const source = '<?= site_url($clase . '/getAjaxGridData'); ?>';
+        const sourceUrl = '<?= site_url($clase . '/getAjaxGridData'); ?>';
         const searchValue = "<?= $sSearch ?>";
         const filterValue = "<?= $sFilter ?>";
 
@@ -158,7 +155,7 @@
             data.sFilter = filterValue;
         }
 
-        getObject(source, data, function (json) {
+        getObject(sourceUrl, data, function (json) {
             fnCallback(json);
             $("#<?= $controllerUniqueID ?>").data('idactivo', '');
             if (json.data.length > 0) {
