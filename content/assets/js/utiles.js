@@ -710,7 +710,7 @@ function showModal(html, encabezado = "", id = "miModal", onClose = null) {
  * @param {string} modalId - The ID of the modal to close.
  */
 function cierraModal(modalId) {
-  const $modal = $("#" + modalId);
+  const $modal = $(`#${modalId}`);
 
   if (!$modal.length) {
     console.warn(`Modal with ID "${modalId}" does not exist.`);
@@ -863,7 +863,7 @@ function limitText(limitField, limitNum) {
  * @param {string} texto - The text content of the new option to be added.
  */
 function ponValorEnSelect(elemento, id, texto) {
-  elemento.find("option[value='" + id + "']").remove();
+  elemento.find(`option[value='${id}']`).remove();
   elemento.find("option").prop("selected", false).removeAttr("selected");
   let newOption = $("<option></option>")
     .val(id)
@@ -897,7 +897,7 @@ function serializeParams(obj, prefix) {
         str.push(serializeParams(val, `${k}[${idx}]`));
       });
     } else {
-      str.push(encodeURIComponent(k) + "=" + encodeURIComponent(v));
+      str.push(`${encodeURIComponent(k)}=${encodeURIComponent(v)}`);
     }
   }
   return str.join("&");

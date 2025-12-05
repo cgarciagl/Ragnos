@@ -167,7 +167,7 @@
             }
             const searchTitle = $("#<?= $controllerUniqueID ?>_searching_title");
             if (json.sSearch.value) {
-                searchTitle.text("<?= lang('Ragnos.Ragnos_searching') ?>" + " (" + json.sSearch.value + ") ...").show();
+                searchTitle.text(`<?= lang('Ragnos.Ragnos_searching') ?> (${json.sSearch.value})...`).show();
             } else {
                 searchTitle.text("").hide();
             }
@@ -194,5 +194,4 @@
             return false;
         }
     });
-
 </script>

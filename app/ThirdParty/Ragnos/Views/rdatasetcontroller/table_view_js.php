@@ -99,7 +99,7 @@
             Ragnos_csrf.Ragnos_master = '<?= $master ?>';
         <?php endif; ?>
 
-        getValue('<?= $clase ?>/getFormData/' + id, Ragnos_csrf, function (response) {
+        getValue(`<?= $clase ?>/getFormData/${id}`, Ragnos_csrf, function (response) {
             formContent.html(response).show();
             formContent.find('[readonly]').addClass('text-bg-info');
         });
@@ -278,7 +278,7 @@
 
             if (response.sSearch.value) {
                 $("#<?= $controllerUniqueID ?>_searching_title")
-                    .text("<?= lang('Ragnos.Ragnos_searching') ?>" + " (" + response.sSearch.value + ") ...")
+                    .text(`<?= lang('Ragnos.Ragnos_searching') ?> (${response.sSearch.value})...`)
                     .show();
             } else {
                 $("#<?= $controllerUniqueID ?>_searching_title").text("").hide();
@@ -298,5 +298,4 @@
             }
         });
     }
-
 </script>
