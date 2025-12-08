@@ -25,6 +25,11 @@ $controller = str_replace('\\', '/', $controller);
             <?php if ($callback != '') {
                 echo "callback: $callback,";
             } ?>
+            <?php if ($isRequired) {
+                echo "canSetToNull: false,";
+            } else {
+                echo "canSetToNull: true,";
+            } ?>
         });
         $('#Ragnos_id_<?= $name ?>').val('<?= $idvalue ?>').attr('data-valueant', '<?= $idvalue ?>');
     </script>

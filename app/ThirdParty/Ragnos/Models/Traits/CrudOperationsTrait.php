@@ -2,6 +2,8 @@
 
 namespace App\ThirdParty\Ragnos\Models\Traits;
 
+use App\ThirdParty\Ragnos\Models\Fields\RSearchField;
+
 trait CrudOperationsTrait
 {
     private function performInsert()
@@ -70,21 +72,29 @@ trait CrudOperationsTrait
     {
         $responseArray = [];
         $request       = request();
-        if ($request->getPost($this->primaryKey)) {
-            foreach ($this->ofieldlist as $k => $fieldItem) {
-                if ($fieldItem->hasChanged()) {
-                    if ($fieldItem->getQuery() == '') {
-                        $responseArray[$fieldItem->getFieldName()] = $fieldItem->getDataFromInput($request);
-                    }
-                }
+        $isUpdate      = $request->getPost($this->primaryKey) !== null;
+
+        foreach ($this->ofieldlist as $k => $fieldItem) {
+            // Skip fields with queries
+            if ($fieldItem->getQuery() != '') {
+                continue;
             }
-        } else {
-            foreach ($this->ofieldlist as $k => $fieldItem) {
-                if ($fieldItem->getQuery() == '') {
-                    $responseArray[$fieldItem->getFieldName()] = $fieldItem->getDataFromInput($request);
-                }
+
+            // Check if the field has changed during an update
+            if ($isUpdate && !$fieldItem->hasChanged()) {
+                continue;
             }
+
+            $fieldValue = $fieldItem->getDataFromInput($request);
+
+            // Set NULL for empty RSearchField values
+            if ($fieldItem instanceof RSearchField && $fieldValue === '') {
+                $fieldValue = null;
+            }
+
+            $responseArray[$fieldItem->getFieldName()] = $fieldValue;
         }
+
         return $responseArray;
     }
 
@@ -114,7 +124,7 @@ trait CrudOperationsTrait
         if (count($b) > 0) {
             foreach ($this->ofieldlist as $k => $fieldItem) {
                 $fieldItem->setValue($b[$this->realField($fieldItem->getFieldName())]);
-                if ($fieldItem instanceof YSearchField) {
+                if ($fieldItem instanceof RSearchField) {
                     $fieldItem->setIdValue($b[$fieldItem->getFieldName()]);
                 }
             }

@@ -164,6 +164,12 @@ abstract class RField
         return implode(' ', $attributes);
     }
 
+    public function isRequired(): bool
+    {
+        $rules = explode('|', $this->rules ?? '');
+        return in_array('required', $rules);
+    }
+
     // Cargar las variables del campo en un array
     public function loadVars(): array
     {

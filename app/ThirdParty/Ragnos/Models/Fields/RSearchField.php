@@ -81,6 +81,7 @@ class RSearchField extends RFieldDecorator
         $loadedVars['idvalue']     = $this->getIdValue() ?? '';
         $loadedVars['filter']      = $this->getFilter() ?? '';
         $loadedVars['callback']    = $this->getCallback() ?? '';
+        $loadedVars['isRequired']  = $this->isRequired();
         $this->checkDefault($loadedVars);
         return view('App\ThirdParty\Ragnos\Views\rfield/searchfield', $loadedVars);
     }

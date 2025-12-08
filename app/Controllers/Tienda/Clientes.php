@@ -33,7 +33,7 @@ class Clientes extends RDatasetController
         $this->addField('postalCode', ['label' => 'Código postal', 'rules' => 'required']);
         $this->addField('country', ['label' => 'País', 'rules' => 'required']);
 
-        $this->addField('salesRepEmployeeNumber', ['label' => 'Empleado a cargo', 'rules' => '']);
+        $this->addField('salesRepEmployeeNumber', ['label' => 'Empleado a cargo', 'rules' => 'required']);
         $this->addSearch('salesRepEmployeeNumber', 'Tienda\Empleados');
 
         $this->addField('creditLimit', ['label' => 'Límite de crédito', 'rules' => 'required|money']);

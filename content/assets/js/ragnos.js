@@ -108,6 +108,8 @@ class RagnosSearch {
       controller: params.controller.toLowerCase(),
       filter: params.filter,
       callback: params.callback || (() => {}),
+      canSetToNull:
+        params.canSetToNull !== undefined ? params.canSetToNull : true,
     };
 
     this.initialize();
@@ -123,11 +125,15 @@ class RagnosSearch {
     }
 
     const controlName = this.control.attr("name");
-    const button = this.createSearchButton();
+    const searchButton = this.createSearchButton();
+    let removeButton = $();
+    if (this.params.canSetToNull) {
+      removeButton = this.createRemoveButton();
+    }
     const hiddenField = this.createHiddenField(controlName);
 
-    this.setupDOM(button, hiddenField);
-    this.setupEventListeners(button);
+    this.setupDOM(searchButton, hiddenField, removeButton);
+    this.setupEventListeners(searchButton, removeButton);
 
     // Store instance reference
     RagnosSearch.instances.set(controlName, this);
@@ -146,12 +152,14 @@ class RagnosSearch {
     `);
   }
 
-  /**
-   * Create the hidden field element
-   * @private
-   * @param {string} controlName
-   * @returns {JQuery}
-   */
+  createRemoveButton() {
+    return $(`
+      <button class="btn btn-outline-secondary" type="button" aria-label="Remove">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    `);
+  }
+
   createHiddenField(controlName) {
     return $(`
       <input 
@@ -168,12 +176,14 @@ class RagnosSearch {
    * @private
    * @param {JQuery} button
    * @param {JQuery} hiddenField
+   * @param {JQuery} removeButton
    */
-  setupDOM(button, hiddenField) {
-    button.insertAfter(this.control);
+  setupDOM(searchButton, hiddenField, removeButton) {
+    searchButton.insertAfter(this.control);
 
     const parentGroup = this.control.closest(".input-group");
     hiddenField.insertAfter(parentGroup);
+    removeButton.insertAfter(searchButton);
 
     this.control.addClass("Ragnosffied");
   }
@@ -181,9 +191,10 @@ class RagnosSearch {
   /**
    * Set up event listeners
    * @private
-   * @param {JQuery} button
+   * @param {JQuery} searchButton
+   * @param {JQuery} removeButton
    */
-  setupEventListeners(button) {
+  setupEventListeners(searchButton, removeButton) {
     if (this.control.is("[readonly]")) {
       return;
     }
@@ -196,10 +207,23 @@ class RagnosSearch {
       }, 400);
     });
 
-    button.on("click", (e) => {
+    searchButton.on("click", (e) => {
       e.preventDefault();
       this.search("", true);
     });
+
+    if (this.params.canSetToNull) {
+      removeButton.on("click", (e) => {
+        e.preventDefault();
+        this.control.val(null);
+        const hiddenInput = this.control
+          .closest(".input-group")
+          .next("input[type=hidden]");
+        if (hiddenInput.length) {
+          hiddenInput.val(null);
+        }
+      });
+    }
   }
 
   /**
@@ -332,6 +356,8 @@ $.fn.RagnosSearch = function (params) {
       controller: params.controller || "",
       filter: params.filter || "",
       callback: params.callback || (() => {}),
+      canSetToNull:
+        params.canSetToNull !== undefined ? params.canSetToNull : true,
     });
   });
 };
