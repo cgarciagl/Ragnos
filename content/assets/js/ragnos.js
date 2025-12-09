@@ -41,12 +41,28 @@ class RagnosSearch {
 
     // Crear botón de búsqueda
     $elemento.wrap('<div class="input-group"></div>');
+
     const searchButton = $(`
       <button class="btn btn-outline-secondary" type="button" aria-label="Search">
         <i class="bi bi-search"></i>
       </button>
     `);
     searchButton.insertAfter($elemento);
+
+    const puedeBorrar =
+      params.canSetToNull !== undefined ? params.canSetToNull : true;
+    if (puedeBorrar) {
+      const deleteButton = $(`
+        <button class="btn btn-outline-secondary" type="button" aria-label="Search">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      `);
+      deleteButton.insertAfter(searchButton);
+      deleteButton.on("click", () => {
+        $elemento.val("");
+        $elemento.data("searchdata", null);
+      });
+    }
 
     // Configurar comportamiento de búsqueda
     const executeSearch = async (searchValue = "") => {
