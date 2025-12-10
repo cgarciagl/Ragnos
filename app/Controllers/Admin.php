@@ -12,10 +12,11 @@ class Admin extends BaseController
         //cargar el helper utiles
         helper('App\ThirdParty\Ragnos\Helpers\ragnos_helper');
         $this->checklogin();
-        $model                        = new \App\Models\Dashboard();
-        $data['ventasultimos12meses'] = $model->ventasultimos12meses();
-        $data['estadosDeCuenta']      = $model->estadosDeCuenta();
-        $data['ventasporlinea']       = $model->ventasporlinea();
+        $model                                            = new \App\Models\Dashboard();
+        $data['ventasultimos12meses']                     = $model->ventasultimos12meses();
+        $data['estadosDeCuenta']                          = $model->estadosDeCuenta();
+        $data['ventasporlinea']                           = $model->ventasporlinea();
+        $data['empleadosConMasVentasEnElUltimoTrimestre'] = $model->empleadosConMasVentasEnElUltimoTrimestre();
         return view('admin/dashboard', $data);
     }
 

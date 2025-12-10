@@ -51,6 +51,39 @@
                         </div>
                     </div> <!-- /.card -->
 
+                    <div class="card mb-4">
+                        <div class="card-header border-0">
+                            <div class="d-flex justify-content-between">
+                                <h3 class="card-title">Empleados con más ventas en el último trimestre</h3>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="position-relative mb-4">
+                                <table class="table table-hover table-borderless table-striped table-vcenter"
+                                    id="tableEmpleadosMasVentas">
+                                    <thead>
+                                        <tr>
+                                            <th>Empleado</th>
+                                            <th>Oficina</th>
+                                            <th>Ventas</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($empleadosConMasVentasEnElUltimoTrimestre as $empleado): ?>
+                                            <tr>
+                                                <td><?= $empleado['Empleado'] ?></td>
+                                                <td><?= $empleado['Oficina'] ?></td>
+                                                <td class="text-success">
+                                                    <?= moneyFormat($empleado['TotalVentasTrimestre']) ?>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
                 </div> <!-- /.col-md-6 -->
 
 
@@ -104,7 +137,7 @@
                                         $('.ligacliente').on('click', function () {
                                             let cliente = $(this).text().trim();
                                             redirectByPost('<?= site_url('/catalogos/clientes') ?>', { sSearch: cliente }, false);
-                                        }).css('cursor', 'pointer').css('color', 'blue').css('text-decoration', 'underline');
+                                        });
                                     });
                                 </script>
                             </div>
@@ -239,5 +272,13 @@
     });
 
 </script>
+
+<style>
+    .ligacliente {
+        cursor: pointer;
+        color: blue;
+        text-decoration: underline;
+    }
+</style>
 
 <?= $this->endSection() ?>
