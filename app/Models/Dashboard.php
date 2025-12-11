@@ -122,4 +122,24 @@ class Dashboard extends Model
         return getCachedData($sql);
     }
 
+    function margenDeGananciaPorLinea()
+    {
+        $sql = "SELECT
+                p.productLine,
+                SUM(od.quantityOrdered * (od.priceEach - p.buyPrice)) AS MargenTotal,
+                ROUND(
+                    (SUM(od.quantityOrdered * (od.priceEach - p.buyPrice)) / SUM(od.quantityOrdered * od.priceEach)) * 100,
+                2) AS PorcentajeMargen
+                FROM orderdetails od
+                JOIN orders o ON od.orderNumber = o.orderNumber
+                JOIN products p ON od.productCode = p.productCode
+                WHERE
+                o.orderDate >= DATE_SUB(
+                    (SELECT MAX(orderDate) FROM orders), INTERVAL 6 MONTH
+                )
+                GROUP BY 1
+                ORDER BY MargenTotal DESC;";
+        return getCachedData($sql);
+    }
+
 }

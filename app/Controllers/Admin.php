@@ -18,6 +18,7 @@ class Admin extends BaseController
         $data['ventasporlinea']                           = $model->ventasporlinea();
         $data['empleadosConMasVentasEnElUltimoTrimestre'] = $model->empleadosConMasVentasEnElUltimoTrimestre();
         $data['productosConMenorRotacion']                = $model->productosConMenorRotacion();
+        $data['margenDeGananciaPorLinea']                 = $model->margenDeGananciaPorLinea();
         return view('admin/dashboard', $data);
     }
 

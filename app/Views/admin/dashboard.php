@@ -101,7 +101,47 @@
                         </div>
                     </div>
 
+                    <div class="card mb-4">
+                        <div class="card-header border-0">
+                            <div class="d-flex justify-content-between">
+                                <h3 class="card-title">Margen de ganancia por línea en los últimos 6 meses</h3>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover table-borderless table-striped table-vcenter"
+                                    id="tableMargenPorLinea">
+                                    <thead>
+                                        <tr>
+                                            <th>Línea</th>
+                                            <th>Margen Total</th>
+                                            <th>Margen %</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($margenDeGananciaPorLinea as $linea): ?>
+                                            <tr>
+                                                <td>
+                                                    <span class="btn-link ligalinea"><?= $linea['productLine'] ?></span>
+                                                </td>
+                                                <td class="text-success"><?= moneyFormat($linea['MargenTotal']) ?></td>
+                                                <td class="text-success"> <?= $linea['PorcentajeMargen'] ?> % </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
 
+                                <script>
+                                    $(function () {
+                                        $('.ligalinea').on('click', function () {
+                                            let linea = $(this).text().trim();
+                                            redirectByPost('<?= site_url('/catalogos/lineas') ?>', { sSearch: linea }, false);
+                                        });
+                                    });
+                                </script>
+                            </div>
+                        </div>
+                    </div>
 
                 </div> <!-- /.col-md-6 -->
 
@@ -344,6 +384,7 @@
 <style>
     .ligacliente,
     .ligaproducto,
+    .ligalinea,
     .ligaempleado {
         cursor: pointer;
         color: blue;
