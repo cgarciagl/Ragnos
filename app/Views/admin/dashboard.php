@@ -63,6 +63,7 @@
                                     id="tableEmpleadosMasVentas">
                                     <thead>
                                         <tr>
+                                            <th>Número de empleado</th>
                                             <th>Empleado</th>
                                             <th>Oficina</th>
                                             <th>Ventas</th>
@@ -71,6 +72,10 @@
                                     <tbody>
                                         <?php foreach ($empleadosConMasVentasEnElUltimoTrimestre as $empleado): ?>
                                             <tr>
+                                                <td> <span class="btn-link ligaempleado">
+                                                        <?= $empleado['employeeNumber'] ?>
+                                                    </span>
+                                                </td>
                                                 <td><?= $empleado['Empleado'] ?></td>
                                                 <td><?= $empleado['Oficina'] ?></td>
                                                 <td class="text-success">
@@ -80,9 +85,23 @@
                                         <?php endforeach; ?>
                                     </tbody>
                                 </table>
+
+                                <script>
+                                    $(function () {
+                                        $('.ligaempleado').on('click', function () {
+                                            let empleado = $(this).text().trim();
+                                            redirectByPost('<?= site_url('/catalogos/empleados') ?>', {
+                                                sSearch: empleado
+                                            }, false);
+                                        });
+                                    });
+                                </script>
+
                             </div>
                         </div>
                     </div>
+
+
 
                 </div> <!-- /.col-md-6 -->
 
@@ -143,6 +162,55 @@
                             </div>
                         </div>
                     </div> <!-- /.card -->
+
+                    <div class="card mb-4">
+                        <div class="card-header border-0">
+                            <div class="d-flex justify-content-between">
+                                <h3 class="card-title">Productos de menor rotación en los últimos 6 meses</h3>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover table-borderless table-striped table-vcenter"
+                                    id="tableProductosMenorRotacion">
+                                    <thead>
+                                        <tr>
+                                            <th>Código</th>
+                                            <th>Producto</th>
+                                            <th>Línea</th>
+                                            <th>Cantidad en stock</th>
+                                            <th>Ventas</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($productosConMenorRotacion as $producto): ?>
+                                            <tr>
+                                                <td>
+                                                    <span
+                                                        class="btn-link ligaproducto"><?= $producto['productCode'] ?></span>
+                                                </td>
+                                                <td><?= $producto['productName'] ?></td>
+                                                <td><?= $producto['productLine'] ?></td>
+                                                <td><?= $producto['quantityInStock'] ?></td>
+                                                <td class="text-danger">
+                                                    <?= moneyFormat($producto['TotalVendidoUltimos6Meses']) ?>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+
+                                <script>
+                                    $(function () {
+                                        $('.ligaproducto').on('click', function () {
+                                            let codigo = $(this).text().trim();
+                                            redirectByPost('<?= site_url('/catalogos/productos') ?>', { sSearch: codigo }, false);
+                                        });
+                                    });
+                                </script>
+                            </div>
+                        </div>
+                    </div>
 
                 </div> <!-- /.col-md-6 -->
             </div> <!--end::Row-->
@@ -274,10 +342,16 @@
 </script>
 
 <style>
-    .ligacliente {
+    .ligacliente,
+    .ligaproducto,
+    .ligaempleado {
         cursor: pointer;
         color: blue;
         text-decoration: underline;
+    }
+
+    .card-title {
+        font-weight: bold;
     }
 </style>
 

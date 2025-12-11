@@ -17,6 +17,7 @@ class Admin extends BaseController
         $data['estadosDeCuenta']                          = $model->estadosDeCuenta();
         $data['ventasporlinea']                           = $model->ventasporlinea();
         $data['empleadosConMasVentasEnElUltimoTrimestre'] = $model->empleadosConMasVentasEnElUltimoTrimestre();
+        $data['productosConMenorRotacion']                = $model->productosConMenorRotacion();
         return view('admin/dashboard', $data);
     }
 

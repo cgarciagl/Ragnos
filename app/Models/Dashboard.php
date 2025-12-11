@@ -84,27 +84,41 @@ class Dashboard extends Model
     function empleadosConMasVentasEnElUltimoTrimestre()
     {
         $sql = "WITH FechaInicioTrimestre AS (
-    SELECT STR_TO_DATE(CONCAT(YEAR(MAX(orderDate)), '-', (QUARTER(MAX(orderDate)) * 3) - 2, '-01'), '%Y-%m-%d') AS FechaInicio FROM orders
-), 
-VentasPorVendedor AS (
-    SELECT c.salesRepEmployeeNumber AS employeeNumber, SUM(od.priceEach * od.quantityOrdered) AS TotalVentasTrimestre
-    FROM customers c
-    JOIN orders ord ON c.customerNumber = ord.customerNumber
-    JOIN orderdetails od ON ord.orderNumber = od.orderNumber
-    WHERE ord.orderDate >= (SELECT FechaInicio FROM FechaInicioTrimestre)
-    GROUP BY c.salesRepEmployeeNumber
-)
-SELECT 
-    e.employeeNumber, CONCAT(e.firstName, ' ', e.lastName) AS Empleado, o.city AS Oficina, v.TotalVentasTrimestre
-FROM 
-    employees e
-JOIN 
-    offices o ON e.officeCode = o.officeCode
-JOIN 
-    VentasPorVendedor v ON e.employeeNumber = v.employeeNumber
-ORDER BY 
-    v.TotalVentasTrimestre DESC
-LIMIT 10;";
+                    SELECT STR_TO_DATE(CONCAT(YEAR(MAX(orderDate)), '-', (QUARTER(MAX(orderDate)) * 3) - 2, '-01'), '%Y-%m-%d') AS FechaInicio FROM orders
+                ), 
+                VentasPorVendedor AS (
+                    SELECT c.salesRepEmployeeNumber AS employeeNumber, SUM(od.priceEach * od.quantityOrdered) AS TotalVentasTrimestre
+                    FROM customers c
+                    JOIN orders ord ON c.customerNumber = ord.customerNumber
+                    JOIN orderdetails od ON ord.orderNumber = od.orderNumber
+                    WHERE ord.orderDate >= (SELECT FechaInicio FROM FechaInicioTrimestre)
+                    GROUP BY c.salesRepEmployeeNumber
+                )
+                SELECT e.employeeNumber, CONCAT(e.firstName, ' ', e.lastName) AS Empleado, o.city AS Oficina, v.TotalVentasTrimestre
+                FROM employees e
+                JOIN offices o ON e.officeCode = o.officeCode
+                JOIN  VentasPorVendedor v ON e.employeeNumber = v.employeeNumber
+                ORDER BY v.TotalVentasTrimestre DESC
+                LIMIT 10;";
+        return getCachedData($sql);
+    }
+
+    function productosConMenorRotacion()
+    {
+        $sql = "SELECT p.productCode, 
+                    p.productName, 
+                    p.quantityInStock, 
+                    p.productLine,
+                    IFNULL(SUM(od.quantityOrdered), 0) AS TotalVendidoUltimos6Meses
+                FROM products p
+                LEFT JOIN orderdetails od ON p.productCode = od.productCode
+                LEFT JOIN orders o ON od.orderNumber = o.orderNumber 
+                    AND o.orderDate >= DATE_SUB((SELECT MAX(orderDate) FROM orders), INTERVAL 6 MONTH)
+                GROUP BY p.productCode, 
+                    p.productName, 
+                    p.quantityInStock
+                ORDER BY TotalVendidoUltimos6Meses ASC
+                LIMIT 10;";
         return getCachedData($sql);
     }
 
