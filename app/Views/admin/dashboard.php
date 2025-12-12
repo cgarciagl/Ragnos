@@ -21,6 +21,120 @@
     </div>
     <div class="app-content"> <!--begin::Container-->
         <div class="container-fluid"> <!--begin::Row-->
+
+            <div class="row">
+                <?php
+                if (!empty($datosinfobox) && is_array($datosinfobox)) {
+                    $datos = $datosinfobox[0];
+                } else {
+                    $datos = [
+                        'VentasUltimoSemestre'        => '0.00',
+                        'ClientesNuevosTrimestre'     => 0,
+                        'ValorPromedioOrdenSemestral' => '0.00',
+                        'MargenPromedioSemestral'     => '0.00'
+                    ];
+                }
+                ?>
+
+                <style>
+                    .custom-info-card {
+                        background-color: #fff;
+                        border: 1px solid #e3e6f0;
+                        /* Borde muy ligero */
+                        border-radius: 0.5rem;
+                        /* Esquinas redondeadas */
+                        display: flex;
+                        align-items: center;
+                        padding: 1rem;
+                        box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.05);
+                        /* Sombra ligera */
+                        height: 100%;
+                        /* Asegura que todas las tarjetas tengan la misma altura */
+                    }
+
+                    .icon-container {
+                        width: 60px;
+                        /* Tamaño fijo para el cuadrado del icono */
+                        height: 60px;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        border-radius: 0.25rem;
+                        font-size: 2rem;
+                        color: #fff;
+                        /* Icono blanco */
+                        margin-right: 1rem;
+                        flex-shrink: 0;
+                    }
+
+                    .text-content h3 {
+                        margin-bottom: 0.1rem;
+                        font-weight: 700;
+                    }
+
+                    .text-content p {
+                        margin: 0;
+                        font-size: 0.9rem;
+                        color: #6c757d;
+                        /* Texto secundario gris */
+                    }
+                </style>
+
+
+                <div class="row">
+                    <div class="col-lg-3 col-6 mb-4">
+                        <div class="custom-info-card">
+                            <div class="icon-container" style="background-color: #007bff;">
+                                <i class="bi bi-currency-dollar"></i>
+                            </div>
+                            <div class="text-content">
+                                <p>Ventas (Último Semestre)</p>
+                                <h3>$<?php echo esc($datos['VentasUltimoSemestre']); ?></h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-6 mb-4">
+                        <div class="custom-info-card">
+                            <div class="icon-container" style="background-color: #28a745;">
+                                <i class="bi bi-graph-up"></i>
+                            </div>
+                            <div class="text-content">
+                                <p>Margen Bruto (Último Semestre)</p>
+                                <h3><?php echo esc($datos['MargenPromedioSemestral']); ?><sup
+                                        style="font-size: 1rem">%</sup></h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-6 mb-4">
+                        <div class="custom-info-card">
+                            <div class="icon-container" style="background-color: #3f51b5;">
+                                <i class="bi bi-bag-check"></i>
+                            </div>
+                            <div class="text-content">
+                                <p>Valor Promedio Orden (Semestre)</p>
+                                <h3>$<?php echo esc($datos['ValorPromedioOrdenSemestral']); ?></h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-6 mb-4">
+                        <div class="custom-info-card">
+                            <div class="icon-container" style="background-color: #ffc107;">
+                                <i class="bi bi-person-plus"></i>
+                            </div>
+                            <div class="text-content">
+                                <p>Clientes Nuevos (Trimestre)</p>
+                                <h3><?php echo esc($datos['ClientesNuevosTrimestre']); ?></h3>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
             <div class="row">
                 <div class="col-lg-6">
                     <div class="card mb-4">
@@ -382,10 +496,7 @@
 </script>
 
 <style>
-    .ligacliente,
-    .ligaproducto,
-    .ligalinea,
-    .ligaempleado {
+    .btn-link {
         cursor: pointer;
         color: blue;
         text-decoration: underline;

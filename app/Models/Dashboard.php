@@ -140,4 +140,57 @@ class Dashboard extends Model
         return getCachedData($sql);
     }
 
+    function datosAtomicosDashboard()
+    {
+        $sql = "SELECT
+                -- 1. Total de Ventas del Último Semestre (Métrica de Rendimiento)
+                (
+                    SELECT 
+                    FORMAT(SUM(od.priceEach * od.quantityOrdered), 2)
+                    FROM orders o
+                    JOIN orderdetails od ON o.orderNumber = od.orderNumber
+                    WHERE o.orderDate >= DATE_SUB((SELECT MAX(orderDate) FROM orders), INTERVAL 6 MONTH)
+                ) AS VentasUltimoSemestre,
+
+                -- 2. Clientes Nuevos del Último Trimestre (Métrica de Crecimiento)
+                (
+                    SELECT 
+                    COUNT(T1.customerNumber)
+                    FROM customers c
+                    JOIN (
+                    SELECT customerNumber, MIN(orderDate) AS firstOrderDate 
+                    FROM orders 
+                    GROUP BY customerNumber
+                    ) AS T1 ON c.customerNumber = T1.customerNumber
+                    WHERE T1.firstOrderDate >= DATE_SUB((SELECT MAX(orderDate) FROM orders), INTERVAL 3 MONTH)
+                ) AS ClientesNuevosTrimestre,
+
+                -- 3. Valor Promedio de la Orden (Métrica de Valor de Cliente)
+                (
+                    SELECT 
+                    FORMAT(AVG(TotalVentas), 2)
+                    FROM (
+                    SELECT
+                        o.orderNumber,
+                        SUM(od.priceEach * od.quantityOrdered) AS TotalVentas
+                    FROM orders o
+                    JOIN orderdetails od ON o.orderNumber = od.orderNumber
+                    WHERE o.orderDate >= DATE_SUB((SELECT MAX(orderDate) FROM orders), INTERVAL 6 MONTH)
+                    GROUP BY 1
+                    ) AS VentasPorOrden
+                ) AS ValorPromedioOrdenSemestral,
+
+                -- 4. Margen Promedio de Beneficio (Métrica de Rentabilidad)
+                (
+                    SELECT 
+                    ROUND(
+                        (SUM(od.quantityOrdered * (od.priceEach - p.buyPrice)) / SUM(od.quantityOrdered * od.priceEach)) * 100,
+                    2)
+                    FROM orderdetails od
+                    JOIN orders o ON od.orderNumber = o.orderNumber
+                    JOIN products p ON od.productCode = p.productCode
+                    WHERE o.orderDate >= DATE_SUB((SELECT MAX(orderDate) FROM orders), INTERVAL 6 MONTH)
+                ) AS MargenPromedioSemestral;";
+        return getCachedData($sql);
+    }
 }
