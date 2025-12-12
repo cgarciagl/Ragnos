@@ -29,7 +29,7 @@
                 } else {
                     $datos = [
                         'VentasUltimoSemestre'        => '0.00',
-                        'ClientesNuevosTrimestre'     => 0,
+                        'OrdenesEnviadasSemestre'     => 0,
                         'ValorPromedioOrdenSemestral' => '0.00',
                         'MargenPromedioSemestral'     => '0.00'
                     ];
@@ -121,12 +121,12 @@
 
                     <div class="col-lg-3 col-6 mb-4">
                         <div class="custom-info-card">
-                            <div class="icon-container" style="background-color: #ffc107;">
-                                <i class="bi bi-person-plus"></i>
+                            <div class="icon-container" style="background-color: #6c757d;">
+                                <i class="bi bi-truck"></i>
                             </div>
                             <div class="text-content">
-                                <p>Clientes Nuevos (Trimestre)</p>
-                                <h3><?php echo esc($datos['ClientesNuevosTrimestre']); ?></h3>
+                                <p>Órdenes Enviadas (Semestre)</p>
+                                <h3><?php echo esc($datos['OrdenesEnviadasSemestre']); ?></h3>
                             </div>
                         </div>
                     </div>

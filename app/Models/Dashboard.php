@@ -152,18 +152,14 @@ class Dashboard extends Model
                     WHERE o.orderDate >= DATE_SUB((SELECT MAX(orderDate) FROM orders), INTERVAL 6 MONTH)
                 ) AS VentasUltimoSemestre,
 
-                -- 2. Clientes Nuevos del Último Trimestre (Métrica de Crecimiento)
+                -- 2. Órdenes Enviadas en el Último Semestre (Métrica de Volumen/Operación)
                 (
-                    SELECT 
-                    COUNT(T1.customerNumber)
-                    FROM customers c
-                    JOIN (
-                    SELECT customerNumber, MIN(orderDate) AS firstOrderDate 
-                    FROM orders 
-                    GROUP BY customerNumber
-                    ) AS T1 ON c.customerNumber = T1.customerNumber
-                    WHERE T1.firstOrderDate >= DATE_SUB((SELECT MAX(orderDate) FROM orders), INTERVAL 3 MONTH)
-                ) AS ClientesNuevosTrimestre,
+                    SELECT
+                    COUNT(orderNumber)
+                    FROM orders o
+                    WHERE o.status = 'Shipped'
+                    AND o.orderDate >= DATE_SUB((SELECT MAX(orderDate) FROM orders), INTERVAL 6 MONTH)
+                ) AS OrdenesEnviadasSemestre,
 
                 -- 3. Valor Promedio de la Orden (Métrica de Valor de Cliente)
                 (
