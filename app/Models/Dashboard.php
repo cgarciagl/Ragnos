@@ -83,15 +83,13 @@ class Dashboard extends Model
 
     function empleadosConMasVentasEnElUltimoTrimestre()
     {
-        $sql = "WITH FechaInicioTrimestre AS (
-                    SELECT STR_TO_DATE(CONCAT(YEAR(MAX(orderDate)), '-', (QUARTER(MAX(orderDate)) * 3) - 2, '-01'), '%Y-%m-%d') AS FechaInicio FROM orders
-                ), 
+        $sql = "WITH 
                 VentasPorVendedor AS (
                     SELECT c.salesRepEmployeeNumber AS employeeNumber, SUM(od.priceEach * od.quantityOrdered) AS TotalVentasTrimestre
                     FROM customers c
                     JOIN orders ord ON c.customerNumber = ord.customerNumber
                     JOIN orderdetails od ON ord.orderNumber = od.orderNumber
-                    WHERE ord.orderDate >= (SELECT FechaInicio FROM FechaInicioTrimestre)
+                    WHERE ord.orderDate >=  DATE_SUB((SELECT MAX(orderDate) FROM orders), INTERVAL 3 MONTH)
                     GROUP BY c.salesRepEmployeeNumber
                 )
                 SELECT e.employeeNumber, CONCAT(e.firstName, ' ', e.lastName) AS Empleado, o.city AS Oficina, v.TotalVentasTrimestre

@@ -54,7 +54,7 @@
                     <div class="card mb-4">
                         <div class="card-header border-0">
                             <div class="d-flex justify-content-between">
-                                <h3 class="card-title">Empleados con más ventas en el último trimestre</h3>
+                                <h3 class="card-title">Empleados con más ventas en los últimos 3 meses</h3>
                             </div>
                         </div>
                         <div class="card-body">
