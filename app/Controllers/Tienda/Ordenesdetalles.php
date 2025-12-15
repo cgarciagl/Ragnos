@@ -29,4 +29,22 @@ class Ordenesdetalles extends RDatasetController
     {
         $this->modelo->builder()->where('orderNumber', $this->master);
     }
+
+    function _afterUpdate()
+    {
+        $cache = \Config\Services::cache();
+        $cache->clean();
+    }
+
+    function _afterInsert()
+    {
+        $cache = \Config\Services::cache();
+        $cache->clean();
+    }
+
+    function _afterDelete()
+    {
+        $cache = \Config\Services::cache();
+        $cache->clean();
+    }
 }

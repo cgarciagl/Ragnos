@@ -57,7 +57,7 @@ class Dashboard extends Model
                 FROM Deudas
                 WHERE Deuda <> 0
                 ORDER BY Deuda DESC;";
-        return getCachedData($sql);
+        return getCachedData($sql, [], 'estadosdecuenta');
     }
 
     function ventasPorLinea()
