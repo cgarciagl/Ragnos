@@ -170,7 +170,7 @@ function removeNewLines($text)
     return str_replace(["\n", "\r"], ' ', $text);
 }
 
-function valueFromSessionOrDefault($variable, $defaultValue = '')
+function sessionValueOrDefault($variable, $defaultValue = '')
 {
     return session($variable) ? session($variable) : $defaultValue;
 }
@@ -349,6 +349,21 @@ HTML;
     return true;
 }
 
+/**
+ * Execute a SQL query and return the results as an array.
+ *
+ * Connects to the configured database, executes the provided SQL statement with
+ * optional bound parameters, and returns the resulting rows as an array.
+ * Errors and exceptions are logged; on failure the function returns an empty
+ * array and any caught exception is re-thrown after logging.
+ *
+ * @param string $sql    The SQL query to execute. Use driver-compatible placeholders for parameters.
+ * @param array  $params Optional parameters to bind into the query.
+ *
+ * @return array An array of result rows (associative arrays). Returns an empty array if the query fails or returns no rows.
+ *
+ * @throws \Exception Re-throws exceptions encountered during connection or execution after logging the error.
+ */
 function executeQuery(string $sql, array $params = []): array
 {
     try {
@@ -367,60 +382,100 @@ function executeQuery(string $sql, array $params = []): array
     }
 }
 
+
 /**
- * Convert a SQL query to an associative array
- * 
- * @param string $sql       SQL query to execute
- * @param string $index_key Column to use as array index
- * @param string $column_key Column to use as array value
- * @return array Associative array of results
- * @throws Exception If database error occurs
+ * Convenience wrapper that executes a SQL query without parameters and
+ * returns an associative array mapping a given index column to a given value column.
+ *
+ * This simply delegates to queryToAssocArrayParams() with an empty parameters array.
+ *
+ * @param string $sql        The SQL query to execute. Should return rows as associative arrays.
+ * @param string $index_key  The column name to use as the keys of the resulting array.
+ * @param string $column_key The column name to use as the values of the resulting array.
+ *
+ * @return array An associative array keyed by $index_key with values from $column_key.
+ *               Returns an empty array if the query returns no rows.
  */
+
 function queryToAssocArray(string $sql, string $index_key, string $column_key): array
 {
-    $records = executeQuery($sql);
-
-    if (empty($records) || !isset($records[0][$index_key]) || !isset($records[0][$column_key])) {
-        log_message('error', "queryToAssocArray: Keys '$index_key' or '$column_key' not found in query results for SQL: " . $sql);
-        return [];
-    }
-
-    return array_column($records, $column_key, $index_key);
+    return queryToAssocArrayParams($sql, [], $index_key, $column_key);
 }
 
+
+/**
+ * Execute a SQL query with parameters and return an associative array mapping
+ * a specified index column to a specified value column.
+ *
+ * Behavior:
+ * - Calls executeQuery($sql, $params) to fetch records (expected as an array of associative arrays).
+ * - If no records are returned, returns an empty array.
+ * - Validates that the first row contains both $index_key and $column_key using array_key_exists
+ *   (so NULL values in columns are allowed). If either key is missing, logs an error via log_message()
+ *   and returns an empty array.
+ * - Uses array_column() to build and return the final mapping: [ index_key => column_key ].
+ *
+ * @param string $sql        The SQL query to execute.
+ * @param array  $params     Parameters to bind to the SQL query.
+ * @param string $index_key  The column name to use as the keys of the resulting array.
+ * @param string $column_key The column name to use as the values of the resulting array.
+ *
+ * @return array An associative array keyed by $index_key with values from $column_key.
+ *               Returns an empty array if no rows are returned or if the specified keys are not present.
+ *
+ * @see executeQuery()
+ * @see log_message()
+ */
 function queryToAssocArrayParams(string $sql, array $params, string $index_key, string $column_key): array
 {
     $records = executeQuery($sql, $params);
 
-    if (empty($records) || !isset($records[0][$index_key]) || !isset($records[0][$column_key])) {
-        log_message('error', "queryToAssocArrayParams: Keys '$index_key' or '$column_key' not found in query results for SQL: " . $sql);
+    if (empty($records)) {
+        return [];
+    }
+
+    // Se usa array_key_exists en lugar de isset para permitir valores NULL en las columnas
+    if (!array_key_exists($index_key, $records[0]) || !array_key_exists($column_key, $records[0])) {
+        log_message('error', "queryToAssocArrayParams: Keys '{$index_key}' or '{$column_key}' not found in query results for SQL: {$sql}");
         return [];
     }
 
     return array_column($records, $column_key, $index_key);
 }
 
+
 /**
- * Retrieves data from cache if available; otherwise, executes the provided SQL query,
- * caches the result, and returns the data.
+ * Ejecuta una consulta SQL y almacena en caché los resultados para optimizar el rendimiento.
  *
- * @param string $sql The SQL query to execute if the data is not found in the cache.
- * @param int $ttl The time-to-live for the cached data in seconds. Defaults to 86400 (24 hours).
- * @return mixed The cached data or the result of the SQL query.
+ * @param string      $sql       La consulta SQL a ejecutar.
+ * @param array       $params    Parámetros para la consulta SQL (opcional).
+ * @param string|null $cacheKey  Clave de caché personalizada (opcional). Si no se proporciona, se genera una automáticamente.
+ * @param int         $ttl       Tiempo de vida en segundos para la caché (por defecto: 86400 segundos = 1 día).
+ *
+ * @return array Los resultados de la consulta, ya sea desde la caché o ejecutando la consulta.
  */
-function getCachedData(string $sql, array $params = [], $cacheKey = null, int $ttl = 86400)
+function getCachedData(string $sql, array $params = [], ?string $cacheKey = null, int $ttl = 86400): array
 {
     $cache = \Config\Services::cache();
-    if (!$cacheKey) {
-        $cacheKey = md5($sql . serialize($params));
+
+    // Generar una clave única basada en la consulta y los parámetros si no se proporciona una.
+    // Se añade un prefijo para evitar colisiones con otras claves de caché.
+    if (empty($cacheKey)) {
+        $cacheKey = 'sql_' . md5($sql . json_encode($params));
     }
+
+    // Intentar recuperar los datos del caché
     $cachedData = $cache->get($cacheKey);
 
-    if ($cachedData) {
+    // Verificar explícitamente si no es null (el caché puede devolver false o null dependiendo del driver)
+    if ($cachedData !== null) {
         return $cachedData;
     }
 
+    // Si no hay datos en caché, ejecutar la consulta usando la función helper existente
     $result = executeQuery($sql, $params);
+
+    // Guardar el resultado en caché
     $cache->save($cacheKey, $result, $ttl);
 
     return $result;
