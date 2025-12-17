@@ -1,4 +1,4 @@
-![Image](https://raw.githubusercontent.com/cgarciagl/Ragnos/refs/heads/main/public/img/logo.webp)
+![Image](https://github.com/cgarciagl/Ragnos/blob/main/content/img/logo.webp?raw=true)
 
 # Ragnos
 
