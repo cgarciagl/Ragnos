@@ -145,11 +145,71 @@ $this->setAutoIncrement(false);
 ```
 
 - Identidad del dataset
-- No editable
+- Obligatorio
 
 ---
 
-## 10. Resumen
+## 10. Campo dropdown (enum)
+
+- Breve descripción: un dropdown (enum) presenta un conjunto cerrado de opciones (clave => etiqueta). Se almacena la clave seleccionada en la base de datos; la etiqueta se usa solo para la interfaz.
+
+- Configuración típica:
+
+  - type: "dropdown"
+  - options: array asociativo [valor => etiqueta]
+  - default: clave por defecto
+  - rules: validar con reglas CI4 (ej. required, in_list)
+  - se recomienda para listas cortas y estables; para grandes volúmenes usar addSearch (selector relacionado).
+
+- Ejemplo estático:
+
+```php
+$this->addField('status', [
+        'label'   => 'Estado',
+        'type'    => 'dropdown',
+        'options' => [
+                'shipped'   => 'Enviado',
+                'pending'   => 'Pendiente',
+                'cancelled' => 'Cancelado'
+        ],
+        'default' => 'pending',
+        'rules'   => 'required|in_list[shipped,pending,cancelled]'
+]);
+```
+
+- Ejemplo dinámico (cargar desde DB):
+
+```php
+$rows   = $this->db->table('categories')->select('id, name')->get()->getResultArray();
+$options = array_column($rows, 'name', 'id');
+
+$this->addField('categoryId', [
+        'label'   => 'Categoría',
+        'type'    => 'dropdown',
+        'options' => $options,
+        'rules'   => 'required|in_list[' . implode(',', array_keys($options)) . ']'
+]);
+```
+
+- Placeholder / opción vacía: agregar una entrada con clave vacía para forzar selección:
+  'options' => ['' => '(Seleccione)'] + $options
+
+- Validación y seguridad:
+
+  - Use in_list para evitar valores no permitidos.
+  - Si las opciones son dinámicas, regenere la lista en cada carga de formulario para que la in_list coincida.
+
+- UX y performance:
+
+  - Dropdown para <~20-30 opciones.
+  - Para relaciones con muchas filas, usar addSearch o un componente tipo autocompletar.
+  - Si necesita seleccionar múltiples valores, prefiera un componente multiselect (o un campo tipo relación); no use dropdown simple.
+
+- Internacionalización: almacene claves estables y traduzca etiquetas en la generación de options para facilitar cambios de idioma.
+
+- Persistencia: el valor guardado es la clave; si necesita guardar la etiqueta, considere un campo calculado o una vista.
+
+## 11. Resumen
 
 | Tipo      | Persistente | Editable |
 | --------- | ----------- | -------- |
@@ -160,6 +220,8 @@ $this->setAutoIncrement(false);
 | Hidden    | Depende     | No       |
 | Calculado | No          | No       |
 | Relación  | Sí          | Sí       |
+| Dropdown  | Sí          | Sí       |
+| Clave PK  | Sí          | Sí       |
 
 ---
 
