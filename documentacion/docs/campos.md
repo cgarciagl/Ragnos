@@ -1,0 +1,166 @@
+# Tipos de campo soportados en Ragnos
+
+En Ragnos, los campos de un dataset se definen mediante el método `addField()`.
+Cada campo es una **descripción declarativa** de cómo un atributo del dominio:
+
+- Se valida
+- Se muestra en formularios
+- Se muestra en grillas
+- Se persiste (o no) en base de datos
+
+Ragnos utiliza esta metadata para generar automáticamente formularios, validaciones, listados y comportamiento CRUD.
+
+---
+
+## 1. Estructura general de `addField()`
+
+```php
+$this->addField('nombreCampo', [
+    'label' => 'Etiqueta visible',
+    'rules' => 'reglas|de|validacion',
+    'type'  => 'tipo',
+    'query' => 'expresion SQL'
+]);
+```
+
+### Parámetros comunes
+
+| Parámetro | Descripción                            |
+| --------- | -------------------------------------- |
+| `label`   | Texto visible en formularios y grillas |
+| `rules`   | Reglas de validación (CI4 + Ragnos)    |
+| `type`    | Tipo de campo (opcional)               |
+| `query`   | Expresión SQL para campos calculados   |
+
+---
+
+## 2. Campo de texto (string)
+
+```php
+$this->addField('customerName', [
+    'label' => 'Nombre',
+    'rules' => 'required'
+]);
+```
+
+- Persistente
+- Editable
+- Texto libre
+
+---
+
+## 3. Campo numérico
+
+```php
+$this->addField('postalCode', [
+    'label' => 'Código postal',
+    'rules' => 'required|numeric'
+]);
+```
+
+- Persistente
+- Editable
+- Numérico
+
+---
+
+## 4. Campo monetario (`money`)
+
+```php
+$this->addField('creditLimit', [
+    'label' => 'Límite de crédito',
+    'rules' => 'required|money'
+]);
+```
+
+- Validador custom
+- Normalización automática
+- Uso financiero
+
+---
+
+## 5. Campo readonly
+
+```php
+$this->addField('Contacto', [
+    'label' => 'Contacto',
+    'rules' => 'readonly'
+]);
+```
+
+- Visible
+- No editable
+
+---
+
+## 6. Campo hidden
+
+```php
+$this->addField('Contacto', [
+    'label' => 'Contacto',
+    'rules' => 'readonly',
+    'type'  => 'hidden'
+]);
+```
+
+- No visible en formularios
+- Útil para UX
+
+---
+
+## 7. Campo calculado (`query`)
+
+```php
+$this->addField('Contacto', [
+    'label' => 'Contacto',
+    'rules' => 'readonly',
+    'query' => "concat(contactLastName, ', ', contactFirstName)",
+    'type'  => 'hidden'
+]);
+```
+
+- No persistente
+- SQL dinámico
+- Solo lectura
+
+---
+
+## 8. Campo relacionado (`addSearch`)
+
+```php
+$this->addSearch('salesRepEmployeeNumber', 'Tienda\\Empleados');
+```
+
+- Clave foránea lógica
+- Selector dinámico
+- Sin JOIN manual
+
+---
+
+## 9. Campo clave primaria
+
+```php
+$this->setIdField('customerNumber');
+$this->setAutoIncrement(false);
+```
+
+- Identidad del dataset
+- No editable
+
+---
+
+## 10. Resumen
+
+| Tipo      | Persistente | Editable |
+| --------- | ----------- | -------- |
+| Texto     | Sí          | Sí       |
+| Numérico  | Sí          | Sí       |
+| Money     | Sí          | Sí       |
+| Readonly  | Depende     | No       |
+| Hidden    | Depende     | No       |
+| Calculado | No          | No       |
+| Relación  | Sí          | Sí       |
+
+---
+
+**En Ragnos, los campos son declaraciones del dominio, no simples inputs.**
