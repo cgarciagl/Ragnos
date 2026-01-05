@@ -24,6 +24,15 @@ Este es el "padre" de la relación. Aquí definimos la cabecera de la factura.
 - **Mostrar la tabla de detalles:**
   Para que la lista de productos aparezca al final del formulario de la orden, usamos una "vista de pie de página" (`_customFormDataFooter`). Esta vista carga un archivo (por ejemplo, `ordenescustomfooter`) que contiene el hueco donde se dibujará la tabla.
 
+  Este es un método ejemplo que puedes agregar en tu controlador maestro:
+
+```php
+    function _customFormDataFooter()
+    {
+        return view('tienda/ordenescustomfooter', []);
+    }
+```
+
 ## 2. Configurando el Detalle (Controlador `Ordenesdetalles`)
 
 Este es el "hijo". Controla cada línea de producto.
