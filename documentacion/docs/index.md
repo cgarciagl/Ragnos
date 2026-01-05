@@ -6,6 +6,7 @@ Guía breve y enlaces a la documentación detallada. Index sólo orientativo: co
 - [Cómo crear un dataset](datasets.md)
 - [Tipos de campo y ejemplos](campos.md)
 - [Hooks y ciclo de vida](hooks.md)
+- [Relaciones Maestro-Detalle](maestro-detalle.md)
 - [Plantilla de nuevo dataset](plantilla.md)
 
 Sugerencia rápida:
