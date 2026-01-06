@@ -3,6 +3,7 @@
 namespace App\ThirdParty\Ragnos\Controllers;
 
 use App\ThirdParty\Ragnos\Controllers\Ragnos;
+use CodeIgniter\API\ResponseTrait;
 
 
 abstract class RDatasetController extends RDataset
@@ -13,6 +14,8 @@ abstract class RDatasetController extends RDataset
     private $sortingDir = 'asc';
 
     public $master = NULL;
+
+    use ResponseTrait;
 
     /**
      * Constructor de la clase
@@ -54,8 +57,21 @@ abstract class RDatasetController extends RDataset
     /**
      * Devuelve la vista inicial con los datos de la relación definida
      */
-    function index(): string
+    function index(): string|\CodeIgniter\HTTP\Response
     {
+        if ($this->isApiCall()) {
+            $this->applyFilters();
+            $ajaxTableResponse = $this->modelo->getTableAjax();
+            if (is_string($ajaxTableResponse)) {
+                $decoded           = json_decode($ajaxTableResponse, true);
+                $ajaxTableResponse = (json_last_error() === JSON_ERROR_NONE) ? $decoded : [];
+            }
+            return $this->respond([
+                'status' => 200,
+                'data'   => $ajaxTableResponse,
+                'count'  => count($ajaxTableResponse['data'] ?? []),
+            ]);
+        }
         checkAjaxRequest(request());
         $tableData['content'] = $this->renderTable();
         return view('App\ThirdParty\Ragnos\Views\ragnos/template', $tableData);
@@ -161,7 +177,7 @@ abstract class RDatasetController extends RDataset
     /**
      * Permite borrar un registro via AJAX
      */
-    function delete()
+    function ajaxdelete()
     {
         if ($this->modelo->canDelete) {
 
@@ -322,5 +338,174 @@ abstract class RDatasetController extends RDataset
             return FALSE;
         }
         return TRUE;
+    }
+
+    /**
+     * Guarda el registro (Insert o Update)
+     */
+    public function save()
+    {
+        // 1. Obtener datos (Soporte híbrido JSON o POST)
+        if (request()->getHeaderLine('Content-Type') === 'application/json') {
+            $data = request()->getJSON(true);
+        } else {
+            $data = request()->getPost();
+        }
+
+        // Determinar ID y si es Insert o Update
+        $pk       = $this->modelo->primaryKey; // Asumiendo que tu modelo tiene esta propiedad pública
+        $id       = $data[$pk] ?? null;
+        $isInsert = empty($id);
+
+        // 2. Validaciones (Usando las reglas acumuladas en el Dataset)
+        // Asumo que tienes una propiedad $this->validationRules poblada por addField
+        if (!$this->validate($this->validationRules ?? [])) {
+            $errors = $this->validator->getErrors();
+
+            if ($this->isApiCall()) {
+                return $this->failValidationErrors($errors);
+            }
+
+            return redirect()->back()->withInput()->with('errors', $errors);
+        }
+
+        // 3. Preparar datos para el modelo
+        // Aquí podrías filtrar $data para dejar solo los campos de la tabla si es necesario
+
+        $this->db->transStart(); // Iniciar transacción para integridad
+
+        try {
+            if ($isInsert) {
+                // --- INSERT ---
+
+                // Hook Before Insert
+                if (method_exists($this, '_beforeInsert')) {
+                    $this->_beforeInsert($data); // El hook puede modificar la data
+                }
+
+                // Guardar
+                $this->modelo->insert($data);
+                $newId = $this->modelo->getInsertID();
+
+                // Hook After Insert
+                if (method_exists($this, '_afterInsert')) {
+                    $this->_afterInsert();
+                }
+
+                $message      = 'Registro creado exitosamente.';
+                $responseData = ['id' => $newId];
+
+            } else {
+                // --- UPDATE ---
+
+                // Hook Before Update
+                if (method_exists($this, '_beforeUpdate')) {
+                    $this->_beforeUpdate($data);
+                }
+
+                // Guardar
+                $this->modelo->update($id, $data);
+
+                // Hook After Update
+                if (method_exists($this, '_afterUpdate')) {
+                    $this->_afterUpdate();
+                }
+
+                $message      = 'Registro actualizado exitosamente.';
+                $responseData = ['id' => $id];
+            }
+
+            $this->db->transComplete();
+
+            if ($this->db->transStatus() === false) {
+                throw new \Exception("Error al guardar en base de datos.");
+            }
+
+            // 4. Respuesta Exitosa
+            if ($this->isApiCall()) {
+                return $this->respond([
+                    'status'  => 200,
+                    'message' => $message,
+                    'data'    => $responseData
+                ]);
+            }
+
+            // Redirección para Web (AdminLTE)
+            return redirect()->to(current_url())->with('success', $message);
+
+        } catch (\Exception $e) {
+            $this->db->transRollback();
+
+            if ($this->isApiCall()) {
+                return $this->failServerError($e->getMessage());
+            }
+
+            return redirect()->back()->withInput()->with('error', 'Error: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Elimina un registro
+     */
+    public function delete($id = null)
+    {
+        // Si no viene por parámetro, intentar buscarlo en POST (para forms web) o JSON body
+        if (!$id) {
+            $id = request()->getPost($this->modelo->primaryKey) ?? request()->getVar('id');
+        }
+
+        if (!$id) {
+            return $this->isApiCall()
+                ? $this->fail('ID no proporcionado', 400)
+                : redirect()->back()->with('error', 'ID no proporcionado');
+        }
+
+        $this->db->transStart();
+
+        try {
+            // Hook Before Delete (Ideal para validaciones de integridad)
+            if (method_exists($this, '_beforeDelete')) {
+                // Si el hook lanza excepción o devuelve false, se cancela
+                $this->_beforeDelete();
+            }
+
+            // Ejecutar borrado
+            $deleted = $this->modelo->delete($id);
+
+            if (!$deleted) {
+                throw new \Exception("No se pudo eliminar el registro o no existe.");
+            }
+
+            // Hook After Delete (Limpieza, logs)
+            if (method_exists($this, '_afterDelete')) {
+                $this->_afterDelete();
+            }
+
+            $this->db->transComplete();
+
+            // Respuesta
+            if ($this->isApiCall()) {
+                return $this->respondDeleted(['id' => $id, 'message' => 'Registro eliminado']);
+            }
+
+            return redirect()->to(current_url())->with('success', 'Registro eliminado correctamente.');
+
+        } catch (\Exception $e) {
+            $this->db->transRollback();
+
+            if ($this->isApiCall()) {
+                return $this->failServerError($e->getMessage());
+            }
+
+            return redirect()->back()->with('error', 'Error al eliminar: ' . $e->getMessage());
+        }
+    }
+
+
+    function isApiCall()
+    {
+        // Verifica si el cliente envió header "Accept: application/json"
+        // o si es una petición AJAX pura que prefiere JSON
+        return request()->negotiate('media', ['text/html', 'application/json']) === 'application/json';
     }
 }

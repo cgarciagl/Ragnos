@@ -177,7 +177,7 @@
                     obj.Ragnos_value_ant_<?= $fieldItem->getFieldName(); ?> = j.<?= $fieldItem->getFieldName(); ?>;
                 <?php endforeach; ?>
 
-                getObject('<?= $clase . '/delete' ?>', obj, function (obj) {
+                getObject('<?= $clase . '/ajaxdelete' ?>', obj, function (obj) {
                     if (obj.result != 'ok') {
                         Swal.fire({
                             icon: 'error',

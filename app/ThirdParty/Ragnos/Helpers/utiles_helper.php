@@ -350,6 +350,16 @@ HTML;
 }
 
 /**
+ * Helper para detectar si la petición espera JSON
+ */
+function isApiCall(\CodeIgniter\HTTP\IncomingRequest $request)
+{
+    // Verifica si el cliente envió header "Accept: application/json"
+    // o si es una petición AJAX pura que prefiere JSON
+    return $request->negotiate('media', ['text/html', 'application/json']) === 'application/json';
+}
+
+/**
  * Execute a SQL query and return the results as an array.
  *
  * Connects to the configured database, executes the provided SQL statement with

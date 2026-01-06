@@ -65,6 +65,8 @@ class Admin extends BaseController
                         $session->set('usu_id', $r['usu_id']);
                         $session->set('usu_nombre', $r['usu_nombre']);
                         $session->set('gru_nombre', $r['gru_nombre']);
+                        $token = bin2hex(random_bytes(32)); // Genera un token seguro de 64 caracteres
+                        $db->table('gen_usuarios')->update(['usu_token' => $token], ['usu_id' => $r['usu_id']]);
                         return true;
                     }
                 },

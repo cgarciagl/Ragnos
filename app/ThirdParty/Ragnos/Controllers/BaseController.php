@@ -62,12 +62,46 @@ abstract class BaseController extends Controller
 
     public function checklogin()
     {
+
+        // Si es API, buscar Header Authorization
+        if (isApiCall(request())) {
+            $token = request()->getHeaderLine('Authorization');
+            // Validar token (JWT o Bearer simple)
+            if (!$this->validarToken($token)) {
+                // Detiene la ejecución enviando JSON 401
+                die(json_encode(['error' => 'Unauthorized']));
+            }
+            return;
+        }
+
         $auth = service('Admin_aut');
         $auth->checklogin();
     }
 
+    function validarToken($token)
+    {
+        $db   = \Config\Database::connect();
+        $user = $db->table('gen_usuarios')
+            ->where('usu_token', $token)
+            ->get()
+            ->getRow();
+        return $user !== null;
+    }
+
     public function soloparagrupo($grupos)
     {
+
+        // Si es API, buscar Header Authorization
+        if (isApiCall(request())) {
+            $token = request()->getHeaderLine('Authorization');
+            // Validar token (JWT o Bearer simple)
+            if (!$this->validarToken($token)) {
+                // Detiene la ejecución enviando JSON 401
+                die(json_encode(['error' => 'Unauthorized']));
+            }
+            return;
+        }
+
         $auth = service('Admin_aut');
         $auth->soloparagrupo($grupos);
     }

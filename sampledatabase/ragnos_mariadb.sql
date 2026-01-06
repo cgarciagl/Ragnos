@@ -71,9 +71,11 @@ CREATE TABLE `gen_usuarios` (
   `usu_nombre` varchar(100) NOT NULL,
   `usu_activo` varchar(1) NOT NULL DEFAULT 'S',
   `usu_grupo` int(11) DEFAULT NULL,
+  `usu_token` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`usu_id`) USING BTREE,
   UNIQUE KEY `usu_login` (`usu_login`) USING BTREE,
-  KEY `usu_grupo` (`usu_grupo`) USING BTREE
+  KEY `usu_grupo` (`usu_grupo`) USING BTREE,
+  KEY `usu_token` (`usu_token`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci ROW_FORMAT=DYNAMIC;
 CREATE TABLE `offices` (
   `officeCode` varchar(10) NOT NULL,
@@ -187,8 +189,11 @@ COMMIT;
 BEGIN;
 LOCK TABLES `ragnos`.`gen_usuarios` WRITE;
 DELETE FROM `ragnos`.`gen_usuarios`;
-INSERT INTO `ragnos`.`gen_usuarios` (`usu_id`,`usu_login`,`usu_pword`,`usu_nombre`,`usu_activo`,`usu_grupo`) VALUES (1, 'ADMIN', 'e0aa021e21dddbd6d8cecec71e9cf564', 'ADMINISTRADOR', 'S', 1),(4, 'CGARCIA', 'e0aa021e21dddbd6d8cecec71e9cf564', 'CARLOS GARCIA', 'S', 2),(5, 'GUEST', '202cb962ac59075b964b07152d234b70', 'GUEST', 'N', 3),(7, 'NUEVO', 'e0aa021e21dddbd6d8cecec71e9cf564', 'NUEVO', 'N', 3),(8, 'JAHIR', 'd797c923b65fc09a009aae45aeb2c726', 'JAHIR CASTILLO', 'S', 1)
-;
+INSERT INTO `gen_usuarios` VALUES (1, 'ADMIN', 'e0aa021e21dddbd6d8cecec71e9cf564', 'ADMINISTRADOR', 'S', 1, '36fc59a445906c482674e587434c766b2b912c045ea6f4e76e5eb14509e34913');
+INSERT INTO `gen_usuarios` VALUES (4, 'CGARCIA', 'e0aa021e21dddbd6d8cecec71e9cf564', 'CARLOS GARCIA', 'S', 2, NULL);
+INSERT INTO `gen_usuarios` VALUES (5, 'GUEST', '202cb962ac59075b964b07152d234b70', 'GUEST', 'N', 3, NULL);
+INSERT INTO `gen_usuarios` VALUES (7, 'NUEVO', 'e0aa021e21dddbd6d8cecec71e9cf564', 'NUEVO', 'N', 3, NULL);
+INSERT INTO `gen_usuarios` VALUES (8, 'JAHIR', 'd797c923b65fc09a009aae45aeb2c726', 'JAHIR CASTILLO', 'S', 1, '12345');
 UNLOCK TABLES;
 COMMIT;
 BEGIN;

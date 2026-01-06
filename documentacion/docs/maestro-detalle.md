@@ -1,4 +1,4 @@
-# Relación Maestro-Detalle en Ragnos (Guía para principiantes)
+# Relación Maestro-Detalle en Ragnos
 
 Esta guía explica cómo crear una pantalla donde tienes un registro principal (como una **Orden de compra**) y una lista de elementos relacionados (los **Detalles** o productos de esa orden).
 
