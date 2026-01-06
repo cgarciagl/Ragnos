@@ -59,7 +59,7 @@ abstract class RDatasetController extends RDataset
      */
     function index(): string|\CodeIgniter\HTTP\Response
     {
-        if ($this->isApiCall()) {
+        if (isApiCall()) {
             $this->applyFilters();
             $ajaxTableResponse = $this->modelo->getTableAjax();
             if (is_string($ajaxTableResponse)) {
@@ -362,7 +362,7 @@ abstract class RDatasetController extends RDataset
         if (!$this->validate($this->validationRules ?? [])) {
             $errors = $this->validator->getErrors();
 
-            if ($this->isApiCall()) {
+            if (isApiCall()) {
                 return $this->failValidationErrors($errors);
             }
 
@@ -422,7 +422,7 @@ abstract class RDatasetController extends RDataset
             }
 
             // 4. Respuesta Exitosa
-            if ($this->isApiCall()) {
+            if (isApiCall()) {
                 return $this->respond([
                     'status'  => 200,
                     'message' => $message,
@@ -436,7 +436,7 @@ abstract class RDatasetController extends RDataset
         } catch (\Exception $e) {
             $this->db->transRollback();
 
-            if ($this->isApiCall()) {
+            if (isApiCall()) {
                 return $this->failServerError($e->getMessage());
             }
 
@@ -455,7 +455,7 @@ abstract class RDatasetController extends RDataset
         }
 
         if (!$id) {
-            return $this->isApiCall()
+            return isApiCall()
                 ? $this->fail('ID no proporcionado', 400)
                 : redirect()->back()->with('error', 'ID no proporcionado');
         }
@@ -484,7 +484,7 @@ abstract class RDatasetController extends RDataset
             $this->db->transComplete();
 
             // Respuesta
-            if ($this->isApiCall()) {
+            if (isApiCall()) {
                 return $this->respondDeleted(['id' => $id, 'message' => 'Registro eliminado']);
             }
 
@@ -493,19 +493,11 @@ abstract class RDatasetController extends RDataset
         } catch (\Exception $e) {
             $this->db->transRollback();
 
-            if ($this->isApiCall()) {
+            if (isApiCall()) {
                 return $this->failServerError($e->getMessage());
             }
 
             return redirect()->back()->with('error', 'Error al eliminar: ' . $e->getMessage());
         }
-    }
-
-
-    function isApiCall()
-    {
-        // Verifica si el cliente envió header "Accept: application/json"
-        // o si es una petición AJAX pura que prefiere JSON
-        return request()->negotiate('media', ['text/html', 'application/json']) === 'application/json';
     }
 }

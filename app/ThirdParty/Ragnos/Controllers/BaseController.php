@@ -64,7 +64,7 @@ abstract class BaseController extends Controller
     {
 
         // Si es API, buscar Header Authorization
-        if (isApiCall(request())) {
+        if (isApiCall()) {
             $token = request()->getHeaderLine('Authorization');
             // Validar token (JWT o Bearer simple)
             if (!$this->validarToken($token)) {
@@ -92,7 +92,7 @@ abstract class BaseController extends Controller
     {
 
         // Si es API, buscar Header Authorization
-        if (isApiCall(request())) {
+        if (isApiCall()) {
             $token = request()->getHeaderLine('Authorization');
             // Validar token (JWT o Bearer simple)
             if (!$this->validarToken($token)) {
@@ -105,4 +105,5 @@ abstract class BaseController extends Controller
         $auth = service('Admin_aut');
         $auth->soloparagrupo($grupos);
     }
+
 }

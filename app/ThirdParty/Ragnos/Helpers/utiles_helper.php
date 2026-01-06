@@ -352,11 +352,11 @@ HTML;
 /**
  * Helper para detectar si la petición espera JSON
  */
-function isApiCall(\CodeIgniter\HTTP\IncomingRequest $request)
+function isApiCall()
 {
     // Verifica si el cliente envió header "Accept: application/json"
     // o si es una petición AJAX pura que prefiere JSON
-    return $request->negotiate('media', ['text/html', 'application/json']) === 'application/json';
+    return request()->negotiate('media', ['text/html', 'application/json']) === 'application/json';
 }
 
 /**
