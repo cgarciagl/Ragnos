@@ -1,1 +1,9 @@
 site_name: Ragnos Docs
+theme:
+  name: github
+  highlightjs: true
+  hljs_style: github
+
+badge:
+  github_repo: ragnos
+  github_user: cgarciagl
