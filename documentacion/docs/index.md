@@ -48,23 +48,24 @@ Ragnos está licenciado bajo la [Licencia MIT](LICENSE).
 - addSearch: añade filtros que se integran para búsquedas.
 - Ejemplo:
 
-  ```php
-  $this->addField('customerNumber', ['label' => 'Cliente', 'rules' => 'required']);
+```php
+ $this->addField('customerNumber', ['label' => 'Cliente', 'rules' => 'required']);
 
-  $this->addSearch('customerNumber', 'Tienda\Clientes');
-  ```
+ $this->addSearch('customerNumber', 'Tienda\Clientes');
+```
 
 4. Personalice comportamiento con hooks (enganches)
 
 - Hooks permiten inyectar lógica sin modificar el CRUD generado (antes/después de insert/update/delete/render).
 - Úselos para: setear valores automáticos (created_by, timestamps), validar o transformar datos, disparar eventos.
 - Ejemplo:
-  ```php
+
+```php
   public function _beforeInsert(&$data) {
           $data['created_at'] = date('Y-m-d H:i:s');
           $data['created_by'] = auth()->id();
   }
-  ```
+```
 
 5. Flujo recomendado de trabajo
 

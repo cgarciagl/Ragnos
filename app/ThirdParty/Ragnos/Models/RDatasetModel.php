@@ -15,6 +15,8 @@ abstract class RDatasetModel extends RTableModel
     public $errors = [];
     public $insertedId = NULL;
 
+    protected $enableAudit = true;
+
     public $defaultSortingField = '';
     public $defaultSortingDir = 'asc';
 

@@ -137,6 +137,6 @@ class RSearchField extends RFieldDecorator
 
     public function getDataFromInput(IncomingRequest $request): mixed
     {
-        return $request->getPost('Ragnos_id_' . $this->getFieldName());
+        return getRagnosInputValue('Ragnos_id_' . $this->getFieldName());
     }
 }

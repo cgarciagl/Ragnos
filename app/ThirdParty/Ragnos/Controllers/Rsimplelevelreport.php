@@ -21,14 +21,8 @@ class RSimpleLevelReport
     private bool $showldwritelevelheader = false; //
     private bool $showldwritelevelfooter = true; //
 
-    // Opcional: Inyectar el servicio de Request si se fuera a usar getPost, getGet, etc.
-    // protected IncomingRequest $request;
-
     public function __construct()
     {
-        // Si no se usa request()->getPost/getGet en la clase, no es estrictamente necesario inyectarlo aquí.
-        // Pero si se necesitara, sería: $this->request = service('request');
-
         // Cargar el helper de Ragnos una sola vez si se usa en la clase
         helper('App\ThirdParty\Ragnos\Helpers\ragnos_helper'); // Cargar el helper aquí o en app/Config/Autoload.php
     }
@@ -110,9 +104,9 @@ class RSimpleLevelReport
 
     public function generateTableHeader(): string //
     {
-        $this->grouprecords = 0; //
-        $output             = '<table>'; //
-        $output .= '<thead><tr>'; //
+        $this->grouprecords  = 0; //
+        $output              = '<table>'; //
+        $output             .= '<thead><tr>'; //
 
         // Asegurarse de que $this->listfields no esté vacío para evitar división por cero.
         $numFields          = count($this->listfields); //
@@ -129,7 +123,7 @@ class RSimpleLevelReport
 
     public function generateTableFooter(): string //
     {
-        $output = '</tbody><tfoot><tr>'; //
+        $output  = '</tbody><tfoot><tr>'; //
         $output .= '<td colspan="' . count($this->listfields) . '">'; //
 
         if ($this->showTotals) { //
@@ -148,7 +142,7 @@ class RSimpleLevelReport
             // Mejorar la lógica para obtener el valor del campo
             // Primero intentar con $fieldIndex (nombre de la columna real)
             // Luego con $listFieldLabel (etiqueta, si se usa como clave en $row)
-            $value       = $row[$fieldIndex] ?? ($row[$listFieldLabel] ?? ''); // Usar operador de coalescencia nula doblemente
+            $value        = $row[$fieldIndex] ?? ($row[$listFieldLabel] ?? ''); // Usar operador de coalescencia nula doblemente
             $temp_string .= "<td> " . htmlspecialchars((string) $value) . " </td>"; // Escapar HTML y asegurar que sea string
         }
         $temp_string .= "</tr>"; //
@@ -187,7 +181,7 @@ class RSimpleLevelReport
                     $g['current']                 = $currentGroupValue; //
                     $this->showldwritelevelheader = TRUE; //
                     // El helper 'App\ThirdParty\Ragnos\Helpers\ragnos_helper' ya se carga en el constructor.
-                    $labelToUse  = isset($g['label']) ? $g['label'] : $f; // Usar isset para $g['label']
+                    $labelToUse   = isset($g['label']) ? $g['label'] : $f; // Usar isset para $g['label']
                     $this->encab .= "<h{$i}> " . htmlspecialchars($labelToUse) . ": " . htmlspecialchars((string) $currentGroupValue) . " </h{$i}>"; // Escapar HTML
                 }
             }
@@ -210,7 +204,7 @@ class RSimpleLevelReport
 
     public function generate(): string //
     {
-        $output = '<div id="imprimible" class="row">'; //
+        $output  = '<div id="imprimible" class="row">'; //
         $output .= '<h1>' . htmlspecialchars($this->title) . '</h1>'; //
 
         if (!empty($this->descfilter)) { //

@@ -102,14 +102,14 @@ abstract class RReportLib
     {
         $ordertoapply = []; //
         for ($i = 1; $i <= 3; $i++) { //
-            $nivel          = $this->request->getPost("nivel{$i}", FILTER_SANITIZE_STRING); // Usar $this->request
-            $filter         = $this->request->getPost("filter{$i}", FILTER_SANITIZE_STRING); // Usar $this->request
-            $ragnosIdFilter = $this->request->getPost("Ragnos_id_filter{$i}"); // Usar $this->request
+            $nivel          = getRagnosInputValue("nivel{$i}", FILTER_SANITIZE_STRING); // Usar $this->request
+            $filter         = getRagnosInputValue("filter{$i}", FILTER_SANITIZE_STRING); // Usar $this->request
+            $ragnosIdFilter = getRagnosInputValue("Ragnos_id_filter{$i}"); // Usar $this->request
 
             if (!empty($nivel)) { // Usar !empty() para cadenas vacías
                 if (!empty($filter)) { // Usar !empty()
                     $this->modelo->setWhere($nivel, $ragnosIdFilter); //
-                    $this->descfilter  .= " < {$modelo->ofieldlist[$nivel]->getLabel()} = '{$filter}' > "; //
+                    $this->descfilter .= " < {$modelo->ofieldlist[$nivel]->getLabel()} = '{$filter}' > "; //
                 }
                 $realField      = $modelo->realField($nivel); //
                 $ordertoapply[] = $realField; //
@@ -151,9 +151,9 @@ abstract class RReportLib
     {
         $temp_string = "<tr>"; //
         foreach ($this->reportfields as $f) { //
-            $temp_string  .= "<td> {$this->fieldToReport($row, $modelo, $f)} </td>"; //
+            $temp_string .= "<td> {$this->fieldToReport($row, $modelo, $f)} </td>"; //
         }
-        $temp_string  .= "</tr>"; //
+        $temp_string .= "</tr>"; //
         $this->totalrecords++; //
         $this->grouprecords++; //
         return $temp_string; //
@@ -190,29 +190,29 @@ abstract class RReportLib
         $temp_string = ''; //
         if ($showldwritelevelheader) { //
             if ($showldwritelevelfooter) { //
-                $temp_string  .= $this->generateTableFooter(); //
+                $temp_string .= $this->generateTableFooter(); //
             }
-            $temp_string  .= $encab; //
-            $temp_string  .= $this->generateTableHeader($this->modelo); //
+            $temp_string .= $encab; //
+            $temp_string .= $this->generateTableHeader($this->modelo); //
         }
-        $temp_string  .= $this->generateTableRow($row, $this->modelo); //
+        $temp_string .= $this->generateTableRow($row, $this->modelo); //
         return $temp_string; //
     }
 
     private function generateTable(array $queryResults, Model $modelo): string
     {
-        $t             = lang('Ragnos.Ragnos_report_of'); //
-        $temp_string   = "<h1> {$t} {$this->title} </h1>"; //
-        $temp_string  .= "<h2> {$this->descfilter} </h2>"; //
+        $t            = lang('Ragnos.Ragnos_report_of'); //
+        $temp_string  = "<h1> {$t} {$this->title} </h1>"; //
+        $temp_string .= "<h2> {$this->descfilter} </h2>"; //
         if (sizeof($this->groups) == 0) { //
-            $temp_string  .= $this->generateTableHeader($modelo); //
+            $temp_string .= $this->generateTableHeader($modelo); //
         }
         foreach ($queryResults as $row) { // Iterar directamente sobre el array de resultados
-            $temp_string  .= $this->generateRowOrLevel($row); //
+            $temp_string .= $this->generateRowOrLevel($row); //
         }
-        $temp_string  .= $this->generateTableFooter(); //
-        $t             = lang('Ragnos.Ragnos_total'); //
-        $temp_string  .= "<hr> <h3 style='text-align:right'> {$t}: {$this->totalrecords} {$this->title} </h3>"; //
+        $temp_string .= $this->generateTableFooter(); //
+        $t            = lang('Ragnos.Ragnos_total'); //
+        $temp_string .= "<hr> <h3 style='text-align:right'> {$t}: {$this->totalrecords} {$this->title} </h3>"; //
         return $temp_string; //
     }
 
@@ -224,7 +224,7 @@ abstract class RReportLib
      */
     public function renderReportOutput(array $data): ResponseInterface
     {
-        $reportType = $this->request->getPost('typeofreport', FILTER_SANITIZE_STRING); //
+        $reportType = getRagnosInputValue('typeofreport', FILTER_SANITIZE_STRING); //
 
         if ($reportType === 'htm') { //
             $htmlContent = view('App\ThirdParty\Ragnos\Views\rreportlib/report_format_html_ajax', $data, ['save' => true]); //

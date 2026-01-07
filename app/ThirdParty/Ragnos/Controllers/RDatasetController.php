@@ -15,6 +15,11 @@ abstract class RDatasetController extends RDataset
 
     public $master = NULL;
 
+    /**
+     * Almacena temporalmente los datos originales antes de un Update
+     */
+    private $originalDataForAudit = [];
+
     use ResponseTrait;
 
     /**
@@ -24,7 +29,12 @@ abstract class RDatasetController extends RDataset
     {
         parent::__construct();
         //si en el request viene el parametro "master" se asigna a la propiedad "master"
-        $this->master = request()->getPost('Ragnos_master', NULL);
+        $this->master = getRagnosInputValue('Ragnos_master', null);
+    }
+
+    function setEnableAudit($band): void
+    {
+        $this->modelo->enableAudit = (bool) $band;
     }
 
     function setSortingField($value, $dir = 'asc')
@@ -138,8 +148,8 @@ abstract class RDatasetController extends RDataset
     {
         $data               = $this->getCommonData();
         $data['primaryKey'] = $this->modelo->primaryKey;
-        $data['sSearch']    = request()->getPost('sSearch');
-        $data['sFilter']    = request()->getPost('sFilter');
+        $data['sSearch']    = getRagnosInputValue('sSearch');
+        $data['sFilter']    = getRagnosInputValue('sFilter');
         return $data;
     }
 
@@ -333,7 +343,7 @@ abstract class RDatasetController extends RDataset
     function getRecordByAjax()
     {
         checkAjaxRequest();
-        $id = request()->getPost('id');
+        $id = getRagnosInputValue('id');
         if ($id) {
             $this->modelo->completeFieldList();
             $res = $this->modelo->find($id);
@@ -343,7 +353,7 @@ abstract class RDatasetController extends RDataset
 
     public function is_unique_Ragnos($inputString, $field)
     {
-        $inputString     = request()->getPost($field);
+        $inputString     = getRagnosInputValue($field);
         $primarykeyvalue = newValue($this->modelo->primaryKey);
         $this->modelo->setWhere($this->modelo->primaryKey . ' <> ', $primarykeyvalue);
         $this->modelo->setWhere($field, $inputString);
@@ -392,53 +402,24 @@ abstract class RDatasetController extends RDataset
             return redirect()->back()->withInput()->with('errors', $errors);
         }
 
-        // 3. Preparar datos para el modelo
-        // Aquí podrías filtrar $data para dejar solo los campos de la tabla si es necesario
-
-        $this->db->transStart(); // Iniciar transacción para integridad
-
         try {
             if ($isInsert) {
                 // --- INSERT ---
+                $this->modelo->performInsert($data);
 
-                // Hook Before Insert
-                if (method_exists($this, '_beforeInsert')) {
-                    $this->_beforeInsert($data); // El hook puede modificar la data
-                }
-
-                // Guardar
-                $this->modelo->insert($data);
-                $newId = $this->modelo->getInsertID();
-
-                // Hook After Insert
-                if (method_exists($this, '_afterInsert')) {
-                    $this->_afterInsert();
-                }
+                $newId = $this->modelo->insertedId;
 
                 $message      = 'Registro creado exitosamente.';
                 $responseData = ['id' => $newId];
 
             } else {
                 // --- UPDATE ---
-
-                // Hook Before Update
-                if (method_exists($this, '_beforeUpdate')) {
-                    $this->_beforeUpdate($data);
-                }
-
-                // Guardar
-                $this->modelo->update($id, $data);
-
-                // Hook After Update
-                if (method_exists($this, '_afterUpdate')) {
-                    $this->_afterUpdate();
-                }
+                $this->modelo->performUpdate($id, $data);
 
                 $message      = 'Registro actualizado exitosamente.';
                 $responseData = ['id' => $id];
             }
 
-            $this->db->transComplete();
 
             if ($this->db->transStatus() === false) {
                 throw new \Exception("Error al guardar en base de datos.");
@@ -457,7 +438,6 @@ abstract class RDatasetController extends RDataset
             return redirect()->to(current_url())->with('success', $message);
 
         } catch (\Exception $e) {
-            $this->db->transRollback();
 
             if (isApiCall()) {
                 return $this->failServerError($e->getMessage());
@@ -474,7 +454,7 @@ abstract class RDatasetController extends RDataset
     {
         // Si no viene por parámetro, intentar buscarlo en POST (para forms web) o JSON body
         if (!$id) {
-            $id = request()->getPost($this->modelo->primaryKey) ?? request()->getVar('id');
+            $id = getRagnosInputValue($this->modelo->primaryKey) ?? getRagnosInputValue('id');
         }
 
         if (!$id) {
@@ -483,28 +463,13 @@ abstract class RDatasetController extends RDataset
                 : redirect()->back()->with('error', 'ID no proporcionado');
         }
 
-        $this->db->transStart();
-
         try {
-            // Hook Before Delete (Ideal para validaciones de integridad)
-            if (method_exists($this, '_beforeDelete')) {
-                // Si el hook lanza excepción o devuelve false, se cancela
-                $this->_beforeDelete();
-            }
-
             // Ejecutar borrado
-            $deleted = $this->modelo->delete($id);
+            $deleted = $this->modelo->performDelete($id);
 
             if (!$deleted) {
                 throw new \Exception("No se pudo eliminar el registro o no existe.");
             }
-
-            // Hook After Delete (Limpieza, logs)
-            if (method_exists($this, '_afterDelete')) {
-                $this->_afterDelete();
-            }
-
-            $this->db->transComplete();
 
             // Respuesta
             if (isApiCall()) {
@@ -514,7 +479,6 @@ abstract class RDatasetController extends RDataset
             return redirect()->to(current_url())->with('success', 'Registro eliminado correctamente.');
 
         } catch (\Exception $e) {
-            $this->db->transRollback();
 
             if (isApiCall()) {
                 return $this->failServerError($e->getMessage());

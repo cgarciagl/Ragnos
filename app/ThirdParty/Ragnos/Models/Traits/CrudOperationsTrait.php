@@ -18,6 +18,7 @@ trait CrudOperationsTrait
                 $primaryKey               = $this->insert($inputDataArray);
                 $_POST[$this->primaryKey] = $primaryKey;
                 $this->insertedId         = $primaryKey;
+                $this->logAudit('INSERT', $primaryKey, ['new' => $inputDataArray]);
                 $this->controller->_afterInsert();
             } catch (\Exception $e) {
                 $this->errors['general_error'] = $e->getMessage();
@@ -34,7 +35,7 @@ trait CrudOperationsTrait
                 if (sizeof($inputDataArray) > 0) {
                     $this->controller->_beforeUpdate($inputDataArray);
 
-                    $id = $request->getPost($this->primaryKey);
+                    $id = getRagnosInputValue($this->primaryKey);
 
                     if (fieldHasChanged($this->primaryKey)) {
                         $id                                = oldValue($this->primaryKey);
@@ -42,6 +43,22 @@ trait CrudOperationsTrait
                     }
 
                     $this->update($id, $inputDataArray);
+
+                    $datosQueCambian = [];
+                    foreach ($inputDataArray as $fieldName => $newValue) {
+                        $oldValue = oldValue($fieldName);
+                        if ($oldValue != $newValue) {
+                            $datosQueCambian[$fieldName] = [
+                                'old' => $oldValue,
+                                'new' => $newValue
+                            ];
+                        }
+                    }
+
+                    if ($this->enableAudit) {
+                        $this->logAudit('UPDATE', $id, $datosQueCambian);
+                    }
+
                     $this->controller->_afterUpdate();
                 }
             } catch (\Exception $e) {
@@ -50,29 +67,45 @@ trait CrudOperationsTrait
         }
     }
 
-    public function performDelete()
+    public function performDelete($pid = null): bool
     {
+        $band = false;
         if ($this->canDelete) {
             try {
                 $request        = request();
                 $inputDataArray = $this->createInputDataArray();
                 if (sizeof($inputDataArray) > 0) {
                     $this->controller->_beforeDelete($inputDataArray);
-                    $id = $request->getPost('id');
-                    $this->where($this->primaryKey, $id)->delete();
+                    $id = getRagnosInputValue('id');
+                    if (!$id) {
+                        $id = $pid;
+                    }
+                    if (!$id) {
+                        throw new \Exception("ID del registro a eliminar no proporcionado.");
+                    }
+                    if ($this->enableAudit) {
+                        $datosaEliminar = $this->where($this->primaryKey, $id)->first();
+                        if (!$datosaEliminar) {
+                            throw new \Exception("El registro con ID {$id} no existe.");
+                        }
+                        $this->logAudit('DELETE', $id, ['deleted_data' => $datosaEliminar]);
+                    }
+                    $band = $this->where($this->primaryKey, $id)->delete();
                     $this->controller->_afterDelete();
+
                 }
             } catch (\Exception $e) {
                 $this->errors['general_error'] = $e->getMessage();
             }
         }
+        return $band;
     }
 
     function createInputDataArray()
     {
         $responseArray = [];
         $request       = request();
-        $isUpdate      = $request->getPost($this->primaryKey) !== null;
+        $isUpdate      = getRagnosInputValue($this->primaryKey) !== null;
 
         foreach ($this->ofieldlist as $k => $fieldItem) {
             // Skip fields with queries
@@ -194,7 +227,7 @@ trait CrudOperationsTrait
     function processFormAction()
     {
         $request = request();
-        if ($request->getPost($this->primaryKey)) {
+        if (getRagnosInputValue($this->primaryKey)) {
             $this->performUpdate();
         } else {
             $this->performInsert();
@@ -211,5 +244,23 @@ trait CrudOperationsTrait
                 }
             }
         }
+    }
+
+    protected function logAudit($action, $recordId, $changes = null)
+    {
+        if (!$this->enableAudit)
+            return;
+
+        $auditModel = new \App\ThirdParty\Ragnos\Models\AuditLogModel();
+
+        $auditModel->insert([
+            'user_id'    => session()->get('usu_id') ?? 0, // Ajusta según tu sistema de auth
+            'table_name' => $this->table, // O $this->getTableName()
+            'record_id'  => $recordId,
+            'action'     => $action,
+            'changes'    => $changes ? json_encode($changes) : null,
+            'ip_address' => request()->getIPAddress(),
+            'user_agent' => (string) request()->getUserAgent()
+        ]);
     }
 }

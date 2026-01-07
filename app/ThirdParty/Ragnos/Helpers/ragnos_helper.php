@@ -14,16 +14,44 @@ function raise(string $exception_message, int $code = 0, ?\Throwable $previous =
     throw new \Exception($exception_message, $code, $previous);
 }
 
+/**
+ * Helper interno para obtener el valor de cualquier fuente (JSON, Input Raw, GET, POST)
+ */
+function getRagnosInputValue($key, $default = null)
+{
+    $request = request();
+
+    // 1. Verificamos si el Content-Type indica que es JSON
+    $contentType = $request->getHeaderLine('Content-Type');
+
+    // strpos verifica si 'application/json' está en el header (por si viene con charset=utf-8, etc.)
+    if (strpos($contentType, 'application/json') !== false) {
+        // Envolvemos en try-catch por si el JSON viene mal formado aunque el header diga que es JSON
+        try {
+            $jsonData = $request->getJSON(true);
+
+            if (!empty($jsonData) && array_key_exists($key, $jsonData)) {
+                return $jsonData[$key];
+            }
+        } catch (\Exception $e) {
+            // Si el JSON falla, ignoramos silenciosamente y dejamos que getVar intente resolverlo
+        }
+    }
+
+    // 2. Si no es JSON, intentar obtener usando getVar() 
+    // Esto cubre GET, POST y datos RAW (form-urlencoded) para PUT/PATCH
+    return $request->getVar($key) ?? $default;
+}
+
 function newValue($fieldname)
 {
-    return request()->getPost($fieldname);
+    return getRagnosInputValue($fieldname);
 }
 
 function oldValue($fieldname)
 {
-    return request()->getPost('Ragnos_value_ant_' . $fieldname);
+    return getRagnosInputValue('Ragnos_value_ant_' . $fieldname);
 }
-
 
 function fieldHasChanged($fieldname)
 {

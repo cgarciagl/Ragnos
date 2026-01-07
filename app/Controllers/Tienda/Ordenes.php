@@ -68,7 +68,7 @@ class Ordenes extends RDatasetController
      */
     function calculatotal()
     {
-        $orderNumber = request()->getPost('orden');
+        $orderNumber = getRagnosInputValue('orden');
 
         // Validate input
         if (empty($orderNumber)) {

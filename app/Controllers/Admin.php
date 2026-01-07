@@ -32,7 +32,7 @@ class Admin extends BaseController
     public function login()
     {
         $validation = \Config\Services::validation();
-        helper('form');
+        helper(['form', 'App\ThirdParty\Ragnos\Helpers\ragnos_helper']);
 
         if (!$this->request->is('post')) {
             return view('admin/login', [
@@ -49,8 +49,8 @@ class Admin extends BaseController
                 static function ($value, $data, &$error, $field) {
                     $request  = request();
                     $session  = session();
-                    $usuario  = strtoupper($request->getPost('usuario'));
-                    $password = md5(strtoupper($request->getPost('pword')));
+                    $usuario  = strtoupper(getRagnosInputValue('usuario'));
+                    $password = md5(strtoupper(getRagnosInputValue('pword')));
                     $db       = db_connect();
                     $query    = $db->table('gen_usuarios')
                         ->select('usu_id, usu_nombre, gru_nombre')
@@ -97,9 +97,9 @@ class Admin extends BaseController
     {
         checkAjaxRequest();
 
-        $valorabuscar = $this->request->getPost('valorabuscar');
-        $ruta         = $this->request->getPost('ruta');
-        $params       = $this->request->getPost('params');
+        $valorabuscar = getRagnosInputValue('valorabuscar');
+        $ruta         = getRagnosInputValue('ruta');
+        $params       = getRagnosInputValue('params');
         $pparams      = [
             'valorabuscar' => $valorabuscar,
             'ruta'         => $ruta,
@@ -138,9 +138,9 @@ class Admin extends BaseController
 
     public function testusuarios()
     {
-        $searchTerm = $this->request->getPost('searchTerm');
-        $limit      = (int) $this->request->getPost('iDisplayLength') ?: 10;
-        $offset     = (int) $this->request->getPost('iDisplayStart') ?: 0;
+        $searchTerm = getRagnosInputValue('searchTerm');
+        $limit      = (int) getRagnosInputValue('iDisplayLength') ?: 10;
+        $offset     = (int) getRagnosInputValue('iDisplayStart') ?: 0;
 
         return $this->search(
             'gen_usuarios',

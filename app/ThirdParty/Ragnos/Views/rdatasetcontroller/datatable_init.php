@@ -35,8 +35,8 @@ $fnServerData2 = "fnData2{$controllerUniqueID}";
 
 echo "var tabla = $('#{$controllerUniqueID}_table');";
 
-if (request()->getPost('sSearch')) {
-    $sSearch = request()->getPost('sSearch');
+if (getRagnosInputValue('sSearch')) {
+    $sSearch = getRagnosInputValue('sSearch');
     $sSearch = json_encode($sSearch);
 } else {
     $sSearch = 'null';
