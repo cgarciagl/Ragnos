@@ -32,9 +32,10 @@ class Admin extends BaseController
     public function login()
     {
         $validation = \Config\Services::validation();
+        $token      = '';
         helper(['form', 'App\ThirdParty\Ragnos\Helpers\ragnos_helper']);
 
-        if (!$this->request->is('post')) {
+        if (!$this->request->is('post') && !isApiCall()) {
             return view('admin/login', [
                 'errors' => [],
             ]);
@@ -66,6 +67,7 @@ class Admin extends BaseController
                         $session->set('usu_nombre', $r['usu_nombre']);
                         $session->set('gru_nombre', $r['gru_nombre']);
                         $token = bin2hex(random_bytes(32)); // Genera un token seguro de 64 caracteres
+                        $session->set('usu_token', $token);
                         $db->table('gen_usuarios')->update(['usu_token' => $token], ['usu_id' => $r['usu_id']]);
                         return true;
                     }
@@ -74,10 +76,28 @@ class Admin extends BaseController
         );
 
         if (!$validation->withRequest($this->request)->run()) {
+
+            if (isApiCall()) {
+                return $this->response->setStatusCode(400)->setJSON([
+                    'status'  => 'error',
+                    'message' => 'Validation failed',
+                    'errors'  => $validation->getErrors(),
+                ]);
+            }
+
             return view('admin/login', [
                 'errors' => $validation->getErrors(),
             ]);
         } else {
+            if (isApiCall()) {
+                return $this->response->setStatusCode(200)->setJSON([
+                    'status'   => 'success',
+                    'message'  => 'Login successful',
+                    'token'    => session('usu_token'),
+                    'redirect' => base_url($sessionBeforeUri),
+                ]);
+            }
+
             $defaultRoute     = 'admin/index';
             $sessionBeforeUri = session('bef_uri') ?? $defaultRoute;
             $restrictedPaths  = ['getFormData', 'getAjaxGridData'];
