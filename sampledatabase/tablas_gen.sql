@@ -46,5 +46,25 @@ INSERT INTO `gen_usuarios` VALUES (5, 'GUEST', '202cb962ac59075b964b07152d234b70
 INSERT INTO `gen_usuarios` VALUES (7, 'NUEVO', 'e0aa021e21dddbd6d8cecec71e9cf564', 'NUEVO', 'N', 3, NULL);
 INSERT INTO `gen_usuarios` VALUES (8, 'JAHIR', 'd797c923b65fc09a009aae45aeb2c726', 'JAHIR CASTILLO', 'S', 1, '12345');
 
+-- ----------------------------
+-- Table structure for gen_audit_logs
+-- ----------------------------
+DROP TABLE IF EXISTS `gen_audit_logs`;
+CREATE TABLE `gen_audit_logs`  (
+  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` int NULL DEFAULT NULL COMMENT 'ID del usuario que hizo el cambio',
+  `table_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Tabla afectada',
+  `record_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'ID del registro afectado',
+  `action` enum('INSERT','UPDATE','DELETE') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `changes` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL COMMENT 'Guarda diferencias: {campo: {old: A, new: B}}',
+  `ip_address` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `user_agent` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
+  `created_at` datetime NULL DEFAULT current_timestamp,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `idx_table_record`(`table_name` ASC, `record_id` ASC) USING BTREE,
+  INDEX `idx_user`(`user_id` ASC) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 0 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+
+
 
 SET FOREIGN_KEY_CHECKS = 1;

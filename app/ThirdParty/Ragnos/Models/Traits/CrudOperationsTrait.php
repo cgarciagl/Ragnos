@@ -248,19 +248,63 @@ trait CrudOperationsTrait
 
     protected function logAudit($action, $recordId, $changes = null)
     {
-        if (!$this->enableAudit)
+        if (!$this->enableAudit) {
             return;
+        }
+
+        // 1. Obtenemos el ID limpiamente (sin modificar la session global)
+        $userId = $this->getCurrentUserId();
 
         $auditModel = new \App\ThirdParty\Ragnos\Models\AuditLogModel();
 
         $auditModel->insert([
-            'user_id'    => session()->get('usu_id') ?? 0, // Ajusta según tu sistema de auth
-            'table_name' => $this->table, // O $this->getTableName()
+            'user_id'    => $userId,
+            'table_name' => $this->table,
             'record_id'  => $recordId,
             'action'     => $action,
-            'changes'    => $changes ? json_encode($changes) : null,
+            // 2. UNESCAPED_UNICODE para que guarde acentos y ñ correctamente en el JSON
+            'changes'    => $changes ? json_encode($changes, JSON_UNESCAPED_UNICODE) : null,
             'ip_address' => request()->getIPAddress(),
             'user_agent' => (string) request()->getUserAgent()
         ]);
+    }
+
+    /**
+     * Método auxiliar para resolver la identidad sin efectos secundarios
+     */
+    private function getCurrentUserId(): int
+    {
+        // A. Si ya hay sesión (Web), usarla directo
+        if (session()->has('usu_id')) {
+            return (int) session()->get('usu_id');
+        }
+
+        // B. Si es API, intentar resolver el token
+        if (isApiCall()) {
+            $header = request()->getHeaderLine('Authorization');
+
+            // Extraer el token si viene como "Bearer <token>"
+            if (preg_match('/Bearer\s(\S+)/', $header, $matches)) {
+                $token = $matches[1];
+            } else {
+                $token = $header; // Intento fallback por si envían el token crudo
+            }
+
+            if ($token) {
+                $db = \Config\Database::connect();
+                // Solo seleccionamos el ID para optimizar memoria
+                $user = $db->table('gen_usuarios')
+                    ->select('usu_id')
+                    ->where('usu_token', $token)
+                    ->get()
+                    ->getRowArray();
+
+                if ($user) {
+                    return (int) $user['usu_id'];
+                }
+            }
+        }
+
+        return 0; // Usuario desconocido o sistema
     }
 }
