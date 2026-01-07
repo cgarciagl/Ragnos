@@ -91,10 +91,10 @@ class Admin extends BaseController
         } else {
             if (isApiCall()) {
                 return $this->response->setStatusCode(200)->setJSON([
-                    'status'   => 'success',
-                    'message'  => 'Login successful',
-                    'token'    => session('usu_token'),
-                    'redirect' => base_url($sessionBeforeUri),
+                    'status'  => 'success',
+                    'message' => 'Login successful',
+                    'token'   => session('usu_token'),
+                    'user_id' => session('usu_id')
                 ]);
             }
 
