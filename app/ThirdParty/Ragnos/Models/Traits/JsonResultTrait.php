@@ -34,6 +34,19 @@ trait JsonResultTrait
             return NULL;
     }
 
+    function getTableForAPI()
+    {
+        if ($this->table) {
+            $count = $this->getCountForSearch();
+            $this->performSearchForJson();
+            $this->setLimitForJsonResult();
+            $this->setOrderByForJsonResult();
+            $query = $this->builder()->get();
+            return ['data' => $query->getResultArray(), 'countAll' => $count];
+        } else
+            return NULL;
+    }
+
     public function generateJsonResult($query, $count)
     {
         $request = request();

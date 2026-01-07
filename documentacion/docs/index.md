@@ -29,18 +29,57 @@ Ragnos está licenciado bajo la [Licencia MIT](LICENSE).
 
 ## Guía rápida de Ragnos
 
-Guía breve y enlaces a la documentación detallada. Index sólo orientativo: consulte los documentos específicos para ejemplos y detalles.
+## Crear una aplicación básica con Ragnos — guía paso a paso
 
-- [Conceptos y filosofía](conceptos.md)
-- [Cómo crear un dataset](datasets.md)
-- [Tipos de campo y ejemplos](campos.md)
-- [Hooks y ciclo de vida](hooks.md)
-- [Relaciones Maestro-Detalle](maestro-detalle.md)
-- [Plantilla de nuevo dataset](plantilla.md)
+1. Diseñe la base de datos primero
 
-Sugerencia rápida:
+- Identifique entidades principales, claves primarias y relaciones (1:N, N:M).
+- Modele cada entidad como una tabla clara y normalizada; defina tipos y constraints.
+- Cree migrations y seeders (evitan cambios manuales en producción).
 
-- Diseñe la BD primero.
-- Cada dataset = una tabla principal.
-- Use addField/addSearch y hooks para personalizar comportamiento sin escribir CRUD.
-- Para detalles y ejemplos, abra los documentos enlazados arriba.
+2. Mapear cada dataset a una tabla principal
+
+- Un "dataset" en Ragnos representa la tabla principal y su comportamiento CRUD.
+- Para tablas relacionadas use claves foráneas y entidades secundarias (detalles/children).
+
+3. Defina campos visibles y buscables con addField / addSearch
+
+- addField: declara columnas, etiquetas, tipo de control y validación para formularios y tablas.
+- addSearch: añade filtros que se integran para búsquedas.
+- Ejemplo:
+
+  ```php
+  $this->addField('customerNumber', ['label' => 'Cliente', 'rules' => 'required']);
+
+  $this->addSearch('customerNumber', 'Tienda\Clientes');
+  ```
+
+4. Personalice comportamiento con hooks (enganches)
+
+- Hooks permiten inyectar lógica sin modificar el CRUD generado (antes/después de insert/update/delete/render).
+- Úselos para: setear valores automáticos (created_by, timestamps), validar o transformar datos, disparar eventos.
+- Ejemplo:
+  ```php
+  public function _beforeInsert(&$data) {
+          $data['created_at'] = date('Y-m-d H:i:s');
+          $data['created_by'] = auth()->id();
+  }
+  ```
+
+5. Flujo recomendado de trabajo
+
+- 1. Diseñar BD y crear migrations.
+- 2. Crear dataset y definir addField/addSearch.
+- 3. Añadir hooks para reglas de negocio y seguridad.
+- 4. Registrar rutas y permisos.
+- 5. Ejecutar migrations, seeders y probar en la UI (DataTables/AdminLTE).
+
+6. Buenas prácticas y consejos rápidos
+
+- Mantenga nombres coherentes (snake_case) y claves foráneas explícitas.
+- Valide tanto en frontend (forms) como en backend (reglas del dataset).
+- Use transacciones para operaciones compuestas con varios datasets.
+- Aproveche seeders para datos de ejemplo y pruebas.
+- Revise los documentos enlazados para ejemplos específicos y plantillas.
+
+Ver "Documentación" arriba para ejemplos completos y configuraciones avanzadas.

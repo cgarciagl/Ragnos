@@ -57,24 +57,47 @@ abstract class RDatasetController extends RDataset
     /**
      * Devuelve la vista inicial con los datos de la relación definida
      */
-    function index(): string|\CodeIgniter\HTTP\Response
+    public function index(): string|\CodeIgniter\HTTP\Response
     {
+        // 1. Si es API, delegamos y retornamos inmediatamente (Cláusula de Guarda)
         if (isApiCall()) {
-            $this->applyFilters();
-            $ajaxTableResponse = $this->modelo->getTableAjax();
-            if (is_string($ajaxTableResponse)) {
-                $decoded           = json_decode($ajaxTableResponse, true);
-                $ajaxTableResponse = (json_last_error() === JSON_ERROR_NONE) ? $decoded : [];
-            }
-            return $this->respond([
-                'status' => 200,
-                'data'   => $ajaxTableResponse,
-                'count'  => count($ajaxTableResponse['data'] ?? []),
-            ]);
+            return $this->handleApiRequest();
         }
+
+        // 2. Si no es API, asumimos flujo de Vista/HTML
         checkAjaxRequest();
-        $tableData['content'] = $this->renderTable();
-        return view('App\ThirdParty\Ragnos\Views\ragnos/template', $tableData);
+
+        return view('App\ThirdParty\Ragnos\Views\ragnos/template', [
+            'content' => $this->renderTable()
+        ]);
+    }
+
+    /**
+     * Maneja la lógica específica de la respuesta API
+     */
+    private function handleApiRequest(): \CodeIgniter\HTTP\Response
+    {
+        $this->applyFilters();
+
+        // Obtenemos y normalizamos los datos
+        $data = $this->getNormalizedTableData();
+
+        return $this->respond([
+            'status' => 200,
+            'data'   => $data['data'] ?? [],
+            'count'  => count($data['data'] ?? []),
+            'total'  => $data['countAll'] ?? 0,
+        ]);
+    }
+
+    /**
+     * Normaliza la respuesta del modelo, asegurando que siempre sea un array
+     */
+    private function getNormalizedTableData(): array
+    {
+        $response = $this->modelo->getTableForAPI();
+
+        return is_array($response) ? $response : [];
     }
 
     /**
