@@ -48,7 +48,7 @@ class RQueryController extends RDatasetController
      */
     function getAjaxGridData()
     {
-        checkAjaxRequest($this->request);
+        checkAjaxRequest();
         $this->applyFilters();
         $ajaxTableResponse = $this->modelo->getTableAjaxBySQL($this->baseQuery);
         returnAsJSON($ajaxTableResponse);

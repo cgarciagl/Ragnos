@@ -95,7 +95,7 @@ class Admin extends BaseController
 
     public function busqueda()
     {
-        checkAjaxRequest($this->request);
+        checkAjaxRequest();
 
         $valorabuscar = $this->request->getPost('valorabuscar');
         $ruta         = $this->request->getPost('ruta');
@@ -110,7 +110,7 @@ class Admin extends BaseController
 
     private function search($table, $selectFields, $searchFields, $searchTerm, $limit = 10, $offset = 0)
     {
-        checkAjaxRequest($this->request);
+        checkAjaxRequest();
 
         $userList = [];
         $query    = $this->db->table($table)
@@ -161,7 +161,7 @@ class Admin extends BaseController
 
     function sess()
     {
-        checkAjaxRequest($this->request);
+        checkAjaxRequest();
 
         //devolvemos el arreglo de la sesion como un objeto json
         return $this->response->setStatusCode(200)->setJSON(session()->get());

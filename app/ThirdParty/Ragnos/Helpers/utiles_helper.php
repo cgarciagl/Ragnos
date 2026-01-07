@@ -308,8 +308,9 @@ function redirectAndDie($url, $statusCode = 302)
     exit;
 }
 
-function checkAjaxRequest(\CodeIgniter\HTTP\IncomingRequest $request)
+function checkAjaxRequest()
 {
+    $request = request();
     if (!$request->isAJAX()) {
         $response    = service('response');
         $urlcompleta = site_url('/');

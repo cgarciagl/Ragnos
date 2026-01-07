@@ -72,7 +72,7 @@ abstract class RDatasetController extends RDataset
                 'count'  => count($ajaxTableResponse['data'] ?? []),
             ]);
         }
-        checkAjaxRequest(request());
+        checkAjaxRequest();
         $tableData['content'] = $this->renderTable();
         return view('App\ThirdParty\Ragnos\Views\ragnos/template', $tableData);
     }
@@ -181,7 +181,7 @@ abstract class RDatasetController extends RDataset
     {
         if ($this->modelo->canDelete) {
 
-            checkAjaxRequest(request());
+            checkAjaxRequest();
 
             try {
                 $this->processDelete();
@@ -197,7 +197,7 @@ abstract class RDatasetController extends RDataset
      */
     private function processDelete()
     {
-        checkAjaxRequest(request());
+        checkAjaxRequest();
         $this->modelo->performDelete();
         $this->showErrorsOrOk();
     }
@@ -216,7 +216,7 @@ abstract class RDatasetController extends RDataset
      */
     function getFormData($id = 'new')
     {
-        checkAjaxRequest(request());
+        checkAjaxRequest();
 
         $formSubmissionData = $this->modelo->getFormData($id);
         echo $formSubmissionData;
@@ -229,7 +229,7 @@ abstract class RDatasetController extends RDataset
      */
     function getAjaxGridData()
     {
-        checkAjaxRequest(request());
+        checkAjaxRequest();
         $this->applyFilters();
         $ajaxTableResponse = $this->modelo->getTableAjax();
         returnAsJSON($ajaxTableResponse);
@@ -240,7 +240,7 @@ abstract class RDatasetController extends RDataset
      */
     function formProcess()
     {
-        checkAjaxRequest(request());
+        checkAjaxRequest();
 
         $this->modelo->processFormInput();
         $this->showErrorsOrOk();
@@ -252,7 +252,7 @@ abstract class RDatasetController extends RDataset
      */
     function searchByAjax()
     {
-        checkAjaxRequest(request());
+        checkAjaxRequest();
         echo $this->renderSearchResults();
     }
 
@@ -270,7 +270,7 @@ abstract class RDatasetController extends RDataset
      */
     function reportByAjax()
     {
-        checkAjaxRequest(request());
+        checkAjaxRequest();
         echo $this->renderReport();
     }
 
@@ -279,7 +279,7 @@ abstract class RDatasetController extends RDataset
      */
     function tableByAjax()
     {
-        checkAjaxRequest(request());
+        checkAjaxRequest();
         echo $this->renderTable();
     }
 
@@ -309,7 +309,7 @@ abstract class RDatasetController extends RDataset
      */
     function getRecordByAjax()
     {
-        checkAjaxRequest(request());
+        checkAjaxRequest();
         $id = request()->getPost('id');
         if ($id) {
             $this->modelo->completeFieldList();
