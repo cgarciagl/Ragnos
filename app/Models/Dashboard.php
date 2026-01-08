@@ -189,4 +189,17 @@ class Dashboard extends Model
                 ) AS MargenPromedioSemestral;";
         return getCachedData($sql);
     }
+
+    function ventasPorPais()
+    {
+        $sql = "SELECT 
+                c.country AS Pais, 
+                SUM(od.quantityOrdered * od.priceEach) AS Total
+            FROM customers c
+            JOIN orders o ON c.customerNumber = o.customerNumber
+            JOIN orderdetails od ON o.orderNumber = od.orderNumber
+            GROUP BY c.country
+            ORDER BY Total DESC";
+        return getCachedData($sql);
+    }
 }

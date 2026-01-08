@@ -26,6 +26,7 @@ class Admin extends BaseController
         $data['productosConMenorRotacion']                = $model->productosConMenorRotacion();
         $data['margenDeGananciaPorLinea']                 = $model->margenDeGananciaPorLinea();
         $data['datosinfobox']                             = $model->datosAtomicosDashboard();
+        $data['mapa_ventas']                              = $model->ventasPorPais();
         return view('admin/dashboard', $data);
     }
 

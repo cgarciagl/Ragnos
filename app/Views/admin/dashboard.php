@@ -136,8 +136,150 @@
 
 
             <div class="row">
-                <div class="col-lg-6">
-                    <div class="card mb-4">
+                <div class="col-md-12">
+                    <div class="card card-primary card-outline mb-4">
+                        <div class="card-header">
+                            <h3 class="card-title"> <i class="fas fa-globe-americas"></i> Distribución Global de Ventas
+                            </h3>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div id="echarts-map" style="height: 400px;"></div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <p class="text-center"><strong>Líderes de Mercado</strong></p>
+                                    <div class="table-responsive" style="height: 400px; overflow-y: auto;">
+                                        <table
+                                            class="table table-hover table-borderless table-striped table-valign-middle table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th>País</th>
+                                                    <th class="text-right">Ventas</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php
+                                                // Asumiendo que $mapa_ventas viene ordenado DESC desde el modelo
+                                                foreach ($mapa_ventas as $pais):
+                                                    ?>
+                                                    <tr>
+                                                        <td>
+                                                            <i class="fas fa-flag text-muted"></i>
+                                                            <?= $pais['Pais'] ?>
+                                                        </td>
+                                                        <td class="text-right text-success text-bold">
+                                                            $
+                                                            <?= number_format($pais['Total'], 0) ?>
+                                                        </td>
+                                                    </tr>
+                                                <?php endforeach; ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+                <script src="https://cdn.jsdelivr.net/npm/echarts@4.9.0/map/js/world.js"></script>
+
+                <script>
+                    document.addEventListener("DOMContentLoaded", function () {
+                        // 1. Obtener datos de PHP
+                        var dbData = <?= json_encode($mapa_ventas) ?>;
+
+                        // 2. Inicializar el gráfico
+                        var chartDom = document.getElementById('echarts-map');
+                        var myChart = echarts.init(chartDom);
+
+                        // 3. Mapeo de Nombres (Tu BD vs ECharts)
+                        // ECharts usa nombres en inglés estándar. Si tu BD tiene nombres diferentes,
+                        // ECharts no los pintará. Este mapa ayuda a corregirlo al vuelo.
+                        var nameMap = {
+                            "USA": "United States",
+                            "UK": "United Kingdom",
+                            // Agrega más si ves países grises que deberían tener color
+                        };
+
+                        // 4. Transformar datos para ECharts
+                        var chartData = dbData.map(function (item) {
+                            // Si el nombre está en el mapa de corrección, úsalo, si no, usa el original
+                            var mapName = nameMap[item.Pais] || item.Pais;
+                            return {
+                                name: mapName,
+                                value: parseFloat(item.Total)
+                            };
+                        });
+
+                        // Calcular el máximo valor para ajustar la escala de colores automáticamente
+                        var maxValue = Math.max(...chartData.map(o => o.value)) || 100000;
+
+                        // 5. Configuración del Mapa
+                        var option = {
+                            tooltip: {
+                                trigger: 'item',
+                                formatter: function (params) {
+                                    if (params.value) {
+                                        // Formato de moneda bonito en el tooltip
+                                        var value = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(params.value);
+                                        return params.name + '<br/>' + value;
+                                    }
+                                    return params.name + '<br/>Sin ventas';
+                                }
+                            },
+                            visualMap: {
+                                min: 0,
+                                max: maxValue,
+                                text: ['Alto', 'Bajo'],
+                                realtime: false,
+                                calculable: true,
+                                inRange: {
+                                    // Gradiente de colores: De azul claro a azul oscuro profesional
+                                    color: ['#e0f3f8', '#007bff', '#004494']
+                                },
+                                left: 'left',
+                                bottom: 'bottom'
+                            },
+                            series: [
+                                {
+                                    name: 'Ventas Globales',
+                                    type: 'map',
+                                    mapType: 'world',
+                                    roam: true, // Permite zoom y moverse
+                                    emphasis: {
+                                        label: { show: true }, // Muestra el nombre al pasar el mouse
+                                        itemStyle: {
+                                            areaColor: '#ffc107' // Color amarillo al hacer hover
+                                        }
+                                    },
+                                    data: chartData
+                                }
+                            ]
+                        };
+
+                        // 6. Renderizar
+                        myChart.setOption(option);
+
+                        // Hacerlo responsivo si cambian el tamaño de la ventana
+                        window.addEventListener('resize', function () {
+                            myChart.resize();
+                        });
+                    });
+                </script>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-5">
+                    <div class="card card-success card-outline mb-4">
                         <div class="card-header border-0">
                             <div class="d-flex justify-content-between">
                                 <h3 class="card-title">Ventas</h3> <a role="button"
@@ -152,7 +294,7 @@
                         </div>
                     </div> <!-- /.card -->
 
-                    <div class="card mb-4">
+                    <div class="card card-info card-outline mb-4">
                         <div class="card-header border-0">
                             <div class="d-flex justify-content-between">
                                 <h3 class="card-title">Ventas por línea</h3>
@@ -165,7 +307,7 @@
                         </div>
                     </div> <!-- /.card -->
 
-                    <div class="card mb-4">
+                    <div class="card card-success card-outline mb-4">
                         <div class="card-header border-0">
                             <div class="d-flex justify-content-between">
                                 <h3 class="card-title">Empleados con más ventas en los últimos 3 meses</h3>
@@ -173,7 +315,8 @@
                         </div>
                         <div class="card-body">
                             <div class="position-relative mb-4">
-                                <table class="table table-hover table-borderless table-striped table-vcenter"
+                                <table
+                                    class="table table-hover table-borderless table-striped table-vcenter table-sm table-success"
                                     id="tableEmpleadosMasVentas">
                                     <thead>
                                         <tr>
@@ -215,7 +358,7 @@
                         </div>
                     </div>
 
-                    <div class="card mb-4">
+                    <div class="card card-primary card-outline mb-4">
                         <div class="card-header border-0">
                             <div class="d-flex justify-content-between">
                                 <h3 class="card-title">Margen de ganancia por línea en los últimos 6 meses</h3>
@@ -223,7 +366,7 @@
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-hover table-borderless table-striped table-vcenter"
+                                <table class="table table-hover table-borderless table-striped table-vcenter table-sm"
                                     id="tableMargenPorLinea">
                                     <thead>
                                         <tr>
@@ -257,11 +400,11 @@
                         </div>
                     </div>
 
-                </div> <!-- /.col-md-6 -->
+                </div> <!-- /.col-md-5 -->
 
 
-                <div class="col-lg-6">
-                    <div class="card mb-4">
+                <div class="col-lg-7">
+                    <div class="card card-warning card-outline mb-4">
                         <div class="card-header border-0">
                             <div class="d-flex justify-content-between">
                                 <h3 class="card-title">Estados de cuenta</h3>
@@ -270,7 +413,7 @@
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-hover table-borderless table-striped table-vcenter"
+                                <table class="table table-hover table-borderless table-striped table-vcenter table-sm"
                                     id="tableclientescondeuda">
                                     <thead>
                                         <tr>
@@ -317,7 +460,7 @@
                         </div>
                     </div> <!-- /.card -->
 
-                    <div class="card mb-4">
+                    <div class="card card-warning card-outline mb-4">
                         <div class="card-header border-0">
                             <div class="d-flex justify-content-between">
                                 <h3 class="card-title">Productos de menor rotación en los últimos 6 meses</h3>
@@ -325,7 +468,8 @@
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-hover table-borderless table-striped table-vcenter"
+                                <table
+                                    class="table table-hover table-borderless table-striped table-vcenter table-sm table-warning"
                                     id="tableProductosMenorRotacion">
                                     <thead>
                                         <tr>
@@ -366,7 +510,7 @@
                         </div>
                     </div>
 
-                </div> <!-- /.col-md-6 -->
+                </div> <!-- /.col-md-7 -->
             </div> <!--end::Row-->
         </div> <!--end::Container-->
     </div> <!--end::App Content-->
@@ -450,7 +594,7 @@
                 }).join('');
                 Swal.fire({
                     title: `Ventas por línea para el mes de ${mes}`,
-                    html: `<table class="table table-hover table-borderless table-striped table-vcenter">
+                    html: `<table class="table table-hover table-borderless table-striped table-vcenter table-sm">
                         <thead>
                             <tr>
                                 <th>Línea</th>
