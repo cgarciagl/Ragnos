@@ -200,6 +200,6 @@ class Dashboard extends Model
             JOIN orderdetails od ON o.orderNumber = od.orderNumber
             GROUP BY c.country
             ORDER BY Total DESC";
-        return getCachedData($sql);
+        return getCachedData($sql, [], 'ventaspais');
     }
 }

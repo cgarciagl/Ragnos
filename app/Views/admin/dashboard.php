@@ -136,7 +136,7 @@
 
 
             <div class="row">
-                <div class="col-md-12">
+                <div class="col">
                     <div class="card card-primary card-outline mb-4">
                         <div class="card-header">
                             <h3 class="card-title"> <i class="fas fa-globe-americas"></i> Distribución Global de Ventas
@@ -315,8 +315,7 @@
                         </div>
                         <div class="card-body">
                             <div class="position-relative mb-4">
-                                <table
-                                    class="table table-hover table-borderless table-striped table-vcenter table-sm table-success"
+                                <table class="table table-hover table-borderless table-striped table-vcenter table-sm"
                                     id="tableEmpleadosMasVentas">
                                     <thead>
                                         <tr>
@@ -468,8 +467,7 @@
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table
-                                    class="table table-hover table-borderless table-striped table-vcenter table-sm table-warning"
+                                <table class="table table-hover table-borderless table-striped table-vcenter table-sm"
                                     id="tableProductosMenorRotacion">
                                     <thead>
                                         <tr>
@@ -521,7 +519,15 @@
 <script src="https://cdn.jsdelivr.net/npm/apexcharts@4.1.0/dist/apexcharts.min.js" crossorigin="anonymous"></script>
 <script>
     $(function () {
-        ponTotalesEnTabla($('#tableclientescondeuda'), true, true);
+        ponTotalesEnTabla($('#tableclientescondeuda'));
+        quitaTotaldeColumna($('#tableclientescondeuda'), [1, 2, 4]);
+
+        ponTotalesEnTabla($('#tableEmpleadosMasVentas'));
+        quitaTotaldeColumna($('#tableEmpleadosMasVentas'), [1, 2]);
+        ponTotalesEnTabla($('#tableProductosMenorRotacion'));
+        quitaTotaldeColumna($('#tableProductosMenorRotacion'), [1, 2]);
+        ponTotalesEnTabla($('#tableMargenPorLinea'));
+        quitaTotaldeColumna($('#tableMargenPorLinea'), 2);
     });
 
     let ventasultimos12meses = <?= json_encode($ventasultimos12meses) ?>;

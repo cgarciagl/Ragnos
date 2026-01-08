@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+    />
+    <title>Ragnos Mobile</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.12.0/dist/cdn.min.js"
+    ></script>
+
+    <style>
+      /* Estilos para que parezca App Nativa */
+      body {
+        background-color: #f4f6f9;
+        padding-bottom: 70px;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif;
+      }
+      .app-header {
+        background: #007bff;
+        color: white;
+        padding: 15px;
+        border-radius: 0 0 20px 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      .stat-card {
+        background: white;
+        border-radius: 15px;
+        padding: 15px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        margin-bottom: 10px;
+      }
+      .order-card {
+        background: white;
+        border-radius: 12px;
+        padding: 15px;
+        margin-bottom: 15px;
+        border-left: 5px solid #ddd;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s;
+      }
+      .order-card.status-In {
+        border-left-color: #007bff;
+      } /* In Process */
+      .order-card.status-Shipped {
+        border-left-color: #28a745;
+      }
+      .order-card.status-Cancelled {
+        border-left-color: #dc3545;
+      }
+
+      /* Botón Flotante de Escáner */
+      .fab {
+        position: fixed;
+        bottom: 80px;
+        right: 20px;
+        width: 60px;
+        height: 60px;
+        background: #007bff;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        box-shadow: 0 4px 10px rgba(0, 123, 255, 0.4);
+        z-index: 1000;
+      }
+
+      /* Barra de Navegación Inferior */
+      .bottom-nav {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        background: white;
+        border-top: 1px solid #eee;
+        display: flex;
+        justify-content: space-around;
+        padding: 10px 0;
+        z-index: 999;
+      }
+      .nav-item {
+        text-align: center;
+        color: #6c757d;
+        font-size: 12px;
+      }
+      .nav-item.active {
+        color: #007bff;
+        font-weight: bold;
+      }
+      .nav-item i {
+        font-size: 20px;
+        display: block;
+        margin-bottom: 2px;
+      }
+
+      /* Notificación Toast */
+      .toast-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1050;
+      }
+    </style>
+  </head>
+
+  <body x-data="ragnosApp()">
+    <div class="app-header d-flex justify-content-between align-items-center">
+      <div>
+        <h5 class="m-0 fw-bold"><i class="fas fa-cubes"></i> Ragnos Go</h5>
+        <small class="opacity-75">Demo Comercial v1.0</small>
+      </div>
+      <div
+        class="bg-white text-primary rounded-circle d-flex align-items-center justify-content-center"
+        style="width: 40px; height: 40px"
+      >
+        <i class="fas fa-user"></i>
+      </div>
+    </div>
+
+    <div class="container mt-3">
+      <div x-show="currentTab === 'home'">
+        <h6
+          class="text-muted mb-3 text-uppercase fw-bold"
+          style="font-size: 0.8rem"
+        >
+          Resumen del Día
+        </h6>
+
+        <div class="row">
+          <div class="col-6">
+            <div class="stat-card text-center">
+              <h3 class="text-primary fw-bold" x-text="stats.ventas"></h3>
+              <small class="text-muted">Ventas Hoy</small>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="stat-card text-center">
+              <h3 class="text-warning fw-bold" x-text="stats.pendientes"></h3>
+              <small class="text-muted">Pendientes</small>
+            </div>
+          </div>
+        </div>
+
+        <h6
+          class="text-muted mt-4 mb-3 text-uppercase fw-bold"
+          style="font-size: 0.8rem"
+        >
+          Órdenes Recientes
+        </h6>
+
+        <template x-for="orden in orders" :key="orden.orderNumber">
+          <div
+            class="order-card"
+            :class="'status-' + orden.status.split(' ')[0]"
+          >
+            <div class="d-flex justify-content-between">
+              <span class="fw-bold"
+                >#<span x-text="orden.orderNumber"></span
+              ></span>
+              <span
+                class="badge rounded-pill"
+                :class="{
+                                  'bg-success': orden.status == 'Shipped',
+                                  'bg-primary': orden.status == 'In Process',
+                                  'bg-danger': orden.status == 'Cancelled',
+                                  'bg-secondary': orden.status == 'Resolved'
+                              }"
+                x-text="orden.status"
+              ></span>
+            </div>
+            <div class="mt-2 text-muted small">
+              <i class="fas fa-user me-1"></i>
+              <span x-text="orden.customerName"></span>
+            </div>
+            <div class="mt-2 d-flex justify-content-between align-items-center">
+              <span class="fw-bold text-dark" x-text="'$' + orden.total"></span>
+
+              <button
+                x-show="orden.status == 'In Process'"
+                @click="despacharOrden(orden.orderNumber)"
+                class="btn btn-sm btn-outline-primary rounded-pill px-3"
+              >
+                <i class="fas fa-shipping-fast"></i> Despachar
+              </button>
+            </div>
+          </div>
+        </template>
+
+        <div x-show="orders.length === 0" class="text-center py-5 text-muted">
+          <i class="fas fa-spinner fa-spin fa-2x"></i>
+          <p class="mt-2">Cargando datos...</p>
+        </div>
+      </div>
+
+      <div x-show="currentTab === 'scan'" class="text-center py-5">
+        <div
+          class="bg-dark rounded-3 mx-auto d-flex align-items-center justify-content-center text-white"
+          style="width: 250px; height: 250px"
+        >
+          <i class="fas fa-qrcode fa-5x"></i>
+        </div>
+        <h5 class="mt-4">Escaneando...</h5>
+        <p class="text-muted">Apunta a un código de pedido</p>
+        <button class="btn btn-primary mt-3" @click="simularEscaneo()">
+          Simular Captura
+        </button>
+      </div>
+    </div>
+
+    <div class="fab" @click="currentTab = 'scan'">
+      <i class="fas fa-barcode"></i>
+    </div>
+
+    <div class="bottom-nav">
+      <div
+        class="nav-item"
+        :class="{ 'active': currentTab === 'home' }"
+        @click="currentTab = 'home'"
+      >
+        <i class="fas fa-home"></i> Inicio
+      </div>
+      <div
+        class="nav-item"
+        :class="{ 'active': currentTab === 'orders' }"
+        @click="currentTab = 'home'"
+      >
+        <i class="fas fa-list"></i> Pedidos
+      </div>
+      <div class="nav-item" :class="{ 'active': currentTab === 'profile' }">
+        <i class="fas fa-cog"></i> Ajustes
+      </div>
+    </div>
+
+    <div class="toast-container">
+      <div
+        id="liveToast"
+        class="toast align-items-center text-white bg-success border-0"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+      >
+        <div class="d-flex">
+          <div class="toast-body">
+            <i class="fas fa-check-circle me-2"></i> Orden Actualizada!
+          </div>
+          <button
+            type="button"
+            class="btn-close btn-close-white me-2 m-auto"
+            data-bs-dismiss="toast"
+            aria-label="Close"
+          ></button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function ragnosApp() {
+        return {
+          currentTab: "home",
+          orders: [],
+          stats: { ventas: "$0", pendientes: 0 },
+
+          // CONFIGURACIÓN:
+          // Si estás en local, la URL relativa funciona. Si no, pon la IP completa.
+          apiUrl: "/api",
+          token: "Bearer TU_TOKEN_AQUI", // <--- Pega aquí un token válido de tu BD
+
+          init() {
+            console.log("Iniciando Ragnos Mobile...");
+            this.fetchData();
+
+            // Polling: Consultar datos cada 5 segundos (Tiempo Real Simulado)
+            setInterval(() => {
+              this.fetchData();
+            }, 5000);
+          },
+
+          async fetchData() {
+            // Simulación de conexión a tu RDataset de Ordenes
+            // NOTA: Ajusta esta URL a tu endpoint real que configuramos
+            // Para el demo, simularé que obtenemos datos si la API falla
+            try {
+              // Aquí iría tu fetch real:
+              // const response = await fetch(`${this.apiUrl}/tienda/ordenes`, { headers: { 'Authorization': this.token, 'Accept': 'application/json' } });
+              // const data = await response.json();
+
+              // --- MODO DEMO (DATOS FALSOS SI NO HAY API) ---
+              // Si no tienes la API corriendo, esto carga datos dummy para que veas el diseño
+              this.mockData();
+            } catch (e) {
+              console.error("Error conectando a Ragnos:", e);
+              this.mockData();
+            }
+          },
+
+          mockData() {
+            // DATOS DE PRUEBA (Elimina esto cuando conectes tu API real)
+            // Simula que la orden 10101 cambia si despachamos
+            if (this.orders.length === 0) {
+              this.orders = [
+                {
+                  orderNumber: 10420,
+                  customerName: "Mini Wheels Co.",
+                  status: "In Process",
+                  total: "4,500.00",
+                },
+                {
+                  orderNumber: 10421,
+                  customerName: "Euro+ Shopping",
+                  status: "Shipped",
+                  total: "1,200.50",
+                },
+                {
+                  orderNumber: 10422,
+                  customerName: "Toys4GrownUps",
+                  status: "In Process",
+                  total: "890.00",
+                },
+                {
+                  orderNumber: 10423,
+                  customerName: "Auto Canal",
+                  status: "Resolved",
+                  total: "2,100.00",
+                },
+              ];
+            }
+
+            // Calcular estadísticas simples
+            let pendientes = this.orders.filter(
+              (o) => o.status === "In Process"
+            ).length;
+            this.stats.pendientes = pendientes;
+            this.stats.ventas = "$" + this.orders.length * 1500;
+          },
+
+          async despacharOrden(id) {
+            // 1. Efecto visual inmediato (Optimistic UI)
+            const ordenIndex = this.orders.findIndex(
+              (o) => o.orderNumber === id
+            );
+            if (ordenIndex !== -1) {
+              this.orders[ordenIndex].status = "Shipped"; // Cambia visualmente ya
+              this.stats.pendientes--; // Baja el contador
+            }
+
+            // 2. Mostrar Notificación
+            const toast = new bootstrap.Toast(
+              document.getElementById("liveToast")
+            );
+            toast.show();
+
+            // 3. Enviar a la API Real (Descomentar para producción)
+            /*
+                    await fetch(`${this.apiUrl}/tienda/ordenes/save`, {
+                        method: 'POST',
+                        headers: { 
+                            'Content-Type': 'application/json',
+                            'Authorization': this.token 
+                        },
+                        body: JSON.stringify({
+                            orderNumber: id,
+                            status: 'Shipped'
+                        })
+                    });
+                    */
+
+            // Si tienes el API real, el setInterval de arriba refrescará los datos reales en 5 seg
+          },
+
+          simularEscaneo() {
+            alert("¡Código de Barras Detectado!\nOrden #10425 encontrada.");
+            this.currentTab = "home";
+          },
+        };
+      }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

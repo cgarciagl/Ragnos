@@ -230,8 +230,8 @@ $(document)
  */
 function ponTotalesEnTabla(
   targetTable,
-  enRenglonFinal = false,
-  enColumnaFinal = true
+  enRenglonFinal = true,
+  enColumnaFinal = false
 ) {
   if (
     !targetTable ||
@@ -364,6 +364,93 @@ function formatearTotal(totalAmount, isCurrency) {
   return Number.isInteger(totalAmount)
     ? totalAmount.toFixed(0)
     : totalAmount.toFixed(2);
+}
+
+/**
+ * Busca el renglón de total de una tabla (asumiendo que es el último renglón del cuerpo)
+ * y elimina el contenido de la celda correspondiente a la columna indicada.
+ *
+ * @param {jQuery|HTMLTableElement} targetTable - La tabla objetivo.
+ * @param {number|number[]} colIndex - El índice o índices de la columna a limpiar (base 0).
+ */
+function quitaTotaldeColumna(targetTable, colIndex) {
+  if (!targetTable) return;
+
+  // Manejar objeto jQuery
+  if (targetTable instanceof jQuery) {
+    targetTable = targetTable[0];
+  }
+
+  // Validar que sea una tabla HTML
+  if (!(targetTable instanceof HTMLTableElement)) {
+    console.error(
+      "quitaTotaldeColumna: El elemento proporcionado no es una tabla válida."
+    );
+    return;
+  }
+
+  const tbody = targetTable.querySelector("tbody");
+  // Obtenemos las filas del cuerpo, o todas las filas si no hay tbody explícito
+  const rows = tbody ? tbody.rows : targetTable.rows;
+
+  if (rows.length === 0) return;
+
+  // El renglón de totales suele ser el último agregado por la función ponTotalesEnTabla
+  const totalRow = rows[rows.length - 1];
+
+  // Convertimos colIndex a un array si no lo es, para manejar ambos casos
+  const indexesToClear = Array.isArray(colIndex) ? colIndex : [colIndex];
+
+  indexesToClear.forEach((index) => {
+    // Verificar si la celda existe en ese índice y limpiar su contenido
+    if (totalRow.cells.length > index) {
+      totalRow.cells[index].textContent = "";
+      totalRow.cells[index].innerHTML = "";
+    }
+  });
+}
+
+/**
+ * Busca un renglón específico de una tabla y elimina el contenido de la última celda
+ * (asumiendo que es la celda de totales agregada por ponTotalesEnTabla).
+ *
+ * @param {jQuery|HTMLTableElement} targetTable - La tabla objetivo.
+ * @param {number|number[]} rowIndex - El índice o índicesdel renglón a limpiar (base 0).
+ */
+function quitaTotaldeRenglon(targetTable, rowIndex) {
+  if (!targetTable) return;
+
+  // Manejar objeto jQuery
+  if (targetTable instanceof jQuery) {
+    targetTable = targetTable[0];
+  }
+
+  // Validar que sea una tabla HTML
+  if (!(targetTable instanceof HTMLTableElement)) {
+    console.error(
+      "quitaTotaldeRenglon: El elemento proporcionado no es una tabla válida."
+    );
+    return;
+  }
+
+  const tbody = targetTable.querySelector("tbody");
+  // Obtenemos las filas del cuerpo, o todas las filas si no hay tbody explícito
+  const rows = tbody ? tbody.rows : targetTable.rows;
+
+  // Normalizar rowIndex a un array para manejar ambos casos (número o array)
+  const indexesToClear = Array.isArray(rowIndex) ? rowIndex : [rowIndex];
+
+  indexesToClear.forEach((idx) => {
+    if (idx >= 0 && idx < rows.length) {
+      const targetRow = rows[idx];
+      // Verificar si la celda existe (última celda) y limpiar su contenido
+      if (targetRow.cells.length > 0) {
+        const lastCellIndex = targetRow.cells.length - 1;
+        targetRow.cells[lastCellIndex].textContent = "";
+        targetRow.cells[lastCellIndex].innerHTML = "";
+      }
+    }
+  });
 }
 
 /**

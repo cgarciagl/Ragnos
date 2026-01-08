@@ -47,5 +47,10 @@ class Clientes extends RDatasetController
             $cache = \Config\Services::cache();
             $cache->delete('estadosdecuenta');
         }
+
+        if (fieldHasChanged('country')) {
+            $cache = \Config\Services::cache();
+            $cache->delete('ventaspais');
+        }
     }
 }
