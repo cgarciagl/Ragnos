@@ -10,6 +10,7 @@ DROP TABLE IF EXISTS `ragnos`.`customers`;
 DROP TABLE IF EXISTS `ragnos`.`employees`;
 DROP TABLE IF EXISTS `ragnos`.`gen_gruposdeusuarios`;
 DROP TABLE IF EXISTS `ragnos`.`gen_usuarios`;
+DROP TABLE IF EXISTS `gen_audit_logs`;
 DROP TABLE IF EXISTS `ragnos`.`offices`;
 DROP TABLE IF EXISTS `ragnos`.`orderdetails`;
 DROP TABLE IF EXISTS `ragnos`.`orders`;
@@ -17,6 +18,21 @@ DROP TABLE IF EXISTS `ragnos`.`payments`;
 DROP TABLE IF EXISTS `ragnos`.`productlines`;
 DROP TABLE IF EXISTS `ragnos`.`products`;
 DROP FUNCTION IF EXISTS `ragnos`.`formateaHora`;
+CREATE TABLE `gen_audit_logs`  (
+  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` int NULL DEFAULT NULL COMMENT 'ID del usuario que hizo el cambio',
+  `table_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Tabla afectada',
+  `record_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'ID del registro afectado',
+  `action` enum('INSERT','UPDATE','DELETE') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `changes` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL COMMENT 'Guarda diferencias: {campo: {old: A, new: B}}',
+  `ip_address` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `user_agent` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
+  `created_at` datetime NULL DEFAULT current_timestamp,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `idx_table_record`(`table_name` ASC, `record_id` ASC) USING BTREE,
+  INDEX `idx_user`(`user_id` ASC) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 0 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+
 CREATE TABLE `ci_sessions` (
   `id` varchar(128) NOT NULL,
   `ip_address` varchar(45) NOT NULL,

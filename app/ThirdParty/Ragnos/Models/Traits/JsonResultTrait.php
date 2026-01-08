@@ -53,10 +53,10 @@ trait JsonResultTrait
 
         $datos = $query->getResultArray();
 
-        $responseData['draw']            = intval(getRagnosInputValue('draw'));
+        $responseData['draw']            = intval(getInputValue('draw'));
         $responseData['recordsTotal']    = $count;
         $responseData['recordsFiltered'] = $count;
-        $responseData['sSearch']         = getRagnosInputValue('search');
+        $responseData['sSearch']         = getInputValue('search');
         $responseData['data']            = [];
 
         $i = 0;
@@ -73,8 +73,8 @@ trait JsonResultTrait
     private function setOrderByForJsonResult()
     {
         $request     = request();
-        $orderColumn = getRagnosInputValue('order[0][column]');
-        $orderDir    = getRagnosInputValue('order[0][dir]');
+        $orderColumn = getInputValue('order[0][column]');
+        $orderDir    = getInputValue('order[0][dir]');
 
         if (!empty($orderColumn)) {
             if ($orderColumn < count($this->tablefields)) {
@@ -88,8 +88,8 @@ trait JsonResultTrait
     private function setLimitForJsonResult()
     {
         $request = request();
-        $limit   = (int) getRagnosInputValue('length') ?: 10; // Default limit
-        $offset  = (int) getRagnosInputValue('start') ?: 0;   // Default offset
+        $limit   = (int) getInputValue('length') ?: 10; // Default limit
+        $offset  = (int) getInputValue('start') ?: 0;   // Default offset
         $this->builder()->limit($limit, $offset);
     }
 }

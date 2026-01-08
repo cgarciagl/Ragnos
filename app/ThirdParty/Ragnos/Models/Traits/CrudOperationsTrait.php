@@ -35,7 +35,7 @@ trait CrudOperationsTrait
                 if (sizeof($inputDataArray) > 0) {
                     $this->controller->_beforeUpdate($inputDataArray);
 
-                    $id = getRagnosInputValue($this->primaryKey);
+                    $id = getInputValue($this->primaryKey);
 
                     if (fieldHasChanged($this->primaryKey)) {
                         $id                                = oldValue($this->primaryKey);
@@ -76,7 +76,7 @@ trait CrudOperationsTrait
                 $inputDataArray = $this->createInputDataArray();
                 if (sizeof($inputDataArray) > 0) {
                     $this->controller->_beforeDelete($inputDataArray);
-                    $id = getRagnosInputValue('id');
+                    $id = getInputValue('id');
                     if (!$id) {
                         $id = $pid;
                     }
@@ -105,7 +105,7 @@ trait CrudOperationsTrait
     {
         $responseArray = [];
         $request       = request();
-        $isUpdate      = getRagnosInputValue($this->primaryKey) !== null;
+        $isUpdate      = getInputValue($this->primaryKey) !== null;
 
         foreach ($this->ofieldlist as $k => $fieldItem) {
             // Skip fields with queries
@@ -227,7 +227,7 @@ trait CrudOperationsTrait
     function processFormAction()
     {
         $request = request();
-        if (getRagnosInputValue($this->primaryKey)) {
+        if (getInputValue($this->primaryKey)) {
             $this->performUpdate();
         } else {
             $this->performInsert();

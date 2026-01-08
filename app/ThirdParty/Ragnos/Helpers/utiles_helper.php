@@ -360,6 +360,19 @@ function isApiCall()
     return request()->negotiate('media', ['text/html', 'application/json']) === 'application/json';
 }
 
+function checkApiCall()
+{
+    if (!isApiCall()) {
+        $response = service('response');
+        $response->setStatusCode(400)
+            ->setHeader('Content-Type', 'application/json')
+            ->setBody(json_encode(['error' => 'API call required'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | (ENVIRONMENT === 'development' ? JSON_PRETTY_PRINT : 0)))
+            ->send();
+        exit;
+    }
+    return true;
+}
+
 /**
  * Execute a SQL query and return the results as an array.
  *

@@ -68,7 +68,7 @@ class Ordenes extends RDatasetController
      */
     function calculatotal()
     {
-        $orderNumber = getRagnosInputValue('orden');
+        $orderNumber = getInputValue('orden');
 
         // Validate input
         if (empty($orderNumber)) {
@@ -94,6 +94,47 @@ class Ordenes extends RDatasetController
         } catch (\Exception $e) {
             log_message('error', 'Error calculating order total: ' . $e->getMessage());
             return $this->respondWithError(500, 'Failed to calculate total');
+        }
+    }
+
+    /**
+     * Hook: Antes de actualizar, revisamos cambios de estado
+     */
+    function _beforeUpdate(&$data)
+    {
+        $id = oldValue('orderNumber');
+        // 1. Automatización de Fecha de Envío
+        // Si el usuario cambia el estado a 'Shipped' y no puso fecha, la ponemos hoy.
+        if (isset($data['status']) && $data['status'] === 'Shipped') {
+            // Verificamos si no enviaron ya una fecha manual
+            if (empty($data['shippedDate'])) {
+                $data['shippedDate'] = date('Y-m-d');
+            }
+        }
+
+        // 2. Bloqueo de Cancelación
+        // Si la orden ya fue enviada, impedimos cancelarla sin permiso especial
+        if (isset($data['status']) && $data['status'] === 'Cancelled') {
+            $ordenActual = $this->modelo->find($id);
+            if ($ordenActual['status'] === 'Shipped') {
+                // Ragnos capturará esto y mostrará un error bonito
+                raise("No puedes cancelar una orden que ya fue enviada. Haz una devolución.");
+            }
+        }
+
+        return $data;
+    }
+
+    /**
+     * Hook: Integridad antes de borrar
+     */
+    function _beforeDelete()
+    {
+        $id = oldValue('orderNumber');
+        // No permitir borrar órdenes enviadas, solo cancelarlas
+        $orden = $this->modelo->find($id);
+        if ($orden && $orden['status'] === 'Shipped') {
+            raise("Por seguridad y auditoría, las órdenes enviadas no se pueden eliminar.");
         }
     }
 }

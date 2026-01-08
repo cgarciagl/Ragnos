@@ -201,7 +201,7 @@ abstract class RField
     // Obtener datos del input
     public function getDataFromInput(IncomingRequest $request): mixed
     {
-        return getRagnosInputValue($this->getFieldName());
+        return getInputValue($this->getFieldName());
     }
 
     // Verificar si el campo ha cambiado

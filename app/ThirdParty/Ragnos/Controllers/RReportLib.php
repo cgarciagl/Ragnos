@@ -102,9 +102,9 @@ abstract class RReportLib
     {
         $ordertoapply = []; //
         for ($i = 1; $i <= 3; $i++) { //
-            $nivel          = getRagnosInputValue("nivel{$i}", FILTER_SANITIZE_STRING); // Usar $this->request
-            $filter         = getRagnosInputValue("filter{$i}", FILTER_SANITIZE_STRING); // Usar $this->request
-            $ragnosIdFilter = getRagnosInputValue("Ragnos_id_filter{$i}"); // Usar $this->request
+            $nivel          = getInputValue("nivel{$i}", FILTER_SANITIZE_STRING); // Usar $this->request
+            $filter         = getInputValue("filter{$i}", FILTER_SANITIZE_STRING); // Usar $this->request
+            $ragnosIdFilter = getInputValue("Ragnos_id_filter{$i}"); // Usar $this->request
 
             if (!empty($nivel)) { // Usar !empty() para cadenas vacías
                 if (!empty($filter)) { // Usar !empty()
@@ -224,7 +224,7 @@ abstract class RReportLib
      */
     public function renderReportOutput(array $data): ResponseInterface
     {
-        $reportType = getRagnosInputValue('typeofreport', FILTER_SANITIZE_STRING); //
+        $reportType = getInputValue('typeofreport', FILTER_SANITIZE_STRING); //
 
         if ($reportType === 'htm') { //
             $htmlContent = view('App\ThirdParty\Ragnos\Views\rreportlib/report_format_html_ajax', $data, ['save' => true]); //

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reporte</title>
 
-    <?php if (in_array(getRagnosInputValue('typeofreport'), ['htm'])): ?>
+    <?php if (in_array(getInputValue('typeofreport'), ['htm'])): ?>
         <link rel="stylesheet" href="./assets/css/bootstrap.min.css" type="text/css" />
         <link rel="stylesheet" href="./assets/css/ragnos.min.css" type="text/css" />
     <?php endif; ?>
@@ -21,7 +21,7 @@
             <?= $tabla ?>
         </div>
     </div>
-    <?php if (getRagnosInputValue('typeofreport') != 'xls'): ?>
+    <?php if (getInputValue('typeofreport') != 'xls'): ?>
         <script type="text/javascript">
             $(function () {
                 $('table').width('100%').addClass('ui-widget-content');

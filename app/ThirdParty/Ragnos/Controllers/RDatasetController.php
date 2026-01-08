@@ -29,7 +29,7 @@ abstract class RDatasetController extends RDataset
     {
         parent::__construct();
         //si en el request viene el parametro "master" se asigna a la propiedad "master"
-        $this->master = getRagnosInputValue('Ragnos_master', null);
+        $this->master = getInputValue('Ragnos_master', null);
     }
 
     function setEnableAudit($band): void
@@ -148,8 +148,8 @@ abstract class RDatasetController extends RDataset
     {
         $data               = $this->getCommonData();
         $data['primaryKey'] = $this->modelo->primaryKey;
-        $data['sSearch']    = getRagnosInputValue('sSearch');
-        $data['sFilter']    = getRagnosInputValue('sFilter');
+        $data['sSearch']    = getInputValue('sSearch');
+        $data['sFilter']    = getInputValue('sFilter');
         return $data;
     }
 
@@ -343,7 +343,7 @@ abstract class RDatasetController extends RDataset
     function getRecordByAjax()
     {
         checkAjaxRequest();
-        $id = getRagnosInputValue('id');
+        $id = getInputValue('id');
         if ($id) {
             $this->modelo->completeFieldList();
             $res = $this->modelo->find($id);
@@ -353,7 +353,7 @@ abstract class RDatasetController extends RDataset
 
     public function is_unique_Ragnos($inputString, $field)
     {
-        $inputString     = getRagnosInputValue($field);
+        $inputString     = getInputValue($field);
         $primarykeyvalue = newValue($this->modelo->primaryKey);
         $this->modelo->setWhere($this->modelo->primaryKey . ' <> ', $primarykeyvalue);
         $this->modelo->setWhere($field, $inputString);
@@ -454,7 +454,7 @@ abstract class RDatasetController extends RDataset
     {
         // Si no viene por parámetro, intentar buscarlo en POST (para forms web) o JSON body
         if (!$id) {
-            $id = getRagnosInputValue($this->modelo->primaryKey) ?? getRagnosInputValue('id');
+            $id = getInputValue($this->modelo->primaryKey) ?? getInputValue('id');
         }
 
         if (!$id) {
@@ -486,5 +486,18 @@ abstract class RDatasetController extends RDataset
 
             return redirect()->back()->with('error', 'Error al eliminar: ' . $e->getMessage());
         }
+    }
+
+    public function history($id)
+    {
+        checkApiCall();
+
+        $auditModel = new \App\ThirdParty\Ragnos\Models\AuditLogModel();
+        $logs       = $auditModel->where('table_name', $this->modelo->table)
+            ->where('record_id', $id)
+            ->orderBy('created_at', 'DESC')
+            ->findAll();
+
+        return $this->respond(['data' => $logs]);
     }
 }

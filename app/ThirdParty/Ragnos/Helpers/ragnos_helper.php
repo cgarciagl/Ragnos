@@ -17,7 +17,7 @@ function raise(string $exception_message, int $code = 0, ?\Throwable $previous =
 /**
  * Helper interno para obtener el valor de cualquier fuente (JSON, Input Raw, GET, POST)
  */
-function getRagnosInputValue($key, $default = null)
+function getInputValue($key, $default = null)
 {
     $request = request();
 
@@ -45,12 +45,12 @@ function getRagnosInputValue($key, $default = null)
 
 function newValue($fieldname)
 {
-    return getRagnosInputValue($fieldname);
+    return getInputValue($fieldname);
 }
 
 function oldValue($fieldname)
 {
-    return getRagnosInputValue('Ragnos_value_ant_' . $fieldname);
+    return getInputValue('Ragnos_value_ant_' . $fieldname);
 }
 
 function fieldHasChanged($fieldname)

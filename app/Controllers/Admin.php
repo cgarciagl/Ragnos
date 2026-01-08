@@ -7,6 +7,12 @@ use App\ThirdParty\Ragnos\Controllers\BaseController;
 
 class Admin extends BaseController
 {
+
+    function __construct()
+    {
+        helper(['form', 'App\ThirdParty\Ragnos\Helpers\ragnos_helper']);
+    }
+
     public function index()
     {
         //cargar el helper utiles
@@ -33,7 +39,6 @@ class Admin extends BaseController
     {
         $validation = \Config\Services::validation();
         $token      = '';
-        helper(['form', 'App\ThirdParty\Ragnos\Helpers\ragnos_helper']);
 
         if (!$this->request->is('post') && !isApiCall()) {
             return view('admin/login', [
@@ -50,8 +55,8 @@ class Admin extends BaseController
                 static function ($value, $data, &$error, $field) {
                     $request  = request();
                     $session  = session();
-                    $usuario  = strtoupper(getRagnosInputValue('usuario'));
-                    $password = md5(strtoupper(getRagnosInputValue('pword')));
+                    $usuario  = strtoupper(getInputValue('usuario'));
+                    $password = md5(strtoupper(getInputValue('pword')));
                     $db       = db_connect();
                     $query    = $db->table('gen_usuarios')
                         ->select('usu_id, usu_nombre, gru_nombre')
@@ -117,9 +122,9 @@ class Admin extends BaseController
     {
         checkAjaxRequest();
 
-        $valorabuscar = getRagnosInputValue('valorabuscar');
-        $ruta         = getRagnosInputValue('ruta');
-        $params       = getRagnosInputValue('params');
+        $valorabuscar = getInputValue('valorabuscar');
+        $ruta         = getInputValue('ruta');
+        $params       = getInputValue('params');
         $pparams      = [
             'valorabuscar' => $valorabuscar,
             'ruta'         => $ruta,
@@ -158,9 +163,9 @@ class Admin extends BaseController
 
     public function testusuarios()
     {
-        $searchTerm = getRagnosInputValue('searchTerm');
-        $limit      = (int) getRagnosInputValue('iDisplayLength') ?: 10;
-        $offset     = (int) getRagnosInputValue('iDisplayStart') ?: 0;
+        $searchTerm = getInputValue('searchTerm');
+        $limit      = (int) getInputValue('iDisplayLength') ?: 10;
+        $offset     = (int) getInputValue('iDisplayStart') ?: 0;
 
         return $this->search(
             'gen_usuarios',

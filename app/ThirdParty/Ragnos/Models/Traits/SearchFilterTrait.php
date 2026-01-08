@@ -79,14 +79,14 @@ trait SearchFilterTrait
     private function performSearchForJson()
     {
         $request     = request();
-        $searchValue = htmlspecialchars_decode(getRagnosInputValue('search[value]'));
+        $searchValue = htmlspecialchars_decode(getInputValue('search[value]'));
 
         if ($searchValue) {
-            $field = getRagnosInputValue('sOnlyField');
+            $field = getInputValue('sOnlyField');
             $this->setWhereForSearchInMultipleFields($searchValue, $field);
         }
 
-        $filterJson = getRagnosInputValue('sFilter');
+        $filterJson = getInputValue('sFilter');
         if ($filterJson) {
             $filters = json_decode(base64_decode($filterJson), true);
             if (json_last_error() === JSON_ERROR_NONE) {
