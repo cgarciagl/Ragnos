@@ -102,7 +102,7 @@
             $(function () {
                 // Pon aquí la ruta REAL a tu archivo echarts.min.js
                 // Puede ser una ruta relativa como 'assets/js/echarts.min.js' o una CDN
-                var urlEcharts = 'https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js';
+                var urlEcharts = "<?= base_url(); ?>/assets/js/echarts/echarts.min.js";
 
                 // Verificamos si ECharts ya está cargado en el navegador
                 if (typeof echarts === 'undefined') {

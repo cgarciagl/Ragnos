@@ -92,7 +92,7 @@ class Dashboard extends Model
                     WHERE ord.orderDate >=  DATE_SUB((SELECT MAX(orderDate) FROM orders), INTERVAL 3 MONTH)
                     GROUP BY c.salesRepEmployeeNumber
                 )
-                SELECT e.employeeNumber, CONCAT(e.firstName, ' ', e.lastName) AS Empleado, o.city AS Oficina, v.TotalVentasTrimestre
+                SELECT e.employeeNumber, CONCAT( e.lastName, ', ', e.firstName) AS Empleado, o.city AS Oficina, v.TotalVentasTrimestre
                 FROM employees e
                 JOIN offices o ON e.officeCode = o.officeCode
                 JOIN  VentasPorVendedor v ON e.employeeNumber = v.employeeNumber

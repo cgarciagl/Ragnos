@@ -4,8 +4,10 @@
 
 <?= $this->section('content') ?>
 
-<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/echarts@4.9.0/map/js/world.js"></script>
+
+
+<script src="<?= base_url(); ?>/assets/js/echarts/echarts.min.js" type="text/javascript"></script>
+<script src="<?= base_url(); ?>/assets/js/echarts/world.js" type="text/javascript"></script>
 
 <main class="app-main"> <!--begin::App Content Header-->
     <div class="app-content-header"> <!--begin::Container-->
@@ -781,6 +783,13 @@
             };
             chartMargen.setOption(optionMargen);
 
+            chartMargen.on('click', function (params) {
+                let linea = params.name;
+                if (linea) {
+                    redirectByPost('<?= site_url('/catalogos/lineas') ?>', { sSearch: linea }, false);
+                }
+            });
+
             // Resize automático
             window.addEventListener('resize', () => chartMargen.resize());
         }
@@ -849,6 +858,12 @@
                 ]
             };
             chartEmp.setOption(optionEmp);
+            chartEmp.on('click', function (params) {
+                let empleado = params.name;
+                if (empleado) {
+                    redirectByPost('<?= site_url('/catalogos/empleados') ?>', { sSearch: empleado }, false);
+                }
+            });
 
             // Resize automático
             window.addEventListener('resize', () => chartEmp.resize());
@@ -926,6 +941,13 @@
             };
 
             chartInv.setOption(optionInv);
+            chartInv.on('click', function (params) {
+                let producto = params.data[2];
+                if (producto) {
+                    redirectByPost('<?= site_url('/catalogos/productos') ?>', { sSearch: producto }, false);
+                }
+            });
+
             window.addEventListener('resize', () => chartInv.resize());
         }
 
