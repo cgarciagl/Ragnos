@@ -4,6 +4,9 @@
 
 <?= $this->section('content') ?>
 
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/echarts@4.9.0/map/js/world.js"></script>
+
 <main class="app-main"> <!--begin::App Content Header-->
     <div class="app-content-header"> <!--begin::Container-->
         <div class="container-fluid"> <!--begin::Row-->
@@ -189,9 +192,6 @@
                     </div>
                 </div>
 
-                <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
-                <script src="https://cdn.jsdelivr.net/npm/echarts@4.9.0/map/js/world.js"></script>
-
                 <script>
                     document.addEventListener("DOMContentLoaded", function () {
                         // 1. Obtener datos de PHP
@@ -342,6 +342,8 @@
                                     </tbody>
                                 </table>
 
+                                <div id="chartEmpleadosRanking" style="height: 300px;"></div>
+
                                 <script>
                                     $(function () {
                                         $('.ligaempleado').on('click', function () {
@@ -364,38 +366,38 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-hover table-borderless table-striped table-vcenter table-sm"
-                                    id="tableMargenPorLinea">
-                                    <thead>
+                            <table class="table table-hover table-borderless table-striped table-vcenter table-sm"
+                                id="tableMargenPorLinea">
+                                <thead>
+                                    <tr>
+                                        <th>Línea</th>
+                                        <th>Margen Total</th>
+                                        <th>Margen %</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($margenDeGananciaPorLinea as $linea): ?>
                                         <tr>
-                                            <th>Línea</th>
-                                            <th>Margen Total</th>
-                                            <th>Margen %</th>
+                                            <td>
+                                                <span class="btn-link ligalinea"><?= $linea['productLine'] ?></span>
+                                            </td>
+                                            <td class="text-success"><?= moneyFormat($linea['MargenTotal']) ?></td>
+                                            <td class="text-success"> <?= $linea['PorcentajeMargen'] ?> % </td>
                                         </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach ($margenDeGananciaPorLinea as $linea): ?>
-                                            <tr>
-                                                <td>
-                                                    <span class="btn-link ligalinea"><?= $linea['productLine'] ?></span>
-                                                </td>
-                                                <td class="text-success"><?= moneyFormat($linea['MargenTotal']) ?></td>
-                                                <td class="text-success"> <?= $linea['PorcentajeMargen'] ?> % </td>
-                                            </tr>
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                            <hr>
+                            <div id="chartMargenDona" style="height: 400px;"></div>
 
-                                <script>
-                                    $(function () {
-                                        $('.ligalinea').on('click', function () {
-                                            let linea = $(this).text().trim();
-                                            redirectByPost('<?= site_url('/catalogos/lineas') ?>', { sSearch: linea }, false);
-                                        });
+                            <script>
+                                $(function () {
+                                    $('.ligalinea').on('click', function () {
+                                        let linea = $(this).text().trim();
+                                        redirectByPost('<?= site_url('/catalogos/lineas') ?>', { sSearch: linea }, false);
                                     });
-                                </script>
-                            </div>
+                                });
+                            </script>
                         </div>
                     </div>
 
@@ -446,16 +448,17 @@
                                         <?php endforeach; ?>
                                     </tbody>
                                 </table>
-
-                                <script>
-                                    $(function () {
-                                        $('.ligacliente').on('click', function () {
-                                            let cliente = $(this).text().trim();
-                                            redirectByPost('<?= site_url('/catalogos/clientes') ?>', { sSearch: cliente }, false);
-                                        });
-                                    });
-                                </script>
                             </div>
+                            <div id="chartParetoDeuda" style="height: 400px;"></div>
+                            <script>
+                                $(function () {
+                                    $('.ligacliente').on('click', function () {
+                                        let cliente = $(this).text().trim();
+                                        redirectByPost('<?= site_url('/catalogos/clientes') ?>', { sSearch: cliente }, false);
+                                    });
+                                });
+                            </script>
+
                         </div>
                     </div> <!-- /.card -->
 
@@ -495,16 +498,18 @@
                                         <?php endforeach; ?>
                                     </tbody>
                                 </table>
-
-                                <script>
-                                    $(function () {
-                                        $('.ligaproducto').on('click', function () {
-                                            let codigo = $(this).text().trim();
-                                            redirectByPost('<?= site_url('/catalogos/productos') ?>', { sSearch: codigo }, false);
-                                        });
-                                    });
-                                </script>
                             </div>
+                            <script>
+                                $(function () {
+                                    $('.ligaproducto').on('click', function () {
+                                        let codigo = $(this).text().trim();
+                                        redirectByPost('<?= site_url('/catalogos/productos') ?>', { sSearch: codigo }, false);
+                                    });
+                                });
+                            </script>
+
+                            <div id="chartInventarioMuerto" style="height: 350px;"></div>
+
                         </div>
                     </div>
 
@@ -514,90 +519,125 @@
     </div> <!--end::App Content-->
 </main> <!--end::App Main--> <!--begin::Footer-->
 
-
-
-<script src="https://cdn.jsdelivr.net/npm/apexcharts@4.1.0/dist/apexcharts.min.js" crossorigin="anonymous"></script>
 <script>
-    $(function () {
-        ponTotalesEnTabla($('#tableclientescondeuda'));
-        quitaTotaldeColumna($('#tableclientescondeuda'), [1, 2, 4]);
+    document.addEventListener("DOMContentLoaded", function () {
+        // --- 1. CONFIGURACIÓN GENERAL Y UTILIDADES ---
 
-        ponTotalesEnTabla($('#tableEmpleadosMasVentas'));
-        quitaTotaldeColumna($('#tableEmpleadosMasVentas'), [1, 2]);
-        ponTotalesEnTabla($('#tableProductosMenorRotacion'));
-        quitaTotaldeColumna($('#tableProductosMenorRotacion'), [1, 2]);
-        ponTotalesEnTabla($('#tableMargenPorLinea'));
-        quitaTotaldeColumna($('#tableMargenPorLinea'), 2);
-    });
+        // Ejecutar funciones de tablas existentes (Totales y limpieza)
+        $(function () {
+            ponTotalesEnTabla($('#tableclientescondeuda'));
+            quitaTotaldeColumna($('#tableclientescondeuda'), [1, 2, 4]);
 
-    let ventasultimos12meses = <?= json_encode($ventasultimos12meses) ?>;
-    let meses = ventasultimos12meses.map(item => item.Mes).reverse();
+            ponTotalesEnTabla($('#tableEmpleadosMasVentas'));
+            quitaTotaldeColumna($('#tableEmpleadosMasVentas'), [1, 2]);
+            ponTotalesEnTabla($('#tableProductosMenorRotacion'));
+            quitaTotaldeColumna($('#tableProductosMenorRotacion'), [1, 2]);
+            ponTotalesEnTabla($('#tableMargenPorLinea'));
+            quitaTotaldeColumna($('#tableMargenPorLinea'), 2);
+        });
 
-    let ventasporlinea = <?= json_encode($ventasporlinea) ?>;
+        // Obtención de datos desde PHP
+        let ventasultimos12meses = <?= json_encode($ventasultimos12meses) ?>;
+        // Invertimos para que sea cronológico (Ene -> Dic)
+        let meses = ventasultimos12meses.map(item => item.Mes).reverse();
+        let datosVentasTotales = ventasultimos12meses.map(item => item.Total).reverse();
 
-    <?php use App\ThirdParty\Ragnos\Controllers\Ragnos; ?>
-    let currency = '<?= Ragnos::config()->currency ?? 'USD' ?>';
+        let ventasporlinea = <?= json_encode($ventasporlinea) ?>;
 
-    let lineas = ventasporlinea.reduce((acc, item) => {
-        if (!acc[item.productLine]) {
-            acc[item.productLine] = { name: item.productLine, data: Array(meses.length).fill(0) };
-        }
-        let mesIndex = meses.indexOf(item.Mes);
-        if (mesIndex !== -1) {
-            acc[item.productLine].data[mesIndex] = item.Total;
-        }
-        return acc;
-    }, {});
+        <?php use App\ThirdParty\Ragnos\Controllers\Ragnos; ?>
+        let currency = '<?= Ragnos::config()->currency ?? 'USD' ?>';
 
-    let serieslineas = Object.values(lineas);
-
-    const chartOptions = (title, series, onclick) => ({
-        series: series,
-        chart: {
-            height: 350,
-            type: 'line',
-            zoom: { enabled: false },
-            dropShadow: {
-                enabled: true,
-                color: '#000',
-                top: 18,
-                left: 7,
-                blur: 10,
-                opacity: 0.5
-            },
-            events: {
-                click: onclick
+        // Procesamiento de datos para Ventas por Línea (Misma lógica que tenías)
+        let lineasMap = ventasporlinea.reduce((acc, item) => {
+            if (!acc[item.productLine]) {
+                acc[item.productLine] = {
+                    name: item.productLine,
+                    type: 'line',
+                    smooth: true, // Curva suave (equivalente a stroke: curve: smooth)
+                    data: Array(meses.length).fill(0)
+                };
             }
-        },
-        dataLabels: { enabled: false },
-        stroke: { curve: 'smooth' },
-        title: { text: title, align: 'left' },
-        grid: {
-            row: {
-                colors: ['#f3f3f3', 'transparent'],
-                opacity: 0.5
-            },
-        },
-        yaxis: {
-            labels: {
-                formatter: value => moneyFormat(value, currency)
-            },
-        },
-        xaxis: { categories: meses },
-    });
+            let mesIndex = meses.indexOf(item.Mes);
+            if (mesIndex !== -1) {
+                acc[item.productLine].data[mesIndex] = parseFloat(item.Total); // Aseguramos float
+            }
+            return acc;
+        }, {});
 
-    new ApexCharts(document.querySelector("#chartventas"), chartOptions('Ventas últimos 12 meses',
-        [{
-            name: "Ventas",
-            data: ventasultimos12meses.map(item => item.Total).reverse(),
-        }],
-        function (event, chartContext, opts) {
-            let mes = opts.globals.categoryLabels[opts.dataPointIndex];
+        let serieslineas = Object.values(lineasMap);
+
+        // --- 2. CONFIGURACIÓN ECHARTS COMÚN ---
+
+        const commonGrid = {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        };
+
+        const commonTooltip = {
+            trigger: 'axis',
+            formatter: function (params) {
+                let tooltipResult = params[0].axisValueLabel + '<br/>';
+                params.forEach(item => {
+                    // Usamos tu función global moneyFormat si existe, sino un fallback
+                    let val = typeof moneyFormat === 'function' ? moneyFormat(item.value, currency) : item.value;
+                    tooltipResult += `${item.marker} ${item.seriesName}: <b>${val}</b><br/>`;
+                });
+                return tooltipResult;
+            }
+        };
+
+        // --- 3. GRÁFICA 1: VENTAS ÚLTIMOS 12 MESES ---
+
+        var chartVentasDom = document.getElementById('chartventas');
+        // Importante: ECharts necesita altura definida en CSS o style inline
+        chartVentasDom.style.height = '350px';
+        var chartVentas = echarts.init(chartVentasDom);
+
+        var optionVentas = {
+            title: { text: 'Ventas últimos 12 meses' },
+            tooltip: commonTooltip,
+            grid: commonGrid,
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                data: meses
+            },
+            yAxis: {
+                type: 'value',
+                axisLabel: {
+                    formatter: function (value) {
+                        return typeof moneyFormat === 'function' ? moneyFormat(value, currency) : value;
+                    }
+                }
+            },
+            series: [{
+                name: 'Ventas',
+                type: 'line',
+                smooth: true,
+                data: datosVentasTotales,
+                itemStyle: { color: '#007bff' },
+                areaStyle: { opacity: 0.1 } // Un toque extra visual
+            }]
+        };
+
+        chartVentas.setOption(optionVentas);
+
+        // --- EVENTO CLICK: Funcionalidad SweetAlert ---
+        chartVentas.on('click', function (params) {
+            // params.name contiene el nombre del Mes (eje X)
+            // params.dataIndex contiene el índice del array
+            let mes = params.name;
+            let index = params.dataIndex;
+
             if (mes) {
-                let ventasPorLinea = serieslineas.map(linea => {
-                    let ventas = linea.data[opts.dataPointIndex];
+                // Construimos las filas usando el array procesado 'serieslineas'
+                let ventasPorLineaHTML = serieslineas.map(linea => {
+                    let ventas = linea.data[index];
                     return `<tr><td>${linea.name}</td><td>${moneyFormat(ventas, currency)}</td></tr>`;
                 }).join('');
+
                 Swal.fire({
                     title: `Ventas por línea para el mes de ${mes}`,
                     html: `<table class="table table-hover table-borderless table-striped table-vcenter table-sm">
@@ -608,41 +648,419 @@
                             </tr>
                         </thead>
                         <tbody>
-                            ${ventasPorLinea}
+                            ${ventasPorLineaHTML}
                         </tbody>
                        </table>`,
                     showCloseButton: true,
                     showConfirmButton: false,
-                })
-            }
-        })).render();
-
-    new ApexCharts(document.querySelector("#chartventasporlinea"), chartOptions('Ventas por línea', serieslineas)).render();
-
-    $('#btnVerReporteDeVentas').on('click', (e) => {
-        e.preventDefault();
-        let tabla = convertToTable(ventasultimos12meses);
-        tabla = tabla.replace(/<td>([^<]+)<\/td>/g, (match, p1) => {
-            if (p1.match(/^\d+(\.\d+)?$/)) {
-                return `<td>${moneyFormat(p1, currency)}</td>`;
-            }
-            return match;
-        });
-        Swal.fire({
-            title: 'Ventas últimos 12 meses',
-            html: tabla,
-            showCloseButton: true,
-            showConfirmButton: true,
-            confirmButtonText: 'Imprimir',
-            showCancelButton: true,
-            cancelButtonText: 'Aceptar'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                redirectByPost('tienda/reportes/ventaspormes', {}, false);
+                });
             }
         });
+
+        // --- 4. GRÁFICA 2: VENTAS POR LÍNEA ---
+
+        var chartLineasDom = document.getElementById('chartventasporlinea');
+        chartLineasDom.style.height = '350px';
+        var chartLineas = echarts.init(chartLineasDom);
+
+        var optionLineas = {
+            title: { text: 'Ventas por línea' },
+            tooltip: commonTooltip,
+            legend: {
+                data: serieslineas.map(s => s.name),
+                bottom: 0
+            },
+            grid: { ...commonGrid, bottom: '10%' }, // Espacio extra para la leyenda
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                data: meses
+            },
+            yAxis: {
+                type: 'value',
+                axisLabel: {
+                    formatter: function (value) {
+                        return typeof moneyFormat === 'function' ? moneyFormat(value, currency) : value;
+                    }
+                }
+            },
+            series: serieslineas // Ya tiene el formato correcto {name, type='line', data}
+        };
+
+        chartLineas.setOption(optionLineas);
+
+        // --- 5. RESPONSIVIDAD ---
+        window.addEventListener('resize', function () {
+            chartVentas.resize();
+            chartLineas.resize();
+            // Si tienes el mapa también en una variable global, agrégalo aquí:
+            // if(typeof myChart !== 'undefined') myChart.resize(); 
+        });
+
+        // --- 6. BOTÓN REPORTE (Sin cambios lógicos, solo jQuery legacy) ---
+        $('#btnVerReporteDeVentas').on('click', (e) => {
+            e.preventDefault();
+            let tabla = convertToTable(ventasultimos12meses);
+            tabla = tabla.replace(/<td>([^<]+)<\/td>/g, (match, p1) => {
+                if (p1.match(/^\d+(\.\d+)?$/)) {
+                    return `<td>${moneyFormat(p1, currency)}</td>`;
+                }
+                return match;
+            });
+            Swal.fire({
+                title: 'Ventas últimos 12 meses',
+                html: tabla,
+                showCloseButton: true,
+                showConfirmButton: true,
+                confirmButtonText: 'Imprimir',
+                showCancelButton: true,
+                cancelButtonText: 'Aceptar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    redirectByPost('tienda/reportes/ventaspormes', {}, false);
+                }
+            });
+        });
+
+
+        // ==========================================
+        // SUGERENCIA 1: DONA DE RENTABILIDAD
+        // ==========================================
+        var datosMargen = <?= json_encode($margenDeGananciaPorLinea) ?>;
+        var chartMargenDom = document.getElementById('chartMargenDona');
+
+        if (chartMargenDom) {
+            var chartMargen = echarts.init(chartMargenDom);
+            var optionMargen = {
+                title: {
+                    text: 'Aportación al Margen Total',
+                    left: 'center',
+                    textStyle: { fontSize: 14 }
+                },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: function (params) {
+                        // Muestra: Nombre linea: $Monto (% del total)
+                        let val = typeof moneyFormat === 'function' ? moneyFormat(params.value, currency) : params.value;
+                        return `${params.name}<br/><b>${val}</b> (${params.percent}%)`;
+                    }
+                },
+                legend: {
+                    orient: 'vertical',
+                    left: 'left',
+                    show: false // Ocultamos leyenda si hay muchas líneas para no ensuciar
+                },
+                series: [
+                    {
+                        name: 'Margen',
+                        type: 'pie',
+                        radius: ['40%', '70%'], // Esto lo hace una "Dona"
+                        avoidLabelOverlap: false,
+                        itemStyle: {
+                            borderRadius: 5,
+                            borderColor: '#fff',
+                            borderWidth: 2
+                        },
+                        label: {
+                            show: false,
+                            position: 'center'
+                        },
+                        emphasis: {
+                            label: {
+                                show: true,
+                                fontSize: 16,
+                                fontWeight: 'bold'
+                            }
+                        },
+                        data: datosMargen.map(item => ({
+                            value: parseFloat(item.MargenTotal), // Asegúrate que este campo venga numérico o limpio
+                            name: item.productLine
+                        }))
+                    }
+                ]
+            };
+            chartMargen.setOption(optionMargen);
+
+            // Resize automático
+            window.addEventListener('resize', () => chartMargen.resize());
+        }
+
+        // ==========================================
+        // SUGERENCIA 2: RANKING DE EMPLEADOS
+        // ==========================================
+        var datosEmpleados = <?= json_encode($empleadosConMasVentasEnElUltimoTrimestre) ?>;
+        // Ordenamos de menor a mayor para que el gráfico de barras horizontales muestre el #1 arriba visualmente
+        datosEmpleados.sort((a, b) => parseFloat(a.TotalVentasTrimestre) - parseFloat(b.TotalVentasTrimestre));
+
+        var chartEmpDom = document.getElementById('chartEmpleadosRanking');
+
+        if (chartEmpDom) {
+            var chartEmp = echarts.init(chartEmpDom);
+            var optionEmp = {
+                title: { text: '' },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: { type: 'shadow' }
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'value',
+                    boundaryGap: [0, 0.01],
+                    axisLabel: {
+                        formatter: function (val) {
+                            // Versión corta de moneda para eje X (ej. 10k)
+                            return val >= 1000 ? (val / 1000) + 'k' : val;
+                        }
+                    }
+                },
+                yAxis: {
+                    type: 'category',
+                    data: datosEmpleados.map(item => item.Empleado) // Nombres en eje Y
+                },
+                series: [
+                    {
+                        name: 'Ventas Trimestre',
+                        type: 'bar',
+                        data: datosEmpleados.map(item => parseFloat(item.TotalVentasTrimestre)),
+                        itemStyle: {
+                            color: function (params) {
+                                // Pinta de verde oscuro al mejor vendedor (el último del array ordenado)
+                                var numItems = datosEmpleados.length;
+                                if (params.dataIndex === numItems - 1) {
+                                    return '#28a745';
+                                }
+                                return '#17a2b8'; // Azul info para el resto
+                            }
+                        },
+                        label: {
+                            show: true,
+                            position: 'right', // Muestra el valor a la derecha de la barra
+                            formatter: function (params) {
+                                return typeof moneyFormat === 'function' ? moneyFormat(params.value, currency) : params.value;
+                            },
+                            fontSize: 10
+                        }
+                    }
+                ]
+            };
+            chartEmp.setOption(optionEmp);
+
+            // Resize automático
+            window.addEventListener('resize', () => chartEmp.resize());
+        }
+
+        // ==========================================
+        // SUGERENCIA 3: MATRIZ DE INVENTARIO (SCATTER)
+        // ==========================================
+        var datosInventario = <?= json_encode($productosConMenorRotacion) ?>;
+        var chartInvDom = document.getElementById('chartInventarioMuerto');
+
+        if (chartInvDom) {
+            var chartInv = echarts.init(chartInvDom);
+
+            var optionInv = {
+                title: {
+                    text: 'Matriz de Rotación de Inventario',
+                    subtext: 'Relación Stock vs. Ventas',
+                    left: 'center'
+                },
+                tooltip: {
+                    formatter: function (params) {
+                        return `<b>${params.data[2]}</b><br/>` + // Nombre del producto
+                            `Stock: ${params.data[1]}<br/>` +
+                            `Ventas: ${params.data[0]}`;
+                    }
+                },
+                grid: { left: '8%', right: '10%', top: '15%', bottom: '10%' },
+                xAxis: {
+                    name: 'Ventas (Unidades)',
+                    type: 'value',
+                    splitLine: { show: false }
+                },
+                yAxis: {
+                    name: 'Stock Actual',
+                    type: 'value',
+                    splitLine: { show: false }
+                },
+                // Zonas visuales (MarkArea) para indicar peligro
+                series: [{
+                    type: 'scatter',
+                    symbolSize: 15,
+                    itemStyle: {
+                        color: function (params) {
+                            // Si tiene mucho stock (>5000) y pocas ventas (<500), color ROJO
+                            if (params.data[1] > 5000 && params.data[0] < 500) return '#dc3545';
+                            return '#007bff';
+                        },
+                        opacity: 0.7
+                    },
+                    // Formato de data para Scatter: [X, Y, NombreExtra]
+                    data: datosInventario.map(item => [
+                        parseInt(item.TotalVendidoUltimos6Meses), // Eje X: Ventas
+                        parseInt(item.quantityInStock),   // Eje Y: Stock
+                        item.productName                // Extra para tooltip
+                    ]),
+                    markArea: {
+                        silent: true,
+                        itemStyle: {
+                            color: 'rgba(220, 53, 69, 0.1)' // Fondo rojo suave
+                        },
+                        data: [[
+                            {
+                                name: 'Zona Crítica\n[Alto Stock (>5000) / Baja Venta (<500)]',
+                                xAxis: 0, // Desde 0 ventas
+                                yAxis: 5000 // Desde 5000 stock (ajusta este umbral a tu realidad)
+                            },
+                            {
+                                xAxis: 500, // Hasta 500 ventas
+                                yAxis: 'max' // Hasta el máximo de stock
+                            }
+                        ]]
+                    }
+                }]
+            };
+
+            chartInv.setOption(optionInv);
+            window.addEventListener('resize', () => chartInv.resize());
+        }
+
+
+        // ==========================================
+        // OPCIÓN RECOMENDADA: PARETO DE DEUDA
+        // ==========================================
+        var datosDeudaRaw = <?= json_encode($estadosDeCuenta) ?>; // <--- Verifica el nombre de tu variable PHP
+
+        // 1. PREPARACIÓN DE DATOS (Matemática para Pareto)
+        // Aseguramos que sea numérico y ordenamos de Mayor a Menor deuda
+        var datosDeuda = datosDeudaRaw.map(item => ({
+            name: item.customerName,            // <--- Ajusta 'customerName' al nombre real de tu campo
+            value: parseFloat(item.Deuda)  // <--- Ajusta 'TotalDeuda' al nombre real de tu campo
+        })).sort((a, b) => b.value - a.value);
+
+        // Calculamos el total de la deuda para sacar los porcentajes
+        var totalDeudaCartera = datosDeuda.reduce((sum, item) => sum + item.value, 0);
+
+        // Generamos los arrays para ECharts
+        var nombresDeudores = [];
+        var valoresDeuda = [];
+        var porcentajesAcumulados = [];
+        var acumulado = 0;
+
+        datosDeuda.forEach(item => {
+            nombresDeudores.push(item.name);
+            valoresDeuda.push(item.value);
+
+            acumulado += item.value;
+            var porcentaje = (acumulado / totalDeudaCartera) * 100;
+            porcentajesAcumulados.push(porcentaje.toFixed(2)); // Guardamos con 2 decimales
+        });
+
+        // 2. CONFIGURACIÓN ECHARTS
+        var chartParetoDom = document.getElementById('chartParetoDeuda');
+
+        if (chartParetoDom) {
+            var chartPareto = echarts.init(chartParetoDom);
+
+            var optionPareto = {
+                title: {
+                    text: 'Análisis de Cartera Vencida (Pareto)',
+                    subtext: 'Regla 80/20: Prioridad de Cobranza',
+                    left: 'center'
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: { type: 'cross' },
+                    formatter: function (params) {
+                        // params[0] es la Barra (Dinero), params[1] es la Línea (Porcentaje)
+                        var deuda = params[0];
+                        var percent = params[1];
+
+                        var valDeuda = typeof moneyFormat === 'function' ? moneyFormat(deuda.value, currency) : deuda.value;
+
+                        return `<b>${deuda.name}</b><br/>` +
+                            `Deuda: ${valDeuda}<br/>` +
+                            `Acumulado: ${percent.value}% del total`;
+                    }
+                },
+                toolbox: {
+                    feature: { saveAsImage: { show: true, title: 'Guardar' } }
+                },
+                grid: {
+                    top: '20%',
+                    right: '10%', // Espacio para el eje derecho
+                    left: '10%',
+                    bottom: '10%'
+                },
+                xAxis: {
+                    type: 'category',
+                    data: nombresDeudores,
+                    axisLabel: {
+                        interval: 0,
+                        rotate: 45, // Rotamos nombres si son largos
+                        fontSize: 10
+                    }
+                },
+                yAxis: [
+                    {
+                        type: 'value',
+                        name: 'Monto Deuda',
+                        position: 'left',
+                        axisLabel: {
+                            formatter: function (value) {
+                                // Formato corto para el eje (ej. 10k)
+                                return value >= 1000 ? (value / 1000).toFixed(0) + 'k' : value;
+                            }
+                        }
+                    },
+                    {
+                        type: 'value',
+                        name: 'Impacto Acumulado',
+                        min: 0,
+                        max: 100,
+                        position: 'right',
+                        axisLabel: {
+                            formatter: '{value} %'
+                        }
+                    }
+                ],
+                series: [
+                    {
+                        name: 'Deuda',
+                        type: 'bar',
+                        data: valoresDeuda,
+                        yAxisIndex: 0, // Usa el eje izquierdo (Dinero)
+                        itemStyle: { color: '#dc3545' }, // Rojo (peligro)
+                        barMaxWidth: 50
+                    },
+                    {
+                        name: '% Acumulado',
+                        type: 'line',
+                        data: porcentajesAcumulados,
+                        yAxisIndex: 1, // Usa el eje derecho (Porcentaje)
+                        smooth: true,
+                        symbol: 'circle',
+                        symbolSize: 8,
+                        itemStyle: { color: '#343a40' }, // Gris oscuro
+                        lineStyle: { width: 3 },
+                        markLine: {
+                            data: [{ yAxis: 80, name: 'Corte 80%' }], // Línea guía al 80%
+                            lineStyle: { type: 'dashed', color: 'orange' },
+                            label: { formatter: '80% Impacto' }
+                        }
+                    }
+                ]
+            };
+
+            chartPareto.setOption(optionPareto);
+            window.addEventListener('resize', () => chartPareto.resize());
+        }
+
     });
-
 </script>
 
 <style>
@@ -654,6 +1072,13 @@
 
     .card-title {
         font-weight: bold;
+    }
+
+    /* Asegura que los contenedores tengan altura por si el script tarda */
+    #chartventas,
+    #chartventasporlinea {
+        min-height: 350px;
+        width: 100%;
     }
 </style>
 

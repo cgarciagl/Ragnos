@@ -72,14 +72,20 @@
                     </a>
                 </li>
 
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="<?= site_url('proceso/showprogress') ?>">
+                        <i class="bi bi-gear"></i> Ajuste de precios
+                    </a>
+                </li>
+
             </ul>
         </li>
 
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="<?= site_url('proceso/showprogress') ?>">
-                <i class="bi bi-gear"></i> Ajuste de precios
-            </a>
-        </li>
+
 
     </ul>
 
