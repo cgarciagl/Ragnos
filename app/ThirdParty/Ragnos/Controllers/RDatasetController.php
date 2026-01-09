@@ -235,7 +235,7 @@ abstract class RDatasetController extends RDataset
         $this->showErrorsOrOk();
     }
 
-    protected function _customFormDataFooter()
+    protected function _customFormDataFooter($id)
     {
         return '';
     }
@@ -253,7 +253,7 @@ abstract class RDatasetController extends RDataset
 
         $formSubmissionData = $this->modelo->getFormData($id);
         echo $formSubmissionData;
-        $customFormDataFooter = $this->_customFormDataFooter();
+        $customFormDataFooter = $this->_customFormDataFooter($id);
         echo $customFormDataFooter;
     }
 

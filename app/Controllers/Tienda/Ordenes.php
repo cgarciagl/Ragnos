@@ -56,7 +56,7 @@ class Ordenes extends RDatasetController
         $this->setHasDetails(true);
     }
 
-    function _customFormDataFooter()
+    function _customFormDataFooter($idOrden)
     {
         return view('tienda/ordenescustomfooter', []);
     }

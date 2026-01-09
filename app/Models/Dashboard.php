@@ -202,4 +202,20 @@ class Dashboard extends Model
             ORDER BY Total DESC";
         return getCachedData($sql, [], 'ventaspais');
     }
+
+    function ventasDelCliente($customerNumber)
+    {
+        $sql = "SELECT 
+                o.orderNumber,
+                o.orderDate,
+                o.status,
+                SUM(od.quantityOrdered * od.priceEach) AS TotalVenta
+            FROM orders o
+            JOIN orderdetails od ON o.orderNumber = od.orderNumber
+            WHERE o.customerNumber = ?
+            GROUP BY o.orderNumber, o.orderDate, o.status
+            ORDER BY o.orderDate ASC
+            Limit 50;";
+        return $this->db->query($sql, [$customerNumber])->getResultArray();
+    }
 }

@@ -53,4 +53,12 @@ class Clientes extends RDatasetController
             $cache->delete('ventaspais');
         }
     }
+
+    function _customFormDataFooter($idCliente)
+    {
+        //cargamos el modelo Dashboard para usar en la vista
+        $dashboardModel = new \App\Models\Dashboard();
+        $data           = ['ventas' => $dashboardModel->ventasDelCliente($idCliente)];
+        return view('tienda/clientescustomfooter', $data);
+    }
 }
