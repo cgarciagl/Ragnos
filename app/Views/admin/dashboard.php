@@ -1079,6 +1079,14 @@
             };
 
             chartPareto.setOption(optionPareto);
+
+            chartPareto.on('click', function (params) {
+                let cliente = params.name;
+                if (cliente) {
+                    redirectByPost('<?= site_url('/catalogos/clientes') ?>', { sSearch: cliente }, false);
+                }
+            });
+
             window.addEventListener('resize', () => chartPareto.resize());
         }
 
