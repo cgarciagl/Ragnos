@@ -11,15 +11,45 @@ A partir de la versión v1.1, **Ragnos Framework** soporta controladores híbrid
 
 ---
 
+## Autenticar con el Modo API y obtener el token
+
+Para usar el Modo API, primero debes autenticarte y obtener un token. Puedes hacerlo enviando una solicitud POST al endpoint de login con tus credenciales.
+**Request:**
+
+```http
+POST /admin/login
+Headers:
+  Content-Type: application/json
+  Accept: application/json
+Body (JSON):
+{
+    "usuario": "admin",
+    "pword": "tu_contraseña"
+}
+```
+
+**Respuesta (200 OK):**
+
+```json
+{
+  "status": "success",
+  "message": "Login successful",
+  "token": "4984656be2ff893362b3b023d0b55df74494fb87552916031143e6431e8d9a7c",
+  "user_id": "1"
+}
+```
+
+Así obtendrás un token que deberás usar en las cabeceras de tus futuras solicitudes API.
+
 ## 🔐 Autenticación y Cabeceras
 
 Para activar el "Modo API", el cliente **debe** enviar las siguientes cabeceras HTTP. Si no se envían, Ragnos responderá con HTML (redirecciones y vistas).
 
-| Header | Valor | Descripción |
-| :--- | :--- | :--- |
-| `Accept` | `application/json` | **Obligatorio.** Le dice a Ragnos que no quieres HTML, sino JSON. |
-| `Authorization` | `Bearer TU_TOKEN_AQUI` | **Obligatorio.** Tu token de seguridad. |
-| `Content-Type` | `application/json` | Necesario cuando envías datos (POST/PUT). |
+| Header          | Valor                  | Descripción                                                       |
+| :-------------- | :--------------------- | :---------------------------------------------------------------- |
+| `Accept`        | `application/json`     | **Obligatorio.** Le dice a Ragnos que no quieres HTML, sino JSON. |
+| `Authorization` | `Bearer TU_TOKEN_AQUI` | **Obligatorio.** Tu token de seguridad.                           |
+| `Content-Type`  | `application/json`     | Necesario cuando envías datos (POST/PUT).                         |
 
 ---
 
@@ -32,22 +62,24 @@ Supongamos que tu controlador es `Tienda/Productos`.
 Obtiene la lista de datos aplicando los filtros de la grilla.
 
 **Request:**
+
 ```http
 GET /tienda/productos
-Headers: 
+Headers:
   Accept: application/json
   Authorization: Bearer xyz123
 ```
 
 **Respuesta (200 OK):**
+
 ```json
 {
-    "status": 200,
-    "data": [
-        { "id": 1, "nombre": "Laptop", "precio": 1500 },
-        { "id": 2, "nombre": "Mouse", "precio": 20 }
-    ],
-    "count": 2
+  "status": 200,
+  "data": [
+    { "id": 1, "nombre": "Laptop", "precio": 1500 },
+    { "id": 2, "nombre": "Mouse", "precio": 20 }
+  ],
+  "count": 2
 }
 ```
 
@@ -56,9 +88,10 @@ Headers:
 ### 2. Crear un Registro (POST)
 
 **Request:**
+
 ```http
 POST /tienda/productos/save
-Headers: 
+Headers:
   Content-Type: application/json
   Accept: application/json
   Authorization: Bearer xyz123
@@ -72,13 +105,14 @@ Body (JSON):
 ```
 
 **Respuesta (201 Created):**
+
 ```json
 {
-    "status": 201,
-    "message": "Registro creado exitosamente.",
-    "data": {
-        "id": 15
-    }
+  "status": 201,
+  "message": "Registro creado exitosamente.",
+  "data": {
+    "id": 15
+  }
 }
 ```
 
@@ -89,6 +123,7 @@ Body (JSON):
 En Ragnos, la actualización se maneja en el mismo endpoint `save`. La diferencia es que **debes incluir el ID** (clave primaria).
 
 **Request:**
+
 ```http
 POST /tienda/productos/save
 Headers: ... (mismos de arriba)
@@ -101,11 +136,12 @@ Body (JSON):
 ```
 
 **Respuesta (200 OK):**
+
 ```json
 {
-    "status": 200,
-    "message": "Registro actualizado exitosamente.",
-    "data": { "id": 15 }
+  "status": 200,
+  "message": "Registro actualizado exitosamente.",
+  "data": { "id": 15 }
 }
 ```
 
@@ -120,6 +156,7 @@ Puedes enviar el ID en la URL o en el cuerpo del JSON.
 **Opción B (JSON Body):**
 
 **Request:**
+
 ```http
 POST /tienda/productos/delete
 Headers: ...
@@ -131,10 +168,11 @@ Body (JSON):
 ```
 
 **Respuesta (200 OK):**
+
 ```json
 {
-    "status": 200,
-    "message": "Registro eliminado correctamente"
+  "status": 200,
+  "message": "Registro eliminado correctamente"
 }
 ```
 
@@ -148,12 +186,12 @@ Si algo sale mal (validación o servidor), Ragnos devolverá un código de estad
 
 ```json
 {
-    "status": 400,
-    "error": 400,
-    "messages": {
-        "precio": "El campo Precio es obligatorio.",
-        "stock": "El campo Stock debe ser numérico."
-    }
+  "status": 400,
+  "error": 400,
+  "messages": {
+    "precio": "El campo Precio es obligatorio.",
+    "stock": "El campo Stock debe ser numérico."
+  }
 }
 ```
 
@@ -161,8 +199,8 @@ Si algo sale mal (validación o servidor), Ragnos devolverá un código de estad
 
 ```json
 {
-    "status": 401,
-    "error": "Token inválido o expirado"
+  "status": 401,
+  "error": "Token inválido o expirado"
 }
 ```
 
@@ -173,24 +211,24 @@ Si algo sale mal (validación o servidor), Ragnos devolverá un código de estad
 ### JavaScript (Fetch)
 
 ```javascript
-const token = 'TU_API_TOKEN';
+const token = "TU_API_TOKEN";
 
 // Ejemplo: Guardar producto
-fetch('https://tusitio.com/tienda/productos/save', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': `Bearer ${token}`
-    },
-    body: JSON.stringify({
-        nombre: 'Monitor 4K',
-        precio: 300
-    })
+fetch("https://tusitio.com/tienda/productos/save", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Accept: "application/json",
+    Authorization: `Bearer ${token}`,
+  },
+  body: JSON.stringify({
+    nombre: "Monitor 4K",
+    precio: 300,
+  }),
 })
-.then(response => response.json())
-.then(data => console.log(data))
-.catch(error => console.error('Error:', error));
+  .then((response) => response.json())
+  .then((data) => console.log(data))
+  .catch((error) => console.error("Error:", error));
 ```
 
 ### cURL (Terminal)

@@ -19,19 +19,10 @@ Este es el "padre" de la relación. Aquí definimos la cabecera de la factura.
 - **Activar el modo detalle:**
   Hay una línea clave que debes agregar en tu controlador maestro para avisar que tendrá "hijos":
   ```php
-  $this->setHasDetails(true);
+  $this->setDetailsController('Tienda\Ordenesdetalles');
   ```
-- **Mostrar la tabla de detalles:**
-  Para que la lista de productos aparezca al final del formulario de la orden, usamos una "vista de pie de página" (`_customFormDataFooter`). Esta vista carga un archivo (por ejemplo, `ordenescustomfooter`) que contiene el hueco donde se dibujará la tabla.
-
-  Este es un método ejemplo que puedes agregar en tu controlador maestro:
-
-```php
-    function _customFormDataFooter()
-    {
-        return view('tienda/ordenescustomfooter', []);
-    }
-```
+  Esto le dice a Ragnos que el controlador `Ordenesdetalles` manejará los detalles relacionados con cada orden.
+  La relación se basa en que el campo `orderNumber` en ambos controladores es el mismo, y este es la llave primaria en el maestro.
 
 ## 2. Configurando el Detalle (Controlador `Ordenesdetalles`)
 
@@ -47,43 +38,30 @@ Este es el "hijo". Controla cada línea de producto.
 - **Actualizar cambios:**
   Usamos funciones especiales (llamadas _hooks_) como `_afterInsert` o `_afterUpdate` para limpiar la memoria caché. Esto asegura que si agregas un producto, el total de la orden principal se recalcule correctamente.
 
-## 3. La Vista Mágica (`ordenescustomfooter.php`)
+## Hooks de javascript personalizados (Opcional)
 
-Este archivo es un pequeño trozo de HTML y JavaScript que conecta todo. Se coloca al final del formulario de la Orden.
+En el archivo custom.js se ha agregado la siguiente función:
 
-```php
-<hr />
-<div class="row clearfix" id="panelorden">
-    <div class="card text-bg-dark">
-        <h5 class="card-header">Detalles</h5>
-        <div class="card-body">
-            <div id="detalleorden">
-
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    $(document).ready(function () {
-        let orden = $("input[name='orderNumber']").val();
-        if (orden == '') {
-            $("#panelorden").remove();
-        } else {
-            RagnosUtils.showControllerTableIn('#detalleorden', 'tienda/ordenesdetalles', orden);
-        }
-    });
-</script>
+```javascript
+// con cada cambio en la tabla de detalles de ordenes
+// recalcula el total de la orden
+function _OrdenesdetallesOnChange(tabla) {
+  let orden = $("input[name='orderNumber']").val();
+  getObject("tienda/ordenes/calculatotal", { orden: orden }, function (data) {
+    $('input[name="total"]').val(data.total);
+  });
+}
 ```
 
-**¿Qué hace exactamente?**
+Esta función se ejecuta cada vez que hay un cambio en la tabla de detalles de órdenes. Lo que hace es:
 
-1. **Crea un espacio vacío:** Dibuja un recuadro (un `div`) en la pantalla donde irán los detalles.
-2. **Verifica si hay orden:**
-   - Si estás creando una orden nueva (aún no tiene número), **oculta** el recuadro. No puedes agregar productos a una orden que no existe.
-   - Si estás editando una orden existente, **muestra** el recuadro.
-3. **Llama al controlador hijo:**
-   Usa una función de JavaScript (`RagnosUtils.showControllerTableIn`) para "incrustar" la tabla del controlador de Detalles dentro del recuadro vacío. Le pasa el número de orden actual para que sepa qué filtrar.
+1. Obtiene el número de orden actual desde el campo oculto.
+2. Llama a un endpoint (`tienda/ordenes/calculatotal`) para recalcular el total de la orden.
+3. Actualiza el campo `total` en la pantalla con el nuevo valor.
+
+de este modo, el total siempre estará actualizado, cada que se agregue, modifique o elimine un producto en la orden.
+
+Esta función se enlaza automáticamente gracias a la convención de nombres: `_NombreDelControladorOnChange`.
 
 ## Resumen del flujo de trabajo
 
