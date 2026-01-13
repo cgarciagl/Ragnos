@@ -53,12 +53,7 @@ class Ordenes extends RDatasetController
         $this->setTableFields(['orderNumber', 'orderDate', 'status', 'customerNumber', 'total']);
 
         $this->setSortingField('orderDate', 'desc');
-        $this->setHasDetails(true);
-    }
-
-    function _customFormDataFooter($idOrden)
-    {
-        return view('tienda/ordenescustomfooter', []);
+        $this->setDetailsController('Tienda\Ordenesdetalles');
     }
 
     /**

@@ -139,7 +139,10 @@ trait CrudOperationsTrait
         } else {
             $this->checkForDefaultValues();
         }
-        $data['fields'] = $this->ofieldlist;
+        $data['fields']            = $this->ofieldlist;
+        $data['detailsController'] = $this->controller->detailsController;
+        $data['primaryKey']        = $this->primaryKey;
+        $data['primaryKeyValue']   = $id;
         return view('App\ThirdParty\Ragnos\Views\rdatasetmodel/form_data', $data);
     }
 

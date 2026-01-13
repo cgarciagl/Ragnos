@@ -99,13 +99,13 @@ class Admin extends BaseController
                 return $this->response->setStatusCode(200)->setJSON([
                     'status'  => 'success',
                     'message' => 'Login successful',
-                    'token'   => session('usu_token'),
-                    'user_id' => session('usu_id')
+                    'token'   => sessionValue('usu_token'),
+                    'user_id' => sessionValue('usu_id')
                 ]);
             }
 
             $defaultRoute     = 'admin/index';
-            $sessionBeforeUri = session('bef_uri') ?? $defaultRoute;
+            $sessionBeforeUri = sessionValue('bef_uri', $defaultRoute);
             $restrictedPaths  = ['getFormData', 'getAjaxGridData'];
 
             foreach ($restrictedPaths as $path) {

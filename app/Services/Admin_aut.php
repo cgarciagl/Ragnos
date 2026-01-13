@@ -45,7 +45,7 @@ class Admin_aut extends BaseService
 
     public static function id()
     {
-        $id = session(Admin_aut::$campoId);
+        $id = sessionValue(Admin_aut::$campoId);
         return $id;
     }
 

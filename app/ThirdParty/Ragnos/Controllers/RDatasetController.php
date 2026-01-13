@@ -8,8 +8,8 @@ use CodeIgniter\API\ResponseTrait;
 
 abstract class RDatasetController extends RDataset
 {
-
     private $hasDetailsProp = FALSE;
+    public $detailsController = NULL;
     private $sortingField = -1;
     private $sortingDir = 'asc';
 
@@ -62,6 +62,12 @@ abstract class RDatasetController extends RDataset
     function hasDetails(): bool
     {
         return $this->hasDetailsProp;
+    }
+
+    function setDetailsController($controllerClassName): void
+    {
+        $this->detailsController = $controllerClassName;
+        $this->setHasDetails(TRUE);
     }
 
     /**

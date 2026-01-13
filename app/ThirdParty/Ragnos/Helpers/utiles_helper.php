@@ -170,7 +170,7 @@ function removeNewLines($text)
     return str_replace(["\n", "\r"], ' ', $text);
 }
 
-function sessionValueOrDefault($variable, $defaultValue = '')
+function sessionValue($variable, $defaultValue = '')
 {
     return session($variable) ? session($variable) : $defaultValue;
 }
@@ -295,14 +295,14 @@ function redirectAndDie($url, $statusCode = 302)
         ->setHeader('Location', $url)
         ->setContentType('text/html')
         ->setBody(sprintf(
-            '<html><head><meta http-equiv="refresh" content="0;url=%s">
+                '<html><head><meta http-equiv="refresh" content="0;url=%s">
                 <script>window.location.href="%s";</script></head>
                 <body>Redirecting to <a href="%s">%s</a>...</body></html>',
-            $url,
-            $url,
-            $url,
-            htmlspecialchars($url)
-        ))
+                $url,
+                $url,
+                $url,
+                htmlspecialchars($url)
+            ))
         ->send();
 
     exit;

@@ -134,7 +134,15 @@ function mapClassToURL(string $class): string
     $path = strtolower(substr($class, 16));
 
     // Replace backslashes with forward slashes for URL compatibility
-    return str_replace('\\', '/', $path);
+    $path = str_replace('\\', '/', $path);
+    $path = str_replace('\\', '/', $path);
+    return $path;
+}
+
+function controllerNameToURL(string $controllername): string
+{
+    $fullClassName = "App\\Controllers\\" . $controllername;
+    return mapClassToURL($fullClassName);
 }
 
 use App\ThirdParty\Ragnos\Controllers\Ragnos;
