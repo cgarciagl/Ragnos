@@ -118,15 +118,44 @@
     });
 
     // Doble clic en una fila
-    $("#<?= $controllerUniqueID ?>_table tbody").on('dblclick', 'tr', function (ev) {
-        ev.preventDefault();
-        const op = $(this).find("td").last();
+    // 1. Definimos la lógica central (para no repetirla)
+    function <?= $controllerUniqueID ?>_procesarSeleccion($row) {
+        const op = $row.find("td").last();
         $("#<?= $controllerUniqueID ?>").data('idactivo', op.attr('idr') || '');
+
         if (!op.hasClass('dt-empty')) {
             $("#<?= $controllerUniqueID ?>btn_ok_search").trigger('click');
         }
-        return false;
-    });
+    }
+
+    // Variable para controlar el tiempo entre toques en móvil
+    var <?= $controllerUniqueID ?>_lastTapTime = 0;
+
+    // 2. Asignamos los eventos
+    $("#<?= $controllerUniqueID ?>_table tbody")
+        .on('dblclick', 'tr', function (ev) {
+            // --- Lógica para PC ---
+            ev.preventDefault();
+        <?= $controllerUniqueID ?>_procesarSeleccion($(this));
+            return false;
+        })
+        .on('touchend', 'tr', function (ev) {
+            // --- Lógica para Móvil (Simulador Doble Tap) ---
+            var currentTime = new Date().getTime();
+            var tapLength = currentTime - <?= $controllerUniqueID ?>_lastTapTime;
+
+            // Detectar si el segundo toque fue rápido (menos de 500ms)
+            if (tapLength < 500 && tapLength > 0) {
+                ev.preventDefault(); // Evita zoom o clicks fantasmas
+            <?= $controllerUniqueID ?>_procesarSeleccion($(this));
+
+                <?= $controllerUniqueID ?>_lastTapTime = 0; // Reiniciar contador
+                return false;
+            } else {
+                // Si es el primer toque, guardamos el tiempo
+                <?= $controllerUniqueID ?> _lastTapTime = currentTime;
+            }
+        });
 
     // Selección de fila con clic
     $("#<?= $controllerUniqueID ?>_table tbody").on('mousedown', 'tr', function (ev) {

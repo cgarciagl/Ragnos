@@ -138,15 +138,44 @@
 
     $('#<?= $controllerUniqueID ?>_Tablediv .dt-search').append($('#<?= $controllerUniqueID ?>_combo'));
 
-    $("#<?= $controllerUniqueID ?>_table tbody").on('dblclick', 'tr', function () {
-        var lastCell = $(this).find("td").last();
+    // 1. Definimos la lógica de lo que debe pasar (para reutilizarla)
+    function <?= $controllerUniqueID ?>_ejecutarAccionDobleClick($row) {
+        var lastCell = $row.find("td").last();
         var recordId = lastCell.attr('idr') || '';
         $("#<?= $controllerUniqueID ?>").data('idactivo', recordId);
 
         if (!lastCell.hasClass('dt-empty')) {
             $('#tab_<?= $controllerUniqueID ?>_Form').click();
         }
-    });
+    }
+
+    // Variable para controlar el tiempo del toque en móviles
+    var <?= $controllerUniqueID ?>_lastTapTime = 0;
+
+    // 2. Asignamos los eventos al selector
+    $("#<?= $controllerUniqueID ?>_table tbody")
+        .on('dblclick', 'tr', function (e) {
+            // Esto maneja el doble click en PC
+            <?= $controllerUniqueID ?>_ejecutarAccionDobleClick($(this));
+        })
+        .on('touchend', 'tr', function (e) {
+            // Esto maneja el "Doble Tap" en Móviles
+            var currentTime = new Date().getTime();
+            var tapLength = currentTime - <?= $controllerUniqueID ?>_lastTapTime;
+
+            // Si el tiempo entre toques es menor a 500ms y mayor a 0, es un doble tap
+            if (tapLength < 500 && tapLength > 0) {
+                // Evitamos que el navegador haga zoom u otras acciones nativas
+                e.preventDefault();
+                <?= $controllerUniqueID ?>_ejecutarAccionDobleClick($(this));
+
+                // Reiniciamos para evitar falsos positivos triples
+                <?= $controllerUniqueID ?>_lastTapTime = 0;
+            } else {
+                // Si no, actualizamos el tiempo del último toque
+                <?= $controllerUniqueID ?>_lastTapTime = currentTime;
+            }
+        });
 
     $("#<?= $controllerUniqueID ?>_table tbody").on('mousedown', 'tr', function () {
         var lastCell = $(this).find("td").last();
