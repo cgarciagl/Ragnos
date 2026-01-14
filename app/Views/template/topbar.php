@@ -11,17 +11,17 @@
     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="#">
-                <i class="bi bi-house-door"></i> Inicio</a>
+                <i class="bi bi-house-door"></i> <span class="d-none d-md-inline">Inicio</span></a>
         </li>
 
         <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="<?= site_url('admin/perfil') ?>">
-                <i class="bi bi-person-bounding-box"></i> Mi perfil</a>
+                <i class="bi bi-person-bounding-box"></i> <span class="d-none d-md-inline">Mi perfil</span></a>
         </li>
 
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="bi bi-file-spreadsheet-fill"></i> Catálogos
+                <i class="bi bi-file-spreadsheet-fill"></i> <span class="d-none d-md-inline">Catálogos</span>
             </a>
             <ul class="dropdown-menu">
                 <li>
@@ -72,20 +72,8 @@
                     </a>
                 </li>
 
-                <li>
-                    <hr class="dropdown-divider">
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="<?= site_url('proceso/showprogress') ?>">
-                        <i class="bi bi-gear"></i> Ajuste de precios
-                    </a>
-                </li>
-
             </ul>
         </li>
-
-
 
     </ul>
 

@@ -17,40 +17,6 @@ $auth = service('Admin_aut');
         <ul id="sidebarTree" class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu"
             data-accordion="false">
 
-            <?php if ($auth->isloggedin()): ?>
-
-                <!-- <li class="nav-item">
-                    <a class="nav-link">
-                        <i class="bi bi-file-music"></i>
-                        <p>Música <i class="nav-arrow bi bi-chevron-right"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="<?= site_url('catalogos/canciones') ?>" class="nav-link">
-                                <i class="bi bi-vinyl"></i>
-                                <p>Canciones</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="<?= site_url('catalogos/artistas') ?>" class="nav-link">
-                                <i class="bi bi-mic"></i>
-                                <p>Artistas</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="<?= site_url('catalogos/categorias') ?>" class="nav-link">
-                                <i class="bi bi-folder2-open"></i>
-                                <p>Categorías</p>
-                            </a>
-                        </li>
-                    </ul>
-                </li> -->
-
-
-
-            <?php endif; ?>
-
             <?php if ($auth->esdegrupo('administrador')): ?>
                 <li class="nav-item">
                     <a class="nav-link">
@@ -79,6 +45,18 @@ $auth = service('Admin_aut');
             <?php endif; ?>
 
             <?php if ($auth->isloggedin()): ?>
+
+
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="<?= site_url('proceso/showprogress') ?>">
+                        <i class="bi bi-gear"></i> Ajuste de precios
+                    </a>
+                </li>
+
                 <hr>
                 <li class="nav-item">
                     <a href="<?= site_url('admin/logout'); ?>" class="nav-link">

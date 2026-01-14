@@ -57,17 +57,17 @@ class Ordenes extends RDatasetController
     }
 
     /**
-     * Calculate the total for a specific order
+     * Calcula el total de una orden específica
      * 
      * @return \CodeIgniter\HTTP\Response
      */
-    function calculatotal()
+    public function calculatotal()
     {
         $orderNumber = getInputValue('orden');
 
         // Validate input
         if (empty($orderNumber)) {
-            return $this->respondWithError(400, 'Order number is required');
+            return $this->respondWithError(400, 'El número de orden es requerido');
         }
 
         try {
@@ -78,7 +78,7 @@ class Ordenes extends RDatasetController
                 ->getRow();
 
             if (!$result || $result->total === null) {
-                return $this->respondWithError(404, 'Order not found or has no details');
+                return $this->respondWithError(404, 'Orden no encontrada o sin detalles');
             }
 
             return $this->response->setJSON([
@@ -87,8 +87,8 @@ class Ordenes extends RDatasetController
                 'rawTotal' => (float) $result->total
             ]);
         } catch (\Exception $e) {
-            log_message('error', 'Error calculating order total: ' . $e->getMessage());
-            return $this->respondWithError(500, 'Failed to calculate total');
+            log_message('error', 'Error al calcular el total de la orden: ' . $e->getMessage());
+            return $this->respondWithError(500, 'Error al calcular el total');
         }
     }
 
