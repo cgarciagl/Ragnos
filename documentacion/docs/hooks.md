@@ -27,14 +27,14 @@ El controlador **no implementa CRUD**, solo reacciona a eventos.
 
 Ragnos expone los siguientes hooks:
 
-| Hook | Momento de ejecución |
-|----|----------------------|
-| `_beforeInsert()` | Antes de insertar un registro |
-| `_afterInsert()` | Después de insertar un registro |
-| `_beforeUpdate()` | Antes de actualizar un registro |
-| `_afterUpdate()` | Después de actualizar un registro |
-| `_beforeDelete()` | Antes de eliminar un registro |
-| `_afterDelete()` | Después de eliminar un registro |
+| Hook              | Momento de ejecución              |
+| ----------------- | --------------------------------- |
+| `_beforeInsert()` | Antes de insertar un registro     |
+| `_afterInsert()`  | Después de insertar un registro   |
+| `_beforeUpdate()` | Antes de actualizar un registro   |
+| `_afterUpdate()`  | Después de actualizar un registro |
+| `_beforeDelete()` | Antes de eliminar un registro     |
+| `_afterDelete()`  | Después de eliminar un registro   |
 
 Todos los hooks son **opcionales**.
 
@@ -225,7 +225,70 @@ Esto permite integrar:
 
 ---
 
-## 12. Buenas prácticas
+## 12. Interrupción segura: `raise()`
+
+En ocasiones es necesario detener una operación CRUD debido a reglas de negocio específicas que van más allá de la validación de campos estándar. Para esto, Ragnos proporciona la función auxiliar `raise()`.
+
+### ¿Qué hace `raise()`?
+
+1. Interrumpe inmediatamente la ejecución del script.
+2. Evita que la operación (INSERT, UPDATE, DELETE) se complete.
+3. Muestra el mensaje de error al usuario en la interfaz gráfica.
+
+### Ejemplos reales
+
+**1. Proteger registros del sistema (evitar borrado)**
+
+En este ejemplo, evitamos que se elimine el grupo de usuarios con ID 1 (Administradores):
+
+```php
+public function _beforeDelete()
+{
+    // Obtener el ID del registro que se está intentando borrar
+    $id = oldValue('gru_id');
+
+    if ($id == 1) {
+        raise('No se puede borrar el grupo de administradores');
+    }
+}
+```
+
+**2. Validar integridad referencial manual**
+
+A veces es preferible validar relaciones manualmente antes de dejar que la base de datos arroje un error SQL.
+
+```php
+private function checkAssociatedUsers($groupId)
+{
+    $db = db_connect();
+    // Verificar si existen usuarios para este grupo
+    $userCount = $db->table('gen_usuarios')->where('usu_grupo', $groupId)->countAllResults();
+
+    if ($userCount > 0) {
+        // Detiene el proceso y avisa al usuario
+        raise('No se puede borrar porque tiene usuarios asociados');
+    }
+}
+```
+
+**3. Proteger registros contra edición**
+
+Similar al borrado, podemos impedir modificaciones en registros críticos dentro del hook `_beforeUpdate`:
+
+```php
+public function _beforeUpdate(&$a)
+{
+    if (oldValue('gru_id') == 1) {
+        raise('No se puede modificar el grupo de administradores');
+    }
+}
+```
+
+> **Nota:** `raise()` es la forma recomendada de lanzar errores de validación lógica ("Soft errors") que el usuario debe corregir o conocer, a diferencia de `throw new Exception` que podría interpretarse como un error del sistema ("Hard error").
+
+---
+
+## 13. Buenas prácticas
 
 - Mantén los hooks pequeños y específicos
 - No escribas lógica de negocio compleja
@@ -235,16 +298,16 @@ Esto permite integrar:
 
 ---
 
-## 13. Errores comunes
+## 14. Errores comunes
 
 ❌ Usar hooks para reemplazar lógica de controlador  
 ❌ Modificar demasiados campos dentro del hook  
 ❌ Depender del orden entre hooks  
-❌ Ejecutar SQL manual innecesario  
+❌ Ejecutar SQL manual innecesario
 
 ---
 
-## 14. Filosofía
+## 15. Filosofía
 
 Los hooks en Ragnos permiten **extender sin romper**:
 
