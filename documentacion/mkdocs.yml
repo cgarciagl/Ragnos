@@ -1,6 +1,14 @@
 site_name: Ragnos Docs
 theme:
   name: readthedocs
+  # Añade estas opciones para mejorar UX básica del tema
+  sticky_navigation: true
+  collapse_navigation: false
+  titles_only: false
+
+# Enlaza tu CSS personalizado
+extra_css:
+  - css/ragnos_style.css
 
 markdown_extensions:
   - admonition

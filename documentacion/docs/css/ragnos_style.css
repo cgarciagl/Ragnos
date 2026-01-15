@@ -1,0 +1,140 @@
+/* docs/css/ragnos_style.css */
+
+/* --- ZONA DE PERSONALIZACIÓN --- */
+:root {
+  /* 1. PON AQUÍ LOS COLORES DE TU LOGO */
+  --brand-primary: #2980b9; /* <--- Color Principal (ej: Azul del logo) */
+  --brand-dark: #1a252f; /* <--- Un tono más oscuro del principal (para el sidebar) */
+  --brand-accent: #ea2c6d; /* <--- Color de Acento (ej: Rojo/Naranja del logo) */
+
+  /* 2. CONFIGURACIÓN BASICA */
+  --text-color: #333333;
+  --bg-light: #f9f9f9;
+  --max-width: 1200px; /* Ancho del contenido */
+}
+
+/* --- FUENTES --- */
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Roboto+Slab:wght@400;700&display=swap");
+
+/* --- APLICACIÓN DE ESTILOS --- */
+
+/* 1. MENÚ LATERAL (SIDEBAR) */
+.wy-nav-side {
+  background-color: var(--brand-dark);
+}
+
+.wy-side-nav-search {
+  background-color: color-mix(in srgb, var(--brand-dark), black 20%);
+}
+
+/* Enlace activo en el menú */
+.wy-menu-vertical li.current > a,
+.wy-menu-vertical li.on a {
+  border-left: 4px solid var(--brand-accent); /* Línea de color de acento */
+  background-color: color-mix(in srgb, var(--brand-dark), white 10%);
+  color: #fff;
+  font-weight: bold;
+}
+
+.wy-menu-vertical a:hover {
+  background-color: color-mix(in srgb, var(--brand-dark), white 5%);
+}
+
+/* 2. CONTENIDO PRINCIPAL */
+.wy-nav-content {
+  max-width: var(--max-width) !important;
+  margin: auto;
+}
+
+body {
+  font-family: "Lato", sans-serif;
+  color: var(--text-color);
+}
+
+/* 3. ENLACES Y TÍTULOS */
+a {
+  color: var(--brand-primary);
+  font-weight: 500;
+}
+
+a:hover {
+  color: var(
+    --brand-accent
+  ); /* Al pasar el mouse, brilla con el color de acento */
+}
+
+h1 {
+  font-family: "Roboto Slab", serif;
+  color: var(--brand-dark);
+  border-bottom: 3px solid var(--brand-accent); /* Subrayado elegante */
+  padding-bottom: 10px;
+  margin-bottom: 25px;
+}
+
+h2,
+h3,
+h4 {
+  font-family: "Roboto Slab", serif;
+  color: var(--brand-primary);
+  margin-top: 30px;
+}
+
+/* 4. TABLAS ELEGANTES */
+.rst-content table.docutils {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: none;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.rst-content table.docutils th {
+  background-color: var(--brand-primary); /* Encabezado de tabla con tu color */
+  color: white;
+  border: none;
+}
+
+.rst-content table.docutils td {
+  border: 1px solid #eee;
+}
+
+/* 5. CAJAS DE AVISO (ADMONITIONS) QUE COMBINAN */
+.admonition.note {
+  border-left: 5px solid var(--brand-primary);
+  background-color: color-mix(in srgb, var(--brand-primary), white 90%);
+}
+.admonition.note .admonition-title {
+  background-color: var(--brand-primary);
+  color: white;
+}
+
+.admonition.warning {
+  border-left: 5px solid var(--brand-accent);
+  background-color: color-mix(in srgb, var(--brand-accent), white 90%);
+}
+.admonition.warning .admonition-title {
+  background-color: var(--brand-accent);
+  color: white;
+  border: none;
+}
+
+/* 6. BOTONES (SI USAS) */
+.btn,
+.rst-content .btn-neutral {
+  background-color: var(--brand-primary) !important;
+  color: white !important;
+  border-radius: 4px;
+  transition: background 0.3s;
+}
+
+.btn:hover,
+.rst-content .btn-neutral:hover {
+  background-color: var(--brand-accent) !important;
+}
+
+/* Ajuste del Logo en el sidebar */
+.wy-side-nav-search img {
+  width: 180px; /* Ajusta el tamaño aquí */
+  margin-bottom: 15px;
+  background: transparent;
+  padding: 10px;
+}
