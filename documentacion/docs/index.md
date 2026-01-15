@@ -1,6 +1,6 @@
 # Ragnos Framework
 
-![Image](https://github.com/cgarciagl/Ragnos/blob/main/content/img/logo.webp?raw=true)
+![Image](https://github.com/cgarciagl/Ragnos/blob/main/content/img/logo.webp?raw=true){ width="300" }
 
 Ragnos es un framework moderno y ligero para el desarrollo de aplicaciones web. Su objetivo es proporcionar una base sólida y flexible para construir aplicaciones escalables y de alto rendimiento. Está basado en **CodeIgniter 4**, lo que garantiza un núcleo robusto y probado en el tiempo. Además, utiliza tecnologías como **jQuery**, **DataTables** y **AdminLTE** para ofrecer una experiencia de desarrollo completa y eficiente.
 
@@ -23,64 +23,18 @@ Ragnos es un framework moderno y ligero para el desarrollo de aplicaciones web. 
 4. **Flexibilidad**: Su arquitectura modular permite personalizar el framework según las necesidades específicas del proyecto.
 5. **Comunidad y soporte**: Al estar basado en tecnologías ampliamente utilizadas como CodeIgniter y jQuery, los desarrolladores tienen acceso a una gran cantidad de recursos y soporte en línea.
 
-## Licencia
+## Organización de la Documentación
 
-Ragnos está licenciado bajo la [Licencia MIT](LICENSE).
+Esta documentación está dividida en cuatro secciones principales para facilitar tu aprendizaje:
 
-## Guía rápida de Ragnos
+**🔰 Fundamentos**
+Todo lo necesario para empezar. Comienza con la [Instalación](fundamentos/instalacion.md), revisa la [Configuración](fundamentos/configuracion.md) y crea tu primer módulo en [Primeros Pasos](fundamentos/primeros_pasos.md).
 
-## Crear una aplicación básica con Ragnos — guía paso a paso
+**💾 Datasets y Modelos**
+El núcleo de Ragnos. Aprende a declarar [Datasets](datasets/datasets.md), definir [Campos](datasets/campos.md) y manejar relaciones [Maestro-Detalle](datasets/maestro-detalle.md).
 
-1. Diseñe la base de datos primero
+**🚀 Funcionalidades Avanzadas**
+Para usuarios intermedios. Profundiza en el [Modo API](avanzado/guia_modo_api.md), sistema de [Hooks](avanzado/hooks.md) y [Despliegue en Producción](avanzado/despliegue.md).
 
-- Identifique entidades principales, claves primarias y relaciones (1:N, N:M).
-- Modele cada entidad como una tabla clara y normalizada; defina tipos y constraints.
-- Cree migrations y seeders (evitan cambios manuales en producción).
-
-2. Mapear cada dataset a una tabla principal
-
-- Un "dataset" en Ragnos representa la tabla principal y su comportamiento CRUD.
-- Para tablas relacionadas use claves foráneas y entidades secundarias (detalles/children).
-
-3. Defina campos visibles y buscables con addField / addSearch
-
-- addField: declara columnas, etiquetas, tipo de control y validación para formularios y tablas.
-- addSearch: añade filtros que se integran para búsquedas.
-- Ejemplo:
-
-```php
- $this->addField('customerNumber', ['label' => 'Cliente', 'rules' => 'required']);
-
- $this->addSearch('customerNumber', 'Tienda\Clientes');
-```
-
-4. Personalice comportamiento con hooks (enganches)
-
-- Hooks permiten inyectar lógica sin modificar el CRUD generado (antes/después de insert/update/delete/render).
-- Úselos para: setear valores automáticos (created_by, timestamps), validar o transformar datos, disparar eventos.
-- Ejemplo:
-
-```php
-  public function _beforeInsert(&$data) {
-          $data['created_at'] = date('Y-m-d H:i:s');
-          $data['created_by'] = auth()->id();
-  }
-```
-
-5. Flujo recomendado de trabajo
-
-- 1. Diseñar BD y crear migrations.
-- 2. Crear dataset y definir addField/addSearch.
-- 3. Añadir hooks para reglas de negocio y seguridad.
-- 4. Registrar rutas y permisos.
-- 5. Ejecutar migrations, seeders y probar en la UI (DataTables/AdminLTE).
-
-6. Buenas prácticas y consejos rápidos
-
-- Mantenga nombres coherentes (snake_case) y claves foráneas explícitas.
-- Valide tanto en frontend (forms) como en backend (reglas del dataset).
-- Use transacciones para operaciones compuestas con varios datasets.
-- Aproveche seeders para datos de ejemplo y pruebas.
-- Revise los documentos enlazados para ejemplos específicos y plantillas.
-
-Ver "Documentación" arriba para ejemplos completos y configuraciones avanzadas.
+**🎨 Frontend y UI**
+Personalización de la interfaz. Aprende a modificar [Menús y Temas](frontend/personalizacion_ui.md) y generar [Reportes](frontend/reportes_simples.md).

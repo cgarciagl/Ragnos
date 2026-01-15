@@ -1,6 +1,6 @@
 # Tipos de campo soportados en Ragnos
 
-En Ragnos, los campos de un dataset se definen mediante el método `addField()`.
+En Ragnos, los campos de un dataset se definen mediante el método `addField()`. Este método es parte fundamental de la configuración de un [RDatasetController](datasets.md).
 Cada campo es una **descripción declarativa** de cómo un atributo del dominio:
 
 - Se valida

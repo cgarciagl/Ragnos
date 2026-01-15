@@ -13,7 +13,7 @@ El sistema espera una estructura de base de datos específica:
 
 ## Protección de Controladores
 
-Todos los controladores que extienden de `BaseController` (incluyendo `RDatasetController`, `RProcessController`, etc.) tienen acceso a métodos de protección simplificados.
+Todos los controladores que extienden de `BaseController` (incluyendo [`RDatasetController`](../datasets/datasets.md), [`RProcessController`](server_side_events.md), etc.) tienen acceso a métodos de protección simplificados.
 
 ### `checklogin()`
 
@@ -24,6 +24,9 @@ Este método verifica si el usuario tiene una sesión activa. Si no la tiene:
 
 **Uso:**
 Se recomienda llamarlo al inicio de cualquier función que requiera autenticación, o en el constructor si todo el controlador es privado.
+
+!!! tip "Controllers Públicos"
+Si tienes un controlador público (ej. página de inicio), simplemente no llames a `checklogin()`.
 
 ```php
 public function miFunciopPrivada()

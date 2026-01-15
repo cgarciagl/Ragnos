@@ -1,6 +1,8 @@
 # Ragnos CLI Generator
 
-El **Generador CLI de Ragnos** es una herramienta de línea de comandos integrada en Spark (CodeIgniter 4) que permite crear esqueletos de `RDatasetController` en segundos.
+El **Generador CLI de Ragnos** es una herramienta de línea de comandos integrada en Spark (CodeIgniter 4) que permite crear esqueletos de [`RDatasetController`](../datasets/datasets.md) en segundos.
+
+Puedes ver este generador en acción en la guía de [Primeros Pasos](primeros_pasos.md).
 
 ---
 

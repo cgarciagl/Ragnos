@@ -1,8 +1,19 @@
 site_name: Ragnos Docs
+theme:
+  name: readthedocs
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - attr_list
 
 nav:
   - Inicio: index.md
   - Fundamentos:
+      - Instalación: fundamentos/instalacion.md
+      - Primeros Pasos: fundamentos/primeros_pasos.md
+      - Configuración: fundamentos/configuracion.md
       - Generador CLI: fundamentos/plantilla.md
   - Datasets y Modelos:
       - Creando Datasets: datasets/datasets.md
@@ -15,6 +26,8 @@ nav:
       - Autenticación: avanzado/autenticacion_integrada.md
       - Audit Log: avanzado/auditlog.md
       - Server Side Events: avanzado/server_side_events.md
+      - Despliegue: avanzado/despliegue.md
   - Frontend y Reportes:
+      - Personalización UI: frontend/personalizacion_ui.md
       - Reportes Simples: frontend/reportes_simples.md
       - Funciones JavaScript: frontend/funciones_javacript.md
