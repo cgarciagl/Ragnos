@@ -1,9 +1,20 @@
 site_name: Ragnos Docs
-theme:
-  name: github
-  highlightjs: true
-  hljs_style: github
 
-badge:
-  github_repo: ragnos
-  github_user: cgarciagl
+nav:
+  - Inicio: index.md
+  - Fundamentos:
+      - Generador CLI: fundamentos/plantilla.md
+  - Datasets y Modelos:
+      - Creando Datasets: datasets/datasets.md
+      - Referencia de Campos: datasets/campos.md
+      - Consultas Avanzadas (RQuery): datasets/guia_RQueryController.md
+      - Maestro-Detalle: datasets/maestro-detalle.md
+  - Backend Avanzado:
+      - Modo API: avanzado/guia_modo_api.md
+      - Hooks y evento: avanzado/hooks.md
+      - Autenticación: avanzado/autenticacion_integrada.md
+      - Audit Log: avanzado/auditlog.md
+      - Server Side Events: avanzado/server_side_events.md
+  - Frontend y Reportes:
+      - Reportes Simples: frontend/reportes_simples.md
+      - Funciones JavaScript: frontend/funciones_javacript.md

@@ -1,8 +1,26 @@
 # Datasets en Ragnos
 
+## ¿Qué es un Dataset?
+
+Un dataset (`RDatasetController`) es el concepto central de Ragnos para el desarrollo **declarativo**. En lugar de escribir controladores, modelos y vistas para cada módulo CRUD, un dataset permite definir la **estructura y comportamiento** de una entidad mediante metadatos en el constructor.
+
+El framework utiliza esta definición para generar automáticamente:
+
+- Interfaces de usuario (Formularios y Grillas/Listados).
+- Validaciones de entrada (Backend y Frontend).
+- Consultas SQL y persistencia en base de datos.
+- Respuestas para APIs.
+
+## Ventajas
+
+- **Centralización**: Todo (validación, display, persistencia) se define en un solo lugar.
+- **Productividad**: Elimina la necesidad de escribir HTML repetitivo o consultas CRUD básicas.
+- **Consistencia**: Todos los módulos se comportan y lucen igual.
+- **Flexibilidad**: Extensiones mediante Hooks y campos virtuales.
+
 ## Crear un dataset
 
-Un dataset es un controlador que extiende `RDatasetController`. Toda la configuración se realiza en el constructor y declara la metadata del módulo sin implementar lógica CRUD explícita.
+Un dataset es un controlador que extiende `RDatasetController`. Toda la configuración se realiza en el constructor.
 
 ### Ejemplo mínimo
 
@@ -67,6 +85,8 @@ class Clientes extends RDatasetController
 ## Definición de campos
 
 Use `addField(name, options)` para describir validación, presentación y persistencia.
+Para una referencia completa de todas las opciones y tipos de campo, consulta la [Guía de Campos](campos.md).
+
 Opciones habituales:
 
 - `label`: texto visible.
@@ -84,6 +104,7 @@ Ejemplos:
 
 ## Relaciones entre datasets
 
+- Para relaciones más complejas tipo cabecera-lineas, consulta la guía de [Maestro-Detalle](maestro-detalle.md).
 - `addSearch(localField, 'Namespace\\Dataset')` crea selectores y búsqueda asistida reutilizando otro dataset.
 - No requiere joins manuales; facilita selectores dinámicos y reutilización de lógica.
 
@@ -95,6 +116,8 @@ Ejemplos:
 
 ## Ciclo de vida (Hooks)
 
+antes o después de las operaciones de base de datos.
+Para una explicación detallada de cada evento, consulta la [Guía de Hooks](../avanzado/hooks.md).
 Implementa hooks para reaccionar a eventos:
 
 - `_beforeInsert()`, `_afterInsert()`
@@ -161,13 +184,13 @@ Con `RDatasetController` no necesitas:
 - Controladores con SQL explícito
 - Formularios y validaciones duplicadas
   Todo se genera desde la metadata del dataset.
+  Buenas Prácticas y Recomendaciones
 
-## Recomendaciones
-
-- Diseña primero la base de datos.
-- Un dataset = una tabla principal.
-- Usa campos virtuales para mejorar UX.
-- Aprovecha `addSearch` para relaciones reutilizables.
+- **Diseño First**: Diseña primero la base de datos de manera sólida.
+- **Un dataset = una tabla**: Cada dataset debe gestionar una tabla principal. Si necesitas vistas complejas, crea un `RQueryController`.
+- **Campos Virtuales**: Usa `query` en `addField` para conciliar columnas (ej. nombre completo) en buscar/listar sin desnormalizar la BD.
+- **Centralización**: Si una validación es regla de negocio, ponla en `rules` del dataset, no en el cliente.
+- **Desacoplamiento**: Usa los hooks para limpiar caché o loguear, pero evita poner lógica de negocio pesada directamente en el controlador; llama a Servicios o Libreríaa relaciones reutilizables.
 - Centraliza lógica en hooks.
 
 ## Próximos pasos
