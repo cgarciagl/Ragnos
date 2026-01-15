@@ -350,7 +350,7 @@
                                     $(function () {
                                         $('.ligaempleado').on('click', function () {
                                             let empleado = $(this).text().trim();
-                                            redirectByPost('<?= site_url('/catalogos/empleados') ?>', {
+                                            redirectByPost('<?= site_url('/tienda/empleados') ?>', {
                                                 sSearch: empleado
                                             }, false);
                                         });
@@ -396,7 +396,7 @@
                                 $(function () {
                                     $('.ligalinea').on('click', function () {
                                         let linea = $(this).text().trim();
-                                        redirectByPost('<?= site_url('/catalogos/lineas') ?>', { sSearch: linea }, false);
+                                        redirectByPost('<?= site_url('/tienda/lineas') ?>', { sSearch: linea }, false);
                                     });
                                 });
                             </script>
@@ -456,7 +456,7 @@
                                 $(function () {
                                     $('.ligacliente').on('click', function () {
                                         let cliente = $(this).text().trim();
-                                        redirectByPost('<?= site_url('/catalogos/clientes') ?>', { sSearch: cliente }, false);
+                                        redirectByPost('<?= site_url('/tienda/clientes') ?>', { sSearch: cliente }, false);
                                     });
                                 });
                             </script>
@@ -505,7 +505,7 @@
                                 $(function () {
                                     $('.ligaproducto').on('click', function () {
                                         let codigo = $(this).text().trim();
-                                        redirectByPost('<?= site_url('/catalogos/productos') ?>', { sSearch: codigo }, false);
+                                        redirectByPost('<?= site_url('/tienda/productos') ?>', { sSearch: codigo }, false);
                                     });
                                 });
                             </script>
@@ -786,7 +786,7 @@
             chartMargen.on('click', function (params) {
                 let linea = params.name;
                 if (linea) {
-                    redirectByPost('<?= site_url('/catalogos/lineas') ?>', { sSearch: linea }, false);
+                    redirectByPost('<?= site_url('/tienda/lineas') ?>', { sSearch: linea }, false);
                 }
             });
 
@@ -861,7 +861,7 @@
             chartEmp.on('click', function (params) {
                 let empleado = params.name;
                 if (empleado) {
-                    redirectByPost('<?= site_url('/catalogos/empleados') ?>', { sSearch: empleado }, false);
+                    redirectByPost('<?= site_url('/tienda/empleados') ?>', { sSearch: empleado }, false);
                 }
             });
 
@@ -944,7 +944,7 @@
             chartInv.on('click', function (params) {
                 let producto = params.data[2];
                 if (producto) {
-                    redirectByPost('<?= site_url('/catalogos/productos') ?>', { sSearch: producto }, false);
+                    redirectByPost('<?= site_url('/tienda/productos') ?>', { sSearch: producto }, false);
                 }
             });
 
@@ -1083,7 +1083,7 @@
             chartPareto.on('click', function (params) {
                 let cliente = params.name;
                 if (cliente) {
-                    redirectByPost('<?= site_url('/catalogos/clientes') ?>', { sSearch: cliente }, false);
+                    redirectByPost('<?= site_url('/tienda/clientes') ?>', { sSearch: cliente }, false);
                 }
             });
 

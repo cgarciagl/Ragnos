@@ -4,18 +4,11 @@
 
 <div class="row">
     <div id="catcontainer" class="col-md-12">
-
         <?php
         if ($object ?? null) {
             echo $object->renderTable();
-        } else {
-            $c       = $controller;
-            $class   = "App\\Controllers\\" . $c;
-            $catalog = new $class();
-            echo $catalog->renderTable();
         }
         ?>
-
     </div>
 </div>
 

@@ -81,11 +81,20 @@ abstract class RDatasetController extends RDataset
         }
 
         // 2. Si no es API, asumimos flujo de Vista/HTML
-        checkAjaxRequest();
 
-        return view('App\ThirdParty\Ragnos\Views\ragnos/template', [
-            'content' => $this->renderTable()
-        ]);
+        // 2.1 Si no es AJAX, cargamos la plantilla completa
+        $request = request();
+        if (!$request->isAJAX()) {
+            return view('App\ThirdParty\Ragnos\Views\ragnos/catalogo_view', [
+                'controller' => get_class($this),
+                'object'     => $this
+            ]);
+        } else {
+            checkAjaxRequest();
+            return view('App\ThirdParty\Ragnos\Views\ragnos/template', [
+                'content' => $this->renderTable()
+            ]);
+        }
     }
 
     /**

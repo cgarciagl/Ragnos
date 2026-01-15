@@ -166,7 +166,8 @@
                                 </span>
                             </p>
 
-                            <input class="form-control form-control-sm" type="text" placeholder="Escribe un comentario">
+                            <input class="form-control form-control-sm" name="comentario" type="text"
+                                placeholder="Escribe un comentario">
                         </div>
                         <!-- /.post -->
 
@@ -174,7 +175,7 @@
 
                         <div class="post clearfix">
                             <div class="form-group form-control">
-                                <label for="">Busca Usuario:</label>
+                                <label for="editusuario">Busca Usuario:</label>
                                 <input type="text" class="form-control" name="" id="editusuario"
                                     placeholder="Busca usuario">
                                 <small class="form-text text-muted">Ejemplo de búsqueda</small>
@@ -200,7 +201,7 @@
 
                         <div class="post clearfix">
                             <div class="form-group form-control ">
-                                <label for="">Busca Usuario:</label>
+                                <label for="busquedausuario">Busca Usuario:</label>
                                 <div class="input-group">
                                     <input type="text" class="form-control" name="" id="busquedausuario"
                                         placeholder="Busca usuario">
@@ -214,7 +215,7 @@
                                         controller: 'usuarios',
                                         filter: btoa(JSON.stringify([
                                             { "field": "usu_activo", "op": "=", "value": "S" },
-                                            { "field": "usu_grupo", "op": "=", "value": 2 }
+                                            { "field": "usu_grupo", "op": "=", "value": 1 }
                                         ])),
                                         callback: function (e) {
                                             let datos = e.data('searchdata');
@@ -232,7 +233,7 @@
 
                         <div class="post clearfix">
                             <div class="form-group form-control ">
-                                <label for="">Busca Usuario:</label>
+                                <label for="busquedausuariosql">Busca Usuario:</label>
                                 <div class="input-group">
                                     <input type="text" class="form-control" name="" id="busquedausuariosql"
                                         placeholder="Busca usuario SQL">
@@ -245,7 +246,7 @@
                                     $('#busquedausuariosql').RagnosSearch({
                                         controller: 'searchusuarios',
                                         filter: btoa(JSON.stringify([
-                                            { "field": "usu_grupo", "op": "=", "value": 1 }
+                                            { "field": "usu_grupo", "op": "=", "value": 3 }
                                         ])),
                                         callback: function (e) {
                                             let datos = e.data('searchdata');

@@ -153,7 +153,7 @@
                 return false;
             } else {
                 // Si es el primer toque, guardamos el tiempo
-                <?= $controllerUniqueID ?> _lastTapTime = currentTime;
+                <?= $controllerUniqueID ?>_lastTapTime = currentTime;
             }
         });
 

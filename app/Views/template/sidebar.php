@@ -28,13 +28,13 @@ $auth = service('Admin_aut');
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="<?= site_url('catalogos/usuarios') ?>" class="nav-link">
+                            <a href="<?= site_url('usuarios') ?>" class="nav-link">
                                 <i class="bi bi-person-circle nav-icon"></i>
                                 <p>Usuarios</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="<?= site_url('catalogos/gruposdeusuarios') ?>" class="nav-link">
+                            <a href="<?= site_url('gruposdeusuarios') ?>" class="nav-link">
                                 <i class="bi bi-people nav-icon"></i>
                                 <p>Grupos de usuarios</p>
                             </a>

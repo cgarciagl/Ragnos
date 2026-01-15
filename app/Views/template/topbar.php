@@ -6,8 +6,6 @@
     </ul>
 
 
-
-
     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="#">
@@ -25,31 +23,31 @@
             </a>
             <ul class="dropdown-menu">
                 <li>
-                    <a href="<?= site_url('catalogos/oficinas') ?>" class="nav-link">
+                    <a href="<?= site_url('tienda/oficinas') ?>" class="nav-link">
                         <i class="bi bi-building"></i>
                         Oficinas
                     </a>
                 </li>
                 <li>
-                    <a href="<?= site_url('catalogos/empleados') ?>" class="nav-link">
+                    <a href="<?= site_url('tienda/empleados') ?>" class="nav-link">
                         <i class="bi bi-person-badge"></i>
                         Empleados
                     </a>
                 </li>
                 <li>
-                    <a href="<?= site_url('catalogos/lineas') ?>" class="nav-link">
+                    <a href="<?= site_url('tienda/lineas') ?>" class="nav-link">
                         <i class="bi bi-tags"></i>
                         Lineas
                     </a>
                 </li>
                 <li>
-                    <a href="<?= site_url('catalogos/productos') ?>" class="nav-link">
+                    <a href="<?= site_url('tienda/productos') ?>" class="nav-link">
                         <i class="bi bi-car-front"></i>
                         Productos
                     </a>
                 </li>
                 <li>
-                    <a href="<?= site_url('catalogos/clientes') ?>" class="nav-link">
+                    <a href="<?= site_url('tienda/clientes') ?>" class="nav-link">
                         <i class="bi bi-person"></i>
                         Clientes
                     </a>
@@ -60,13 +58,13 @@
                 </li>
 
                 <li>
-                    <a href="<?= site_url('catalogos/pagos') ?>" class="nav-link">
+                    <a href="<?= site_url('tienda/pagos') ?>" class="nav-link">
                         <i class="bi bi-cash"></i>
                         Pagos
                     </a>
                 </li>
                 <li>
-                    <a href="<?= site_url('catalogos/ordenes') ?>" class="nav-link">
+                    <a href="<?= site_url('tienda/ordenes') ?>" class="nav-link">
                         <i class="bi bi-send"></i>
                         Órdenes
                     </a>
