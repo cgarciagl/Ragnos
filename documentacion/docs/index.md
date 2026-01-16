@@ -37,4 +37,4 @@ El núcleo de Ragnos. Aprende a declarar [Datasets](datasets/datasets.md), defin
 Para usuarios intermedios. Profundiza en el [Modo API](avanzado/guia_modo_api.md), sistema de [Hooks](avanzado/hooks.md) y [Despliegue en Producción](avanzado/despliegue.md).
 
 **🎨 Frontend y UI**
-Personalización de la interfaz. Aprende a modificar [Menús y Temas](frontend/personalizacion_ui.md) y generar [Reportes](frontend/reportes_simples.md).
+Personalización de la interfaz. Aprende a modificar [Menús o Temas](frontend/personalizacion_ui.md) y generar [Reportes](frontend/reportes_simples.md).

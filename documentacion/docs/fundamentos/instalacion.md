@@ -74,3 +74,10 @@ Asegúrate de que la carpeta `writable/` y sus subcarpetas tengan permisos de es
 Accede a tu navegador en la URL configurada (ej. `http://localhost/mi-proyecto/public` o simplemente `http://mi-proyecto.test` si usas Laragon).
 
 Deberías ver la pantalla de inicio de sesión.
+
+### 6. Credenciales de Acceso (Demo)
+
+Para acceder al sistema demo por primera vez, utiliza las siguientes credenciales:
+
+- **Usuario:** `admin`
+- **Contraseña:** `ok`

@@ -42,6 +42,18 @@ class RagnosConfig extends BaseConfig
 | `$currency` | `string` | Define el código de moneda por defecto (ej. 'USD', 'MXN', 'EUR') utilizado en los helpers de formateo de dinero.                                              |
 | `$locale`   | `string` | Define el locale predeterminado para formatos de fecha y número (ej. 'es_MX', 'en_US'). Nota: Esto es independiente del idioma de la interfaz que maneja CI4. |
 
+## Enrutamiento (Auto Routing)
+
+Una particularidad importante de Ragnos es que mantiene habilitada la característica de **Auto Routing** (`$routes->setAutoRoute(true)`) de CodeIgniter 4 por defecto.
+
+### ¿Qué implica esto para el desarrollador?
+
+1.  **Cero Configuración de Rutas:** Al crear un nuevo controlador (por ejemplo, con el [Generador CLI](plantilla.md)), este es accesible inmediatamente vía URL (`/TuControlador/metodo`) sin necesidad de editar `app/Config/Routes.php`.
+2.  **Agilidad:** Esto es fundamental para la filosofía "Low Code" de Ragnos, permitiendo prototipar y desplegar módulos CRUD en segundos.
+3.  **Seguridad y Personalización:** Si necesitas URLs específicas o restringir el acceso, puedes definir rutas manuales en `Config/Routes.php`. Las rutas manuales tienen prioridad sobre las automáticas.
+
+> ⚠️ **Importante:** Si decides desactivar el Auto Routing (`false`) por políticas de seguridad estrictas, deberás registrar manualmente cada ruta de tus Datasets, lo cual incrementa el trabajo de mantenimiento.
+
 ## Otras Configuraciones (CodeIgniter)
 
 Recuerda que Ragnos respeta la configuración nativa de CI4. Archivos importantes en `app/Config/`:

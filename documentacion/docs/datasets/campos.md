@@ -32,6 +32,11 @@ $this->addField('nombreCampo', [
 | `type`    | Tipo de campo (opcional)               |
 | `query`   | Expresión SQL para campos calculados   |
 
+!!! tip "Reglas de Validación"
+Ragnos adopta el potente motor de validación de CodeIgniter 4. Puedes usar reglas como `required`, `is_unique`, `min_length`, `valid_email`, etc.
+
+[Consulta todas las reglas disponibles en la documentación oficial de CodeIgniter 4](https://codeigniter.com/user_guide/libraries/validation.html#available-rules)
+
 ---
 
 ## 2. Campo de texto (string)
@@ -141,11 +146,12 @@ $this->addSearch('salesRepEmployeeNumber', 'Tienda\\Empleados');
 
 ```php
 $this->setIdField('customerNumber');
-$this->setAutoIncrement(false);
 ```
 
 - Identidad del dataset
 - Obligatorio
+
+- Por defecto, los campos Id se consideran autoincrementales. Si no es el caso, se debe incluir explícitamente `$this->setAutoIncrement(false);`.
 
 ---
 

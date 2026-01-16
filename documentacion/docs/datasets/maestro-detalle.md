@@ -37,6 +37,7 @@ Este es el "hijo". Controla cada línea de producto.
   No queremos ver _todos_ los productos de _todas_ las órdenes. En el método `_filters()`, agregamos una regla para que solo se carguen los productos que coincidan con el ID del maestro actual (`$this->master`).
 - **Actualizar cambios:**
   Usamos funciones especiales (llamadas _hooks_) como `_afterInsert` o `_afterUpdate` para limpiar la memoria caché. Esto asegura que si agregas un producto, el total de la orden principal se recalcule correctamente.
+  👉 **[Ver Guía de Hooks](../avanzado/hooks.md)**
 
 ## Hooks de javascript personalizados (Opcional)
 

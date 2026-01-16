@@ -3,9 +3,9 @@
 /* --- ZONA DE PERSONALIZACIÓN --- */
 :root {
   /* 1. PON AQUÍ LOS COLORES DE TU LOGO */
-  --brand-primary: #2980b9; /* <--- Color Principal (ej: Azul del logo) */
-  --brand-dark: #1a252f; /* <--- Un tono más oscuro del principal (para el sidebar) */
-  --brand-accent: #ea2c6d; /* <--- Color de Acento (ej: Rojo/Naranja del logo) */
+  --brand-primary: orangered; /* <--- Color Principal (ej: Azul del logo) */
+  --brand-dark: #343131; /* <--- Un tono más oscuro del principal (para el sidebar) */
+  --brand-accent: orangered; /* <--- Color de Acento (ej: Rojo/Naranja del logo) */
 
   /* 2. CONFIGURACIÓN BASICA */
   --text-color: #333333;

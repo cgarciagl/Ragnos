@@ -288,7 +288,38 @@ public function _beforeUpdate(&$a)
 
 ---
 
-## 13. Buenas prácticas
+## 13. Hooks de Interfaz (UI)
+
+Además de los hooks de ciclo de vida de datos, existen hooks para intervenir en la generación de la interfaz de usuario.
+
+### `_customFormDataFooter()`
+
+Este método permite insertar HTML o JavaScript adicional al pie del formulario de edición del dataset.
+
+- **Propósito:** Agregar paneles de detalle, resúmenes, botones personalizados o scripts específicos para ese módulo.
+- **Implementación:** El método debe retornar un `string` (HTML). Lo ideal es retornar una vista.
+
+**Ejemplo:**
+
+```php
+function _customFormDataFooter()
+{
+    // Obtener ID actual del formulario (si es edición)
+    $id = $this->request->getPost($this->getIdField());
+
+    // Pasar datos a una vista parcial
+    return view('Tienda/detalle_pedidos', [
+        'orderId' => $id,
+        'permisos' => $this->hasPermission('admin')
+    ]);
+}
+```
+
+El contenido retornado se renderizará inmediatamente después de los campos del formulario y antes de los botones de acción.
+
+---
+
+## 14. Buenas prácticas
 
 - Mantén los hooks pequeños y específicos
 - No escribas lógica de negocio compleja
@@ -298,7 +329,7 @@ public function _beforeUpdate(&$a)
 
 ---
 
-## 14. Errores comunes
+## 15. Errores comunes
 
 ❌ Usar hooks para reemplazar lógica de controlador  
 ❌ Modificar demasiados campos dentro del hook  
@@ -307,7 +338,7 @@ public function _beforeUpdate(&$a)
 
 ---
 
-## 15. Filosofía
+## 16. Filosofía
 
 Los hooks en Ragnos permiten **extender sin romper**:
 

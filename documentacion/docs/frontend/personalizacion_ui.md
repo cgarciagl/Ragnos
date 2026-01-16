@@ -12,6 +12,9 @@ El menú principal de la aplicación se encuentra en una vista estática. Para a
 
 El menú utiliza una lista HTML estándar con clases de Bootstrap/AdminLTE.
 
+!!! info "Iconos Disponibles"
+Ragnos incluye la librería **Bootstrap Icons**. Puedes navegar por la [galería oficial de iconos](https://icons.getbootstrap.com/) para encontrar los códigos de clase (ej. `bi-shop`, `bi-gear`).
+
 **Ejemplo de cómo agregar un enlace simple:**
 
 ```php

@@ -8,7 +8,7 @@ Puedes ver este generador en acción en la guía de [Primeros Pasos](primeros_pa
 
 ## 📋 Tabla de Contenidos
 
-1. [Instalación](#instalación)
+1. [Instalación](#instalacion)
 2. [Sintaxis del Comando](#sintaxis-del-comando)
 3. [Ejemplos de Uso](#ejemplos-de-uso)
 4. [Mapeo Inteligente de Tipos](#mapeo-inteligente-de-tipos)
@@ -16,7 +16,7 @@ Puedes ver este generador en acción en la guía de [Primeros Pasos](primeros_pa
 
 ---
 
-## 🛠 Instalación
+## 🛠 Instalación {: #instalacion }
 
 El Generador CLI de Ragnos viene preinstalado con el paquete Ragnos. Solo asegúrate de tener Ragnos correctamente instalado en tu proyecto CodeIgniter 4.
 

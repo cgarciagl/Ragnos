@@ -116,65 +116,14 @@ Ejemplos:
 
 ## Ciclo de vida (Hooks)
 
-antes o después de las operaciones de base de datos.
-Para una explicación detallada de cada evento, consulta la [Guía de Hooks](../avanzado/hooks.md).
-Implementa hooks para reaccionar a eventos:
+Puedes intervenir en el ciclo de vida de los datos y de la interfaz mediante métodos protegidos.
 
-- `_beforeInsert()`, `_afterInsert()`
-- `_beforeUpdate()`, `_afterUpdate()`
-- `_beforeDelete()`, `_afterDelete()`
-
-Ejemplo:
-
-```php
-function _afterUpdate()
-{
-    if (fieldHasChanged('creditLimit')) {
-        $cache = \Config\Services::cache();
-        $cache->delete('estadosdecuenta');
-    }
-}
-```
+👉 **[Ver la Guía Completa de Hooks y Eventos](../avanzado/hooks.md)**
 
 ## Tipos de campo soportados (resumen)
 
 - Texto, Numérico, Money (validador `money`), Readonly, Hidden, Calculado (`query`), Relación (vía `addSearch`), Clave primaria.
 - Campos con `query` o sin columna física no se insertan ni actualizan; solo se calculan en lectura.
-
-## Cache e integración
-
-Hooks permiten integrar cache, logs, servicios externos y auditoría:
-
-```php
-$cache = \Config\Services::cache();
-$cache->delete('mi_clave');
-```
-
-## Uso de \_customFormDataFooter
-
-- Propósito: permitir insertar HTML/JS adicional al pie del formulario de datos del dataset (por ejemplo paneles con detalles, resúmenes, botones extra).
-- Cómo se implementa: el método debe devolver una cadena HTML. Normalmente se devuelve una vista con view('ruta/a/vista', $data).
-- Datos disponibles: puede leer campos del formulario mediante $this->request->getPost(...) o construir datos a partir del id actual para pasarlos a la vista.
-- Contenido de la vista: puede incluir HTML, fragmentos de plantilla y scripts que usen utilidades del framework (por ejemplo llamadas AJAX a rutas del mismo controlador para cargar detalles dinámicos).
-- Buenas prácticas:
-  - Mantener la lógica pesada en controladores/modelos y pasar solo datos preparados a la vista.
-  - Evitar exponer información sensible en el HTML; comprobar permisos con checklogin()/roles antes de mostrar acciones.
-  - Usar rutas internas del controlador para operaciones AJAX (p. ej. calcular totales, listar detalles) y gestionar errores HTTP/JSON.
-  - Minimizar dependencias globales en la vista; preferir funciones utilitarias del proyecto.
-- Ejemplo (conceptual):
-
-```php
-// en el dataset
-function _customFormDataFooter()
-{
-        $id = $this->request->getPost($this->getIdField());
-        $data = ['id' => $id, 'canEdit' => $this->hasPermission('edit')];
-        return view('miModulo/footer_extra', $data);
-}
-```
-
-- Resultado: la vista se renderiza debajo del formulario principal y se envía al cliente junto con el formulario, permitiendo mejorar la UX con información contextual (detalles, totales, históricos).
-- Debug y mantenimiento: loguear errores servidor/JS y validar respuestas AJAX antes de manipular el DOM.
 
 ## Qué NO se escribe en Ragnos
 

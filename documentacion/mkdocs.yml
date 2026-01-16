@@ -1,7 +1,6 @@
 site_name: Ragnos Docs
 theme:
   name: readthedocs
-  # Añade estas opciones para mejorar UX básica del tema
   sticky_navigation: true
   collapse_navigation: false
   titles_only: false
@@ -15,6 +14,11 @@ markdown_extensions:
   - pymdownx.details
   - pymdownx.superfences
   - attr_list
+  # Mantén el highlight activado
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
 
 nav:
   - Inicio: index.md
@@ -30,6 +34,7 @@ nav:
       - Maestro-Detalle: datasets/maestro-detalle.md
   - Backend Avanzado:
       - Modo API: avanzado/guia_modo_api.md
+      - Helpers y Utilidades: avanzado/helpers.md
       - Hooks y evento: avanzado/hooks.md
       - Autenticación: avanzado/autenticacion_integrada.md
       - Audit Log: avanzado/auditlog.md
@@ -38,4 +43,4 @@ nav:
   - Frontend y Reportes:
       - Personalización UI: frontend/personalizacion_ui.md
       - Reportes Simples: frontend/reportes_simples.md
-      - Funciones JavaScript: frontend/funciones_javacript.md
+      - Funciones JavaScript: frontend/funciones_javascript.md
