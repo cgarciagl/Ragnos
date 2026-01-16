@@ -1,13 +1,20 @@
 site_name: Ragnos Docs
+repo_url: https://github.com/cgarciagl/ragnos
+edit_uri: "" # Elimina el botón de edición
+
 theme:
-  name: readthedocs
+  name: mkdocs
   sticky_navigation: true
   collapse_navigation: false
   titles_only: false
+  highlightjs: true
+  hljs_style: panda-syntax-dark
 
-# Enlaza tu CSS personalizado
 extra_css:
   - css/ragnos_style.css
+
+extra_javascript:
+  - js/particles.js
 
 markdown_extensions:
   - admonition
