@@ -74,14 +74,14 @@ php spark ragnos:make Admin/Usuarios -table app_users_tbl
 
 Ragnos elige el componente según tu BD:
 
-| Tipo BD      | Tipo Ragnos | Reglas Auto-generadas |
-| :----------- | :---------- | :-------------------- | -------------- |
-| `INT`        | `number`    | `required             | integer`       |
-| `DECIMAL`    | `money`     | `required             | decimal`       |
-| `DATE`       | `date`      | `required`            |
-| `TEXT`       | `textarea`  | `required`            |
-| `TINYINT(1)` | `checkbox`  | `permit_empty`        |
-| `VARCHAR`    | `text`      | `required             | max_length[n]` |
+| Tipo BD      | Tipo Ragnos | Reglas Auto-generadas       |
+| :----------- | :---------- | :-------------------------- |
+| `INT`        | `number`    | `required \| integer`       |
+| `DECIMAL`    | `money`     | `required \| decimal`       |
+| `DATE`       | `date`      | `required`                  |
+| `TEXT`       | `textarea`  | `required`                  |
+| `TINYINT(1)` | `checkbox`  | `permit_empty`              |
+| `VARCHAR`    | `text`      | `required \| max_length[n]` |
 
 ---
 
