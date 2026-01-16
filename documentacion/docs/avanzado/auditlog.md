@@ -7,7 +7,8 @@ El framework Ragnos incluye un sistema nativo y automático para registrar los c
 ### Uso en Datasets (RDatasetController)
 
 !!! success "Activado por defecto"
-Todas las clases que extienden de `RDatasetController` tienen el registro de auditoría **activado automáticamente**.
+
+    Todas las clases que extienden de `RDatasetController` tienen el registro de auditoría **activado automáticamente**.
 
 Si desea **desactivar** la auditoría para un dataset específico (por ejemplo, para tablas temporales o de movimientos masivos donde no se requiere trazabilidad), puede utilizar el método `setEnableAudit(false)` dentro del constructor.
 

@@ -5,7 +5,8 @@ Esta guía cubre los pasos esenciales para llevar tu aplicación Ragnos de un en
 ## 1. Configuración de Entorno
 
 !!! danger "Importante"
-En producción, **nunca** debes ejecutar la aplicación en modo `development`. Esto expondría información sensible y ralentizaría la aplicación.
+
+    En producción, **nunca** debes ejecutar la aplicación en modo `development`. Esto expondría información sensible y ralentizaría la aplicación.
 
 1. Edita el archivo `.env` en tu servidor.
 2. Establece la variable de entorno:

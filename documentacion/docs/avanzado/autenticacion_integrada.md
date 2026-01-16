@@ -52,7 +52,8 @@ Este método verifica si el usuario tiene una sesión activa. Si no la tiene:
 Se recomienda llamarlo al inicio de cualquier función que requiera autenticación, o en el constructor si todo el controlador es privado.
 
 !!! tip "Controllers Públicos"
-Si tienes un controlador público (ej. página de inicio), simplemente no llames a `checklogin()`.
+
+    Si tienes un controlador público (ej. página de inicio), simplemente no llames a `checklogin()`.
 
 ```php
 public function miFunciopPrivada()

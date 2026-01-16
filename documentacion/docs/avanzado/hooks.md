@@ -6,7 +6,8 @@ Son el mecanismo principal para **extender comportamiento** sin romper el modelo
 Los hooks se definen como métodos protegidos dentro del controlador que extiende `RDatasetController`.
 
 !!! info "Concepto Clave"
-El controlador **no implementa el CRUD** directamente manualmente. Ragnos se encarga de la operación de base de datos, y tú solo "te enganchas" (hook) en los puntos clave para inyectar tu lógica de negocio.
+
+    El controlador **no implementa el CRUD** directamente manualmente. Ragnos se encarga de la operación de base de datos, y tú solo "te enganchas" (hook) en los puntos clave para inyectar tu lógica de negocio.
 
 ---
 
@@ -73,7 +74,8 @@ protected function _afterUpdate()
 Se ejecuta **antes de un INSERT**. Recibe por referencia el array `$data` con los valores que se van a insertar.
 
 !!! warning "Atención"
-Cualquier modificación hecha a `$data` **se reflejará directamente en la base de datos**.
+
+    Cualquier modificación hecha a `$data` **se reflejará directamente en la base de datos**.
 
 ### Usos comunes
 
@@ -246,8 +248,9 @@ No todas las funciones tienen sentido en todas las operaciones:
 | `oldValue()` |   ❌   |   ✅   |   ✅   |
 
 !!! note "Limitaciones lógicas"
-**Insert**: No existe un valor anterior (`oldValue` devuelve null/vacío).
-**Delete**: No se envía un valor nuevo (`newValue` no aplica), solo se elimina lo existente.
+
+    **Insert**: No existe un valor anterior (`oldValue` devuelve null/vacío).
+    **Delete**: No se envía un valor nuevo (`newValue` no aplica), solo se elimina lo existente.
 
 ### Ejemplos de uso
 
@@ -453,10 +456,12 @@ El contenido retornado se renderizará inmediatamente después de los campos del
 ## Buenas prácticas
 
 !!! success "Recomendado"
-**Mantén los hooks pequeños:** La lógica compleja debe ir a Servicios o Librerías. - **Documenta efectos secundarios:** Si un hook altera otra tabla, deja un comentario claro. - **Usa `_afterUpdate` para cache:** Es el lugar más seguro para invalidar caches.
+
+    **Mantén los hooks pequeños:** La lógica compleja debe ir a Servicios o Librerías. - **Documenta efectos secundarios:** Si un hook altera otra tabla, deja un comentario claro. - **Usa `_afterUpdate` para cache:** Es el lugar más seguro para invalidar caches.
 
 !!! fail "A evitar"
-**No reemplaces el controlador:** Los hooks son para _extender_, no para reescribir la lógica base. - **Evita dependencias de orden:** No asumas que un campo se actualiza antes que otro dentro del mismo array. - **Cuidado con el SQL manual:** Intenta usar los modelos siempre que sea posible.
+
+    **No reemplaces el controlador:** Los hooks son para _extender_, no para reescribir la lógica base. - **Evita dependencias de orden:** No asumas que un campo se actualiza antes que otro dentro del mismo array. - **Cuidado con el SQL manual:** Intenta usar los modelos siempre que sea posible.
 
 ---
 
@@ -469,9 +474,10 @@ Los hooks en Ragnos permiten **extender sin romper**:
 - **Mantenibilidad:** Separan claramente la responsabilidad "Qué guardar" de "Qué hacer cuando se guarda".
 
 !!! quote "Filosofía Ragnos"
-**En Ragnos, los hooks no controlan el flujo: reaccionan al dominio.**
+
+    **En Ragnos, los hooks no controlan el flujo: reaccionan al dominio.**
 
 !!! quote "Filosofía Ragnos"
 
-- **Declarativo:** Mantienen el enfoque de configuración sobre programación.
-- **Mantenibilidad:** Separan claramente la responsabilidad "Qué guardar" de "Qué hacer cuando se guarda".
+    **Declarativo:** Mantienen el enfoque de configuración sobre programación.
+    **Mantenibilidad:** Separan claramente la responsabilidad "Qué guardar" de "Qué hacer cuando se guarda".

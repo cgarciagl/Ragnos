@@ -33,7 +33,8 @@ $this->addField('nombreCampo', [
 | `query`   | Expresión SQL para campos calculados   |
 
 !!! tip "Reglas de Validación"
-Ragnos adopta el potente motor de validación de CodeIgniter 4. Puedes usar reglas como `required`, `is_unique`, `min_length`, `valid_email`, etc.
+
+    Ragnos adopta el potente motor de validación de CodeIgniter 4. Puedes usar reglas como `required`, `is_unique`, `min_length`, `valid_email`, etc.
 
     [Consulta todas las reglas disponibles en la documentación oficial de CodeIgniter 4](https://codeigniter.com/user_guide/libraries/validation.html#available-rules)
 

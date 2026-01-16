@@ -5,7 +5,8 @@ El framework Ragnos incluye una implementación para manejar procesos de larga d
 Esta funcionalidad es ideal para tareas que exceden el tiempo de espera habitual de una petición HTTP o donde el usuario necesita retroalimentación visual del avance (barras de progreso).
 
 !!! warning "Límites de tiempo en PHP"
-Aunque SSE permite mantener la conexión abierta, tu servidor web o configuración de PHP (`max_execution_time`) podría matar el proceso si dura demasiado. Asegúrate de configurar `set_time_limit(0)` en tu lógica si esperas procesos muy largos.
+
+    Aunque SSE permite mantener la conexión abierta, tu servidor web o configuración de PHP (`max_execution_time`) podría matar el proceso si dura demasiado. Asegúrate de configurar `set_time_limit(0)` en tu lógica si esperas procesos muy largos.
 
 ## Arquitectura
 

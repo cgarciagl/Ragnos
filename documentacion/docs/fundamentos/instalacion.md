@@ -31,7 +31,8 @@ Ragnos está basado en **CodeIgniter 4**, por lo que comparte sus requisitos mí
 3. Abre el archivo `.env` y ajusta las siguientes variables:
 
 !!! note "Ojo con el punto"
-Asegúrate de que el archivo se llame exactamente `.env` (con el punto al inicio) y no solo `env`.
+
+    Asegúrate de que el archivo se llame exactamente `.env` (con el punto al inicio) y no solo `env`.
 
 **Entorno:**
 

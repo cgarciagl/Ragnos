@@ -24,7 +24,8 @@ Realiza una petición HTTP `POST` a una URL especificada y devuelve la respuesta
 ### Ejemplos de uso
 
 !!! tip "Moderniza tu código"
-Aunque soportan callbacks, recomendamos fuertemente usar la sintaxis `async/await` para un código más limpio y legible, evitando el "callback hell".
+
+    Aunque soportan callbacks, recomendamos fuertemente usar la sintaxis `async/await` para un código más limpio y legible, evitando el "callback hell".
 
 **Uso básico con Promesas (Async/Await):**
 

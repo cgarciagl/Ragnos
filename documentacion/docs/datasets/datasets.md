@@ -77,13 +77,15 @@ class Clientes extends RDatasetController
 - `setTitle()` para título del módulo y breadcrumbs.
 
 !!! tip "Seguridad por defecto"
-Siempre llama a `checklogin()` al principio del constructor si tu módulo debe ser privado. Si olvidas esta línea, el módulo será accesible públicamente.
+
+    Siempre llama a `checklogin()` al principio del constructor si tu módulo debe ser privado. Si olvidas esta línea, el módulo será accesible públicamente.
 
 ## Tabla y clave primaria
 
 - `setTableName('table')` define la tabla principal.
   !!! warning "Coherencia con la BD"
-  El valor de `setTableName` debe coincidir exactamente con el nombre de la tabla física en tu base de datos. Ragnos no crea la tabla por ti; asume que ya existe.
+
+      El valor de `setTableName` debe coincidir exactamente con el nombre de la tabla física en tu base de datos. Ragnos no crea la tabla por ti; asume que ya existe.
 
 - `setIdField('id')` establece la clave primaria.
 - `setAutoIncrement(true|false)` controla si la PK es autoincremental.
