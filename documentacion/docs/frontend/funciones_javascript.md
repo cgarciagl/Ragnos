@@ -1,4 +1,4 @@
-# Funciones JavaScript: `getValue` y `getObject`
+# ⚡ Funciones JavaScript: `getValue` y `getObject`
 
 Este documento describe las funciones utilitarias `getValue` y `getObject`, utilizadas en el proyecto para realizar peticiones asíncronas al servidor. Estas funciones simplifican el uso de `fetch` y manejan la serialización de parámetros, tiempos de espera y reintentos.
 
@@ -22,6 +22,9 @@ Realiza una petición HTTP `POST` a una URL especificada y devuelve la respuesta
 - Si **no** se proporciona un `callback`, devuelve una `Promise` que resuelve con el texto de la respuesta o rechaza con un error.
 
 ### Ejemplos de uso
+
+!!! tip "Moderniza tu código"
+Aunque soportan callbacks, recomendamos fuertemente usar la sintaxis `async/await` para un código más limpio y legible, evitando el "callback hell".
 
 **Uso básico con Promesas (Async/Await):**
 

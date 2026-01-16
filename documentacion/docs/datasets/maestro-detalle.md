@@ -1,4 +1,4 @@
-# Relación Maestro-Detalle en Ragnos
+# 📑 Relación Maestro-Detalle en Ragnos
 
 Esta guía explica cómo crear una pantalla donde tienes un registro principal (como una **Orden de compra**) y una lista de elementos relacionados (los **Detalles** o productos de esa orden).
 
@@ -35,6 +35,16 @@ Este es el "hijo". Controla cada línea de producto.
      _¿Qué hace esto?_ Cuando creas un detalle desde la orden #100, Ragnos automáticamente rellena este campo con el número 100.
 - **Filtrar los datos:**
   No queremos ver _todos_ los productos de _todas_ las órdenes. En el método `_filters()`, agregamos una regla para que solo se carguen los productos que coincidan con el ID del maestro actual (`$this->master`).
+
+  ```php
+  function _filters()
+  {
+      $this->modelo->builder()->where('orderNumber', $this->master);
+  }
+  ```
+
+  En este fragmento, `$this->modelo->builder()` permite interactuar directamente con la consulta SQL que generará la grilla. La variable `$this->master` es inyectada automáticamente por el framework cuando detecta que este controlador se está ejecutando como "hijo", y contiene el ID del registro que se está visualizando en el maestro (en este caso, el número de orden).
+
 - **Actualizar cambios:**
   Usamos funciones especiales (llamadas _hooks_) como `_afterInsert` o `_afterUpdate` para limpiar la memoria caché. Esto asegura que si agregas un producto, el total de la orden principal se recalcule correctamente.
   👉 **[Ver Guía de Hooks](../avanzado/hooks.md)**

@@ -15,11 +15,6 @@ abstract class RDatasetController extends RDataset
 
     public $master = NULL;
 
-    /**
-     * Almacena temporalmente los datos originales antes de un Update
-     */
-    private $originalDataForAudit = [];
-
     use ResponseTrait;
 
     /**

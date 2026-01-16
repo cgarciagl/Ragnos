@@ -4,7 +4,36 @@ El framework Ragnos incluye un sistema nativo y automático para registrar los c
 
 ## Configuración
 
-Para activar el registro de auditoría en un modelo específico, debe establecer la propiedad `$enableAudit` en `true` dentro de la definición de su modelo. Este modelo debe estar utilizando el `CrudOperationsTrait` (o heredar de una clase base que lo use, como `RdatasetModel`).
+### Uso en Datasets (RDatasetController)
+
+!!! success "Activado por defecto"
+Todas las clases que extienden de `RDatasetController` tienen el registro de auditoría **activado automáticamente**.
+
+Si desea **desactivar** la auditoría para un dataset específico (por ejemplo, para tablas temporales o de movimientos masivos donde no se requiere trazabilidad), puede utilizar el método `setEnableAudit(false)` dentro del constructor.
+
+**Ejemplo:**
+
+```php
+class LogsTemporales extends RDatasetController
+{
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->setTableName('logs_temp');
+        $this->setIdField('id');
+
+        // ❌ Desactivar auditoría para este controlador
+        $this->setEnableAudit(false);
+
+        // ... resto de configuración
+    }
+}
+```
+
+### Uso en Modelos Manuales
+
+Para activar el registro de auditoría en un modelo personalizado (que no es gestionado por un Dataset), debe establecer la propiedad `$enableAudit` en `true`. Este modelo debe estar utilizando el `CrudOperationsTrait` (o heredar de una clase base que lo use, como `RdatasetModel`).
 
 ```php
 class ClientesModel extends RdatasetModel

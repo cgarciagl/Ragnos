@@ -22,7 +22,3 @@ Ragnos es un framework moderno y ligero para el desarrollo de aplicaciones web. 
 3. **Gestión de datos eficiente**: DataTables facilita la visualización y manipulación de grandes conjuntos de datos de manera interactiva.
 4. **Flexibilidad**: Su arquitectura modular permite personalizar el framework según las necesidades específicas del proyecto.
 5. **Comunidad y soporte**: Al estar basado en tecnologías ampliamente utilizadas como CodeIgniter y jQuery, los desarrolladores tienen acceso a una gran cantidad de recursos y soporte en línea.
-
-## Licencia
-
-Ragnos está licenciado bajo la [Licencia MIT](LICENSE).

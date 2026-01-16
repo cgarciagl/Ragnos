@@ -1,4 +1,4 @@
-# Generación de Reportes Simples (RSimpleLevelReport)
+# 📊 Generación de Reportes Simples (RSimpleLevelReport)
 
 La clase `RSimpleLevelReport` permite generar reportes en formato de tabla HTML de manera rápida y estructurada a partir de un array de datos. Es ideal para mostrar listados, resúmenes financieros o cualquier conjunto de datos que requiera una presentación tabular, con soporte para agrupación por niveles (cortes de control).
 
