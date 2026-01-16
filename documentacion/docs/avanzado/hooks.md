@@ -245,7 +245,9 @@ No todas las funciones tienen sentido en todas las operaciones:
 | `newValue()` |   ✅   |   ✅   |   ❌   |
 | `oldValue()` |   ❌   |   ✅   |   ✅   |
 
-!!! note "Limitaciones lógicas" - **Insert**: No existe un valor anterior (`oldValue` devuelve null/vacío). - **Delete**: No se envía un valor nuevo (`newValue` no aplica), solo se elimina lo existente.
+!!! note "Limitaciones lógicas"
+**Insert**: No existe un valor anterior (`oldValue` devuelve null/vacío).
+**Delete**: No se envía un valor nuevo (`newValue` no aplica), solo se elimina lo existente.
 
 ### Ejemplos de uso
 
@@ -363,17 +365,17 @@ private function checkAssociatedUsers($groupId)
 
 Similar al borrado, podemos impedir modificaciones en registros críticos dentro del hook `_beforeUpdate`:
 
-````php
+```php
 public function _beforeUpdate(&$a)
 {
     if (oldValue('gru_id') == 1) {
         raise('No se puede modificar el grupo de administradores');
     }
 }
+```
+
 !!! tip "Nota de Diseño"
-
-
-> **Nota:** `raise()` es la forma recomendada de lanzar errores de validación lógica ("Soft errors") que el usuario debe corregir o conocer, a diferencia de `throw new Exception` que podría interpretarse como un error del sistema ("Hard error").
+`raise()` es la forma recomendada de lanzar errores de validación lógica ("Soft errors") que el usuario debe corregir o conocer, a diferencia de `throw new Exception` que podría interpretarse como un error del sistema ("Hard error").
 
 ---
 
@@ -398,7 +400,7 @@ public function _beforeUpdate(&$userData)
         $userData['usu_pword'] = md5(strtoupper($userData['usu_pword']));
     }
 }
-````
+```
 
 ### Explicación detallada
 
@@ -450,18 +452,15 @@ El contenido retornado se renderizará inmediatamente después de los campos del
 
 ## Buenas prácticas
 
-!!! success "Recomendado" - **Mantén los hooks pequeños:** La lógica compleja debe ir a Servicios o Librerías. - **Documenta efectos secundarios:** Si un hook altera otra tabla, deja un comentario claro. - **Usa `_afterUpdate` para cache:** Es el lugar más seguro para invalidar caches.
+!!! success "Recomendado"
+**Mantén los hooks pequeños:** La lógica compleja debe ir a Servicios o Librerías. - **Documenta efectos secundarios:** Si un hook altera otra tabla, deja un comentario claro. - **Usa `_afterUpdate` para cache:** Es el lugar más seguro para invalidar caches.
 
-!!! fail "A evitar" - **No reemplaces el controlador:** Los hooks son para _extender_, no para reescribir la lógica base. - **Evita dependencias de orden:** No asumas que un campo se actualiza antes que otro dentro del mismo array. - **Cuidado con el SQL manual:** Intenta usar los modelos siempre que sea posible.
-❌ Ejecutar SQL manual innecesario
+!!! fail "A evitar"
+**No reemplaces el controlador:** Los hooks son para _extender_, no para reescribir la lógica base. - **Evita dependencias de orden:** No asumas que un campo se actualiza antes que otro dentro del mismo array. - **Cuidado con el SQL manual:** Intenta usar los modelos siempre que sea posible.
 
 ---
 
 ## Filosofía
-
-Los hooks en Ragnos permiten **extender sin romper**:
-
-- No7. Filosofía
 
 Los hooks en Ragnos permiten **extender sin romper**:
 
@@ -470,3 +469,9 @@ Los hooks en Ragnos permiten **extender sin romper**:
 - **Mantenibilidad:** Separan claramente la responsabilidad "Qué guardar" de "Qué hacer cuando se guarda".
 
 !!! quote "Filosofía Ragnos"
+**En Ragnos, los hooks no controlan el flujo: reaccionan al dominio.**
+
+!!! quote "Filosofía Ragnos"
+
+- **Declarativo:** Mantienen el enfoque de configuración sobre programación.
+- **Mantenibilidad:** Separan claramente la responsabilidad "Qué guardar" de "Qué hacer cuando se guarda".

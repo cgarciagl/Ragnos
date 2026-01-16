@@ -26,7 +26,6 @@ markdown_extensions:
   - pymdownx.details
   - pymdownx.superfences
   - attr_list
-  # Mantén el highlight activado
   - pymdownx.highlight:
       anchor_linenums: true
   - pymdownx.inlinehilite

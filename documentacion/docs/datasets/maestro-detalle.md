@@ -2,6 +2,41 @@
 
 Esta guía explica cómo crear una pantalla donde tienes un registro principal (como una **Orden de compra**) y una lista de elementos relacionados (los **Detalles** o productos de esa orden).
 
+## Arquitectura de la Relación
+
+```mermaid
+graph TD
+    User["Usuario"] -->|Abre Pantalla| Master["Controlador Maestro<br/>(Ordenes)"]
+    Master -->|Renderiza| View["Vista Principal"]
+    View -->|Contiene| Form["Formulario Maestro"]
+
+    subgraph Vinculacion ["Lógica de Vinculación"]
+        direction TB
+        Form -->|"ID Orden"| Logic{"¿Existe Orden?"}
+        Logic -- NO --> Info("Solo muestra Formulario")
+        Logic -- "SI (ID=100)" --> LoadDetails["Carga Controlador Detalle"]
+    end
+
+    LoadDetails -->|"Inyecta ID=100 como $this->master"| Detail["Controlador Detalle<br/>(OrdenesDetalles)"]
+
+    subgraph Detalle ["Zona del Detalle"]
+        direction TB
+        Detail -->|Aplica Filtro| Filter["WHERE orderNumber = 100"]
+        Filter -->|Muestra| Grid["Grilla de Productos"]
+        Grid -->|Nuevo Registro| NewLine["Formulario Detalle"]
+        NewLine -->|Campo Oculto| Hidden["orderNumber = 100"]
+    end
+
+    %% Estilos Profesionales
+    classDef mainNode fill:#f9f,stroke:#333,stroke-width:2px;
+    classDef detailNode fill:#bbf,stroke:#333,stroke-width:2px;
+    classDef logicNode fill:#fff9c4,stroke:#fbc02d,stroke-width:2px;
+
+    style Master fill:#e1bee7,stroke:#4a148c,stroke-width:2px
+    style Detail fill:#bbdefb,stroke:#0d47a1,stroke-width:2px
+    style Hidden fill:#c8e6c9,stroke:#2e7d32,stroke-dasharray: 5 5
+```
+
 La idea básica es tener dos controladores:
 
 1. **El Maestro (Ordenes):** Controla la información general (fecha, cliente, total).

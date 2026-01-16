@@ -15,6 +15,32 @@ El sistema espera una estructura de base de datos específica:
 
 Todos los controladores que extienden de `BaseController` (incluyendo [`RDatasetController`](../datasets/datasets.md), [`RProcessController`](server_side_events.md), etc.) tienen acceso a métodos de protección simplificados.
 
+### Flujo de Verificación
+
+```mermaid
+graph TD
+    Req["Petición Entrante"] --> Controller["Controlador"]
+    Controller -->|Llama| Check{"checklogin( )"}
+
+    Check -- "No hay sesión" --> Type{"¿Es API?"}
+    Type -- "Sí" --> Error401["JSON 401 Unauthorized"]
+    Type -- "No" --> Login["Redirigir a Login"]
+
+    Check -- "Hay sesión" --> Group{"¿soloparagrupo( )?"}
+
+    Group -- "No requerido" --> Access["✅ Acceso Permitido"]
+    Group -- "Requerido" --> Role{"¿Usuario en Grupo?"}
+
+    Role -- "Sí" --> Access
+    Role -- "No" --> Error403["⛔ Redirigir / Error 403"]
+
+    %% Estilos mejorados
+    style Access fill:#d4edda,stroke:#155724,stroke-width:2px,color:#155724
+    style Error401 fill:#f8d7da,stroke:#721c24,stroke-width:2px,color:#721c24
+    style Login fill:#fff3cd,stroke:#856404,stroke-width:2px,color:#856404
+    style Error403 fill:#f8d7da,stroke:#721c24,stroke-width:2px,color:#721c24
+```
+
 ### `checklogin()`
 
 Este método verifica si el usuario tiene una sesión activa. Si no la tiene:
