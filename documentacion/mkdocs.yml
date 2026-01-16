@@ -16,6 +16,11 @@ extra_css:
 extra_javascript:
   - js/particles.js
 
+plugins:
+  - search
+  - mermaid2:
+      version: "10.6.1"
+
 markdown_extensions:
   - admonition
   - pymdownx.details
@@ -26,6 +31,11 @@ markdown_extensions:
       anchor_linenums: true
   - pymdownx.inlinehilite
   - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:mermaid2.fence_mermaid
 
 nav:
   - Inicio: index.md
