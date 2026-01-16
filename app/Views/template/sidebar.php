@@ -46,14 +46,14 @@ $auth = service('Admin_aut');
 
             <?php if ($auth->isloggedin()): ?>
 
-
                 <li>
                     <hr class="dropdown-divider">
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="<?= site_url('proceso/showprogress') ?>">
-                        <i class="bi bi-gear"></i> Ajuste de precios
+                    <a class="nav-link" href="<?= site_url('proceso/showprogress') ?>">
+                        <i class="bi bi-gear"></i>
+                        <p>Ajuste de precios</p>
                     </a>
                 </li>
 
@@ -61,9 +61,7 @@ $auth = service('Admin_aut');
                 <li class="nav-item">
                     <a href="<?= site_url('admin/logout'); ?>" class="nav-link">
                         <i class="bi bi-door-closed"></i>
-                        <p>
-                            Cerrar sesión
-                        </p>
+                        <p>Cerrar sesión</p>
                     </a>
                 </li>
             <?php endif; ?>
