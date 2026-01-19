@@ -8,604 +8,171 @@
       name="description"
       content="Ragnos: A powerful declarative framework for modern PHP development based on CodeIgniter 4."
     />
-
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
-
-    <style>
-      /* --- CONFIGURACIÓN DE COLORES (Paleta Naranja Oscuro) --- */
-      :root {
-        /* Naranja oscuro vibrante */
-        --primary-color: #ea580c;
-        /* Brillo naranja */
-        --primary-glow: rgba(234, 88, 12, 0.3);
-
-        --bg-color: #0b0c15; /* Fondo muy oscuro */
-        --surface-color: rgba(
-          22,
-          27,
-          34,
-          0.8
-        ); /* Fondo de tarjetas semi-transparente */
-        --text-main: #ffffff;
-        --text-muted: #94a3b8;
-        --font-main: "Inter", sans-serif;
-      }
-
-      /* --- ESTILOS GENERALES --- */
-      * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-      }
-
-      body {
-        font-family: var(--font-main);
-        background-color: var(--bg-color);
-        color: var(--text-main);
-        overflow-x: hidden;
-        line-height: 1.6;
-        position: relative;
-      }
-
-      /* Lienzo para las partículas */
-      #particles-canvas {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: -2; /* Detrás de todo */
-        pointer-events: none;
-      }
-
-      /* Fondo de "mancha" de color sutil */
-      body::before {
-        content: "";
-        position: fixed;
-        top: -10%;
-        left: -10%;
-        width: 60vw;
-        height: 60vw;
-        background: radial-gradient(
-          circle,
-          var(--primary-glow) 0%,
-          transparent 60%
-        );
-        opacity: 0.15;
-        z-index: -1;
-        filter: blur(120px);
-        animation: floatGlow 15s infinite alternate ease-in-out;
-      }
-
-      a {
-        text-decoration: none;
-        color: inherit;
-        transition: 0.3s;
-      }
-
-      /* --- HEADER --- */
-      header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 1.5rem 5%;
-        position: fixed;
-        width: 100%;
-        top: 0;
-        z-index: 10;
-        background: rgba(11, 12, 21, 0.7);
-        backdrop-filter: blur(12px);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      }
-
-      .logo {
-        font-weight: 800;
-        font-size: 1.5rem;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        color: var(--text-main);
-      }
-
-      .nav-links {
-        display: flex;
-        align-items: center;
-      }
-
-      .nav-links a {
-        margin-left: 2rem;
-        color: var(--text-muted);
-        font-size: 0.9rem;
-        font-weight: 600;
-      }
-      .nav-links a:hover {
-        color: var(--primary-color);
-      }
-
-      .lang-switch {
-        margin-left: 2rem;
-        padding: 4px 10px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 4px;
-        color: var(--text-muted);
-        font-size: 0.8rem;
-        cursor: pointer;
-        background: transparent;
-      }
-      .lang-switch:hover {
-        border-color: var(--primary-color);
-        color: var(--text-main);
-      }
-
-      /* --- HERO SECTION --- */
-      .hero {
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        padding: 100px 20px 40px;
-        animation: fadeIn 1s ease-out;
-        position: relative;
-        z-index: 1;
-      }
-
-      h1 {
-        font-size: 4.5rem;
-        margin-bottom: 1.5rem;
-        line-height: 1.1;
-        font-weight: 800;
-        letter-spacing: -1px;
-        background: linear-gradient(
-          135deg,
-          #ffffff 20%,
-          var(--text-muted) 100%
-        );
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-      }
-
-      h1 span {
-        background: linear-gradient(
-          135deg,
-          var(--primary-color) 0%,
-          #ff8a4c 100%
-        );
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        text-shadow: 0 0 40px var(--primary-glow);
-      }
-
-      .subtitle {
-        font-size: 1.35rem;
-        color: var(--text-muted);
-        max-width: 700px;
-        margin-bottom: 3rem;
-        line-height: 1.5;
-      }
-
-      /* --- BOTONES --- */
-      .btn-group {
-        display: flex;
-        gap: 20px;
-        flex-wrap: wrap;
-        justify-content: center;
-      }
-
-      .btn {
-        padding: 14px 36px;
-        border-radius: 6px;
-        font-weight: 600;
-        font-size: 1rem;
-        cursor: pointer;
-        border: 1px solid transparent;
-        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-      }
-
-      .btn-primary {
-        background: linear-gradient(
-          135deg,
-          var(--primary-color) 0%,
-          #c2410b 100%
-        );
-        border-top: 1px solid rgba(255, 255, 255, 0.2);
-        color: #fff;
-        box-shadow: 0 4px 20px rgba(234, 88, 12, 0.3);
-      }
-
-      .btn-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 30px rgba(234, 88, 12, 0.5);
-      }
-
-      .btn-outline {
-        border-color: rgba(255, 255, 255, 0.15);
-        color: var(--text-muted);
-        background: rgba(255, 255, 255, 0.03);
-      }
-
-      .btn-outline:hover {
-        border-color: var(--primary-color);
-        color: #fff;
-        background: rgba(234, 88, 12, 0.1);
-      }
-
-      /* --- FEATURES GRID --- */
-      .features {
-        padding: 5rem 10%;
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 2rem;
-        position: relative;
-        z-index: 1;
-      }
-
-      .card {
-        background: var(--surface-color);
-        padding: 2.5rem;
-        border-radius: 12px;
-        border: 1px solid rgba(255, 255, 255, 0.05);
-        transition: 0.3s;
-        backdrop-filter: blur(10px);
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-      }
-
-      .card:hover {
-        transform: translateY(-5px);
-        border-color: var(--primary-color);
-        box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.6);
-      }
-
-      .card-icon {
-        font-size: 2rem;
-        margin-bottom: 1.5rem;
-        color: var(--primary-color);
-      }
-
-      .card h3 {
-        margin-bottom: 1rem;
-        color: #fff;
-        font-size: 1.25rem;
-        font-weight: 700;
-      }
-      .card p {
-        color: var(--text-muted);
-        font-size: 0.95rem;
-        line-height: 1.6;
-      }
-
-      /* --- FOOTER --- */
-      footer {
-        padding: 4rem 2rem;
-        text-align: center;
-        color: var(--text-muted);
-        font-size: 0.9rem;
-        border-top: 1px solid rgba(255, 255, 255, 0.05);
-        position: relative;
-        z-index: 1;
-        background: #08090f;
-        margin-top: auto;
-      }
-
-      /* --- UTILS & ANIMATIONS --- */
-      .hidden {
-        display: none !important;
-      }
-
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(20px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-
-      @keyframes floatGlow {
-        0% {
-          transform: translate(0, 0) scale(1);
-          opacity: 0.15;
-        }
-        100% {
-          transform: translate(50px, 50px) scale(1.1);
-          opacity: 0.25;
-        }
-      }
-
-      /* Responsive */
-      @media (max-width: 768px) {
-        h1 {
-          font-size: 2.8rem;
-        }
-        .hero {
-          padding-top: 120px;
-        }
-        header {
-          padding: 1rem 1.5rem;
-        }
-        .nav-links a {
-          display: none;
-        }
-        .nav-links .lang-switch {
-          display: block;
-          margin-left: 0;
-        }
-        .subtitle {
-          font-size: 1.1rem;
-          padding: 0 1rem;
-        }
-      }
-    </style>
+    <link rel="stylesheet" href="./css/style.css">
   </head>
   <body>
+    <!-- Background Canvas -->
     <canvas id="particles-canvas"></canvas>
 
+    <!-- Header -->
     <header>
-      <div class="logo">
-        <span style="letter-spacing: 2px; color: #fff">RAGNOS</span>
+      <div class="header-container">
+        <div class="logo">
+          <img src="https://github.com/cgarciagl/Ragnos/blob/main/content/img/logo.webp?raw=true" alt="Ragnos Logo" class="brand-logo">
+          <span style="letter-spacing: 2px; color: #fff">RAGNOS</span> 
+        </div>
+        <nav class="nav-links">
+          <a href="https://github.com/cgarciagl/Ragnos" target="_blank">GitHub</a>
+          <a href="./docs/" data-lang="es">Documentación</a>
+          <a href="./docs/" data-lang="en" class="hidden">Documentation</a>
+          <button id="langToggle" class="lang-switch">EN / ES</button>
+        </nav>
       </div>
-      <nav class="nav-links">
-        <a href="https://github.com/cgarciagl/Ragnos" target="_blank">GitHub</a>
-        <a href="./docs/" data-lang="es">Documentación</a>
-        <a href="./docs/" data-lang="en" class="hidden">Documentation</a>
-        <button id="langToggle" class="lang-switch">EN | ES</button>
-      </nav>
     </header>
 
+    <!-- Hero Section -->
     <section class="hero">
-      <img
-        src="https://github.com/cgarciagl/Ragnos/blob/main/content/img/logo.webp?raw=true"
-        alt="Ragnos Logo"
-        style="
-          width: 180px;
-          height: auto;
-          margin-bottom: 2rem;
-          filter: drop-shadow(0 0 30px rgba(234, 88, 12, 0.4));
-          animation: fadeIn 1.2s ease-out;
-        "
-      />
+      <div class="hero-container">
+        <div class="hero-content">
+          <div class="hero-badge">
+            <span class="dot"></span>
+            <span>v1.0 Release</span>
+          </div>
+          
+          <h1 data-lang="es">
+            El Framework Declarativo para <br /><span>PHP Profesional</span>
+          </h1>
+          <h1 data-lang="en" class="hidden">
+            The Declarative Framework for <br /><span>Professional PHP</span>
+          </h1>
 
-      <h1 data-lang="es">
-        El Framework Declarativo para <br /><span>PHP Profesional</span>
-      </h1>
-      <h1 data-lang="en" class="hidden">
-        The Declarative Framework for <br /><span>Professional PHP</span>
-      </h1>
+          <p data-lang="es">
+            Deja de escribir código repetitivo. Ragnos genera automáticamente APIs, 
+            Interfaces y Validaciones complejas a partir de tus modelos de datos.
+          </p>
+          <p data-lang="en" class="hidden">
+            Stop writing repetitive code. Ragnos automatically generates APIs, UIs, 
+            and complex Validations directly from your data models.
+          </p>
 
-      <p class="subtitle" data-lang="es">
-        Deja de escribir código CRUD repetitivo. Define tus modelos de datos y
-        deja que Ragnos genere automáticamente APIs, Interfaces de Usuario y
-        Validaciones complejas al instante.
-      </p>
-      <p class="subtitle hidden" data-lang="en">
-        Stop writing repetitive CRUD code. Define your data models once and let
-        Ragnos instantly generate APIs, UIs, and complex Validations for you.
-      </p>
+          <div class="btn-group" style="display:flex; gap:16px;">
+            <a href="./docs/" class="btn btn-primary">
+              <span data-lang="es">Leer Documentación</span>
+              <span data-lang="en" class="hidden">Read Documentation</span>
+            </a>
+            <a href="https://github.com/cgarciagl/Ragnos" target="_blank" class="btn btn-outline">
+              GitHub
+            </a>
+          </div>
+        </div>
 
-      <div class="btn-group">
-        <a href="./docs/" class="btn btn-primary">
-          <span data-lang="es">Leer Documentación</span>
-          <span data-lang="en" class="hidden">Read Documentation</span>
-        </a>
-        <a
-          href="https://github.com/cgarciagl/Ragnos"
-          target="_blank"
-          class="btn btn-outline"
-        >
-          GitHub Repo
-        </a>
+        <div class="hero-visual-3d">
+          <img src="./assets/img/hero_core.png" alt="Ragnos Core Technology">
+        </div>
       </div>
     </section>
 
-    <section class="features">
-      <!-- Feature 1: Declarative Datasets -->
-      <div class="card">
-        <div class="card-icon">💾</div>
-        <h3 data-lang="es">Datasets Declarativos</h3>
-        <h3 data-lang="en" class="hidden">Declarative Datasets</h3>
-        <p data-lang="es">
-          Olvídate de crear controladores, vistas y modelos manualmente para
-          cada tabla. Define la estructura y reglas de negocio en un solo lugar
-          y obtén un módulo funcional de inmediato.
-        </p>
-        <p data-lang="en" class="hidden">
-          Forget about manually creating controllers, views, and models for
-          every table. Define your structure and business rules in one place and
-          get a fully functional module immediately.
-        </p>
+    <!-- Detailed Features Section -->
+    <section class="features-section">
+      <div class="section-header">
+        <h2 data-lang="es">Arquitectura de Siguiente Nivel</h2>
+        <h2 data-lang="en" class="hidden">Next-Level Architecture</h2>
+        <p data-lang="es">Diseñado para escalabilidad y velocidad de desarrollo.</p>
+        <p data-lang="en" class="hidden">Engineered for scalability and development speed.</p>
       </div>
 
-      <!-- Feature 2: Hybrid API Mode -->
-      <div class="card">
-        <div class="card-icon">🔌</div>
-        <h3 data-lang="es">Núcleo Híbrido (HTML + API)</h3>
-        <h3 data-lang="en" class="hidden">Hybrid Core (HTML + API)</h3>
-        <p data-lang="es">
-          Ragnos es "Dual-Stack" por defecto. Cada controlador que creas sirve
-          automáticamente tu panel de administración y funciona como una API
-          RESTful segura para tus aplicaciones móviles.
-        </p>
-        <p data-lang="en" class="hidden">
-          Ragnos is "Dual-Stack" by default. Every controller you build
-          automatically serves your admin panel and functions as a secure
-          RESTful API for your mobile apps.
-        </p>
+      <!-- Feature 1: Datasets -->
+      <div class="feature-row">
+        <div class="feature-content">
+          <div class="feature-icon-box">💾</div>
+          <h3 data-lang="es">Datasets Declarativos</h3>
+          <h3 data-lang="en" class="hidden">Declarative Datasets</h3>
+          <p data-lang="es">
+            Olvídate de crear controladores, vistas y modelos manualmente. Define la estructura 
+            y reglas de negocio en un solo archivo JSON/PHP y obtén un módulo funcional de inmediato.
+          </p>
+          <p data-lang="en" class="hidden">
+            Forget manual controllers and views. Define structure and business rules in a single 
+            file and get a fully functional module immediately.
+          </p>
+        </div>
+        <div class="feature-image">
+          <img src="./assets/img/feat_db.png" alt="Declarative Data Structure">
+        </div>
       </div>
 
-      <!-- Feature 3: Enterprise Ready -->
-      <div class="card">
-        <div class="card-icon">🛡️</div>
-        <h3 data-lang="es">Seguridad Empresarial</h3>
-        <h3 data-lang="en" class="hidden">Enterprise Security</h3>
-        <p data-lang="es">
-          Incluye logs de auditoría nativos, control de acceso basado en roles
-          (RBAC), hooks de ciclo de vida para lógica compleja y protecciones
-          contra vulnerabilidades comunes.
-        </p>
-        <p data-lang="en" class="hidden">
-          Includes native audit logs, Role-Based Access Control (RBAC),
-          lifecycle hooks for complex logic, and built-in protection against
-          common vulnerabilities.
-        </p>
+      <!-- Feature 2: Hybrid API (Reversed) -->
+      <div class="feature-row reverse">
+        <div class="feature-content">
+          <div class="feature-icon-box">🔌</div>
+          <h3 data-lang="es">Núcleo Híbrido (HTML + API)</h3>
+          <h3 data-lang="en" class="hidden">Hybrid Core (HTML + API)</h3>
+          <p data-lang="es">
+            Arquitectura "Dual-Stack". Tu panel de administración sirve automáticamente como una 
+            API RESTful segura para consumir desde aplicaciones móviles o frontends modernos.
+          </p>
+          <p data-lang="en" class="hidden">
+            "Dual-Stack" architecture. Your admin panel automatically serves as a secure RESTful API 
+            ready for mobile apps or modern frontends.
+          </p>
+        </div>
+        <div class="feature-image">
+          <img src="./assets/img/feat_api.png" alt="Hybrid API Connectivity">
+        </div>
       </div>
 
-      <!-- Feature 4: Solid Stack -->
-      <div class="card">
-        <div class="card-icon">⚡</div>
-        <h3 data-lang="es">Stack Sólido y Robusto</h3>
-        <h3 data-lang="en" class="hidden">Solid & Robust Stack</h3>
-        <p data-lang="es">
-          Construido sobre la solidez de <strong>CodeIgniter 4</strong>,
-          potenciado con AdminLTE para interfaces elegantes y enriquecido con
-          jQuery y DataTables para máxima interactividad.
-        </p>
-        <p data-lang="en" class="hidden">
-          Built on the rock-solid foundation of <strong>CodeIgniter 4</strong>,
-          powered by AdminLTE for sleek interfaces, and enriched with jQuery and
-          DataTables for maximum interactivity.
-        </p>
+      <!-- Feature 3: Security -->
+      <div class="feature-row">
+        <div class="feature-content">
+          <div class="feature-icon-box">🛡️</div>
+          <h3 data-lang="es">Seguridad Empresarial</h3>
+          <h3 data-lang="en" class="hidden">Enterprise Security</h3>
+          <p data-lang="es">
+            Protección robusta desde el primer día. Incluye RBAC (Control de Acceso Basado en Roles), 
+            Logs de Auditoría inmutables y mitigación automática de OWASP Top 10.
+          </p>
+          <p data-lang="en" class="hidden">
+            Robust protection from day one. Includes RBAC, immutable Audit Logs, and automatic 
+            OWASP Top 10 mitigation.
+          </p>
+        </div>
+        <div class="feature-image">
+          <img src="./assets/img/feat_sec.png" alt="Cyber Security Shield">
+        </div>
       </div>
+
+      <!-- Tech Stack Grid -->
+      <div class="grid-extra">
+        <div class="mini-card">
+          <h4>CodeIgniter 4</h4>
+          <p>PHP Foundation</p>
+        </div>
+        <div class="mini-card">
+          <h4>AdminLTE</h4>
+          <p>UI Interface</p>
+        </div>
+        <div class="mini-card">
+          <h4>jQuery & DataTables</h4>
+          <p>Interactivity</p>
+        </div>
+        <div class="mini-card">
+          <h4>REST API</h4>
+          <p>Native Support</p>
+        </div>
+      </div>
+      
     </section>
 
     <footer>
       <p>&copy; 2026 Ragnos Framework. Open Source MIT License.</p>
     </footer>
 
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        // Simple lang state
-        let currentLang = navigator.language.startsWith("es") ? "es" : "en";
-
-        const updateLang = () => {
-          const showEs = currentLang === "es";
-
-          document
-            .querySelectorAll('[data-lang="es"]')
-            .forEach((el) => el.classList.toggle("hidden", !showEs));
-          document
-            .querySelectorAll('[data-lang="en"]')
-            .forEach((el) => el.classList.toggle("hidden", showEs));
-
-          // Update button text if simpler toggle is desired, but "EN | ES" is static
-        };
-
-        // Initial setup
-        updateLang();
-
-        // Button listener
-        const btn = document.getElementById("langToggle");
-        btn.addEventListener("click", () => {
-          currentLang = currentLang === "es" ? "en" : "es";
-          updateLang();
-        });
-      });
-    </script>
-
-    <script>
-      const canvas = document.getElementById("particles-canvas");
-      const ctx = canvas.getContext("2d");
-      let particlesArray;
-
-      // Resizing
-      const resizeCanvas = () => {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-      };
-
-      window.addEventListener("resize", () => {
-        resizeCanvas();
-        init();
-      });
-      resizeCanvas();
-
-      // Config: Vibrant Orange #ea580c RGB
-      const particleColorRGB = "234, 88, 12";
-
-      class Particle {
-        constructor(x, y, directionX, directionY, size, color) {
-          this.x = x;
-          this.y = y;
-          this.directionX = directionX;
-          this.directionY = directionY;
-          this.size = size;
-          this.color = color;
-        }
-        draw() {
-          ctx.beginPath();
-          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
-          ctx.fillStyle = this.color;
-          ctx.fill();
-        }
-        update() {
-          if (this.x > canvas.width || this.x < 0)
-            this.directionX = -this.directionX;
-          if (this.y > canvas.height || this.y < 0)
-            this.directionY = -this.directionY;
-          this.x += this.directionX;
-          this.y += this.directionY;
-          this.draw();
-        }
-      }
-
-      function init() {
-        particlesArray = [];
-        // Less particles for cleaner look
-        let numberOfParticles = (canvas.height * canvas.width) / 20000;
-        for (let i = 0; i < numberOfParticles; i++) {
-          let size = Math.random() * 2 + 1;
-          let x = Math.random() * (innerWidth - size * 4) + size * 2;
-          let y = Math.random() * (innerHeight - size * 4) + size * 2;
-          let directionX = Math.random() * 0.4 - 0.2;
-          let directionY = Math.random() * 0.4 - 0.2;
-          let color = `rgba(${particleColorRGB}, ${Math.random() * 0.4 + 0.1})`;
-          particlesArray.push(
-            new Particle(x, y, directionX, directionY, size, color)
-          );
-        }
-      }
-
-      function connect() {
-        for (let a = 0; a < particlesArray.length; a++) {
-          for (let b = a; b < particlesArray.length; b++) {
-            let dx = particlesArray[a].x - particlesArray[b].x;
-            let dy = particlesArray[a].y - particlesArray[b].y;
-            let distance = dx * dx + dy * dy;
-
-            if (distance < (canvas.width / 7) * (canvas.height / 7)) {
-              let opacityValue = 1 - distance / 25000;
-              if (opacityValue > 0) {
-                ctx.strokeStyle = `rgba(${particleColorRGB}, ${opacityValue * 0.12})`;
-                ctx.lineWidth = 1;
-                ctx.beginPath();
-                ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
-                ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
-                ctx.stroke();
-              }
-            }
-          }
-        }
-      }
-
-      function animate() {
-        requestAnimationFrame(animate);
-        ctx.clearRect(0, 0, innerWidth, innerHeight);
-        particlesArray.forEach((p) => p.update());
-        connect();
-      }
-
-      init();
-      animate();
-    </script>
+    <script src="./js/main.js"></script>
   </body>
 </html>
