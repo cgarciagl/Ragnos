@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        <link rel="canonical" href="https://cgarciagl.github.io/Ragnos/docs/frontend/funciones_javascript/">
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>Funciones JavaScript - Ragnos Docs</title>
+        <link href="../../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../../css/fontawesome.min.css" rel="stylesheet">
+        <link href="../../css/brands.min.css" rel="stylesheet">
+        <link href="../../css/solid.min.css" rel="stylesheet">
+        <link href="../../css/v4-font-face.min.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/panda-syntax-dark.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <link href="../../css/ragnos_style.css" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="../..">Ragnos Docs</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href="../.." class="nav-link">Inicio</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Fundamentos</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../fundamentos/instalacion/" class="dropdown-item">Instalación</a>
+</li>
+                                    
+<li>
+    <a href="../../fundamentos/primeros_pasos/" class="dropdown-item">Primeros Pasos</a>
+</li>
+                                    
+<li>
+    <a href="../../fundamentos/configuracion/" class="dropdown-item">Configuración</a>
+</li>
+                                    
+<li>
+    <a href="../../fundamentos/plantilla/" class="dropdown-item">Generador CLI</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Datasets y Modelos</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../datasets/datasets/" class="dropdown-item">Creando Datasets</a>
+</li>
+                                    
+<li>
+    <a href="../../datasets/campos/" class="dropdown-item">Referencia de Campos</a>
+</li>
+                                    
+<li>
+    <a href="../../datasets/guia_RQueryController/" class="dropdown-item">Consultas Avanzadas (RQuery)</a>
+</li>
+                                    
+<li>
+    <a href="../../datasets/maestro-detalle/" class="dropdown-item">Maestro-Detalle</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Backend Avanzado</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../avanzado/guia_modo_api/" class="dropdown-item">Modo API</a>
+</li>
+                                    
+<li>
+    <a href="../../avanzado/helpers/" class="dropdown-item">Helpers y Utilidades</a>
+</li>
+                                    
+<li>
+    <a href="../../avanzado/hooks/" class="dropdown-item">Hooks y eventos</a>
+</li>
+                                    
+<li>
+    <a href="../../avanzado/autenticacion_integrada/" class="dropdown-item">Autenticación</a>
+</li>
+                                    
+<li>
+    <a href="../../avanzado/auditlog/" class="dropdown-item">Audit Log</a>
+</li>
+                                    
+<li>
+    <a href="../../avanzado/server_side_events/" class="dropdown-item">Server Side Events</a>
+</li>
+                                    
+<li>
+    <a href="../../avanzado/despliegue/" class="dropdown-item">Despliegue</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle active" aria-current="page" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Frontend y Reportes</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../personalizacion_ui/" class="dropdown-item">Personalización UI</a>
+</li>
+                                    
+<li>
+    <a href="../reportes_simples/" class="dropdown-item">Reportes Simples</a>
+</li>
+                                    
+<li>
+    <a href="./" class="dropdown-item active" aria-current="page">Funciones JavaScript</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="../reportes_simples/" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" class="nav-link disabled">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="https://github.com/cgarciagl/ragnos" class="nav-link"><i class="fa-brands fa-github"></i> GitHub</a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#funciones-javascript-getvalue-y-getobject" class="nav-link">⚡ Funciones JavaScript: getValue y getObject</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#getvalueurl-params-callback" class="nav-link">getValue(url, params, callback)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#getobjectpurl-pparameters-callbackfunction" class="nav-link">getObject(purl, pparameters, callbackfunction)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#ragnossearch-y-clases-relacionadas" class="nav-link">RagnosSearch y Clases relacionadas</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#hooks-de-sistema-y-funciones-en-customjs" class="nav-link">Hooks de Sistema y Funciones en custom.js</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="funciones-javascript-getvalue-y-getobject">⚡ Funciones JavaScript: <code>getValue</code> y <code>getObject</code></h1>
+<p>Este documento describe las funciones utilitarias <code>getValue</code> y <code>getObject</code>, utilizadas en el proyecto para realizar peticiones asíncronas al servidor. Estas funciones simplifican el uso de <code>fetch</code> y manejan la serialización de parámetros, tiempos de espera y reintentos.</p>
+<h2 id="getvalueurl-params-callback"><code>getValue(url, params, callback)</code></h2>
+<p>Realiza una petición HTTP <code>POST</code> a una URL especificada y devuelve la respuesta como texto plano.</p>
+<h3 id="parametros">Parámetros</h3>
+<ul>
+<li><strong><code>url</code></strong> (string): La URL a la que se realizará la petición. Se procesa internamente con <code>fixUrl</code>, por lo que puede ser una ruta relativa.</li>
+<li><strong><code>params</code></strong> (object, opcional): Un objeto con los parámetros que se enviarán en el cuerpo de la petición (codificados como <code>application/x-www-form-urlencoded</code>).</li>
+<li>Además de los datos a enviar, este objeto acepta configuraciones especiales:<ul>
+<li><code>timeout</code> (number): Tiempo máximo de espera en milisegundos (por defecto: 12000).</li>
+<li><code>retryAttempts</code> (number): Número de intentos en caso de fallo (por defecto: 1).</li>
+<li><code>retryDelay</code> (number): Retardo entre intentos en milisegundos (por defecto: 1000).</li>
+</ul>
+</li>
+<li><strong><code>callback</code></strong> (function, opcional): Una función que se ejecutará al completar la petición. Recibe dos argumentos: <code>(response, error)</code>.</li>
+</ul>
+<h3 id="retorno">Retorno</h3>
+<ul>
+<li>Si se proporciona un <code>callback</code>, la función no retorna nada y el resultado se maneja en el callback.</li>
+<li>Si <strong>no</strong> se proporciona un <code>callback</code>, devuelve una <code>Promise</code> que resuelve con el texto de la respuesta o rechaza con un error.</li>
+</ul>
+<h3 id="ejemplos-de-uso">Ejemplos de uso</h3>
+<div class="admonition tip">
+<p class="admonition-title">Moderniza tu código</p>
+<p>Aunque soportan callbacks, recomendamos fuertemente usar la sintaxis <code>async/await</code> para un código más limpio y legible, evitando el "callback hell".</p>
+</div>
+<p><strong>Uso básico con Promesas (Async/Await):</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">respuestaTexto</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">getValue</span><span class="p">(</span><span class="s2">&quot;controller/metodo&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="mf">123</span><span class="w"> </span><span class="p">});</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Respuesta del servidor:&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">respuestaTexto</span><span class="p">);</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">&quot;Hubo un error:&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">error</span><span class="p">);</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>Uso con Callback:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nx">getValue</span><span class="p">(</span><span class="s2">&quot;controller/metodo&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">usuario</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;juan&quot;</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="p">(</span><span class="nx">response</span><span class="p">,</span><span class="w"> </span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">&quot;Error:&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">error</span><span class="p">);</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Respuesta:&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">response</span><span class="p">);</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="p">});</span>
+</code></pre></div>
+<p><strong>Configuración de timeout y reintentos:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">params</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nx">dato</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;valor&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nx">timeout</span><span class="o">:</span><span class="w"> </span><span class="mf">5000</span><span class="p">,</span><span class="w"> </span><span class="c1">// Esperar máximo 5 segundos</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="nx">retryAttempts</span><span class="o">:</span><span class="w"> </span><span class="mf">3</span><span class="p">,</span><span class="w"> </span><span class="c1">// Reintentar hasta 3 veces si falla</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="p">};</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">getValue</span><span class="p">(</span><span class="s2">&quot;api/data&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">params</span><span class="p">);</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">&quot;Falló tras 3 intentos&quot;</span><span class="p">);</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="p">}</span>
+</code></pre></div>
+<hr />
+<h2 id="getobjectpurl-pparameters-callbackfunction"><code>getObject(purl, pparameters, callbackfunction)</code></h2>
+<p>Es una función envolvente (wrapper) de <code>getValue</code>. Realiza la petición y automáticamente intenta parsear la respuesta como un objeto JSON.</p>
+<h3 id="parametros_1">Parámetros</h3>
+<ul>
+<li><strong><code>purl</code></strong> (string): La URL a la que se realizará la petición.</li>
+<li><strong><code>pparameters</code></strong> (object): Objeto con los parámetros a enviar.</li>
+<li><strong><code>callbackfunction</code></strong> (function, opcional): Función de callback que recibe <code>(objeto, error)</code>.</li>
+<li><code>objeto</code>: El resultado parseado como JSON si todo salió bien (o <code>null</code> si hubo error).</li>
+<li><code>error</code>: Objeto de error si la petición falló o el JSON no es válido (o <code>null</code> si todo salió bien).</li>
+</ul>
+<h3 id="retorno_1">Retorno</h3>
+<ul>
+<li>Si se usa <code>callbackfunction</code>, no retorna nada explícito.</li>
+<li>Si <strong>no</strong> se usa <code>callbackfunction</code>, devuelve una <code>Promise</code> que resuelve con el objeto JavaScript parseado o rechaza con el error.</li>
+</ul>
+<h3 id="ejemplos-de-uso_1">Ejemplos de uso</h3>
+<p><strong>Uso básico para obtener datos JSON:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">// Supongamos que el servidor devuelve: {&quot;nombre&quot;: &quot;Ragnos&quot;, &quot;version&quot;: 1.0}</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">getObject</span><span class="p">(</span><span class="s2">&quot;api/config&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">modulo</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;admin&quot;</span><span class="w"> </span><span class="p">});</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Nombre del sistema:&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">data</span><span class="p">.</span><span class="nx">nombre</span><span class="p">);</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">&quot;Error obteniendo configuración:&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">error</span><span class="p">);</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>Uso con Callback:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nx">getObject</span><span class="p">(</span><span class="s2">&quot;clientes/buscar&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">q</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Empresa X&quot;</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="p">(</span><span class="nx">clientes</span><span class="p">,</span><span class="w"> </span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="nx">alert</span><span class="p">(</span><span class="s2">&quot;Error en la búsqueda&quot;</span><span class="p">);</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span><span class="k">return</span><span class="p">;</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span><span class="c1">// &#39;clientes&#39; ya es un array u objeto JS</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span><span class="nx">clientes</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">c</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">c</span><span class="p">.</span><span class="nx">nombre</span><span class="p">));</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="p">});</span>
+</code></pre></div>
+<hr />
+<h2 id="ragnossearch-y-clases-relacionadas"><code>RagnosSearch</code> y Clases relacionadas</h2>
+<p>La clase <code>RagnosSearch</code> y sus métodos auxiliares proporcionan una interfaz estandarizada para realizar búsquedas en inputs, integrando interfaz gráfica (botones) y manejo de resultados.</p>
+<h3 id="ragnossearchsetupsimplesearchelemento-ruta-params-callback"><code>RagnosSearch.setupSimpleSearch(elemento, ruta, params, callback)</code></h3>
+<p>Método estático para configurar una búsqueda sencilla en un input existente. Transforma el input agregando botones de búsqueda y limpieza.</p>
+<h4 id="parametros_2">Parámetros</h4>
+<ul>
+<li><strong><code>elemento</code></strong> (jQuery Selector | DOM Element): El input donde se habilitará la búsqueda.</li>
+<li><strong><code>ruta</code></strong> (string): La URL del servidor (Controlador/Método) que procesará la búsqueda.</li>
+<li><strong><code>params</code></strong> (object): Configuración adicional.</li>
+<li><code>canSetToNull</code> (boolean): Define si se muestra el botón "X" para limpiar el campo (Default: <code>true</code>).</li>
+<li><strong><code>callback</code></strong> (function): Función a ejecutar tras una búsqueda exitosa. Recibe el objeto jQuery del input como argumento <code>e</code>.</li>
+</ul>
+<h4 id="retorno_2">Retorno</h4>
+<p>No retorna valor. Modifica el DOM del input.</p>
+<h4 id="ejemplo-de-uso">Ejemplo de uso</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nx">RagnosSearch</span><span class="p">.</span><span class="nx">setupSimpleSearch</span><span class="p">(</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#miInput&quot;</span><span class="p">),</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="s2">&quot;admin/usuarios/buscar&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="p">{},</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span><span class="kd">function</span><span class="w"> </span><span class="p">(</span><span class="nx">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span><span class="c1">// Los datos del resultado se adjuntan al objeto jQuery en &#39;searchdata&#39;</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">resultado</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">e</span><span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="s2">&quot;searchdata&quot;</span><span class="p">);</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">resultado</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">      </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;ID seleccionado:&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">resultado</span><span class="p">.</span><span class="nx">id</span><span class="p">);</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">      </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Nombre:&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">resultado</span><span class="p">.</span><span class="nx">nombre</span><span class="p">);</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">      </span><span class="c1">// Asignar valor al input visible</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">      </span><span class="nx">e</span><span class="p">.</span><span class="nx">val</span><span class="p">(</span><span class="nx">resultado</span><span class="p">.</span><span class="nx">nombre</span><span class="p">);</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="p">);</span>
+</code></pre></div>
+<hr />
+<h3 id="selectorragnossearchparams"><code>$(selector).RagnosSearch(params)</code></h3>
+<p>Plugin de jQuery que instancia la clase <code>RagnosSearch</code>. Está diseñado para búsquedas más complejas, típicamente vinculadas a un controlador estándar del sistema (<code>RagnosController</code>) que implementa <code>searchByAjax</code> y soporta filtros estructurados.</p>
+<h4 id="parametros-params">Parámetros (<code>params</code>)</h4>
+<p>Objeto de configuración con:</p>
+<ul>
+<li><strong><code>controller</code></strong> (string): Nombre del controlador que gestiona la búsqueda (ej. <code>'usuarios'</code>, <code>'productos'</code>). El sistema buscará en <code>controller/searchByAjax</code>.</li>
+<li><strong><code>filter</code></strong> (string): Cadena en Base64 que contiene un array JSON de filtros.</li>
+<li>Estructura: <code>Base64( JSON_String([ {field, op, value}, ... ]) )</code>.</li>
+<li><strong><code>callback</code></strong> (function): Función a ejecutar al seleccionar un resultado.</li>
+<li><strong><code>canSetToNull</code></strong> (boolean): (Opcional) Permite limpiar el campo.</li>
+</ul>
+<h4 id="ejemplo-de-uso_1">Ejemplo de uso</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#inputBusquedaAvanzada&quot;</span><span class="p">).</span><span class="nx">RagnosSearch</span><span class="p">({</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="nx">controller</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;usuarios&quot;</span><span class="p">,</span><span class="w"> </span><span class="c1">// Busca en: usuarios/searchByAjax</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="c1">// Filtro: Usuarios activos (usu_activo = &#39;S&#39;) y del grupo 2</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span><span class="nx">filter</span><span class="o">:</span><span class="w"> </span><span class="nx">btoa</span><span class="p">(</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">([</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nx">field</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;usu_activo&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">op</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;=&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">value</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;S&quot;</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nx">field</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;usu_grupo&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">op</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;=&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">value</span><span class="o">:</span><span class="w"> </span><span class="mf">2</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">    </span><span class="p">])</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">  </span><span class="p">),</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">  </span><span class="nx">callback</span><span class="o">:</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="p">(</span><span class="nx">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">datos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">e</span><span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="s2">&quot;searchdata&quot;</span><span class="p">);</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Datos recibidos:&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">datos</span><span class="p">);</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">datos</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">datos</span><span class="p">.</span><span class="nx">id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="w">      </span><span class="c1">// Lógica personalizada</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="p">});</span>
+</code></pre></div>
+<hr />
+<h2 id="hooks-de-sistema-y-funciones-en-customjs">Hooks de Sistema y Funciones en <code>custom.js</code></h2>
+<p>El archivo <code>custom.js</code> es el lugar designado para lógica específica de la aplicación, incluyendo "hooks" (ganchos) que el sistema invoca automáticamente basándose en convenciones de nombres. Esto permite extender la funcionalidad de búsquedas y tablas sin modificar el núcleo.</p>
+<h3 id="convencion-de-nombres-para-hooks">Convención de Nombres para Hooks</h3>
+<p>El sistema detecta automáticamente funciones globales con patrones específicos de nombre para ejecutar acciones tras ciertos eventos.</p>
+<h4 id="1-hooks-de-busqueda-_nombrecampoonsearch">1. Hooks de Búsqueda (<code>_NombreCampoOnSearch</code>)</h4>
+<p>Se ejecutan automáticamente después de que un control <code>RagnosSearch</code> completa una selección.</p>
+<ul>
+<li><strong>Patrón:</strong> <code>_{id_del_input}OnSearch</code></li>
+<li><strong>Parámetro:</strong> Recibe el objeto jQuery del control (input).</li>
+<li><strong>Uso:</strong> Ideal para rellenar otros campos del formulario basándose en el resultado de la búsqueda.</li>
+</ul>
+<p><strong>Ejemplo del sistema (<code>_productCodeOnSearch</code>):</strong>
+Cuando se selecciona un producto en el input <code>productCode</code>, esta función busca el input <code>priceEach</code> en el detalle de la orden y le asigna el precio sugerido (MSRP).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1">// Se activa al seleccionar algo en &lt;input id=&quot;productCode&quot; ...&gt;</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="kd">function</span><span class="w"> </span><span class="nx">_productCodeOnSearch</span><span class="p">(</span><span class="nx">control</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="c1">// &#39;control&#39; es el input del código de producto</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span><span class="c1">// Accedemos a los datos devueltos por la búsqueda con .data(&quot;searchdata&quot;)</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span><span class="kd">let</span><span class="w"> </span><span class="nx">datos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">control</span><span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="s2">&quot;searchdata&quot;</span><span class="p">);</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span><span class="c1">// Actualizamos otro campo (Precio Unitario) con el valor MSRP del producto</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">  </span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#detalleorden input[name=&quot;priceEach&quot;]&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">(</span><span class="nx">datos</span><span class="p">.</span><span class="nx">MSRP</span><span class="p">);</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="p">}</span>
+</code></pre></div>
+<h4 id="2-hooks-de-cambio-en-tabla-_nombretablaonchange">2. Hooks de Cambio en Tabla (<code>_NombreTablaOnChange</code>)</h4>
+<p>Se ejecutan cuando ocurre un cambio en una tabla gestionada (por ejemplo, al agregar o editar filas en una tabla detalle).</p>
+<ul>
+<li><strong>Patrón:</strong> <code>_{id_de_la_tabla}OnChange</code></li>
+<li><strong>Parámetro:</strong> Recibe el objeto tabla o el contexto del cambio.</li>
+<li><strong>Uso:</strong> Recálculos de totales, validaciones cruzadas.</li>
+</ul>
+<p><strong>Ejemplo del sistema (<code>_OrdenesdetallesOnChange</code>):</strong>
+Cada vez que cambia algo en la tabla de detalles de órdenes (<code>Ordenesdetalles</code>), se recalcula el total de la orden completa llamando al servidor.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1">// Se activa al modificar la tabla &lt;table id=&quot;Ordenesdetalles&quot; ...&gt;</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="kd">function</span><span class="w"> </span><span class="nx">_OrdenesdetallesOnChange</span><span class="p">(</span><span class="nx">tabla</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="c1">// Obtenemos el ID de la orden actual</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="kd">let</span><span class="w"> </span><span class="nx">orden</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">$</span><span class="p">(</span><span class="s2">&quot;input[name=&#39;orderNumber&#39;]&quot;</span><span class="p">).</span><span class="nx">val</span><span class="p">();</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span><span class="c1">// Llamamos al servidor para recalcular el total</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span><span class="nx">getObject</span><span class="p">(</span><span class="s2">&quot;tienda/ordenes/calculatotal&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">orden</span><span class="o">:</span><span class="w"> </span><span class="nx">orden</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="p">(</span><span class="nx">data</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">    </span><span class="c1">// Actualizamos el campo visual de Total</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">    </span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;input[name=&quot;total&quot;]&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">total</span><span class="p">);</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">  </span><span class="p">});</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="p">}</span>
+</code></pre></div>
+<h3 id="funciones-utilitarias-personalizadas">Funciones Utilitarias Personalizadas</h3>
+<p>También se pueden definir funciones normales para ser usadas como callbacks explícitos en configuraciones de búsqueda.</p>
+<p><strong>Ejemplo (<code>pruebaBusquedaOffice</code>):</strong>
+Una función simple diseñada para ser pasada como parámetro <code>callback</code> en <code>RagnosSearch</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kd">function</span><span class="w"> </span><span class="nx">pruebaBusquedaOffice</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="kd">let</span><span class="w"> </span><span class="nx">datos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">e</span><span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="s2">&quot;searchdata&quot;</span><span class="p">);</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Los datos de la busqueda por oficina&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">datos</span><span class="p">);</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="p">}</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c1">// Uso:</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1">// $(&#39;#oficina&#39;).RagnosSearch({ ..., callback: pruebaBusquedaOffice });</span>
+</code></pre></div></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../../js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = "../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../js/base.js"></script>
+        <script src="../../js/particles.js"></script>
+        <script src="../../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
