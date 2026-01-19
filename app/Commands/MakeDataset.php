@@ -202,7 +202,7 @@ class {$class} extends RDatasetController
         parent::__construct();
 
         // Configuración General
-        \$this->checklogin();
+        \$this->checkLogin();
         \$this->setTitle('{$class}'); // TODO: Ajustar título
         
         // Configuración de Base de Datos

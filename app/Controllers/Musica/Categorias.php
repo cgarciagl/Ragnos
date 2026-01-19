@@ -9,7 +9,7 @@ class Categorias extends RDatasetController
     function __construct()
     {
         parent::__construct();
-        $this->checklogin();
+        $this->checkLogin();
         $this->setTitle('📂 Categorias');
         $this->setTableName('mus_categorias');
         $this->setIdField('CAT_ID');

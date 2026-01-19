@@ -9,7 +9,7 @@ class Artistas extends RDatasetController
     function __construct()
     {
         parent::__construct();
-        $this->checklogin();
+        $this->checkLogin();
         $this->setTitle('🎤 Artistas');
         $this->setTableName('mus_cantantes');
         $this->setIdField('CNT_ID');

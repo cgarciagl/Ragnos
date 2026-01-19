@@ -16,11 +16,11 @@
                 </div>
 
                 <h5 class="profile-username text-center">
-                    <?= $auth->nombre(); ?>
+                    <?= $auth->name(); ?>
                 </h5>
 
                 <p class="text-muted text-center">
-                    <?= $auth->campo('gru_nombre'); ?>
+                    <?= $auth->getField('gru_nombre'); ?>
                 </p>
 
                 <ul class="list-group list-group-flush mb-3">

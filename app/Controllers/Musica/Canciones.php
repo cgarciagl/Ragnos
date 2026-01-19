@@ -10,7 +10,7 @@ class Canciones extends RDatasetController
     {
         parent::__construct();
 
-        $this->checklogin();
+        $this->checkLogin();
 
         $this->setTitle('🎶 Canciones');
         $this->setTableName('mus_canciones');

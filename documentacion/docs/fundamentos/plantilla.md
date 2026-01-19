@@ -108,7 +108,7 @@ class EjemploDataset extends RDatasetController
     {
         parent::__construct();
 
-        $this->checklogin();
+        $this->checkLogin();
         $this->setTitle('Ejemplo');
         $this->setTableName('example_table');
         $this->setIdField('id');

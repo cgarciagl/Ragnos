@@ -11,7 +11,7 @@ class Gruposdeusuarios extends RDatasetController
     {
         parent::__construct();
 
-        $this->soloparagrupo('Administrador');
+        $this->checkUserInGroup('Administrador');
 
         $this->setTitle('Grupos de Usuarios');
 

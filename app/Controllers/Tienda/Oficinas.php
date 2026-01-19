@@ -9,7 +9,7 @@ class Oficinas extends RDatasetController
     function __construct()
     {
         parent::__construct();
-        $this->checklogin();
+        $this->checkLogin();
         $this->setTitle('Oficinas');
         $this->setTableName('offices');
         $this->setIdField('officeCode');

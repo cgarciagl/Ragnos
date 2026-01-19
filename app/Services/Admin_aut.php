@@ -29,7 +29,7 @@ class Admin_aut extends BaseService
         return self::$instance;
     }
 
-    public function isloggedin()
+    public function isLoggedIn()
     {
         return !$this->id() ? false : true;
     }
@@ -49,9 +49,9 @@ class Admin_aut extends BaseService
         return $id;
     }
 
-    public function campo($field)
+    public function getField($field)
     {
-        if ($this->isloggedin()) {
+        if ($this->isLoggedIn()) {
             if (!Admin_aut::$user_record) {
                 $id                     = $this->id();
                 $sql                    = "select usu_id, usu_nombre, gru_nombre from gen_usuarios, gen_gruposdeusuarios where usu_grupo=gru_id and usu_id=?";
@@ -66,20 +66,20 @@ class Admin_aut extends BaseService
         }
     }
 
-    public function nombre()
+    public function name()
     {
-        return $this->campo('usu_nombre');
+        return $this->getField('usu_nombre');
     }
 
-    public function esdegrupo($grupo)
+    public function isUserInGroup($grupo)
     {
-        return (trim(strtolower($this->campo('gru_nombre'))) == trim(strtolower($grupo)));
+        return (trim(strtolower($this->getField('gru_nombre'))) == trim(strtolower($grupo)));
     }
 
-    public function soloparagrupo($grupos)
+    public function checkUserInGroup($grupos)
     {
-        $this->checklogin();
-        $groupName = trim(strtolower($this->campo('gru_nombre')));
+        $this->checkLogin();
+        $groupName = trim(strtolower($this->getField('gru_nombre')));
         if (is_array($grupos)) {
             array_map('trim', $grupos);
             array_map('strtolower', $grupos);

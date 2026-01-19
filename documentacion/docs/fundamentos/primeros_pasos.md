@@ -43,7 +43,7 @@ class Tareas extends RDatasetController
         parent::__construct();
 
         // 1. Título y Seguridad
-        $this->checklogin(); // Requiere estar logueado
+        $this->checkLogin(); // Requiere estar logueado
         $this->setTitle('Gestión de Tareas');
 
         // 2. Configuración de la Tabla

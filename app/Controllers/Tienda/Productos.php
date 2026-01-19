@@ -9,7 +9,7 @@ class Productos extends RDatasetController
     function __construct()
     {
         parent::__construct();
-        $this->checklogin();
+        $this->checkLogin();
         $this->setTitle('Productos');
         $this->setTableName('products');
         $this->setIdField('productCode');

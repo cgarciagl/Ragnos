@@ -9,7 +9,7 @@ class Pagos extends RDatasetController
     function __construct()
     {
         parent::__construct();
-        $this->checklogin();
+        $this->checkLogin();
         $this->setTitle('Pagos');
         $this->setTableName('payments');
         $this->setIdField('idPayment');

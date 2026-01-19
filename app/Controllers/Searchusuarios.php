@@ -9,7 +9,7 @@ class Searchusuarios extends RQueryController
     public function __construct()
     {
         parent::__construct();
-        $this->soloparagrupo('Administrador');
+        $this->checkUserInGroup('Administrador');
         $this->setTitle('🔎 Usuarios');
         $this->setQuery("SELECT usu_id, usu_nombre as 'Nombre', usu_login as 'Login', usu_activo as Activo, usu_grupo FROM gen_usuarios");
         $this->setIdField('usu_id');

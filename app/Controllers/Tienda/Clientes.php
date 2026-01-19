@@ -9,7 +9,7 @@ class Clientes extends RDatasetController
     function __construct()
     {
         parent::__construct();
-        $this->checklogin();
+        $this->checkLogin();
         $this->setTitle('Clientes');
         $this->setTableName('customers');
         $this->setIdField('customerNumber');

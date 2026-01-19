@@ -9,7 +9,7 @@ class Empleados extends RDatasetController
     function __construct()
     {
         parent::__construct();
-        $this->checklogin();
+        $this->checkLogin();
         $this->setTitle('Empleados');
         $this->setTableName('employees');
         $this->setIdField('employeeNumber');

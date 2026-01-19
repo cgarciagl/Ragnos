@@ -9,7 +9,7 @@ class Lineas extends RDatasetController
     function __construct()
     {
         parent::__construct();
-        $this->checklogin();
+        $this->checkLogin();
         $this->setTitle('Lineas de productos');
         $this->setTableName('productlines');
         $this->setIdField('productLine');

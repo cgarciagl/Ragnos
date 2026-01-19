@@ -19,7 +19,7 @@ class Catalogos extends BaseController
             throw new \RuntimeException('Controller name cannot be empty');
         }
 
-        $this->checklogin();
+        $this->checkLogin();
 
         return view('admin/catalogo_view', [
             'controller' => $controller

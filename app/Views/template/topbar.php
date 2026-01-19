@@ -84,37 +84,37 @@
                     data-lte-icon="minimize" class="bi bi-fullscreen-exit" style="display: block;"></i> </a> </li>
 
         <?php $auth = service('Admin_aut'); ?>
-        <?php if ($auth->isloggedin()): ?>
+        <?php if ($auth->isLoggedIn()): ?>
 
-            <li class="nav-item dropdown user-menu"> <a href="#" class="nav-link dropdown-toggle text-primary"
-                    data-bs-toggle="dropdown" aria-expanded="false"> <img class="user-image rounded-circle shadow"
-                        src="./img/avatar.jpg" alt="User Image">
-                    <span class="d-none d-md-inline"><?= $auth->nombre(); ?></span> </a>
-                <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end"> <!--begin::User Image-->
-                    <li class="user-header text-bg-primary"> <img class="user-image rounded-circle shadow"
+                <li class="nav-item dropdown user-menu"> <a href="#" class="nav-link dropdown-toggle text-primary"
+                        data-bs-toggle="dropdown" aria-expanded="false"> <img class="user-image rounded-circle shadow"
                             src="./img/avatar.jpg" alt="User Image">
-                        <p>
-                            <?= $auth->nombre(); ?> - Web Developer
-                            <small>Miembro desde Nov. 2024</small>
-                        </p>
-                    </li> <!--end::User Image--> <!--begin::Menu Body-->
-                    <li class="user-body"> <!--begin::Row-->
-                        <div class="row">
-                            <!-- <div class="col-4 text-center"> <a href="#">Followers</a> </div>
+                        <span class="d-none d-md-inline"><?= $auth->name(); ?></span> </a>
+                    <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end"> <!--begin::User Image-->
+                        <li class="user-header text-bg-primary"> <img class="user-image rounded-circle shadow"
+                                src="./img/avatar.jpg" alt="User Image">
+                            <p>
+                                <?= $auth->name(); ?> - Web Developer
+                                <small>Miembro desde Nov. 2024</small>
+                            </p>
+                        </li> <!--end::User Image--> <!--begin::Menu Body-->
+                        <li class="user-body"> <!--begin::Row-->
+                            <div class="row">
+                                <!-- <div class="col-4 text-center"> <a href="#">Followers</a> </div>
                             <div class="col-4 text-center"> <a href="#">Sales</a> </div>
                             <div class="col-4 text-center"> <a href="#">Friends</a> </div> -->
-                        </div> <!--end::Row-->
-                    </li> <!--end::Menu Body--> <!--begin::Menu Footer-->
-                    <li class="user-footer">
-                        <a href="<?= site_url('/admin/perfil'); ?>" class="dropdown-item">
-                            <i class="bi bi-person-circle nav-icon"></i> Perfil del usuario
-                        </a>
-                        <a href="<?= site_url('admin/logout'); ?>" class="dropdown-item">
-                            <i class="bi bi-door-closed"></i> Cerrar sesión
-                        </a>
-                    </li> <!--end::Menu Footer-->
-                </ul>
-            </li>
+                            </div> <!--end::Row-->
+                        </li> <!--end::Menu Body--> <!--begin::Menu Footer-->
+                        <li class="user-footer">
+                            <a href="<?= site_url('/admin/perfil'); ?>" class="dropdown-item">
+                                <i class="bi bi-person-circle nav-icon"></i> Perfil del usuario
+                            </a>
+                            <a href="<?= site_url('admin/logout'); ?>" class="dropdown-item">
+                                <i class="bi bi-door-closed"></i> Cerrar sesión
+                            </a>
+                        </li> <!--end::Menu Footer-->
+                    </ul>
+                </li>
         <?php endif; ?>
 
     </ul>

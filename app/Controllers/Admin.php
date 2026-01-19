@@ -17,7 +17,7 @@ class Admin extends BaseController
     {
         //cargar el helper utiles
         helper('App\ThirdParty\Ragnos\Helpers\ragnos_helper');
-        $this->checklogin();
+        $this->checkLogin();
         $model                                            = new \App\Models\Dashboard();
         $data['ventasultimos12meses']                     = $model->ventasultimos12meses();
         $data['estadosDeCuenta']                          = $model->estadosDeCuenta();
@@ -32,7 +32,7 @@ class Admin extends BaseController
 
     public function perfil()
     {
-        $this->checklogin();
+        $this->checkLogin();
         return view('admin/perfil');
     }
 

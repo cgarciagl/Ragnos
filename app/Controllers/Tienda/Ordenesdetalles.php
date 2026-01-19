@@ -9,7 +9,7 @@ class Ordenesdetalles extends RDatasetController
     function __construct()
     {
         parent::__construct();
-        $this->checklogin();
+        $this->checkLogin();
 
         $this->setTitle('Detalles de orden');
         $this->setTableName('orderdetails');

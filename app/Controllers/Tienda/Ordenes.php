@@ -9,7 +9,7 @@ class Ordenes extends RDatasetController
     function __construct()
     {
         parent::__construct();
-        $this->checklogin();
+        $this->checkLogin();
         $this->setTitle('Ordenes de compra');
         $this->setTableName('orders');
         $this->setIdField('orderNumber');

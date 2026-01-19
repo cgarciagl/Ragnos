@@ -61,7 +61,7 @@ $auth = service('Admin_aut');
 
 <!-- ... en el menú ... -->
 
-<?php if ($auth->esdegrupo('administrador')): ?>
+<?php if ($auth->isUserInGroup('administrador')): ?>
     <li class="nav-item">
         <a href="<?= site_url('usuarios') ?>" class="nav-link"> ... </a>
     </li>

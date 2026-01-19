@@ -17,53 +17,53 @@ $auth = service('Admin_aut');
         <ul id="sidebarTree" class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu"
             data-accordion="false">
 
-            <?php if ($auth->esdegrupo('administrador')): ?>
-                <li class="nav-item">
-                    <a class="nav-link">
-                        <i class="bi bi-people"></i>
-                        <p>
-                            Usuarios
-                            <i class="nav-arrow bi bi-chevron-right"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="<?= site_url('usuarios') ?>" class="nav-link">
-                                <i class="bi bi-person-circle nav-icon"></i>
-                                <p>Usuarios</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="<?= site_url('gruposdeusuarios') ?>" class="nav-link">
-                                <i class="bi bi-people nav-icon"></i>
-                                <p>Grupos de usuarios</p>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
+            <?php if ($auth->isUserInGroup('administrador')): ?>
+                    <li class="nav-item">
+                        <a class="nav-link">
+                            <i class="bi bi-people"></i>
+                            <p>
+                                Usuarios
+                                <i class="nav-arrow bi bi-chevron-right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="<?= site_url('usuarios') ?>" class="nav-link">
+                                    <i class="bi bi-person-circle nav-icon"></i>
+                                    <p>Usuarios</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="<?= site_url('gruposdeusuarios') ?>" class="nav-link">
+                                    <i class="bi bi-people nav-icon"></i>
+                                    <p>Grupos de usuarios</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
 
             <?php endif; ?>
 
-            <?php if ($auth->isloggedin()): ?>
+            <?php if ($auth->isLoggedIn()): ?>
 
-                <li>
-                    <hr class="dropdown-divider">
-                </li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
 
-                <li class="nav-item">
-                    <a class="nav-link" href="<?= site_url('proceso/showprogress') ?>">
-                        <i class="bi bi-gear"></i>
-                        <p>Ajuste de precios</p>
-                    </a>
-                </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?= site_url('proceso/showprogress') ?>">
+                            <i class="bi bi-gear"></i>
+                            <p>Ajuste de precios</p>
+                        </a>
+                    </li>
 
-                <hr>
-                <li class="nav-item">
-                    <a href="<?= site_url('admin/logout'); ?>" class="nav-link">
-                        <i class="bi bi-door-closed"></i>
-                        <p>Cerrar sesión</p>
-                    </a>
-                </li>
+                    <hr>
+                    <li class="nav-item">
+                        <a href="<?= site_url('admin/logout'); ?>" class="nav-link">
+                            <i class="bi bi-door-closed"></i>
+                            <p>Cerrar sesión</p>
+                        </a>
+                    </li>
             <?php endif; ?>
 
         </ul>

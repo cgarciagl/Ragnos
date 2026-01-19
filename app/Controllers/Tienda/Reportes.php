@@ -11,7 +11,7 @@ class Reportes extends BaseController
 
     function ventaspormes()
     {
-        $this->checklogin();
+        $this->checkLogin();
         //cargar el helper utiles
         helper('App\ThirdParty\Ragnos\Helpers\ragnos_helper');
         $model = new \App\Models\Dashboard();

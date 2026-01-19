@@ -34,7 +34,7 @@ class Searchusuarios extends RQueryController
         parent::__construct();
 
         // 1. Seguridad
-        $this->soloparagrupo('Administrador');
+        $this->checkUserInGroup('Administrador');
 
         // 2. Configuración Visual
         $this->setTitle('🔎 Usuarios');
@@ -92,7 +92,7 @@ Permite vincular una columna de tu consulta con otro controlador Ragnos.
 
 - Esto habilita el icono de lupa para buscar valores relacionados.
 
-### `soloparagrupo(string|array $groups)`
+### `checkUserInGroup(string|array $groups)`
 
 Restringe el acceso a este controlador exclusivamente a los grupos de usuarios especificados.
 

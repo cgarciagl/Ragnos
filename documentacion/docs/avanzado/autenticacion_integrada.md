@@ -20,13 +20,13 @@ Todos los controladores que extienden de `BaseController` (incluyendo [`RDataset
 ```mermaid
 graph TD
     Req["Petición Entrante"] --> Controller["Controlador"]
-    Controller -->|Llama| Check{"checklogin( )"}
+    Controller -->|Llama| Check{"checkLogin( )"}
 
     Check -- "No hay sesión" --> Type{"¿Es API?"}
     Type -- "Sí" --> Error401["JSON 401 Unauthorized"]
     Type -- "No" --> Login["Redirigir a Login"]
 
-    Check -- "Hay sesión" --> Group{"¿soloparagrupo( )?"}
+    Check -- "Hay sesión" --> Group{"¿checkUserInGroup( )?"}
 
     Group -- "No requerido" --> Access["✅ Acceso Permitido"]
     Group -- "Requerido" --> Role{"¿Usuario en Grupo?"}
@@ -41,7 +41,7 @@ graph TD
     style Error403 fill:#f8d7da,stroke:#721c24,stroke-width:2px,color:#721c24
 ```
 
-### `checklogin()`
+### `checkLogin()`
 
 Este método verifica si el usuario tiene una sesión activa. Si no la tiene:
 
@@ -53,26 +53,26 @@ Se recomienda llamarlo al inicio de cualquier función que requiera autenticaci�
 
 !!! tip "Controllers Públicos"
 
-    Si tienes un controlador público (ej. página de inicio), simplemente no llames a `checklogin()`.
+    Si tienes un controlador público (ej. página de inicio), simplemente no llames a `checkLogin()`.
 
 ```php
 public function miFunciopPrivada()
 {
-    $this->checklogin();
+    $this->checkLogin();
 
     // El resto del código solo se ejecuta si el usuario está logueado
     return view('mi_vista');
 }
 ```
 
-### `soloparagrupo($grupos)`
+### `checkUserInGroup($grupos)`
 
 Restringe el acceso exclusivamente a usuarios que pertenezcan a los grupos especificados.
 
 - **Parámetro**: Puede ser un `string` con el nombre de un grupo o un `array` de strings para permitir múltiples grupos.
 - **Comportamiento**:
   - Si no cumple la condición, redirige a `admin/index` (o devuelve 403/401 si es API).
-  - Internamente llama a `checklogin()`, por lo que no es necesario llamar a ambos.
+  - Internamente llama a `checkLogin()`, por lo que no es necesario llamar a ambos.
 
 **Uso:**
 
@@ -80,13 +80,13 @@ Restringe el acceso exclusivamente a usuarios que pertenezcan a los grupos espec
 public function __construct()
 {
     // Solo permitir acceso a Administradores
-    $this->soloparagrupo('Administrador');
+    $this->checkUserInGroup('Administrador');
 }
 
 public function reporteGerencial()
 {
     // Permitir acceso a Administradores o Gerentes
-    $this->soloparagrupo(['Administrador', 'Gerencia']);
+    $this->checkUserInGroup(['Administrador', 'Gerencia']);
 
     // Lógica del reporte...
 }
@@ -102,12 +102,12 @@ Lo ideal es invocarlo mediante `service('Admin_aut')`.
 
 ### Funciones Principales
 
-#### `isloggedin()`
+#### `isLoggedIn()`
 
 Devuelve `true` si hay un usuario logueado, `false` en caso contrario.
 
 ```php
-if (service('Admin_aut')->isloggedin()) {
+if (service('Admin_aut')->isLoggedIn()) {
     echo "Usuario conectado";
 }
 ```
@@ -120,13 +120,13 @@ Devuelve el ID (`usu_id`) del usuario actual.
 
 Devuelve el nombre completo (`usu_nombre`) del usuario actual.
 
-#### `esdegrupo($grupo)`
+#### `isUserInGroup($grupo)`
 
 Evalúa si el usuario actual pertenece al grupo indicado. Es muy útil para ocultar o mostrar botones en las vistas o aplicar lógica condicional. Comparación _case-insensitive_.
 
 ```php
 // En un controlador o vista
-if (service('Admin_aut')->esdegrupo('Ventas')) {
+if (service('Admin_aut')->isUserInGroup('Ventas')) {
     // Mostrar botón de crear pedido
 }
 ```
@@ -137,7 +137,7 @@ Obtiene cualquier campo de la tabla `gen_usuarios` para el usuario actual. La in
 
 ```php
 // Obtener el email o cualquier campo personalizado
-$email = service('Admin_aut')->campo('usu_email');
+$email = service('Admin_aut')->getField('usu_email');
 ```
 
 ---
@@ -148,7 +148,7 @@ El sistema soporta autenticación para APIs REST de forma transparente.
 
 1.  Al hacer login, se genera un token seguro en `usu_token`.
 2.  El cliente debe enviar este token en el header `Authorization`.
-3.  `checklogin()` detecta automáticamente si la petición es una llamada API (`isApiCall()`) y valida el token en lugar de la sesión de PHP.
+3.  `checkLogin()` detecta automáticamente si la petición es una llamada API (`isApiCall()`) y valida el token en lugar de la sesión de PHP.
 
 Esto permite utilizar los mismos controladores para la interfaz web y para aplicaciones móviles o frontends desacoplados.
 
@@ -172,13 +172,13 @@ class Pedidos extends BaseController
     public function index()
     {
         // 1. Asegurar que esté logueado
-        $this->checklogin();
+        $this->checkLogin();
 
         $auth = service('Admin_aut');
 
         // 2. Obtener datos del usuario
-        $data['usuario'] = $auth->nombre();
-        $data['esAdmin'] = $auth->esdegrupo('Administrador');
+        $data['usuario'] = $auth->name();
+        $data['esAdmin'] = $auth->isUserInGroup('Administrador');
 
         return view('pedidos/index', $data);
     }
@@ -186,7 +186,7 @@ class Pedidos extends BaseController
     public function eliminar($id)
     {
         // 3. Restricción estricta: Solo Admins pueden eliminar
-        $this->soloparagrupo('Administrador');
+        $this->checkUserInGroup('Administrador');
 
         $model = new \App\Models\PedidosModel();
         $model->delete($id);

@@ -36,7 +36,7 @@ class Clientes extends RDatasetController
         parent::__construct();
 
         // Seguridad y contexto
-        $this->checklogin();
+        $this->checkLogin();
         $this->setTitle('Clientes');
 
         // Persistencia
@@ -73,12 +73,12 @@ class Clientes extends RDatasetController
 
 ## Seguridad y contexto
 
-- `checklogin()` para requerir sesión activa.
+- `checkLogin()` para requerir sesión activa.
 - `setTitle()` para título del módulo y breadcrumbs.
 
 !!! tip "Seguridad por defecto"
 
-    Siempre llama a `checklogin()` al principio del constructor si tu módulo debe ser privado. Si olvidas esta línea, el módulo será accesible públicamente.
+    Siempre llama a `checkLogin()` al principio del constructor si tu módulo debe ser privado. Si olvidas esta línea, el módulo será accesible públicamente.
 
 ## Tabla y clave primaria
 

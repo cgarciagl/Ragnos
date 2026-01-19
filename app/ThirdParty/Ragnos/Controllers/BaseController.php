@@ -60,7 +60,7 @@ abstract class BaseController extends Controller
 
     }
 
-    public function checklogin()
+    public function checkLogin()
     {
 
         // Si es API, buscar Header Authorization
@@ -75,7 +75,7 @@ abstract class BaseController extends Controller
         }
 
         $auth = service('Admin_aut');
-        $auth->checklogin();
+        $auth->checkLogin();
     }
 
     function validarToken($token)
@@ -88,7 +88,7 @@ abstract class BaseController extends Controller
         return $user !== null;
     }
 
-    public function soloparagrupo($grupos)
+    public function checkUserInGroup($grupos)
     {
 
         // Si es API, buscar Header Authorization
@@ -103,7 +103,7 @@ abstract class BaseController extends Controller
         }
 
         $auth = service('Admin_aut');
-        $auth->soloparagrupo($grupos);
+        $auth->checkUserInGroup($grupos);
     }
 
 }
