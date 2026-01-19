@@ -25,20 +25,38 @@ jobs:
           pip install mkdocs-material
           pip install mkdocs-mermaid2-plugin
 
-      # 1. Construir la documentación (se genera en la carpeta 'site')
+      # 1. Construir la documentación apuntando al archivo en la subcarpeta
+      # Usamos -f para indicar el archivo de config
+      # Usamos -d para forzar que el sitio generado ("site") se guarde en la raíz del entorno de trabajo
       - name: Construir Documentación MkDocs
-        run: mkdocs build
+        run: mkdocs build -f documentacion/mkdocs.yml -d ../site
 
       # 2. Preparar carpeta de publicación
       - name: Preparar Sitio Web Combinado
         run: |
           mkdir public
-          # Copiar tu Landing Page (asumiendo que está en la carpeta 'web') a la raíz pública
+          # Copiamos la landing page
           cp -r web/* public/
-          # Mover la documentación construida dentro de una subcarpeta 'docs'
-          mv site public/docs
+          # Movemos el sitio generado (que guardamos en ../site o ./site) a la carpeta docs
+          # Nota: Al usar -d ../site desde la carpeta, o mejor, simplemente controlamos las rutas absolutas:
 
-      # 3. Desplegar usando una acción especializada que no depende de mkdocs gh-deploy
+      # RECTIFICACIÓN DEL PASO ANTERIOR PARA MAYOR SEGURIDAD:
+      # Es más seguro hacerlo así para evitar confusiones de rutas relativas:
+
+      - name: Construir y Mover
+        run: |
+          # Construye usando el config en 'documentacion' y exporta a una carpeta temporal 'site_build' en la raiz
+          mkdocs build -f documentacion/mkdocs.yml -d site_build
+
+          # Prepara la carpeta pública
+          mkdir public
+
+          # Copia la web principal
+          cp -r web/* public/
+
+          # Mueve la documentación construida a la subcarpeta 'docs' dentro de public
+          mv site_build public/docs
+
       - name: Desplegar a GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
