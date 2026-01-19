@@ -345,18 +345,43 @@ header {
   position: relative;
   width: 100%;
   height: auto;
-  animation: fadeInRight 1.2s ease-out;
-  display: flex;
-  justify-content: center;
+  /* Combine entrance and float animations */
+  animation: fadeInRight 1.2s ease-out, floatImg 8s infinite ease-in-out;
+  display: grid;
+  place-items: center; /* Center content */
+  perspective: 1000px; /* Enable 3D space */
 }
 
 .hero-visual-3d img {
+  grid-area: 1 / 1; /* Stack images on top of each other */
   width: 100%;
   max-width: 650px;
   height: auto;
   filter: drop-shadow(0 20px 80px rgba(234, 88, 12, 0.25));
-  animation: floatImg 8s infinite ease-in-out;
-  border-radius: 20px; /* Optional slight rounding if image is square */
+  border-radius: 20px;
+  backface-visibility: hidden; /* Hide back of images */
+  transform-style: preserve-3d;
+}
+
+.visual-base {
+  animation: flipBase 10s infinite;
+}
+
+.visual-overlay {
+  animation: flipOverlay 10s infinite;
+}
+
+/* Toggle Animations (Flip) */
+@keyframes flipBase {
+  0%, 45% { transform: rotateY(0deg); }
+  50%, 95% { transform: rotateY(180deg); }
+  100% { transform: rotateY(360deg); }
+}
+
+@keyframes flipOverlay {
+  0%, 45% { transform: rotateY(180deg); }
+  50%, 95% { transform: rotateY(360deg); }
+  100% { transform: rotateY(540deg); }
 }
 
 /* --- FEATURES SECTION (Zig Zag) --- */
