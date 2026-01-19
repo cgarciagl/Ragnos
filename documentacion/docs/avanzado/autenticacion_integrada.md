@@ -116,7 +116,7 @@ if (service('Admin_aut')->isLoggedIn()) {
 
 Devuelve el ID (`usu_id`) del usuario actual.
 
-#### `nombre()`
+#### `name()`
 
 Devuelve el nombre completo (`usu_nombre`) del usuario actual.
 

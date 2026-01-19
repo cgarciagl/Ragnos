@@ -250,6 +250,7 @@ No todas las funciones tienen sentido en todas las operaciones:
 !!! note "Limitaciones lógicas"
 
     **Insert**: No existe un valor anterior (`oldValue` devuelve null/vacío).
+
     **Delete**: No se envía un valor nuevo (`newValue` no aplica), solo se elimina lo existente.
 
 ### Ejemplos de uso
