@@ -27,21 +27,22 @@ jobs:
 
       - name: Construir y Preparar Sitio
         run: |
-          # 1. Construir la documentación
-          # -f indica dónde está el archivo de configuración
-          # -d indica que guarde el resultado en una carpeta temporal llamada 'site_build'
-          mkdocs build -f documentacion/mkdocs.yml -d site_build
-
-          # 2. Crear carpeta pública (usamos -p para evitar el error si ya existe)
+          # 1. Crear la carpeta final 'public'
           mkdir -p public
 
-          # 3. Copiar la Landing Page (carpeta web) a la raíz de public
-          # El -r es recursivo, el . hace que incluya archivos ocultos si los hubiera, 
-          # pero web/* es suficiente para lo visible.
+          # 2. Copiar tu Landing Page (carpeta web) a public
           cp -r web/* public/
 
-          # 4. Mover la documentación construida a la subcarpeta 'docs'
-          mv site_build public/docs
+          # 3. Entrar a la carpeta 'documentacion', construir y salir
+          cd documentacion
+          mkdocs build
+          cd ..
+
+          # NOTA: Por defecto, mkdocs crea una carpeta llamada 'site' 
+          # justo donde está el mkdocs.yml.
+
+          # 4. Mover esa carpeta 'site' a 'public/docs'
+          mv documentacion/site public/docs
 
       - name: Desplegar a GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
