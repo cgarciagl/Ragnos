@@ -8,13 +8,13 @@
       name="description"
       content="Ragnos: A powerful declarative framework for modern PHP development based on CodeIgniter 4."
     />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/style.css" />
   </head>
   <body>
     <!-- Background Canvas -->
@@ -24,11 +24,17 @@
     <header>
       <div class="header-container">
         <div class="logo">
-          <img src="https://github.com/cgarciagl/Ragnos/blob/main/content/img/logo.webp?raw=true" alt="Ragnos Logo" class="brand-logo">
-          <span style="letter-spacing: 2px; color: #fff">RAGNOS</span> 
+          <img
+            src="https://github.com/cgarciagl/Ragnos/blob/main/content/img/logo.webp?raw=true"
+            alt="Ragnos Logo"
+            class="brand-logo"
+          />
+          <span style="letter-spacing: 2px; color: #fff">RAGNOS</span>
         </div>
         <nav class="nav-links">
-          <a href="https://github.com/cgarciagl/Ragnos" target="_blank">GitHub</a>
+          <a href="https://github.com/cgarciagl/Ragnos" target="_blank"
+            >GitHub</a
+          >
           <a href="./docs/" data-lang="es">Documentación</a>
           <a href="./docs/" data-lang="en" class="hidden">Documentation</a>
           <button id="langToggle" class="lang-switch">EN / ES</button>
@@ -44,7 +50,7 @@
             <span class="dot"></span>
             <span>v1.0 Release</span>
           </div>
-          
+
           <h1 data-lang="es">
             El Framework Declarativo para <br /><span>PHP Profesional</span>
           </h1>
@@ -53,27 +59,41 @@
           </h1>
 
           <p data-lang="es">
-            Deja de escribir código repetitivo. Ragnos genera automáticamente APIs, 
-            Interfaces y Validaciones complejas a partir de tus modelos de datos.
+            Deja de escribir código repetitivo. Ragnos genera automáticamente
+            APIs, Interfaces y Validaciones complejas a partir de tus modelos de
+            datos.
           </p>
           <p data-lang="en" class="hidden">
-            Stop writing repetitive code. Ragnos automatically generates APIs, UIs, 
-            and complex Validations directly from your data models.
+            Stop writing repetitive code. Ragnos automatically generates APIs,
+            UIs, and complex Validations directly from your data models.
           </p>
 
-          <div class="btn-group" style="display:flex; gap:16px;">
+          <div class="btn-group" style="display: flex; gap: 16px">
             <a href="./docs/" class="btn btn-primary">
               <span data-lang="es">Leer Documentación</span>
               <span data-lang="en" class="hidden">Read Documentation</span>
             </a>
-            <a href="https://github.com/cgarciagl/Ragnos" target="_blank" class="btn btn-outline">
+            <a
+              href="https://github.com/cgarciagl/Ragnos"
+              target="_blank"
+              class="btn btn-outline"
+            >
               GitHub
             </a>
           </div>
         </div>
 
         <div class="hero-visual-3d">
-          <img src="./assets/img/hero_core.png" alt="Ragnos Core Technology">
+          <img
+            src="./assets/img/hero_core.png"
+            alt="Ragnos Core Technology"
+            class="visual-base"
+          />
+          <img
+            src="https://github.com/cgarciagl/Ragnos/blob/main/content/img/logo.webp?raw=true"
+            alt="Ragnos Logo"
+            class="visual-overlay"
+          />
         </div>
       </div>
     </section>
@@ -83,8 +103,12 @@
       <div class="section-header">
         <h2 data-lang="es">Arquitectura de Siguiente Nivel</h2>
         <h2 data-lang="en" class="hidden">Next-Level Architecture</h2>
-        <p data-lang="es">Diseñado para escalabilidad y velocidad de desarrollo.</p>
-        <p data-lang="en" class="hidden">Engineered for scalability and development speed.</p>
+        <p data-lang="es">
+          Diseñado para escalabilidad y velocidad de desarrollo.
+        </p>
+        <p data-lang="en" class="hidden">
+          Engineered for scalability and development speed.
+        </p>
       </div>
 
       <!-- Feature 1: Datasets -->
@@ -94,16 +118,21 @@
           <h3 data-lang="es">Datasets Declarativos</h3>
           <h3 data-lang="en" class="hidden">Declarative Datasets</h3>
           <p data-lang="es">
-            Olvídate de crear controladores, vistas y modelos manualmente. Define la estructura 
-            y reglas de negocio en un solo archivo JSON/PHP y obtén un módulo funcional de inmediato.
+            Olvídate de crear controladores, vistas y modelos manualmente.
+            Define la estructura y reglas de negocio en un solo archivo JSON/PHP
+            y obtén un módulo funcional de inmediato.
           </p>
           <p data-lang="en" class="hidden">
-            Forget manual controllers and views. Define structure and business rules in a single 
-            file and get a fully functional module immediately.
+            Forget manual controllers and views. Define structure and business
+            rules in a single file and get a fully functional module
+            immediately.
           </p>
         </div>
         <div class="feature-image">
-          <img src="./assets/img/feat_db.png" alt="Declarative Data Structure">
+          <img
+            src="./assets/img/feat_db.png"
+            alt="Declarative Data Structure"
+          />
         </div>
       </div>
 
@@ -114,16 +143,17 @@
           <h3 data-lang="es">Núcleo Híbrido (HTML + API)</h3>
           <h3 data-lang="en" class="hidden">Hybrid Core (HTML + API)</h3>
           <p data-lang="es">
-            Arquitectura "Dual-Stack". Tu panel de administración sirve automáticamente como una 
-            API RESTful segura para consumir desde aplicaciones móviles o frontends modernos.
+            Arquitectura "Dual-Stack". Tu panel de administración sirve
+            automáticamente como una API RESTful segura para consumir desde
+            aplicaciones móviles o frontends modernos.
           </p>
           <p data-lang="en" class="hidden">
-            "Dual-Stack" architecture. Your admin panel automatically serves as a secure RESTful API 
-            ready for mobile apps or modern frontends.
+            "Dual-Stack" architecture. Your admin panel automatically serves as
+            a secure RESTful API ready for mobile apps or modern frontends.
           </p>
         </div>
         <div class="feature-image">
-          <img src="./assets/img/feat_api.png" alt="Hybrid API Connectivity">
+          <img src="./assets/img/feat_api.png" alt="Hybrid API Connectivity" />
         </div>
       </div>
 
@@ -134,16 +164,17 @@
           <h3 data-lang="es">Seguridad Empresarial</h3>
           <h3 data-lang="en" class="hidden">Enterprise Security</h3>
           <p data-lang="es">
-            Protección robusta desde el primer día. Incluye RBAC (Control de Acceso Basado en Roles), 
-            Logs de Auditoría inmutables y mitigación automática de OWASP Top 10.
+            Protección robusta desde el primer día. Incluye RBAC (Control de
+            Acceso Basado en Roles), Logs de Auditoría inmutables y mitigación
+            automática de OWASP Top 10.
           </p>
           <p data-lang="en" class="hidden">
-            Robust protection from day one. Includes RBAC, immutable Audit Logs, and automatic 
-            OWASP Top 10 mitigation.
+            Robust protection from day one. Includes RBAC, immutable Audit Logs,
+            and automatic OWASP Top 10 mitigation.
           </p>
         </div>
         <div class="feature-image">
-          <img src="./assets/img/feat_sec.png" alt="Cyber Security Shield">
+          <img src="./assets/img/feat_sec.png" alt="Cyber Security Shield" />
         </div>
       </div>
 
@@ -166,7 +197,6 @@
           <p>Native Support</p>
         </div>
       </div>
-      
     </section>
 
     <footer>
