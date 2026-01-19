@@ -1,0 +1,46 @@
+name: Publicar Web y Docs
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
+
+      - name: Instalar dependencias
+        run: |
+          pip install mkdocs-material
+          pip install mkdocs-mermaid2-plugin
+
+      # 1. Construir la documentación (se genera en la carpeta 'site')
+      - name: Construir Documentación MkDocs
+        run: mkdocs build
+
+      # 2. Preparar carpeta de publicación
+      - name: Preparar Sitio Web Combinado
+        run: |
+          mkdir public
+          # Copiar tu Landing Page (asumiendo que está en la carpeta 'web') a la raíz pública
+          cp -r web/* public/
+          # Mover la documentación construida dentro de una subcarpeta 'docs'
+          mv site public/docs
+
+      # 3. Desplegar usando una acción especializada que no depende de mkdocs gh-deploy
+      - name: Desplegar a GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public

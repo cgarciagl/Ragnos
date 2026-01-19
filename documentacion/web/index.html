@@ -1,0 +1,530 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ragnos Framework</title>
+    <meta
+      name="description"
+      content="Ragnos: A powerful framework for modern development."
+    />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* --- CONFIGURACIÓN DE COLORES (Paleta Naranja Oscuro) --- */
+      :root {
+        /* Naranja oscuro vibrante */
+        --primary-color: #ea580c;
+        /* Brillo naranja */
+        --primary-glow: rgba(234, 88, 12, 0.3);
+
+        --bg-color: #0b0c15; /* Fondo muy oscuro */
+        --surface-color: rgba(
+          22,
+          27,
+          34,
+          0.8
+        ); /* Fondo de tarjetas semi-transparente */
+        --text-main: #ffffff;
+        --text-muted: #94a3b8;
+        --font-main: "Inter", sans-serif;
+      }
+
+      /* --- ESTILOS GENERALES --- */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: var(--font-main);
+        background-color: var(--bg-color);
+        color: var(--text-main);
+        overflow-x: hidden;
+        line-height: 1.6;
+        position: relative;
+      }
+
+      /* Lienzo para las partículas */
+      #particles-canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -2; /* Detrás de todo */
+        pointer-events: none;
+      }
+
+      /* Fondo de "mancha" de color sutil (opcional, se suma a las partículas) */
+      body::before {
+        content: "";
+        position: fixed;
+        top: -10%;
+        left: -10%;
+        width: 60vw;
+        height: 60vw;
+        background: radial-gradient(
+          circle,
+          var(--primary-glow) 0%,
+          transparent 60%
+        );
+        opacity: 0.15;
+        z-index: -1;
+        filter: blur(120px);
+        animation: floatGlow 15s infinite alternate ease-in-out;
+      }
+
+      a {
+        text-decoration: none;
+        color: inherit;
+        transition: 0.3s;
+      }
+
+      /* --- HEADER --- */
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.5rem 5%;
+        position: fixed; /* Fijo para que se vea al hacer scroll */
+        width: 100%;
+        top: 0;
+        z-index: 10;
+        background: rgba(11, 12, 21, 0.5); /* Ligeramente transparente */
+        backdrop-filter: blur(10px); /* Efecto de vidrio esmerilado */
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      .logo {
+        font-weight: 800;
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--text-main);
+      }
+
+      /* Ajusta el tamaño de tu logo aquí */
+      .logo img {
+        height: 35px;
+        width: auto;
+      }
+
+      .nav-links a {
+        margin-left: 2rem;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        font-weight: 600;
+      }
+      .nav-links a:hover {
+        color: var(--primary-color);
+      }
+
+      /* --- HERO SECTION --- */
+      .hero {
+        min-height: 100vh; /* Asegura que ocupe toda la pantalla */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 80px 20px 20px; /* Padding superior para compensar el header fijo */
+        animation: fadeIn 1s ease-out;
+        position: relative;
+        z-index: 1;
+      }
+
+      h1 {
+        font-size: 4.5rem;
+        margin-bottom: 1.5rem;
+        line-height: 1.1;
+        font-weight: 800;
+        /* Degradado de texto de blanco a gris claro */
+        background: linear-gradient(
+          135deg,
+          #ffffff 20%,
+          var(--text-muted) 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      /* La palabra clave en naranja */
+      h1 span {
+        background: linear-gradient(
+          135deg,
+          var(--primary-color) 0%,
+          #ff8a4c 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0 0 30px var(--primary-glow);
+      }
+
+      .subtitle {
+        font-size: 1.35rem;
+        color: var(--text-muted);
+        max-width: 650px;
+        margin-bottom: 3rem;
+      }
+
+      /* --- BOTONES --- */
+      .btn-group {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .btn {
+        padding: 14px 36px;
+        border-radius: 4px; /* Bordes un poco más cuadrados para un look técnico */
+        font-weight: 700;
+        font-size: 1rem;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .btn-primary {
+        background: linear-gradient(
+          135deg,
+          var(--primary-color) 0%,
+          #d4530b 100%
+        );
+        color: #fff;
+        box-shadow: 0 4px 20px rgba(234, 88, 12, 0.4);
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 30px rgba(234, 88, 12, 0.6);
+      }
+
+      .btn-outline {
+        border-color: rgba(255, 255, 255, 0.2);
+        color: var(--text-muted);
+        background: transparent;
+      }
+
+      .btn-outline:hover {
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+        background: rgba(234, 88, 12, 0.05);
+      }
+
+      /* --- FEATURES GRID --- */
+      .features {
+        padding: 5rem 10%;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2.5rem;
+        position: relative;
+        z-index: 1;
+        /* Un fondo sutil para separar la sección */
+        background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.3));
+      }
+
+      .card {
+        background: var(--surface-color);
+        padding: 2.5rem;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        transition: 0.3s;
+        backdrop-filter: blur(5px);
+      }
+
+      .card:hover {
+        transform: translateY(-7px);
+        border-color: var(--primary-color);
+        box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+      }
+
+      .card h3 {
+        margin-bottom: 1rem;
+        color: #fff;
+        font-size: 1.3rem;
+      }
+      .card p {
+        color: var(--text-muted);
+        font-size: 1rem;
+      }
+
+      /* --- FOOTER --- */
+      footer {
+        padding: 3rem 2rem;
+        text-align: center;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        position: relative;
+        z-index: 1;
+        background: #08090f;
+      }
+
+      /* --- UTILS & ANIMATIONS --- */
+      .hidden {
+        display: none !important;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes floatGlow {
+        0% {
+          transform: translate(0, 0) scale(1);
+          opacity: 0.15;
+        }
+        100% {
+          transform: translate(50px, 50px) scale(1.1);
+          opacity: 0.25;
+        }
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        h1 {
+          font-size: 3rem;
+        }
+        .hero {
+          padding-top: 120px;
+        }
+        header {
+          padding: 1rem 1.5rem;
+        }
+        .nav-links {
+          display: none;
+        }
+        .subtitle {
+          font-size: 1.1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="particles-canvas"></canvas>
+
+    <header>
+      <div class="logo">
+        <span style="letter-spacing: 2px">RAGNOS</span>
+      </div>
+      <nav class="nav-links">
+        <a href="https://github.com/cgarciagl/Ragnos" target="_blank">GitHub</a>
+        <a href="./docs/" data-lang="es">Documentación</a>
+        <a href="./docs/" data-lang="en" class="hidden">Documentation</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <h1 data-lang="es">El Framework <br /><span>Evolucionado</span></h1>
+      <h1 data-lang="en" class="hidden">
+        The Framework <br /><span>Evolved</span>
+      </h1>
+
+      <p class="subtitle" data-lang="es">
+        Ragnos proporciona una arquitectura robusta, rápida y escalable para tus
+        proyectos de próxima generación.
+      </p>
+      <p class="subtitle hidden" data-lang="en">
+        Ragnos provides a robust, fast, and scalable architecture for your
+        next-generation projects.
+      </p>
+
+      <div class="btn-group">
+        <a href="./docs/" class="btn btn-primary">
+          <span data-lang="es">Comenzar Ahora</span>
+          <span data-lang="en" class="hidden">Get Started</span>
+        </a>
+        <a
+          href="https://github.com/cgarciagl/Ragnos"
+          target="_blank"
+          class="btn btn-outline"
+        >
+          GitHub
+        </a>
+      </div>
+    </section>
+
+    <section class="features">
+      <div class="card">
+        <h3 data-lang="es">Rendimiento Extremo</h3>
+        <h3 data-lang="en" class="hidden">Extreme Performance</h3>
+        <p data-lang="es">
+          Núcleo optimizado para manejar cargas de trabajo intensivas con
+          latencia mínima.
+        </p>
+        <p data-lang="en" class="hidden">
+          Engineered core optimized to handle intensive workloads with minimal
+          latency.
+        </p>
+      </div>
+      <div class="card">
+        <h3 data-lang="es">Arquitectura Modular</h3>
+        <h3 data-lang="en" class="hidden">Modular Architecture</h3>
+        <p data-lang="es">
+          Diseño flexible y desacoplado que permite que el sistema crezca sin
+          fricciones.
+        </p>
+        <p data-lang="en" class="hidden">
+          Flexible, decoupled design allowing the system to scale without
+          friction.
+        </p>
+      </div>
+      <div class="card">
+        <h3 data-lang="es">Seguridad Nativa</h3>
+        <h3 data-lang="en" class="hidden">Native Security</h3>
+        <p data-lang="es">
+          Protección integrada contra vulnerabilidades comunes siguiendo
+          estándares de la industria.
+        </p>
+        <p data-lang="en" class="hidden">
+          Built-in protection against common vulnerabilities following industry
+          standards.
+        </p>
+      </div>
+    </section>
+
+    <footer>
+      <p>&copy; 2026 Ragnos Framework.</p>
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const userLang = navigator.language || navigator.userLanguage;
+        const isSpanish = userLang.startsWith("es");
+        const toggleLanguage = (showEs) => {
+          document
+            .querySelectorAll('[data-lang="es"]')
+            .forEach((el) => el.classList.toggle("hidden", !showEs));
+          document
+            .querySelectorAll('[data-lang="en"]')
+            .forEach((el) => el.classList.toggle("hidden", showEs));
+        };
+        toggleLanguage(isSpanish);
+      });
+    </script>
+
+    <script>
+      const canvas = document.getElementById("particles-canvas");
+      const ctx = canvas.getContext("2d");
+      let particlesArray;
+
+      // Ajustar canvas al tamaño de la ventana
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      // Manejar redimensionamiento de ventana
+      window.addEventListener("resize", () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        init();
+      });
+
+      // Configuración de color naranja (RGB para usar en rgba)
+      const particleColorRGB = "234, 88, 12"; // Corresponde a #ea580c
+
+      // Clase Partícula
+      class Particle {
+        constructor(x, y, directionX, directionY, size, color) {
+          this.x = x;
+          this.y = y;
+          this.directionX = directionX;
+          this.directionY = directionY;
+          this.size = size;
+          this.color = color;
+        }
+        // Dibujar partícula individual
+        draw() {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+          ctx.fillStyle = this.color;
+          ctx.fill();
+        }
+        // Actualizar posición y manejar rebotes
+        update() {
+          if (this.x > canvas.width || this.x < 0)
+            this.directionX = -this.directionX;
+          if (this.y > canvas.height || this.y < 0)
+            this.directionY = -this.directionY;
+          this.x += this.directionX;
+          this.y += this.directionY;
+          this.draw();
+        }
+      }
+
+      // Inicializar arreglo de partículas
+      function init() {
+        particlesArray = [];
+        // Calcular número de partículas según el tamaño de pantalla
+        let numberOfParticles = (canvas.height * canvas.width) / 15000;
+        for (let i = 0; i < numberOfParticles; i++) {
+          let size = Math.random() * 2 + 1;
+          let x = Math.random() * (innerWidth - size * 2 - size * 2) + size * 2;
+          let y =
+            Math.random() * (innerHeight - size * 2 - size * 2) + size * 2;
+          // Velocidad lenta para un efecto sutil
+          let directionX = Math.random() * 0.4 - 0.2;
+          let directionY = Math.random() * 0.4 - 0.2;
+          let color = `rgba(${particleColorRGB}, ${Math.random() * 0.5 + 0.1})`; // Naranja con transparencia variable
+          particlesArray.push(
+            new Particle(x, y, directionX, directionY, size, color)
+          );
+        }
+      }
+
+      // Conectar partículas cercanas con líneas
+      function connect() {
+        let opacityValue = 1;
+        for (let a = 0; a < particlesArray.length; a++) {
+          for (let b = a; b < particlesArray.length; b++) {
+            let distance =
+              (particlesArray[a].x - particlesArray[b].x) *
+                (particlesArray[a].x - particlesArray[b].x) +
+              (particlesArray[a].y - particlesArray[b].y) *
+                (particlesArray[a].y - particlesArray[b].y);
+            // Si están cerca, dibujar línea
+            if (distance < (canvas.width / 9) * (canvas.height / 9)) {
+              opacityValue = 1 - distance / 20000;
+              ctx.strokeStyle = `rgba(${particleColorRGB}, ${opacityValue * 0.15})`; // Líneas naranjas muy tenues
+              ctx.lineWidth = 1;
+              ctx.beginPath();
+              ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+              ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+              ctx.stroke();
+            }
+          }
+        }
+      }
+
+      // Bucle de animación
+      function animate() {
+        requestAnimationFrame(animate);
+        ctx.clearRect(0, 0, innerWidth, innerHeight);
+        for (let i = 0; i < particlesArray.length; i++) {
+          particlesArray[i].update();
+        }
+        connect();
+      }
+
+      // Arrancar
+      init();
+      animate();
+    </script>
+  </body>
+</html>

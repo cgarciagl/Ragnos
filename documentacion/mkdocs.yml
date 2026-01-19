@@ -1,4 +1,5 @@
 site_name: Ragnos Docs
+site_url: https://cgarciagl.github.io/Ragnos/docs/
 repo_url: https://github.com/cgarciagl/ragnos
 edit_uri: "" # Elimina el botón de edición
 
@@ -51,7 +52,7 @@ nav:
   - Backend Avanzado:
       - Modo API: avanzado/guia_modo_api.md
       - Helpers y Utilidades: avanzado/helpers.md
-      - Hooks y evento: avanzado/hooks.md
+      - Hooks y eventos: avanzado/hooks.md
       - Autenticación: avanzado/autenticacion_integrada.md
       - Audit Log: avanzado/auditlog.md
       - Server Side Events: avanzado/server_side_events.md
