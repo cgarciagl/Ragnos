@@ -24,6 +24,7 @@ jobs:
         run: |
           pip install mkdocs-material
           pip install mkdocs-mermaid2-plugin
+          pip install mkdocs-static-i18n
 
       - name: Construir y Preparar Sitio
         run: |

@@ -21,6 +21,17 @@ plugins:
   - search
   - mermaid2:
       version: "10.6.1"
+  - i18n:
+      docs_structure: folder # Indica que usas carpetas (docs/es, docs/en)
+      fallback_to_default: true
+      languages:
+        - locale: es
+          name: Español
+          default: true # Español será la raíz (/docs/)
+          build: true
+        - locale: en
+          name: English
+          build: true
 
 markdown_extensions:
   - admonition
