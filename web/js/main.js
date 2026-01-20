@@ -4,12 +4,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const updateLang = () => {
     const showEs = currentLang === "es";
-    document.querySelectorAll('[data-lang="es"]').forEach((el) => {
-      el.classList.toggle("hidden", !showEs);
-    });
-    document.querySelectorAll('[data-lang="en"]').forEach((el) => {
-      el.classList.toggle("hidden", showEs);
-    });
+    
+    // Helper to toggle visibility and pause video if hidden
+    const toggleElement = (el, isVisible) => {
+      el.classList.toggle("hidden", !isVisible);
+      if (!isVisible && el.tagName === "IFRAME") {
+        el.contentWindow?.postMessage(
+          '{"event":"command","func":"pauseVideo","args":""}',
+          "*"
+        );
+      }
+    };
+
+    document.querySelectorAll('[data-lang="es"]').forEach((el) => toggleElement(el, showEs));
+    document.querySelectorAll('[data-lang="en"]').forEach((el) => toggleElement(el, !showEs));
     
     // Update button text
     const btn = document.getElementById("langToggle");
@@ -44,73 +52,84 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     resizeCanvas();
 
-    const particleColorRGB = "234, 88, 12"; // Primary orange
+    // Fire Spark Colors: Bright Orange, Gold, Red-Orange
+    const getFireColor = () => {
+      const colors = [
+        "255, 165, 0", // Orange
+        "255, 69, 0",  // Red-Orange
+        "255, 215, 0", // Gold
+        "234, 88, 12"  // Brand Orange
+      ];
+      return colors[Math.floor(Math.random() * colors.length)];
+    };
 
     class Particle {
-      constructor(x, y, dx, dy, size, alpha) {
+      constructor(x, y, dx, dy, size, alpha, color) {
         this.x = x;
         this.y = y;
-        this.dx = dx;
-        this.dy = dy;
+        this.dx = dx; // Horizontal drift
+        this.dy = dy; // Vertical rise
         this.size = size;
         this.alpha = alpha;
+        this.color = color;
       }
       draw() {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
-        ctx.fillStyle = `rgba(${particleColorRGB}, ${this.alpha})`;
+        ctx.fillStyle = `rgba(${this.color}, ${this.alpha})`;
+        // Add a glow effect
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = `rgba(${this.color}, 0.8)`;
         ctx.fill();
+        ctx.shadowBlur = 0; // Reset
       }
       update() {
-        if (this.x > canvas.width || this.x < 0) this.dx = -this.dx;
-        if (this.y > canvas.height || this.y < 0) this.dy = -this.dy;
+        // Wrap around horizontally
+        if (this.x > canvas.width) this.x = 0;
+        if (this.x < 0) this.x = canvas.width;
+        
+        // Wrap around vertically (bottom to top if rising, or top to bottom)
+        // Since we want sparks to rise, they go up (dy is negative).
+        // If they go off top, reset to bottom.
+        if (this.y < -10) this.y = canvas.height + 10;
+        
         this.x += this.dx;
         this.y += this.dy;
+        
+        // Random slight flicker
+        if(Math.random() > 0.95) {
+           this.alpha = Math.random() * 0.5 + 0.5;
+        }
+        
         this.draw();
       }
     }
 
     function initParticles() {
       particlesArray = [];
-      let numberOfParticles = (canvas.height * canvas.width) / 25000;
+      // Increase density slightly
+      let numberOfParticles = (canvas.height * canvas.width) / 15000;
       for (let i = 0; i < numberOfParticles; i++) {
-        let size = Math.random() * 2 + 1;
+        let size = Math.random() * 3 + 1; // Slightly larger
         let x = Math.random() * canvas.width;
         let y = Math.random() * canvas.height;
-        let dx = (Math.random() - 0.5) * 0.5;
-        let dy = (Math.random() - 0.5) * 0.5;
-        let alpha = Math.random() * 0.5 + 0.2;
-        particlesArray.push(new Particle(x, y, dx, dy, size, alpha));
+        // Upward movement mostly
+        let dx = (Math.random() - 0.5) * 1; 
+        let dy = -Math.random() * 1.5 - 0.5; // Always negative (up), speed 0.5 to 2
+        let alpha = Math.random() * 0.6 + 0.4; // Brighter
+        let color = getFireColor();
+        particlesArray.push(new Particle(x, y, dx, dy, size, alpha, color));
       }
     }
 
-    function connectParticles() {
-      for (let a = 0; a < particlesArray.length; a++) {
-        for (let b = a; b < particlesArray.length; b++) {
-          let dx = particlesArray[a].x - particlesArray[b].x;
-          let dy = particlesArray[a].y - particlesArray[b].y;
-          let distance = dx * dx + dy * dy;
-
-          if (distance < (canvas.width / 7) * (canvas.height / 7)) {
-            let opacityValue = 1 - distance / 20000;
-            if (opacityValue > 0) {
-              ctx.strokeStyle = `rgba(${particleColorRGB}, ${opacityValue * 0.2})`;
-              ctx.lineWidth = 1;
-              ctx.beginPath();
-              ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
-              ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
-              ctx.stroke();
-            }
-          }
-        }
-      }
-    }
-
+    // Connect particles logic removed to make them look more like individual sparks
+    // But we can keep a subtle version if requested. User asked for "sparks", 
+    // usually sparks don't connect. Let's remove connections for a cleaner "fire" look.
+    
     function animateParticles() {
       requestAnimationFrame(animateParticles);
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       particlesArray.forEach((p) => p.update());
-      connectParticles();
     }
 
     initParticles();
