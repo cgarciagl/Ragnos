@@ -108,7 +108,7 @@
     <!-- Video Section -->
     <section class="video-section">
       <div class="video-container">
-        <div class="section-header" style="margin-bottom: 3rem;">
+        <div class="section-header" style="margin-bottom: 3rem">
           <h2 data-lang="es">Mira Ragnos en Acción</h2>
           <h2 data-lang="en" class="hidden">See Ragnos in Action</h2>
           <p data-lang="es">
@@ -125,7 +125,15 @@
             data-lang="es"
             src="https://www.youtube.com/embed/HIhzOJdv38I?enablejsapi=1"
             title="Introduction to Ragnos (ES)"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allow="
+              accelerometer;
+              autoplay;
+              clipboard-write;
+              encrypted-media;
+              gyroscope;
+              picture-in-picture;
+              web-share;
+            "
             allowfullscreen
           ></iframe>
 
@@ -135,7 +143,15 @@
             class="hidden"
             src="https://www.youtube.com/embed/-fHB5KAP0As?enablejsapi=1"
             title="Introduction to Ragnos (EN)"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allow="
+              accelerometer;
+              autoplay;
+              clipboard-write;
+              encrypted-media;
+              gyroscope;
+              picture-in-picture;
+              web-share;
+            "
             allowfullscreen
           ></iframe>
         </div>
@@ -230,15 +246,22 @@
           <span data-lang="en" class="hidden">CORE STACK</span>
           <span class="line"></span>
         </div>
-        
+
         <div class="tech-grid">
           <!-- Card 1 -->
           <div class="tech-card">
             <div class="tech-icon">🔥</div>
             <div class="tech-info">
               <h4>CodeIgniter 4</h4>
-              <p data-lang="es">Framework PHP ultraligero. Sin bloatware, con una curva de aprendizaje mínima y rendimiento excepcional para apps de alto tráfico.</p>
-              <p data-lang="en" class="hidden">Ultra-lightweight PHP framework. Bloat-free, minimal learning curve, and exceptional performance for high-traffic apps.</p>
+              <p data-lang="es">
+                Framework PHP ultraligero. Sin bloatware, con una curva de
+                aprendizaje mínima y rendimiento excepcional para apps de alto
+                tráfico.
+              </p>
+              <p data-lang="en" class="hidden">
+                Ultra-lightweight PHP framework. Bloat-free, minimal learning
+                curve, and exceptional performance for high-traffic apps.
+              </p>
             </div>
           </div>
 
@@ -247,8 +270,15 @@
             <div class="tech-icon">💎</div>
             <div class="tech-info">
               <h4>AdminLTE 3</h4>
-              <p data-lang="es">Interfaz probada en batalla. Basada en Bootstrap, totalmente responsiva y personalizable, reduciendo el tiempo de diseño en un 80%.</p>
-              <p data-lang="en" class="hidden">Battle-tested UI. Built on Bootstrap, fully responsive and customizable, slashing frontend design time by 80%.</p>
+              <p data-lang="es">
+                Interfaz probada en batalla. Basada en Bootstrap, totalmente
+                responsiva y personalizable, reduciendo el tiempo de diseño en
+                un 80%.
+              </p>
+              <p data-lang="en" class="hidden">
+                Battle-tested UI. Built on Bootstrap, fully responsive and
+                customizable, slashing frontend design time by 80%.
+              </p>
             </div>
           </div>
 
@@ -257,8 +287,14 @@
             <div class="tech-icon">⚡</div>
             <div class="tech-info">
               <h4>jQuery & DataTables</h4>
-              <p data-lang="es">Manipulación robusta de datos. Tablas dinámicas con búsqueda y ordenamiento instantáneo, sin la complejidad de compilación JS.</p>
-              <p data-lang="en" class="hidden">Robust data manipulation. Dynamic tables with instant search and sorting, without the complexity of a JS build process.</p>
+              <p data-lang="es">
+                Manipulación robusta de datos. Tablas dinámicas con búsqueda y
+                ordenamiento instantáneo, sin la complejidad de compilación JS.
+              </p>
+              <p data-lang="en" class="hidden">
+                Robust data manipulation. Dynamic tables with instant search and
+                sorting, without the complexity of a JS build process.
+              </p>
             </div>
           </div>
 
@@ -267,8 +303,14 @@
             <div class="tech-icon">🚀</div>
             <div class="tech-info">
               <h4>Native REST API</h4>
-              <p data-lang="es">Conectividad universal. Expón tus datos automáticamente a móviles (iOS/Android) o SPAs con seguridad tokenizada integrada.</p>
-              <p data-lang="en" class="hidden">Universal connectivity. Automatically expose data to mobile apps (iOS/Android) or SPAs with integrated tokenized security.</p>
+              <p data-lang="es">
+                Conectividad universal. Expón tus datos automáticamente a
+                móviles (iOS/Android) o SPAs con seguridad tokenizada integrada.
+              </p>
+              <p data-lang="en" class="hidden">
+                Universal connectivity. Automatically expose data to mobile apps
+                (iOS/Android) or SPAs with integrated tokenized security.
+              </p>
             </div>
           </div>
         </div>
@@ -280,5 +322,20 @@
     </footer>
 
     <script src="./js/main.js"></script>
+
+    <!-- Google tag (gtag.js) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-JGEDJD0GZP"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-JGEDJD0GZP");
+    </script>
   </body>
 </html>
