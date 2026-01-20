@@ -29,9 +29,59 @@ plugins:
           name: Español
           default: true # Español será la raíz (/docs/)
           build: true
+          nav:
+            - Inicio: index.md
+            - Fundamentos:
+                - Instalación: fundamentos/instalacion.md
+                - Primeros Pasos: fundamentos/primeros_pasos.md
+                - Configuración: fundamentos/configuracion.md
+                - Generador CLI: fundamentos/plantilla.md
+            - Datasets y Modelos:
+                - Creando Datasets: datasets/datasets.md
+                - Referencia de Campos: datasets/campos.md
+                - Consultas Avanzadas (RQuery): datasets/guia_RQueryController.md
+                - Maestro-Detalle: datasets/maestro-detalle.md
+            - Backend Avanzado:
+                - Modo API: avanzado/guia_modo_api.md
+                - Helpers y Utilidades: avanzado/helpers.md
+                - Hooks y eventos: avanzado/hooks.md
+                - Autenticación: avanzado/autenticacion_integrada.md
+                - Audit Log: avanzado/auditlog.md
+                - Server Side Events: avanzado/server_side_events.md
+                - Despliegue: avanzado/despliegue.md
+            - Frontend y Reportes:
+                - Personalización UI: frontend/personalizacion_ui.md
+                - Reportes Simples: frontend/reportes_simples.md
+                - Funciones JavaScript: frontend/funciones_javascript.md
+            - "🏠 Home": "https://cgarciagl.github.io/Ragnos/"
         - locale: en
           name: English
           build: true
+          nav:
+            - Home: index.md
+            - Fundamentals:
+                - Installation: fundamentos/instalacion.md
+                - Getting Started: fundamentos/primeros_pasos.md
+                - Configuration: fundamentos/configuracion.md
+                - CLI Generator: fundamentos/plantilla.md
+            - Datasets & Models:
+                - Creating Datasets: datasets/datasets.md
+                - Field Reference: datasets/campos.md
+                - Advanced Queries (RQuery): datasets/guia_RQueryController.md
+                - Master-Detail: datasets/maestro-detalle.md
+            - Advanced Backend:
+                - API Mode: avanzado/guia_modo_api.md
+                - Helpers & Utilities: avanzado/helpers.md
+                - Hooks & Events: avanzado/hooks.md
+                - Authentication: avanzado/autenticacion_integrada.md
+                - Audit Log: avanzado/auditlog.md
+                - Server Side Events: avanzado/server_side_events.md
+                - Deployment: avanzado/despliegue.md
+            - Frontend & Reports:
+                - UI Customization: frontend/personalizacion_ui.md
+                - Simple Reports: frontend/reportes_simples.md
+                - JavaScript Functions: frontend/funciones_javascript.md
+            - "🏠 Home": "https://cgarciagl.github.io/Ragnos/"
 
 markdown_extensions:
   - admonition
@@ -47,29 +97,3 @@ markdown_extensions:
         - name: mermaid
           class: mermaid
           format: !!python/name:mermaid2.fence_mermaid
-
-nav:
-  - Inicio: index.md
-  - Fundamentos:
-      - Instalación: fundamentos/instalacion.md
-      - Primeros Pasos: fundamentos/primeros_pasos.md
-      - Configuración: fundamentos/configuracion.md
-      - Generador CLI: fundamentos/plantilla.md
-  - Datasets y Modelos:
-      - Creando Datasets: datasets/datasets.md
-      - Referencia de Campos: datasets/campos.md
-      - Consultas Avanzadas (RQuery): datasets/guia_RQueryController.md
-      - Maestro-Detalle: datasets/maestro-detalle.md
-  - Backend Avanzado:
-      - Modo API: avanzado/guia_modo_api.md
-      - Helpers y Utilidades: avanzado/helpers.md
-      - Hooks y eventos: avanzado/hooks.md
-      - Autenticación: avanzado/autenticacion_integrada.md
-      - Audit Log: avanzado/auditlog.md
-      - Server Side Events: avanzado/server_side_events.md
-      - Despliegue: avanzado/despliegue.md
-  - Frontend y Reportes:
-      - Personalización UI: frontend/personalizacion_ui.md
-      - Reportes Simples: frontend/reportes_simples.md
-      - Funciones JavaScript: frontend/funciones_javascript.md
-  - "🏠 Home": "https://cgarciagl.github.io/Ragnos/"
