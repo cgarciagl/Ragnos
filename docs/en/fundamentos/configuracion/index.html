@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        <link rel="canonical" href="https://cgarciagl.github.io/Ragnos/docs/en/fundamentos/configuracion/">
+        <link rel="shortcut icon" href="../../../img/favicon.ico">
+        <title>Configuración - Ragnos Docs</title>
+        <link href="../../../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../../../css/fontawesome.min.css" rel="stylesheet">
+        <link href="../../../css/brands.min.css" rel="stylesheet">
+        <link href="../../../css/solid.min.css" rel="stylesheet">
+        <link href="../../../css/v4-font-face.min.css" rel="stylesheet">
+        <link href="../../../css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/panda-syntax-dark.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <link href="../../../css/ragnos_style.css" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="../../">Ragnos Docs</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href="../../" class="nav-link">Inicio</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle active" aria-current="page" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Fundamentos</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../instalacion/" class="dropdown-item">Instalación</a>
+</li>
+                                    
+<li>
+    <a href="../primeros_pasos/" class="dropdown-item">Primeros Pasos</a>
+</li>
+                                    
+<li>
+    <a href="./" class="dropdown-item active" aria-current="page">Configuración</a>
+</li>
+                                    
+<li>
+    <a href="../plantilla/" class="dropdown-item">Generador CLI</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Datasets y Modelos</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../datasets/datasets/" class="dropdown-item">Creando Datasets</a>
+</li>
+                                    
+<li>
+    <a href="../../datasets/campos/" class="dropdown-item">Referencia de Campos</a>
+</li>
+                                    
+<li>
+    <a href="../../datasets/guia_RQueryController/" class="dropdown-item">Consultas Avanzadas (RQuery)</a>
+</li>
+                                    
+<li>
+    <a href="../../datasets/maestro-detalle/" class="dropdown-item">Maestro-Detalle</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Backend Avanzado</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../avanzado/guia_modo_api/" class="dropdown-item">Modo API</a>
+</li>
+                                    
+<li>
+    <a href="../../avanzado/helpers/" class="dropdown-item">Helpers y Utilidades</a>
+</li>
+                                    
+<li>
+    <a href="../../avanzado/hooks/" class="dropdown-item">Hooks y eventos</a>
+</li>
+                                    
+<li>
+    <a href="../../avanzado/autenticacion_integrada/" class="dropdown-item">Autenticación</a>
+</li>
+                                    
+<li>
+    <a href="../../avanzado/auditlog/" class="dropdown-item">Audit Log</a>
+</li>
+                                    
+<li>
+    <a href="../../avanzado/server_side_events/" class="dropdown-item">Server Side Events</a>
+</li>
+                                    
+<li>
+    <a href="../../avanzado/despliegue/" class="dropdown-item">Despliegue</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Frontend y Reportes</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../frontend/personalizacion_ui/" class="dropdown-item">Personalización UI</a>
+</li>
+                                    
+<li>
+    <a href="../../frontend/reportes_simples/" class="dropdown-item">Reportes Simples</a>
+</li>
+                                    
+<li>
+    <a href="../../frontend/funciones_javascript/" class="dropdown-item">Funciones JavaScript</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a href="https://cgarciagl.github.io/Ragnos/" class="nav-link">🏠 Home</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="../primeros_pasos/" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="../plantilla/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="https://github.com/cgarciagl/ragnos" class="nav-link"><i class="fa-brands fa-github"></i> GitHub</a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#configuracion-de-ragnos" class="nav-link">Configuración de Ragnos</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#archivo-de-configuracion" class="nav-link">Archivo de Configuración</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#variables-disponibles" class="nav-link">Variables Disponibles</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#enrutamiento-auto-routing" class="nav-link">Enrutamiento (Auto Routing)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#otras-configuraciones-codeigniter" class="nav-link">Otras Configuraciones (CodeIgniter)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="configuracion-de-ragnos">Configuración de Ragnos</h1>
+<p>Además de la configuración estándar de CodeIgniter 4 (base de datos, rutas, etc.), Ragnos incluye un archivo de configuración específico para personalizar el comportamiento global del framework.</p>
+<h2 id="archivo-de-configuracion">Archivo de Configuración</h2>
+<p>El archivo se encuentra en <code>app/Config/RagnosConfig.php</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="x">namespace Config;</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="x">use CodeIgniter\Config\BaseConfig;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="x">class RagnosConfig extends BaseConfig</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="x">{</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="x">    public $Ragnos_application_title = &#39;🏪 Tienda&#39;;</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="x">    public $Ragnos_all_to_uppercase = false;</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="x">    public $currency = &#39;USD&#39;;</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="x">    public $locale = &#39;es_MX&#39;;</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="x">}</span>
+</code></pre></div>
+<h2 id="variables-disponibles">Variables Disponibles</h2>
+<h3 id="identidad-de-la-aplicacion">Identidad de la Aplicación</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Variable</th>
+<th style="text-align: left;">Tipo</th>
+<th style="text-align: left;">Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>$Ragnos_application_title</code></td>
+<td style="text-align: left;"><code>string</code></td>
+<td style="text-align: left;">Define el nombre público de la aplicación. Este texto aparecerá en la barra superior (Topbar), en el menú lateral (Sidebar) y en los encabezados de página.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="comportamiento-de-datos">Comportamiento de Datos</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Variable</th>
+<th style="text-align: left;">Tipo</th>
+<th style="text-align: left;">Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>$Ragnos_all_to_uppercase</code></td>
+<td style="text-align: left;"><code>bool</code></td>
+<td style="text-align: left;">Si se establece en <code>true</code>, fuerza la conversión a mayúsculas de ciertos campos de entrada predeterminados en los formularios generados automáticamente.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="regionalizacion">Regionalización</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Variable</th>
+<th style="text-align: left;">Tipo</th>
+<th style="text-align: left;">Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>$currency</code></td>
+<td style="text-align: left;"><code>string</code></td>
+<td style="text-align: left;">Define el código de moneda por defecto (ej. 'USD', 'MXN', 'EUR') utilizado en los helpers de formateo de dinero.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$locale</code></td>
+<td style="text-align: left;"><code>string</code></td>
+<td style="text-align: left;">Define el locale predeterminado para formatos de fecha y número (ej. 'es_MX', 'en_US'). Nota: Esto es independiente del idioma de la interfaz que maneja CI4.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="enrutamiento-auto-routing">Enrutamiento (Auto Routing)</h2>
+<p>Una particularidad importante de Ragnos es que mantiene habilitada la característica de <strong>Auto Routing</strong> (<code>$routes-&gt;setAutoRoute(true)</code>) de CodeIgniter 4 por defecto.</p>
+<h3 id="que-implica-esto-para-el-desarrollador">¿Qué implica esto para el desarrollador?</h3>
+<ol>
+<li><strong>Cero Configuración de Rutas:</strong> Al crear un nuevo controlador (por ejemplo, con el <a href="../plantilla/">Generador CLI</a>), este es accesible inmediatamente vía URL (<code>/TuControlador/metodo</code>) sin necesidad de editar <code>app/Config/Routes.php</code>.</li>
+<li><strong>Agilidad:</strong> Esto es fundamental para la filosofía "Low Code" de Ragnos, permitiendo prototipar y desplegar módulos CRUD en segundos.</li>
+<li><strong>Seguridad y Personalización:</strong> Si necesitas URLs específicas o restringir el acceso, puedes definir rutas manuales en <code>Config/Routes.php</code>. Las rutas manuales tienen prioridad sobre las automáticas.</li>
+</ol>
+<blockquote>
+<p>⚠️ <strong>Importante:</strong> Si decides desactivar el Auto Routing (<code>false</code>) por políticas de seguridad estrictas, deberás registrar manualmente cada ruta de tus Datasets, lo cual incrementa el trabajo de mantenimiento.</p>
+</blockquote>
+<h2 id="otras-configuraciones-codeigniter">Otras Configuraciones (CodeIgniter)</h2>
+<p>Recuerda que Ragnos respeta la configuración nativa de CI4. Archivos importantes en <code>app/Config/</code>:</p>
+<ul>
+<li><strong>App.php</strong>: Configuración base (<code>baseURL</code>, <code>indexPage</code>).</li>
+<li><strong>Database.php</strong>: Credenciales de conexión.</li>
+<li><strong>Security.php</strong>: Configuración CSRF y headers de seguridad.</li>
+</ul></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../../../js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = "../../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../../js/base.js"></script>
+        <script src="../../../js/particles.js"></script>
+        <script src="../../../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
