@@ -5,6 +5,7 @@ edit_uri: "" # Elimina el botón de edición
 
 theme:
   name: mkdocs
+  custom_dir: overrides
   sticky_navigation: true
   collapse_navigation: false
   titles_only: false
@@ -15,7 +16,7 @@ extra_css:
   - css/ragnos_style.css
 
 extra_javascript:
-  - js/particles.js
+  - back_particles.js
 
 plugins:
   - search
