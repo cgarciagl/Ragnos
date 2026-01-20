@@ -7,7 +7,7 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <link href="https://cgarciagl.github.io/Ragnos/docs/en/avanzado/autenticacion_integrada/" rel="canonical"/>
 <link href="../../../img/favicon.ico" rel="shortcut icon"/>
-<title>Autenticación - Ragnos Docs</title>
+<title>Authentication - Ragnos Docs</title>
 <link href="../../../css/bootstrap.min.css" rel="stylesheet"/>
 <link href="../../../css/fontawesome.min.css" rel="stylesheet"/>
 <link href="../../../css/brands.min.css" rel="stylesheet"/>
@@ -33,56 +33,56 @@
 <!-- Main navigation -->
 <ul class="nav navbar-nav">
 <li class="nav-item">
-<a class="nav-link" href="../../">Inicio</a>
+<a class="nav-link" href="../../">Home</a>
 </li>
 <li class="nav-item dropdown">
-<a aria-expanded="false" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">Fundamentos</a>
+<a aria-expanded="false" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">Fundamentals</a>
 <ul class="dropdown-menu">
 <li>
-<a class="dropdown-item" href="../../fundamentos/instalacion/">Instalación</a>
+<a class="dropdown-item" href="../../fundamentos/instalacion/">Installation</a>
 </li>
 <li>
-<a class="dropdown-item" href="../../fundamentos/primeros_pasos/">Primeros Pasos</a>
+<a class="dropdown-item" href="../../fundamentos/primeros_pasos/">Getting Started</a>
 </li>
 <li>
-<a class="dropdown-item" href="../../fundamentos/configuracion/">Configuración</a>
+<a class="dropdown-item" href="../../fundamentos/configuracion/">Configuration</a>
 </li>
 <li>
-<a class="dropdown-item" href="../../fundamentos/plantilla/">Generador CLI</a>
+<a class="dropdown-item" href="../../fundamentos/plantilla/">CLI Generator</a>
 </li>
 </ul>
 </li>
 <li class="nav-item dropdown">
-<a aria-expanded="false" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">Datasets y Modelos</a>
+<a aria-expanded="false" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">Datasets &amp; Models</a>
 <ul class="dropdown-menu">
 <li>
-<a class="dropdown-item" href="../../datasets/datasets/">Creando Datasets</a>
+<a class="dropdown-item" href="../../datasets/datasets/">Creating Datasets</a>
 </li>
 <li>
-<a class="dropdown-item" href="../../datasets/campos/">Referencia de Campos</a>
+<a class="dropdown-item" href="../../datasets/campos/">Field Reference</a>
 </li>
 <li>
-<a class="dropdown-item" href="../../datasets/guia_RQueryController/">Consultas Avanzadas (RQuery)</a>
+<a class="dropdown-item" href="../../datasets/guia_RQueryController/">Advanced Queries (RQuery)</a>
 </li>
 <li>
-<a class="dropdown-item" href="../../datasets/maestro-detalle/">Maestro-Detalle</a>
+<a class="dropdown-item" href="../../datasets/maestro-detalle/">Master-Detail</a>
 </li>
 </ul>
 </li>
 <li class="nav-item dropdown">
-<a aria-current="page" aria-expanded="false" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown" href="#" role="button">Backend Avanzado</a>
+<a aria-current="page" aria-expanded="false" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown" href="#" role="button">Advanced Backend</a>
 <ul class="dropdown-menu">
 <li>
-<a class="dropdown-item" href="../guia_modo_api/">Modo API</a>
+<a class="dropdown-item" href="../guia_modo_api/">API Mode</a>
 </li>
 <li>
-<a class="dropdown-item" href="../helpers/">Helpers y Utilidades</a>
+<a class="dropdown-item" href="../helpers/">Helpers &amp; Utilities</a>
 </li>
 <li>
-<a class="dropdown-item" href="../hooks/">Hooks y eventos</a>
+<a class="dropdown-item" href="../hooks/">Hooks &amp; Events</a>
 </li>
 <li>
-<a aria-current="page" class="dropdown-item active" href="./">Autenticación</a>
+<a aria-current="page" class="dropdown-item active" href="./">Authentication</a>
 </li>
 <li>
 <a class="dropdown-item" href="../auditlog/">Audit Log</a>
@@ -91,21 +91,21 @@
 <a class="dropdown-item" href="../server_side_events/">Server Side Events</a>
 </li>
 <li>
-<a class="dropdown-item" href="../despliegue/">Despliegue</a>
+<a class="dropdown-item" href="../despliegue/">Deployment</a>
 </li>
 </ul>
 </li>
 <li class="nav-item dropdown">
-<a aria-expanded="false" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">Frontend y Reportes</a>
+<a aria-expanded="false" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">Frontend &amp; Reports</a>
 <ul class="dropdown-menu">
 <li>
-<a class="dropdown-item" href="../../frontend/personalizacion_ui/">Personalización UI</a>
+<a class="dropdown-item" href="../../frontend/personalizacion_ui/">UI Customization</a>
 </li>
 <li>
-<a class="dropdown-item" href="../../frontend/reportes_simples/">Reportes Simples</a>
+<a class="dropdown-item" href="../../frontend/reportes_simples/">Simple Reports</a>
 </li>
 <li>
-<a class="dropdown-item" href="../../frontend/funciones_javascript/">Funciones JavaScript</a>
+<a class="dropdown-item" href="../../frontend/funciones_javascript/">JavaScript Functions</a>
 </li>
 </ul>
 </li>
@@ -146,25 +146,25 @@
 </div>
 <div class="navbar-collapse collapse card bg-body-tertiary" id="toc-collapse">
 <ul class="nav flex-column">
-<li class="nav-item" data-bs-level="1"><a class="nav-link" href="#sistema-de-autenticacion-y-permisos-en-ragnos">Sistema de Autenticación y Permisos en Ragnos</a>
+<li class="nav-item" data-bs-level="1"><a class="nav-link" href="#integrated-authentication-and-permissions-system">Integrated Authentication and Permissions System</a>
 <ul class="nav flex-column">
-<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#tablas-de-base-de-datos">Tablas de Base de Datos</a>
-<ul class="nav flex-column">
-</ul>
-</li>
-<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#proteccion-de-controladores">Protección de Controladores</a>
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#database-tables">Database Tables</a>
 <ul class="nav flex-column">
 </ul>
 </li>
-<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#servicio-admin_aut">Servicio Admin_aut</a>
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#controller-protection">Controller Protection</a>
 <ul class="nav flex-column">
 </ul>
 </li>
-<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#autenticacion-via-api">Autenticación vía API</a>
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#admin_aut-service">Admin_aut Service</a>
 <ul class="nav flex-column">
 </ul>
 </li>
-<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#ejemplo-completo">Ejemplo Completo</a>
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#api-authentication">API Authentication</a>
+<ul class="nav flex-column">
+</ul>
+</li>
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#complete-example">Complete Example</a>
 <ul class="nav flex-column">
 </ul>
 </li>
@@ -174,157 +174,157 @@
 </div>
 </div></div>
 <div class="col-md-9" role="main">
-<h1 id="sistema-de-autenticacion-y-permisos-en-ragnos">Sistema de Autenticación y Permisos en Ragnos</h1>
-<p>Ragnos incorpora un sistema de autenticación ligero y flexible integrado directamente en el núcleo del framework. Este sistema gestiona sesiones de usuario, protección de controladores y control de acceso basado en roles (grupos).</p>
-<p>El sistema se apoya principalmente en el servicio <code>App\Services\Admin_aut</code> y en la clase <code>BaseController</code>.</p>
-<h2 id="tablas-de-base-de-datos">Tablas de Base de Datos</h2>
-<p>El sistema espera una estructura de base de datos específica:</p>
+<h1 id="integrated-authentication-and-permissions-system">Integrated Authentication and Permissions System</h1>
+<p>Ragnos includes a lightweight flexible authentication system integrated directly into framework core. Handles user sessions, controller protection and Role Based Access Control (RBAC).</p>
+<p>System relies mainly on <code>App\Services\Admin_aut</code> service and <code>BaseController</code> class.</p>
+<h2 id="database-tables">Database Tables</h2>
+<p>System expects specific database structure:</p>
 <ul>
-<li><strong><code>gen_usuarios</code></strong>: Tabla de usuarios (<code>usu_id</code>, <code>usu_nombre</code>, <code>usu_login</code>, <code>usu_pword</code>, <code>usu_activo</code>, <code>usu_grupo</code>).</li>
-<li><strong><code>gen_gruposdeusuarios</code></strong>: Tabla de roles (<code>gru_id</code>, <code>gru_nombre</code>).</li>
+<li><strong><code>gen_usuarios</code></strong>: Users table (<code>usu_id</code>, <code>usu_nombre</code>, <code>usu_login</code>, <code>usu_pword</code>, <code>usu_activo</code>, <code>usu_grupo</code>).</li>
+<li><strong><code>gen_gruposdeusuarios</code></strong>: Roles table (<code>gru_id</code>, <code>gru_nombre</code>).</li>
 </ul>
-<h2 id="proteccion-de-controladores">Protección de Controladores</h2>
-<p>Todos los controladores que extienden de <code>BaseController</code> (incluyendo <a href="../../datasets/datasets/"><code>RDatasetController</code></a>, <a href="../server_side_events/"><code>RProcessController</code></a>, etc.) tienen acceso a métodos de protección simplificados.</p>
-<h3 id="flujo-de-verificacion">Flujo de Verificación</h3>
+<h2 id="controller-protection">Controller Protection</h2>
+<p>All controllers extending <code>BaseController</code> (including <a href="../../datasets/datasets/"><code>RDatasetController</code></a>, <a href="../server_side_events/"><code>RProcessController</code></a>, etc.) access simplified protection methods.</p>
+<h3 id="verification-flow">Verification Flow</h3>
 <div class="mermaid">graph TD
-    Req["Petición Entrante"] --&gt; Controller["Controlador"]
-    Controller --&gt;|Llama| Check{"checkLogin( )"}
+    Req["Incoming Request"] --&gt; Controller["Controller"]
+    Controller --&gt;|Calls| Check{"checkLogin( )"}
 
-    Check -- "No hay sesión" --&gt; Type{"¿Es API?"}
-    Type -- "Sí" --&gt; Error401["JSON 401 Unauthorized"]
-    Type -- "No" --&gt; Login["Redirigir a Login"]
+    Check -- "No session" --&gt; Type{"Is API?"}
+    Type -- "Yes" --&gt; Error401["JSON 401 Unauthorized"]
+    Type -- "No" --&gt; Login["Redirect to Login"]
 
-    Check -- "Hay sesión" --&gt; Group{"¿checkUserInGroup( )?"}
+    Check -- "Has session" --&gt; Group{"checkUserInGroup( )?"}
 
-    Group -- "No requerido" --&gt; Access["✅ Acceso Permitido"]
-    Group -- "Requerido" --&gt; Role{"¿Usuario en Grupo?"}
+    Group -- "Not required" --&gt; Access["✅ Access Allowed"]
+    Group -- "Required" --&gt; Role{"User in Group?"}
 
-    Role -- "Sí" --&gt; Access
-    Role -- "No" --&gt; Error403["⛔ Redirigir / Error 403"]
+    Role -- "Yes" --&gt; Access
+    Role -- "No" --&gt; Error403["⛔ Redirect / Error 403"]
 
-    %% Estilos mejorados
+    %% Improved styles
     style Access fill:#d4edda,stroke:#155724,stroke-width:2px,color:#155724
     style Error401 fill:#f8d7da,stroke:#721c24,stroke-width:2px,color:#721c24
     style Login fill:#fff3cd,stroke:#856404,stroke-width:2px,color:#856404
     style Error403 fill:#f8d7da,stroke:#721c24,stroke-width:2px,color:#721c24
 </div>
 <h3 id="checklogin"><code>checkLogin()</code></h3>
-<p>Este método verifica si el usuario tiene una sesión activa. Si no la tiene:</p>
+<p>Verifies if user has active session. If not:</p>
 <ol>
-<li>Para peticiones Web: Redirige al login (<code>admin/login</code>).</li>
-<li>Para API: Verifica el header <code>Authorization</code> contra el <code>usu_token</code> en base de datos. Si falla, devuelve un error 401 JSON.</li>
+<li>Web requests: Redirects to login (<code>admin/login</code>).</li>
+<li>API requests: Verifies <code>Authorization</code> header against <code>usu_token</code> in DB. If fails, returns JSON 401 error.</li>
 </ol>
-<p><strong>Uso:</strong>
-Se recomienda llamarlo al inicio de cualquier función que requiera autenticación, o en el constructor si todo el controlador es privado.</p>
+<p><strong>Usage:</strong>
+Recommended to call at start of function requiring auth, or in constructor if whole controller private.</p>
 <div class="admonition tip">
-<p class="admonition-title">Controllers Públicos</p>
-<p>Si tienes un controlador público (ej. página de inicio), simplemente no llames a <code>checkLogin()</code>.</p>
+<p class="admonition-title">Public Controllers</p>
+<p>If you have a public controller (e.g. Home page), simply do not call <code>checkLogin()</code>.</p>
 </div>
-<div class="highlight"><pre><span></span><code><a href="#__codelineno-0-1" id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="x">public function miFunciopPrivada()</span>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-0-1" id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="x">public function myPrivateFunction()</span>
 <a href="#__codelineno-0-2" id="__codelineno-0-2" name="__codelineno-0-2"></a><span class="x">{</span>
 <a href="#__codelineno-0-3" id="__codelineno-0-3" name="__codelineno-0-3"></a><span class="x">    $this-&gt;checkLogin();</span>
 <a href="#__codelineno-0-4" id="__codelineno-0-4" name="__codelineno-0-4"></a>
-<a href="#__codelineno-0-5" id="__codelineno-0-5" name="__codelineno-0-5"></a><span class="x">    // El resto del código solo se ejecuta si el usuario está logueado</span>
-<a href="#__codelineno-0-6" id="__codelineno-0-6" name="__codelineno-0-6"></a><span class="x">    return view('mi_vista');</span>
+<a href="#__codelineno-0-5" id="__codelineno-0-5" name="__codelineno-0-5"></a><span class="x">    // Rest of code only executes if user logged in</span>
+<a href="#__codelineno-0-6" id="__codelineno-0-6" name="__codelineno-0-6"></a><span class="x">    return view('my_view');</span>
 <a href="#__codelineno-0-7" id="__codelineno-0-7" name="__codelineno-0-7"></a><span class="x">}</span>
 </code></pre></div>
-<h3 id="checkuseringroupgrupos"><code>checkUserInGroup($grupos)</code></h3>
-<p>Restringe el acceso exclusivamente a usuarios que pertenezcan a los grupos especificados.</p>
+<h3 id="checkuseringroupgroups"><code>checkUserInGroup($groups)</code></h3>
+<p>Restricts access exclusively to users belonging to specified groups.</p>
 <ul>
-<li><strong>Parámetro</strong>: Puede ser un <code>string</code> con el nombre de un grupo o un <code>array</code> de strings para permitir múltiples grupos.</li>
-<li><strong>Comportamiento</strong>:</li>
-<li>Si no cumple la condición, redirige a <code>admin/index</code> (o devuelve 403/401 si es API).</li>
-<li>Internamente llama a <code>checkLogin()</code>, por lo que no es necesario llamar a ambos.</li>
+<li><strong>Parameter</strong>: Can be <code>string</code> with group name or <code>array</code> of strings for multiple groups.</li>
+<li><strong>Behavior</strong>:</li>
+<li>If condition not met, redirects to <code>admin/index</code> (or returns 403/401 if API).</li>
+<li>Internally calls <code>checkLogin()</code>, so calling both is unnecessary.</li>
 </ul>
-<p><strong>Uso:</strong></p>
+<p><strong>Usage:</strong></p>
 <div class="highlight"><pre><span></span><code><a href="#__codelineno-1-1" id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="x">public function __construct()</span>
 <a href="#__codelineno-1-2" id="__codelineno-1-2" name="__codelineno-1-2"></a><span class="x">{</span>
-<a href="#__codelineno-1-3" id="__codelineno-1-3" name="__codelineno-1-3"></a><span class="x">    // Solo permitir acceso a Administradores</span>
-<a href="#__codelineno-1-4" id="__codelineno-1-4" name="__codelineno-1-4"></a><span class="x">    $this-&gt;checkUserInGroup('Administrador');</span>
+<a href="#__codelineno-1-3" id="__codelineno-1-3" name="__codelineno-1-3"></a><span class="x">    // Only allow Administrator access</span>
+<a href="#__codelineno-1-4" id="__codelineno-1-4" name="__codelineno-1-4"></a><span class="x">    $this-&gt;checkUserInGroup('Administrator');</span>
 <a href="#__codelineno-1-5" id="__codelineno-1-5" name="__codelineno-1-5"></a><span class="x">}</span>
 <a href="#__codelineno-1-6" id="__codelineno-1-6" name="__codelineno-1-6"></a>
-<a href="#__codelineno-1-7" id="__codelineno-1-7" name="__codelineno-1-7"></a><span class="x">public function reporteGerencial()</span>
+<a href="#__codelineno-1-7" id="__codelineno-1-7" name="__codelineno-1-7"></a><span class="x">public function managementReport()</span>
 <a href="#__codelineno-1-8" id="__codelineno-1-8" name="__codelineno-1-8"></a><span class="x">{</span>
-<a href="#__codelineno-1-9" id="__codelineno-1-9" name="__codelineno-1-9"></a><span class="x">    // Permitir acceso a Administradores o Gerentes</span>
-<a href="#__codelineno-1-10" id="__codelineno-1-10" name="__codelineno-1-10"></a><span class="x">    $this-&gt;checkUserInGroup(['Administrador', 'Gerencia']);</span>
+<a href="#__codelineno-1-9" id="__codelineno-1-9" name="__codelineno-1-9"></a><span class="x">    // Allow Admins or Management</span>
+<a href="#__codelineno-1-10" id="__codelineno-1-10" name="__codelineno-1-10"></a><span class="x">    $this-&gt;checkUserInGroup(['Administrator', 'Management']);</span>
 <a href="#__codelineno-1-11" id="__codelineno-1-11" name="__codelineno-1-11"></a>
-<a href="#__codelineno-1-12" id="__codelineno-1-12" name="__codelineno-1-12"></a><span class="x">    // Lógica del reporte...</span>
+<a href="#__codelineno-1-12" id="__codelineno-1-12" name="__codelineno-1-12"></a><span class="x">    // Report logic...</span>
 <a href="#__codelineno-1-13" id="__codelineno-1-13" name="__codelineno-1-13"></a><span class="x">}</span>
 </code></pre></div>
 <hr/>
-<h2 id="servicio-admin_aut">Servicio <code>Admin_aut</code></h2>
-<p>Para lógica más granular dentro de tus vistas o controladores, puedes acceder directamente al servicio de autenticación.</p>
-<p>Lo ideal es invocarlo mediante <code>service('Admin_aut')</code>.</p>
-<h3 id="funciones-principales">Funciones Principales</h3>
+<h2 id="admin_aut-service"><code>Admin_aut</code> Service</h2>
+<p>For granular logic inside views/controllers, access auth service directly.</p>
+<p>Ideally invoke via <code>service('Admin_aut')</code>.</p>
+<h3 id="main-functions">Main Functions</h3>
 <h4 id="isloggedin"><code>isLoggedIn()</code></h4>
-<p>Devuelve <code>true</code> si hay un usuario logueado, <code>false</code> en caso contrario.</p>
+<p>Returns <code>true</code> if user logged in, <code>false</code> otherwise.</p>
 <div class="highlight"><pre><span></span><code><a href="#__codelineno-2-1" id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="x">if (service('Admin_aut')-&gt;isLoggedIn()) {</span>
-<a href="#__codelineno-2-2" id="__codelineno-2-2" name="__codelineno-2-2"></a><span class="x">    echo "Usuario conectado";</span>
+<a href="#__codelineno-2-2" id="__codelineno-2-2" name="__codelineno-2-2"></a><span class="x">    echo "User connected";</span>
 <a href="#__codelineno-2-3" id="__codelineno-2-3" name="__codelineno-2-3"></a><span class="x">}</span>
 </code></pre></div>
 <h4 id="id"><code>id()</code></h4>
-<p>Devuelve el ID (<code>usu_id</code>) del usuario actual.</p>
+<p>Returns current user ID (<code>usu_id</code>).</p>
 <h4 id="name"><code>name()</code></h4>
-<p>Devuelve el nombre completo (<code>usu_nombre</code>) del usuario actual.</p>
-<h4 id="isuseringroupgrupo"><code>isUserInGroup($grupo)</code></h4>
-<p>Evalúa si el usuario actual pertenece al grupo indicado. Es muy útil para ocultar o mostrar botones en las vistas o aplicar lógica condicional. Comparación <em>case-insensitive</em>.</p>
-<div class="highlight"><pre><span></span><code><a href="#__codelineno-3-1" id="__codelineno-3-1" name="__codelineno-3-1"></a><span class="x">// En un controlador o vista</span>
-<a href="#__codelineno-3-2" id="__codelineno-3-2" name="__codelineno-3-2"></a><span class="x">if (service('Admin_aut')-&gt;isUserInGroup('Ventas')) {</span>
-<a href="#__codelineno-3-3" id="__codelineno-3-3" name="__codelineno-3-3"></a><span class="x">    // Mostrar botón de crear pedido</span>
+<p>Returns current user full name (<code>usu_nombre</code>).</p>
+<h4 id="isuseringroupgroup"><code>isUserInGroup($group)</code></h4>
+<p>Evaluates if current user belongs to indicated group. Useful for hiding/showing buttons in views or conditional logic. Case-insensitive.</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-3-1" id="__codelineno-3-1" name="__codelineno-3-1"></a><span class="x">// In controller or view</span>
+<a href="#__codelineno-3-2" id="__codelineno-3-2" name="__codelineno-3-2"></a><span class="x">if (service('Admin_aut')-&gt;isUserInGroup('Sales')) {</span>
+<a href="#__codelineno-3-3" id="__codelineno-3-3" name="__codelineno-3-3"></a><span class="x">    // Show create order button</span>
 <a href="#__codelineno-3-4" id="__codelineno-3-4" name="__codelineno-3-4"></a><span class="x">}</span>
 </code></pre></div>
-<h4 id="camponombrecampo"><code>campo($nombreCampo)</code></h4>
-<p>Obtiene cualquier campo de la tabla <code>gen_usuarios</code> para el usuario actual. La información se carga bajo demanda (lazy loading) la primera vez que se solicita un campo.</p>
-<div class="highlight"><pre><span></span><code><a href="#__codelineno-4-1" id="__codelineno-4-1" name="__codelineno-4-1"></a><span class="x">// Obtener el email o cualquier campo personalizado</span>
+<h4 id="getfieldfieldname"><code>getField($fieldName)</code></h4>
+<p>Gets any field from <code>gen_usuarios</code> table for current user. Info lazily loaded on first request.</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-4-1" id="__codelineno-4-1" name="__codelineno-4-1"></a><span class="x">// Get email or custom field</span>
 <a href="#__codelineno-4-2" id="__codelineno-4-2" name="__codelineno-4-2"></a><span class="x">$email = service('Admin_aut')-&gt;getField('usu_email');</span>
 </code></pre></div>
 <hr/>
-<h2 id="autenticacion-via-api">Autenticación vía API</h2>
-<p>El sistema soporta autenticación para APIs REST de forma transparente.</p>
+<h2 id="api-authentication">API Authentication</h2>
+<p>System supports authentication for REST APIs transparently.</p>
 <ol>
-<li>Al hacer login, se genera un token seguro en <code>usu_token</code>.</li>
-<li>El cliente debe enviar este token en el header <code>Authorization</code>.</li>
-<li><code>checkLogin()</code> detecta automáticamente si la petición es una llamada API (<code>isApiCall()</code>) y valida el token en lugar de la sesión de PHP.</li>
+<li>On login, secure token generated in <code>usu_token</code>.</li>
+<li>Client must send token in <code>Authorization</code> header.</li>
+<li><code>checkLogin()</code> automatically detects API call (<code>isApiCall()</code>) and validates token instead of PHP session.</li>
 </ol>
-<p>Esto permite utilizar los mismos controladores para la interfaz web y para aplicaciones móviles o frontends desacoplados.</p>
-<h2 id="ejemplo-completo">Ejemplo Completo</h2>
+<p>Allows using same controllers for web interface and mobile apps or decoupled frontends.</p>
+<h2 id="complete-example">Complete Example</h2>
 <div class="highlight"><pre><span></span><code><a href="#__codelineno-5-1" id="__codelineno-5-1" name="__codelineno-5-1"></a><span class="cp">&lt;?php</span>
 <a href="#__codelineno-5-2" id="__codelineno-5-2" name="__codelineno-5-2"></a>
 <a href="#__codelineno-5-3" id="__codelineno-5-3" name="__codelineno-5-3"></a><span class="k">namespace</span> <span class="nx">App\Controllers</span><span class="p">;</span>
 <a href="#__codelineno-5-4" id="__codelineno-5-4" name="__codelineno-5-4"></a>
 <a href="#__codelineno-5-5" id="__codelineno-5-5" name="__codelineno-5-5"></a><span class="k">use</span> <span class="nx">App\ThirdParty\Ragnos\Controllers\BaseController</span><span class="p">;</span>
 <a href="#__codelineno-5-6" id="__codelineno-5-6" name="__codelineno-5-6"></a>
-<a href="#__codelineno-5-7" id="__codelineno-5-7" name="__codelineno-5-7"></a><span class="k">class</span> <span class="nc">Pedidos</span> <span class="k">extends</span> <span class="nx">BaseController</span>
+<a href="#__codelineno-5-7" id="__codelineno-5-7" name="__codelineno-5-7"></a><span class="k">class</span> <span class="nc">Orders</span> <span class="k">extends</span> <span class="nx">BaseController</span>
 <a href="#__codelineno-5-8" id="__codelineno-5-8" name="__codelineno-5-8"></a><span class="p">{</span>
 <a href="#__codelineno-5-9" id="__codelineno-5-9" name="__codelineno-5-9"></a>    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">()</span>
 <a href="#__codelineno-5-10" id="__codelineno-5-10" name="__codelineno-5-10"></a>    <span class="p">{</span>
-<a href="#__codelineno-5-11" id="__codelineno-5-11" name="__codelineno-5-11"></a>        <span class="c1">// Cargar helpers necesarios</span>
+<a href="#__codelineno-5-11" id="__codelineno-5-11" name="__codelineno-5-11"></a>        <span class="c1">// Load helpers</span>
 <a href="#__codelineno-5-12" id="__codelineno-5-12" name="__codelineno-5-12"></a>        <span class="nx">helper</span><span class="p">([</span><span class="s1">'form'</span><span class="p">,</span> <span class="s1">'url'</span><span class="p">]);</span>
 <a href="#__codelineno-5-13" id="__codelineno-5-13" name="__codelineno-5-13"></a>    <span class="p">}</span>
 <a href="#__codelineno-5-14" id="__codelineno-5-14" name="__codelineno-5-14"></a>
 <a href="#__codelineno-5-15" id="__codelineno-5-15" name="__codelineno-5-15"></a>    <span class="k">public</span> <span class="k">function</span> <span class="nf">index</span><span class="p">()</span>
 <a href="#__codelineno-5-16" id="__codelineno-5-16" name="__codelineno-5-16"></a>    <span class="p">{</span>
-<a href="#__codelineno-5-17" id="__codelineno-5-17" name="__codelineno-5-17"></a>        <span class="c1">// 1. Asegurar que esté logueado</span>
+<a href="#__codelineno-5-17" id="__codelineno-5-17" name="__codelineno-5-17"></a>        <span class="c1">// 1. Ensure logged in</span>
 <a href="#__codelineno-5-18" id="__codelineno-5-18" name="__codelineno-5-18"></a>        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">checkLogin</span><span class="p">();</span>
 <a href="#__codelineno-5-19" id="__codelineno-5-19" name="__codelineno-5-19"></a>
 <a href="#__codelineno-5-20" id="__codelineno-5-20" name="__codelineno-5-20"></a>        <span class="nv">$auth</span> <span class="o">=</span> <span class="nx">service</span><span class="p">(</span><span class="s1">'Admin_aut'</span><span class="p">);</span>
 <a href="#__codelineno-5-21" id="__codelineno-5-21" name="__codelineno-5-21"></a>
-<a href="#__codelineno-5-22" id="__codelineno-5-22" name="__codelineno-5-22"></a>        <span class="c1">// 2. Obtener datos del usuario</span>
-<a href="#__codelineno-5-23" id="__codelineno-5-23" name="__codelineno-5-23"></a>        <span class="nv">$data</span><span class="p">[</span><span class="s1">'usuario'</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$auth</span><span class="o">-&gt;</span><span class="na">name</span><span class="p">();</span>
-<a href="#__codelineno-5-24" id="__codelineno-5-24" name="__codelineno-5-24"></a>        <span class="nv">$data</span><span class="p">[</span><span class="s1">'esAdmin'</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$auth</span><span class="o">-&gt;</span><span class="na">isUserInGroup</span><span class="p">(</span><span class="s1">'Administrador'</span><span class="p">);</span>
+<a href="#__codelineno-5-22" id="__codelineno-5-22" name="__codelineno-5-22"></a>        <span class="c1">// 2. Get user data</span>
+<a href="#__codelineno-5-23" id="__codelineno-5-23" name="__codelineno-5-23"></a>        <span class="nv">$data</span><span class="p">[</span><span class="s1">'user'</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$auth</span><span class="o">-&gt;</span><span class="na">name</span><span class="p">();</span>
+<a href="#__codelineno-5-24" id="__codelineno-5-24" name="__codelineno-5-24"></a>        <span class="nv">$data</span><span class="p">[</span><span class="s1">'isAdmin'</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$auth</span><span class="o">-&gt;</span><span class="na">isUserInGroup</span><span class="p">(</span><span class="s1">'Administrator'</span><span class="p">);</span>
 <a href="#__codelineno-5-25" id="__codelineno-5-25" name="__codelineno-5-25"></a>
-<a href="#__codelineno-5-26" id="__codelineno-5-26" name="__codelineno-5-26"></a>        <span class="k">return</span> <span class="nx">view</span><span class="p">(</span><span class="s1">'pedidos/index'</span><span class="p">,</span> <span class="nv">$data</span><span class="p">);</span>
+<a href="#__codelineno-5-26" id="__codelineno-5-26" name="__codelineno-5-26"></a>        <span class="k">return</span> <span class="nx">view</span><span class="p">(</span><span class="s1">'orders/index'</span><span class="p">,</span> <span class="nv">$data</span><span class="p">);</span>
 <a href="#__codelineno-5-27" id="__codelineno-5-27" name="__codelineno-5-27"></a>    <span class="p">}</span>
 <a href="#__codelineno-5-28" id="__codelineno-5-28" name="__codelineno-5-28"></a>
-<a href="#__codelineno-5-29" id="__codelineno-5-29" name="__codelineno-5-29"></a>    <span class="k">public</span> <span class="k">function</span> <span class="nf">eliminar</span><span class="p">(</span><span class="nv">$id</span><span class="p">)</span>
+<a href="#__codelineno-5-29" id="__codelineno-5-29" name="__codelineno-5-29"></a>    <span class="k">public</span> <span class="k">function</span> <span class="nf">delete</span><span class="p">(</span><span class="nv">$id</span><span class="p">)</span>
 <a href="#__codelineno-5-30" id="__codelineno-5-30" name="__codelineno-5-30"></a>    <span class="p">{</span>
-<a href="#__codelineno-5-31" id="__codelineno-5-31" name="__codelineno-5-31"></a>        <span class="c1">// 3. Restricción estricta: Solo Admins pueden eliminar</span>
-<a href="#__codelineno-5-32" id="__codelineno-5-32" name="__codelineno-5-32"></a>        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">checkUserInGroup</span><span class="p">(</span><span class="s1">'Administrador'</span><span class="p">);</span>
+<a href="#__codelineno-5-31" id="__codelineno-5-31" name="__codelineno-5-31"></a>        <span class="c1">// 3. Strict restriction: Only Admins can delete</span>
+<a href="#__codelineno-5-32" id="__codelineno-5-32" name="__codelineno-5-32"></a>        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">checkUserInGroup</span><span class="p">(</span><span class="s1">'Administrator'</span><span class="p">);</span>
 <a href="#__codelineno-5-33" id="__codelineno-5-33" name="__codelineno-5-33"></a>
-<a href="#__codelineno-5-34" id="__codelineno-5-34" name="__codelineno-5-34"></a>        <span class="nv">$model</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\App\Models\PedidosModel</span><span class="p">();</span>
+<a href="#__codelineno-5-34" id="__codelineno-5-34" name="__codelineno-5-34"></a>        <span class="nv">$model</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\App\Models\OrdersModel</span><span class="p">();</span>
 <a href="#__codelineno-5-35" id="__codelineno-5-35" name="__codelineno-5-35"></a>        <span class="nv">$model</span><span class="o">-&gt;</span><span class="na">delete</span><span class="p">(</span><span class="nv">$id</span><span class="p">);</span>
 <a href="#__codelineno-5-36" id="__codelineno-5-36" name="__codelineno-5-36"></a>
-<a href="#__codelineno-5-37" id="__codelineno-5-37" name="__codelineno-5-37"></a>        <span class="k">return</span> <span class="nx">redirect</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">to</span><span class="p">(</span><span class="s1">'/pedidos'</span><span class="p">);</span>
+<a href="#__codelineno-5-37" id="__codelineno-5-37" name="__codelineno-5-37"></a>        <span class="k">return</span> <span class="nx">redirect</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">to</span><span class="p">(</span><span class="s1">'/orders'</span><span class="p">);</span>
 <a href="#__codelineno-5-38" id="__codelineno-5-38" name="__codelineno-5-38"></a>    <span class="p">}</span>
 <a href="#__codelineno-5-39" id="__codelineno-5-39" name="__codelineno-5-39"></a><span class="p">}</span>
 </code></pre></div></div>

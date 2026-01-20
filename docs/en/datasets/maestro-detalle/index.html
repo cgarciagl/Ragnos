@@ -7,7 +7,7 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <link href="https://cgarciagl.github.io/Ragnos/docs/en/datasets/maestro-detalle/" rel="canonical"/>
 <link href="../../../img/favicon.ico" rel="shortcut icon"/>
-<title>Maestro-Detalle - Ragnos Docs</title>
+<title>Master-Detail - Ragnos Docs</title>
 <link href="../../../css/bootstrap.min.css" rel="stylesheet"/>
 <link href="../../../css/fontawesome.min.css" rel="stylesheet"/>
 <link href="../../../css/brands.min.css" rel="stylesheet"/>
@@ -33,56 +33,56 @@
 <!-- Main navigation -->
 <ul class="nav navbar-nav">
 <li class="nav-item">
-<a class="nav-link" href="../../">Inicio</a>
+<a class="nav-link" href="../../">Home</a>
 </li>
 <li class="nav-item dropdown">
-<a aria-expanded="false" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">Fundamentos</a>
+<a aria-expanded="false" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">Fundamentals</a>
 <ul class="dropdown-menu">
 <li>
-<a class="dropdown-item" href="../../fundamentos/instalacion/">Instalación</a>
+<a class="dropdown-item" href="../../fundamentos/instalacion/">Installation</a>
 </li>
 <li>
-<a class="dropdown-item" href="../../fundamentos/primeros_pasos/">Primeros Pasos</a>
+<a class="dropdown-item" href="../../fundamentos/primeros_pasos/">Getting Started</a>
 </li>
 <li>
-<a class="dropdown-item" href="../../fundamentos/configuracion/">Configuración</a>
+<a class="dropdown-item" href="../../fundamentos/configuracion/">Configuration</a>
 </li>
 <li>
-<a class="dropdown-item" href="../../fundamentos/plantilla/">Generador CLI</a>
+<a class="dropdown-item" href="../../fundamentos/plantilla/">CLI Generator</a>
 </li>
 </ul>
 </li>
 <li class="nav-item dropdown">
-<a aria-current="page" aria-expanded="false" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown" href="#" role="button">Datasets y Modelos</a>
+<a aria-current="page" aria-expanded="false" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown" href="#" role="button">Datasets &amp; Models</a>
 <ul class="dropdown-menu">
 <li>
-<a class="dropdown-item" href="../datasets/">Creando Datasets</a>
+<a class="dropdown-item" href="../datasets/">Creating Datasets</a>
 </li>
 <li>
-<a class="dropdown-item" href="../campos/">Referencia de Campos</a>
+<a class="dropdown-item" href="../campos/">Field Reference</a>
 </li>
 <li>
-<a class="dropdown-item" href="../guia_RQueryController/">Consultas Avanzadas (RQuery)</a>
+<a class="dropdown-item" href="../guia_RQueryController/">Advanced Queries (RQuery)</a>
 </li>
 <li>
-<a aria-current="page" class="dropdown-item active" href="./">Maestro-Detalle</a>
+<a aria-current="page" class="dropdown-item active" href="./">Master-Detail</a>
 </li>
 </ul>
 </li>
 <li class="nav-item dropdown">
-<a aria-expanded="false" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">Backend Avanzado</a>
+<a aria-expanded="false" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">Advanced Backend</a>
 <ul class="dropdown-menu">
 <li>
-<a class="dropdown-item" href="../../avanzado/guia_modo_api/">Modo API</a>
+<a class="dropdown-item" href="../../avanzado/guia_modo_api/">API Mode</a>
 </li>
 <li>
-<a class="dropdown-item" href="../../avanzado/helpers/">Helpers y Utilidades</a>
+<a class="dropdown-item" href="../../avanzado/helpers/">Helpers &amp; Utilities</a>
 </li>
 <li>
-<a class="dropdown-item" href="../../avanzado/hooks/">Hooks y eventos</a>
+<a class="dropdown-item" href="../../avanzado/hooks/">Hooks &amp; Events</a>
 </li>
 <li>
-<a class="dropdown-item" href="../../avanzado/autenticacion_integrada/">Autenticación</a>
+<a class="dropdown-item" href="../../avanzado/autenticacion_integrada/">Authentication</a>
 </li>
 <li>
 <a class="dropdown-item" href="../../avanzado/auditlog/">Audit Log</a>
@@ -91,21 +91,21 @@
 <a class="dropdown-item" href="../../avanzado/server_side_events/">Server Side Events</a>
 </li>
 <li>
-<a class="dropdown-item" href="../../avanzado/despliegue/">Despliegue</a>
+<a class="dropdown-item" href="../../avanzado/despliegue/">Deployment</a>
 </li>
 </ul>
 </li>
 <li class="nav-item dropdown">
-<a aria-expanded="false" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">Frontend y Reportes</a>
+<a aria-expanded="false" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">Frontend &amp; Reports</a>
 <ul class="dropdown-menu">
 <li>
-<a class="dropdown-item" href="../../frontend/personalizacion_ui/">Personalización UI</a>
+<a class="dropdown-item" href="../../frontend/personalizacion_ui/">UI Customization</a>
 </li>
 <li>
-<a class="dropdown-item" href="../../frontend/reportes_simples/">Reportes Simples</a>
+<a class="dropdown-item" href="../../frontend/reportes_simples/">Simple Reports</a>
 </li>
 <li>
-<a class="dropdown-item" href="../../frontend/funciones_javascript/">Funciones JavaScript</a>
+<a class="dropdown-item" href="../../frontend/funciones_javascript/">JavaScript Functions</a>
 </li>
 </ul>
 </li>
@@ -146,25 +146,21 @@
 </div>
 <div class="navbar-collapse collapse card bg-body-tertiary" id="toc-collapse">
 <ul class="nav flex-column">
-<li class="nav-item" data-bs-level="1"><a class="nav-link" href="#relacion-maestro-detalle-en-ragnos">📑 Relación Maestro-Detalle en Ragnos</a>
+<li class="nav-item" data-bs-level="1"><a class="nav-link" href="#master-detail-relationship-in-ragnos">📑 Master-Detail Relationship in Ragnos</a>
 <ul class="nav flex-column">
-<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#arquitectura-de-la-relacion">Arquitectura de la Relación</a>
-<ul class="nav flex-column">
-</ul>
-</li>
-<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#1-configurando-el-maestro-controlador-ordenes">1. Configurando el Maestro (Controlador Ordenes)</a>
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#relationship-architecture">Relationship Architecture</a>
 <ul class="nav flex-column">
 </ul>
 </li>
-<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#2-configurando-el-detalle-controlador-ordenesdetalles">2. Configurando el Detalle (Controlador Ordenesdetalles)</a>
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#1-configuring-the-master-orders-controller">1. Configuring the Master (Orders Controller)</a>
 <ul class="nav flex-column">
 </ul>
 </li>
-<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#hooks-de-javascript-personalizados-opcional">Hooks de javascript personalizados (Opcional)</a>
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#2-configuring-the-detail-orderdetails-controller">2. Configuring the Detail (OrderDetails Controller)</a>
 <ul class="nav flex-column">
 </ul>
 </li>
-<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#resumen-del-flujo-de-trabajo">Resumen del flujo de trabajo</a>
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#custom-javascript-hooks-optional">Custom JavaScript Hooks (Optional)</a>
 <ul class="nav flex-column">
 </ul>
 </li>
@@ -174,32 +170,32 @@
 </div>
 </div></div>
 <div class="col-md-9" role="main">
-<h1 id="relacion-maestro-detalle-en-ragnos">📑 Relación Maestro-Detalle en Ragnos</h1>
-<p>Esta guía explica cómo crear una pantalla donde tienes un registro principal (como una <strong>Orden de compra</strong>) y una lista de elementos relacionados (los <strong>Detalles</strong> o productos de esa orden).</p>
-<h2 id="arquitectura-de-la-relacion">Arquitectura de la Relación</h2>
+<h1 id="master-detail-relationship-in-ragnos">📑 Master-Detail Relationship in Ragnos</h1>
+<p>This guide explains how to create a screen where you have a main record (like a <strong>Purchase Order</strong>) and a list of related items (the <strong>Details</strong> or products of that order).</p>
+<h2 id="relationship-architecture">Relationship Architecture</h2>
 <div class="mermaid">graph TD
-    User["Usuario"] --&gt;|Abre Pantalla| Master["Controlador Maestro<br/>(Ordenes)"]
-    Master --&gt;|Renderiza| View["Vista Principal"]
-    View --&gt;|Contiene| Form["Formulario Maestro"]
+    User["User"] --&gt;|Opens Screen| Master["Master Controller<br/>(Orders)"]
+    Master --&gt;|Renders| View["Main View"]
+    View --&gt;|Contains| Form["Master Form"]
 
-    subgraph Vinculacion ["Lógica de Vinculación"]
+    subgraph Linkage ["Linkage Logic"]
         direction TB
-        Form --&gt;|"ID Orden"| Logic{"¿Existe Orden?"}
-        Logic -- NO --&gt; Info("Solo muestra Formulario")
-        Logic -- "SI (ID=100)" --&gt; LoadDetails["Carga Controlador Detalle"]
+        Form --&gt;|"Order ID"| Logic{"Order Exists?"}
+        Logic -- NO --&gt; Info("Only shows Form")
+        Logic -- "YES (ID=100)" --&gt; LoadDetails["Load Detail Controller"]
     end
 
-    LoadDetails --&gt;|"Inyecta ID=100 como $this-&gt;master"| Detail["Controlador Detalle<br/>(OrdenesDetalles)"]
+    LoadDetails --&gt;|"Injects ID=100 as $this-&gt;master"| Detail["Detail Controller<br/>(OrderDetails)"]
 
-    subgraph Detalle ["Zona del Detalle"]
+    subgraph Detail ["Detail Zone"]
         direction TB
-        Detail --&gt;|Aplica Filtro| Filter["WHERE orderNumber = 100"]
-        Filter --&gt;|Muestra| Grid["Grilla de Productos"]
-        Grid --&gt;|Nuevo Registro| NewLine["Formulario Detalle"]
-        NewLine --&gt;|Campo Oculto| Hidden["orderNumber = 100"]
+        Detail --&gt;|Apply Filter| Filter["WHERE orderNumber = 100"]
+        Filter --&gt;|Shows| Grid["Product Grid"]
+        Grid --&gt;|New Record| NewLine["Detail Form"]
+        NewLine --&gt;|Hidden Field| Hidden["orderNumber = 100"]
     end
 
-    %% Estilos Profesionales
+    %% Professional Styles
     classDef mainNode fill:#f9f,stroke:#333,stroke-width:2px;
     classDef detailNode fill:#bbf,stroke:#333,stroke-width:2px;
     classDef logicNode fill:#fff9c4,stroke:#fbc02d,stroke-width:2px;
@@ -208,76 +204,58 @@
     style Detail fill:#bbdefb,stroke:#0d47a1,stroke-width:2px
     style Hidden fill:#c8e6c9,stroke:#2e7d32,stroke-dasharray: 5 5
 </div>
-<p>La idea básica es tener dos controladores:</p>
+<p>The basic idea is to have two controllers:</p>
 <ol>
-<li><strong>El Maestro (Ordenes):</strong> Controla la información general (fecha, cliente, total).</li>
-<li><strong>El Detalle (OrdenesDetalles):</strong> Controla la lista de productos dentro de esa orden.</li>
+<li><strong>The Master (Orders):</strong> Controls general information (date, customer, total).</li>
+<li><strong>The Detail (OrderDetails):</strong> Controls the list of products within that order.</li>
 </ol>
 <hr/>
-<h2 id="1-configurando-el-maestro-controlador-ordenes">1. Configurando el Maestro (Controlador <code>Ordenes</code>)</h2>
-<p>Este es el "padre" de la relación. Aquí definimos la cabecera de la factura.</p>
+<h2 id="1-configuring-the-master-orders-controller">1. Configuring the Master (<code>Orders</code> Controller)</h2>
+<p>This is the "parent" of the relationship. Here we define the invoice header.</p>
 <ul>
-<li><strong>Configuración básica:</strong> Le decimos a Ragnos que use la tabla <code>orders</code> y que la clave principal es <code>orderNumber</code>.</li>
-<li><strong>Campos:</strong> Definimos los campos normales como fecha (<code>orderDate</code>), estado (<code>status</code>) y cliente (<code>customerNumber</code>).</li>
-<li><strong>Campo Total (Calculado):</strong> Para mostrar el total de la orden sin guardarlo manualmente, usamos una pequeña consulta SQL dentro de la configuración del campo. Esta consulta suma <code>cantidad * precio</code> de la tabla de detalles.</li>
-<li><strong>Activar el modo detalle:</strong>
-  Hay una línea clave que debes agregar en tu controlador maestro para avisar que tendrá "hijos":
-  <div class="highlight"><pre><span></span><code><a href="#__codelineno-0-1" id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="x">$this-&gt;setDetailsController('Tienda\Ordenesdetalles');</span>
+<li><strong>Basic Configuration:</strong> We tell Ragnos to use the <code>orders</code> table and that the primary key is <code>orderNumber</code>.</li>
+<li><strong>Fields:</strong> We define normal fields like date (<code>orderDate</code>), status (<code>status</code>), and customer (<code>customerNumber</code>).</li>
+<li><strong>Total Field (Calculated):</strong> To show the order total without saving it manually, we use a small SQL query within the field configuration. This query sums <code>quantity * price</code> from the details table.</li>
+<li><strong>Activate Detail Mode:</strong>
+  There is a key line you must add to your master controller to warn that it will have "children":
+  <div class="highlight"><pre><span></span><code><a href="#__codelineno-0-1" id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="x">$this-&gt;setDetailsController('Store\OrderDetails');</span>
 </code></pre></div>
-  Esto le dice a Ragnos que el controlador <code>Ordenesdetalles</code> manejará los detalles relacionados con cada orden.
-  La relación se basa en que el campo <code>orderNumber</code> en ambos controladores es el mismo, y este es la llave primaria en el maestro.</li>
+  This tells Ragnos that the <code>OrderDetails</code> controller will handle the details related to each order.
+  The relationship is based on the <code>orderNumber</code> field in both controllers being the same, and this is the primary key in the master.</li>
 </ul>
-<h2 id="2-configurando-el-detalle-controlador-ordenesdetalles">2. Configurando el Detalle (Controlador <code>Ordenesdetalles</code>)</h2>
-<p>Este es el "hijo". Controla cada línea de producto.</p>
+<h2 id="2-configuring-the-detail-orderdetails-controller">2. Configuring the Detail (<code>OrderDetails</code> Controller)</h2>
+<p>This is the "child". It controls each product line.</p>
 <ul>
-<li><strong>El truco del campo oculto:</strong>
-  Necesitamos que cada producto sepa a qué orden pertenece. Para eso, en el campo <code>orderNumber</code> del detalle hacemos dos cosas:</li>
-<li>Lo ponemos como <code>hidden</code> (oculto) para que el usuario no lo toque.</li>
-<li>Le asignamos el valor por defecto <code>$this-&gt;master</code>.
-     <em>¿Qué hace esto?</em> Cuando creas un detalle desde la orden #100, Ragnos automáticamente rellena este campo con el número 100.</li>
-<li><strong>Filtrar los datos:</strong>
-  No queremos ver <em>todos</em> los productos de <em>todas</em> las órdenes. En el método <code>_filters()</code>, agregamos una regla para que solo se carguen los productos que coincidan con el ID del maestro actual (<code>$this-&gt;master</code>).</li>
+<li><strong>The Hidden Field Trick:</strong>
+  We need each product to know which order it belongs to. For that, in the <code>orderNumber</code> field of the detail, we do two things:</li>
+<li>We set it as <code>hidden</code> so the user doesn't touch it.</li>
+<li>We assign the default value <code>$this-&gt;master</code>.
+     <em>What does this do?</em> When you create a detail from order #100, Ragnos automatically fills this field with the number 100.</li>
+<li><strong>Filter Data:</strong>
+  We don't want to see <em>all</em> products from <em>all</em> orders. In the <code>_filters()</code> method, we add a rule so that only products matching the current master ID (<code>$this-&gt;master</code>) are loaded.</li>
 </ul>
 <div class="highlight"><pre><span></span><code><a href="#__codelineno-1-1" id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="x">function _filters()</span>
 <a href="#__codelineno-1-2" id="__codelineno-1-2" name="__codelineno-1-2"></a><span class="x">{</span>
 <a href="#__codelineno-1-3" id="__codelineno-1-3" name="__codelineno-1-3"></a><span class="x">    $this-&gt;modelo-&gt;builder()-&gt;where('orderNumber', $this-&gt;master);</span>
 <a href="#__codelineno-1-4" id="__codelineno-1-4" name="__codelineno-1-4"></a><span class="x">}</span>
 </code></pre></div>
-<p>En este fragmento, <code>$this-&gt;modelo-&gt;builder()</code> permite interactuar directamente con la consulta SQL que generará la grilla. La variable <code>$this-&gt;master</code> es inyectada automáticamente por el framework cuando detecta que este controlador se está ejecutando como "hijo", y contiene el ID del registro que se está visualizando en el maestro (en este caso, el número de orden).</p>
+<p>In this snippet, <code>$this-&gt;modelo-&gt;builder()</code> allows you to interact directly with the SQL query that the grid will generate. The <code>$this-&gt;master</code> variable is automatically injected by the framework when it detects that this controller is running as a "child", and contains the ID of the record being viewed in the master (in this case, the order number).</p>
 <ul>
-<li><strong>Actualizar cambios:</strong>
-  Usamos funciones especiales (llamadas <em>hooks</em>) como <code>_afterInsert</code> o <code>_afterUpdate</code> para limpiar la memoria caché. Esto asegura que si agregas un producto, el total de la orden principal se recalcule correctamente.
-  👉 <strong><a href="../../avanzado/hooks/">Ver Guía de Hooks</a></strong></li>
+<li><strong>Update Changes:</strong>
+  We use special functions (called <em>hooks</em>) like <code>_afterInsert</code> or <code>_afterUpdate</code> to clear the cache. This ensures that if you add a product, the main order total is recalculated correctly.
+  👉 <strong><a href="../../avanzado/hooks/">See Hooks Guide</a></strong></li>
 </ul>
-<h2 id="hooks-de-javascript-personalizados-opcional">Hooks de javascript personalizados (Opcional)</h2>
-<p>En el archivo custom.js se ha agregado la siguiente función:</p>
-<div class="highlight"><pre><span></span><code><a href="#__codelineno-2-1" id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="c1">// con cada cambio en la tabla de detalles de ordenes</span>
-<a href="#__codelineno-2-2" id="__codelineno-2-2" name="__codelineno-2-2"></a><span class="c1">// recalcula el total de la orden</span>
-<a href="#__codelineno-2-3" id="__codelineno-2-3" name="__codelineno-2-3"></a><span class="kd">function</span><span class="w"> </span><span class="nx">_OrdenesdetallesOnChange</span><span class="p">(</span><span class="nx">tabla</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a href="#__codelineno-2-4" id="__codelineno-2-4" name="__codelineno-2-4"></a><span class="w">  </span><span class="kd">let</span><span class="w"> </span><span class="nx">orden</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">$</span><span class="p">(</span><span class="s2">"input[name='orderNumber']"</span><span class="p">).</span><span class="nx">val</span><span class="p">();</span>
-<a href="#__codelineno-2-5" id="__codelineno-2-5" name="__codelineno-2-5"></a><span class="w">  </span><span class="nx">getObject</span><span class="p">(</span><span class="s2">"tienda/ordenes/calculatotal"</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">orden</span><span class="o">:</span><span class="w"> </span><span class="nx">orden</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="p">(</span><span class="nx">data</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<h2 id="custom-javascript-hooks-optional">Custom JavaScript Hooks (Optional)</h2>
+<p>The following function has been added to the custom.js file:</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-2-1" id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="c1">// with every change in the order details table</span>
+<a href="#__codelineno-2-2" id="__codelineno-2-2" name="__codelineno-2-2"></a><span class="c1">// recalculate the order total</span>
+<a href="#__codelineno-2-3" id="__codelineno-2-3" name="__codelineno-2-3"></a><span class="kd">function</span><span class="w"> </span><span class="nx">_OrderDetailsOnChange</span><span class="p">(</span><span class="nx">table</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a href="#__codelineno-2-4" id="__codelineno-2-4" name="__codelineno-2-4"></a><span class="w">  </span><span class="kd">let</span><span class="w"> </span><span class="nx">order</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">$</span><span class="p">(</span><span class="s2">"input[name='orderNumber']"</span><span class="p">).</span><span class="nx">val</span><span class="p">();</span>
+<a href="#__codelineno-2-5" id="__codelineno-2-5" name="__codelineno-2-5"></a><span class="w">  </span><span class="nx">getObject</span><span class="p">(</span><span class="s2">"store/orders/calculatetotal"</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">order</span><span class="o">:</span><span class="w"> </span><span class="nx">order</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="p">(</span><span class="nx">data</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <a href="#__codelineno-2-6" id="__codelineno-2-6" name="__codelineno-2-6"></a><span class="w">    </span><span class="nx">$</span><span class="p">(</span><span class="s1">'input[name="total"]'</span><span class="p">).</span><span class="nx">val</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">total</span><span class="p">);</span>
 <a href="#__codelineno-2-7" id="__codelineno-2-7" name="__codelineno-2-7"></a><span class="w">  </span><span class="p">});</span>
 <a href="#__codelineno-2-8" id="__codelineno-2-8" name="__codelineno-2-8"></a><span class="p">}</span>
-</code></pre></div>
-<p>Esta función se ejecuta cada vez que hay un cambio en la tabla de detalles de órdenes. Lo que hace es:</p>
-<ol>
-<li>Obtiene el número de orden actual desde el campo oculto.</li>
-<li>Llama a un endpoint (<code>tienda/ordenes/calculatotal</code>) para recalcular el total de la orden.</li>
-<li>Actualiza el campo <code>total</code> en la pantalla con el nuevo valor.</li>
-</ol>
-<p>de este modo, el total siempre estará actualizado, cada que se agregue, modifique o elimine un producto en la orden.</p>
-<p>Esta función se enlaza automáticamente gracias a la convención de nombres: <code>_NombreDelControladorOnChange</code>.</p>
-<h2 id="resumen-del-flujo-de-trabajo">Resumen del flujo de trabajo</h2>
-<ol>
-<li><strong>Abres una Orden:</strong> Ves los datos generales (Maestro).</li>
-<li><strong>El sistema verifica:</strong> ¿Esta orden ya existe?</li>
-<li><strong>Sí:</strong> Carga automáticamente la tabla de productos relacionados al final de la pantalla.</li>
-<li><strong>No:</strong> Oculta la sección de productos hasta que guardes la orden por primera vez.</li>
-<li><strong>Agregas un producto:</strong> Al crear una línea en la tabla de detalles, el sistema le pega invisiblemente el número de la orden padre.</li>
-<li><strong>Guardas:</strong> Al guardar el detalle, el sistema actualiza los totales y todo se mantiene sincronizado.</li>
-</ol>
-<p>¡Y listo! Con estos pasos logras que dos tablas funcionen como una sola pantalla integrada.</p></div>
+</code></pre></div></div>
 </div>
 </div>
 <footer class="col-md-12">
