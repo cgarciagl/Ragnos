@@ -38,3 +38,10 @@ Para usuarios intermedios. Profundiza en el [Modo API](avanzado/guia_modo_api.md
 
 **🎨 Frontend y UI**
 Personalización de la interfaz. Aprende a modificar [Menús o Temas](frontend/personalizacion_ui.md) y generar [Reportes](frontend/reportes_simples.md).
+
+!!! info "Demo en vivo"
+
+    Puedes probar la demo en vivo en [https://ragnos.yupii.org/](https://ragnos.yupii.org/).
+
+    *   **Usuario:** admin
+    *   **Contraseña:** ok

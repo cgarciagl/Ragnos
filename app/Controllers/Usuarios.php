@@ -60,7 +60,10 @@ class Usuarios extends RDatasetController
 
     public function _beforeUpdate(&$userData)
     {
-        if (fieldHasChanged('usu_pword')) {
+        $id = oldValue('usu_id');
+        if ($id == 1) {
+            raise('No puede modificar al superusuario...');
+        } elseif (fieldHasChanged('usu_pword')) {
             $userData['usu_pword'] = md5(strtoupper($userData['usu_pword']));
         }
     }

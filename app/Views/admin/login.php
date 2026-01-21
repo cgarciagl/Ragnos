@@ -50,6 +50,11 @@
                     <button type="submit" class="btn btn-primary">Ingresar</button>
                 </div>
             </form>
+
+            <div class="mt-3 text-center">
+                <small class="text-muted">Use <strong>admin</strong> / <strong>ok</strong> para ingresar al demo</small>
+            </div>
+
         </div>
     </div>
 </div>
@@ -59,85 +64,115 @@
     $(function () {
         $("input[name='usuario']").focus();
     });
-    const numParticles = 50; // Número de partículas
+    document.addEventListener("DOMContentLoaded", () => {
+        let canvas = document.getElementById("particles-canvas");
+        if (!canvas) {
+            canvas = document.createElement("canvas");
+            canvas.id = "particles-canvas";
+            canvas.style.position = "fixed";
+            canvas.style.top = "0";
+            canvas.style.left = "0";
+            canvas.style.width = "100%";
+            canvas.style.height = "100%";
+            canvas.style.zIndex = "0";
+            canvas.style.pointerEvents = "none";
+            document.body.appendChild(canvas);
+        }
 
-    function createParticle() {
-        const particle = document.createElement("div");
-        particle.classList.add("particle");
+        const ctx = canvas.getContext("2d");
+        let particlesArray;
 
-        // Posición inicial aleatoria
-        particle.style.top = `${Math.random() * 100}vh`;
-        particle.style.left = `${Math.random() * 100}vw`;
+        const resizeCanvas = () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        };
 
-        // Movimiento aleatorio
-        particle.style.setProperty("--x", `${(Math.random() - 0.5) * 200}px`);
-        particle.style.setProperty("--y", `${(Math.random() - 0.5) * 200}px`);
+        window.addEventListener("resize", () => {
+            resizeCanvas();
+            initParticles();
+        });
+        resizeCanvas();
 
-        // Tamaño aleatorio
-        const size = Math.random() * 10 + 5;
-        particle.style.width = `${size}px`;
-        particle.style.height = `${size}px`;
+        const getFireColor = () => {
+            const colors = [
+                "255, 165, 0", // Orange
+                "255, 69, 0", // Red-Orange
+                "255, 215, 0", // Gold
+                "234, 88, 12", // Brand Orange
+            ];
+            return colors[Math.floor(Math.random() * colors.length)];
+        };
 
-        document.body.appendChild(particle);
+        class Particle {
+            constructor(x, y, dx, dy, size, alpha, color) {
+                this.x = x;
+                this.y = y;
+                this.dx = dx;
+                this.dy = dy;
+                this.size = size;
+                this.alpha = alpha;
+                this.color = color;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+                ctx.fillStyle = `rgba(${this.color}, ${this.alpha})`;
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = `rgba(${this.color}, 0.8)`;
+                ctx.fill();
+                ctx.shadowBlur = 0;
+            }
+            update() {
+                if (this.x > canvas.width) this.x = 0;
+                if (this.x < 0) this.x = canvas.width;
+                if (this.y < -10) this.y = canvas.height + 10;
 
-        // Eliminar y recrear después de la animación
-        setTimeout(() => {
-            particle.remove();
-            createParticle();
-        }, 10000);
-    }
+                this.x += this.dx;
+                this.y += this.dy;
 
-    // Crear las partículas iniciales
-    for (let i = 0; i < numParticles; i++) {
-        createParticle();
-    }
+                if (Math.random() > 0.95) {
+                    this.alpha = Math.random() * 0.5 + 0.5;
+                }
+
+                this.draw();
+            }
+        }
+
+        function initParticles() {
+            particlesArray = [];
+            let numberOfParticles = (canvas.height * canvas.width) / 15000;
+            for (let i = 0; i < numberOfParticles; i++) {
+                let size = Math.random() * 3 + 1;
+                let x = Math.random() * canvas.width;
+                let y = Math.random() * canvas.height;
+                let dx = (Math.random() - 0.5) * 1;
+                let dy = -Math.random() * 1.5 - 0.5;
+                let alpha = Math.random() * 0.6 + 0.4;
+                let color = getFireColor();
+                particlesArray.push(new Particle(x, y, dx, dy, size, alpha, color));
+            }
+        }
+
+        function animateParticles() {
+            requestAnimationFrame(animateParticles);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particlesArray.forEach((p) => p.update());
+        }
+
+        initParticles();
+        animateParticles();
+
+        $('body').removeClass('bg-body-secondary');
+    });
 </script>
 
 <style>
     body {
-        background-color: #1e1e2f;
-        /* Color base oscuro elegante */
-        background-image:
-            linear-gradient(45deg, rgba(255, 255, 255, 0.3) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.3) 75%, rgba(255, 255, 255, 0.3)),
-            linear-gradient(-45deg, rgba(255, 255, 255, 0.3) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.3) 75%, rgba(255, 255, 255, 0.3));
-        background-size: 150px 150px;
-        /* Tamaño del patrón */
-        background-attachment: fixed;
+        background-color: #05060a !important;
         color: #ffffff;
-        /* Texto legible */
-        font-family: 'Poppins', sans-serif;
-
-        overflow: hidden;
-        position: relative;
-        width: 100vw;
-        height: 100vh;
-    }
-
-    .particle {
-        position: absolute;
-        width: 8px;
-        height: 8px;
-        background-color: orangered;
-        /* Azul brillante */
-        border-radius: 50%;
-        box-shadow: 0 0 8px yellow;
-        animation: moveParticle 10s linear infinite;
-    }
-
-    @keyframes moveParticle {
-        0% {
-            transform: translate(0, 0);
-            opacity: 0.5;
-        }
-
-        50% {
-            opacity: 1;
-        }
-
-        100% {
-            transform: translate(var(--x), var(--y));
-            opacity: 0.2;
-        }
+        overflow-x: hidden;
+        line-height: 1.6;
+        min-height: 100vh;
     }
 
     .login-box .card {

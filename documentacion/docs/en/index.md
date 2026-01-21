@@ -38,3 +38,10 @@ For intermediate users. Dive into [API Mode](avanzado/guia_modo_api.md), [Hooks]
 
 **🎨 Frontend and UI**
 Interface customization. Learn to modify [Menus or Themes](frontend/personalizacion_ui.md) and generate [Reports](frontend/reportes_simples.md).
+
+!!! info "Live Demo"
+
+    You can try the live demo at [https://ragnos.yupii.org/](https://ragnos.yupii.org/).
+
+    *   **User:** admin
+    *   **Password:** ok
