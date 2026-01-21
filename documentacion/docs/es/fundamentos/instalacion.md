@@ -72,7 +72,11 @@ Asegúrate de que la carpeta `writable/` y sus subcarpetas tengan permisos de es
 
 ### 5. Ejecutar
 
-Accede a tu navegador en la URL configurada (ej. `http://localhost/mi-proyecto/public` o simplemente `http://mi-proyecto.test` si usas Laragon).
+Accede a tu navegador en la URL configurada (ej. `http://localhost/mi-proyecto/content` o simplemente `http://mi-proyecto.test` si usas Laragon).
+
+!!! note "Cambio de carpeta pública"
+
+    En el código fuente, la carpeta `public` ha sido renombrada a `content`. Sin embargo, no hay problema en cambiarle el nombre al que mejor convenga para tu servidor.
 
 Deberías ver la pantalla de inicio de sesión.
 
@@ -81,4 +85,4 @@ Deberías ver la pantalla de inicio de sesión.
 Para acceder al sistema demo por primera vez, utiliza las siguientes credenciales:
 
 - **Usuario:** `admin`
-- **Contraseña:** `ok`
+- **Contraseña:** `admin`

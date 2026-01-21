@@ -44,4 +44,4 @@ Interface customization. Learn to modify [Menus or Themes](frontend/personalizac
     You can try the live demo at [https://ragnos.yupii.org/](https://ragnos.yupii.org/).
 
     *   **User:** admin
-    *   **Password:** ok
+    *   **Password:** admin

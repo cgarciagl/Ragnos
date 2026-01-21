@@ -44,4 +44,4 @@ Personalización de la interfaz. Aprende a modificar [Menús o Temas](frontend/p
     Puedes probar la demo en vivo en [https://ragnos.yupii.org/](https://ragnos.yupii.org/).
 
     *   **Usuario:** admin
-    *   **Contraseña:** ok
+    *   **Contraseña:** admin

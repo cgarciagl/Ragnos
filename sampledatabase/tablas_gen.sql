@@ -40,10 +40,10 @@ CREATE TABLE `gen_usuarios`  (
 -- ----------------------------
 -- Records of gen_usuarios
 -- ----------------------------
-INSERT INTO `gen_usuarios` VALUES (1, 'ADMIN', 'e0aa021e21dddbd6d8cecec71e9cf564', 'ADMINISTRADOR', 'S', 1, '36fc59a445906c482674e587434c766b2b912c045ea6f4e76e5eb14509e34913');
-INSERT INTO `gen_usuarios` VALUES (4, 'CGARCIA', 'e0aa021e21dddbd6d8cecec71e9cf564', 'CARLOS GARCIA', 'S', 2, NULL);
+INSERT INTO `gen_usuarios` VALUES (1, 'ADMIN', '73acd9a5972130b75066c82595a1fae3', 'ADMINISTRADOR', 'S', 1, '36fc59a445906c482674e587434c766b2b912c045ea6f4e76e5eb14509e34913');
+INSERT INTO `gen_usuarios` VALUES (4, 'CGARCIA', '73acd9a5972130b75066c82595a1fae3', 'CARLOS GARCIA', 'S', 2, NULL);
 INSERT INTO `gen_usuarios` VALUES (5, 'GUEST', '202cb962ac59075b964b07152d234b70', 'GUEST', 'N', 3, NULL);
-INSERT INTO `gen_usuarios` VALUES (7, 'NUEVO', 'e0aa021e21dddbd6d8cecec71e9cf564', 'NUEVO', 'N', 3, NULL);
+INSERT INTO `gen_usuarios` VALUES (7, 'NUEVO', '73acd9a5972130b75066c82595a1fae3', 'NUEVO', 'N', 3, NULL);
 INSERT INTO `gen_usuarios` VALUES (8, 'JAHIR', 'd797c923b65fc09a009aae45aeb2c726', 'JAHIR CASTILLO', 'S', 1, '12345');
 
 -- ----------------------------

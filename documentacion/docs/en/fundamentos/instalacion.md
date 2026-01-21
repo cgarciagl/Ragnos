@@ -72,7 +72,11 @@ Ensure that the `writable/` folder and its subfolders have write permissions by 
 
 ### 5. Run
 
-Access your browser at the configured URL (e.g., `http://localhost/my-project/public` or simply `http://my-project.test` if using Laragon).
+Access your browser at the configured URL (e.g., `http://localhost/my-project/content` or simply `http://my-project.test` if using Laragon).
+
+!!! note "Public folder change"
+
+    In the source code, the `public` folder has been renamed to `content`. However, it is fine to rename it to whatever suits your server best.
 
 You should see the login screen.
 
@@ -81,4 +85,4 @@ You should see the login screen.
 To access the demo system for the first time, use the following credentials:
 
 - **User:** `admin`
-- **Password:** `ok`
+- **Password:** `admin`

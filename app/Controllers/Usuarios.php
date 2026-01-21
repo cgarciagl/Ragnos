@@ -26,7 +26,7 @@ class Usuarios extends RDatasetController
                 'label'   => 'Password',
                 'rules'   => 'required',
                 'type'    => 'password',
-                'default' => 'ok',
+                'default' => 'pword123',
             ]
         );
 

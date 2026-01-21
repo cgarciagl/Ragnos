@@ -52,7 +52,8 @@
             </form>
 
             <div class="mt-3 text-center">
-                <small class="text-muted">Use <strong>admin</strong> / <strong>ok</strong> para ingresar al demo</small>
+                <small class="text-muted">Use <strong>admin</strong> / <strong>admin</strong> para ingresar al
+                    demo</small>
             </div>
 
         </div>
