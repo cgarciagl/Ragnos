@@ -41,7 +41,4 @@ Interface customization. Learn to modify [Menus or Themes](frontend/personalizac
 
 !!! info "Live Demo"
 
-    You can try the live demo at [https://ragnos.yupii.org/](https://ragnos.yupii.org/).
-
-    *   **User:** admin
-    *   **Password:** admin
+    To see Ragnos in action with the **Classicmodels** sample database, visit the [Demo Database](fundamentos/demo_database.md) section where you will find access credentials and a detailed explanation of the data.

@@ -41,7 +41,4 @@ Personalización de la interfaz. Aprende a modificar [Menús o Temas](frontend/p
 
 !!! info "Demo en vivo"
 
-    Puedes probar la demo en vivo en [https://ragnos.yupii.org/](https://ragnos.yupii.org/).
-
-    *   **Usuario:** admin
-    *   **Contraseña:** admin
+    Para ver Ragnos en acción con la base de datos de ejemplo **Classicmodels**, visita la sección [Base de Datos Demo](fundamentos/base_de_datos_demo.md) donde encontrarás credenciales de acceso y una explicación detallada de los datos.

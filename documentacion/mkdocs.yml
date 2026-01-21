@@ -35,6 +35,7 @@ plugins:
             - Fundamentos:
                 - Instalación: fundamentos/instalacion.md
                 - Primeros Pasos: fundamentos/primeros_pasos.md
+                - Base de Datos Demo: fundamentos/base_de_datos_demo.md
                 - Configuración: fundamentos/configuracion.md
                 - Generador CLI: fundamentos/plantilla.md
             - Datasets y Modelos:
@@ -63,6 +64,7 @@ plugins:
             - Fundamentals:
                 - Installation: fundamentos/instalacion.md
                 - Getting Started: fundamentos/primeros_pasos.md
+                - Demo Database: fundamentos/demo_database.md
                 - Configuration: fundamentos/configuracion.md
                 - CLI Generator: fundamentos/plantilla.md
             - Datasets & Models:

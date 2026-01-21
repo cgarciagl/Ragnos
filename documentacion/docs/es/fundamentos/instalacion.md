@@ -65,6 +65,7 @@ Ragnos requiere ciertas tablas base para funcionar (usuarios, sesiones, permisos
 2. Importa los archivos SQL ubicados en la carpeta `sampledatabase/`:
    - Ejecuta primero `ragnos_mariadb.sql` (o el dump principal que contenga la estructura base).
    - Ejecuta `ci_sessions.sql` para la tabla de sesiones.
+   - (Opcional) Ejecuta `mysqlsampledatabase.sql` si deseas cargar los datos de ejemplo **Classicmodels**. Consulta [Base de Datos Demo](base_de_datos_demo.md) para más detalles.
 
 ### 4. Verificar Permisos
 
@@ -80,9 +81,6 @@ Accede a tu navegador en la URL configurada (ej. `http://localhost/mi-proyecto/c
 
 Deberías ver la pantalla de inicio de sesión.
 
-### 6. Credenciales de Acceso (Demo)
+### 6. Acceso y Datos Demo
 
-Para acceder al sistema demo por primera vez, utiliza las siguientes credenciales:
-
-- **Usuario:** `admin`
-- **Contraseña:** `admin`
+Para obtener las credenciales de acceso predeterminadas y conocer más sobre los datos de ejemplo incluidos (**Classicmodels**), consulta la sección [Base de Datos Demo](base_de_datos_demo.md).
