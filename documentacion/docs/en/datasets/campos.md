@@ -38,6 +38,20 @@ $this->addField('fieldName', [
 
     [Consult all available rules in the official CodeIgniter 4 documentation](https://codeigniter.com/user_guide/libraries/validation.html#available-rules)
 
+!!! note "Simplified `is_unique` Validation"
+
+    Unlike CodeIgniter 4, where `is_unique` usually requires parameters like `is_unique[table.field]`, Ragnos simplifies its usage: **you only need to specify the keyword `is_unique`**.
+
+    The framework automatically detects which table and field are being operated on (using the definitions in `setTableName` and the field name in `addField`) to build the verification query. Additionally, it correctly handles exceptions when editing a record (auto-detecting the primary key defined with `setIdField` to ignore the current record).
+
+    **Common Use Cases:**
+    It is ideal for fields that must be unique across the system, such as:
+
+    - **Email addresses** in a user registry.
+    - **Usernames** or aliases.
+    - **Product codes** (SKU) or barcodes.
+    - **National ID** numbers.
+
 ---
 
 ## 2. Text Field (string)

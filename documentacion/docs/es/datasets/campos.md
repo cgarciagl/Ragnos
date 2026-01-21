@@ -38,6 +38,20 @@ $this->addField('nombreCampo', [
 
     [Consulta todas las reglas disponibles en la documentación oficial de CodeIgniter 4](https://codeigniter.com/user_guide/libraries/validation.html#available-rules)
 
+!!! note "Validación `is_unique` Simplificada"
+
+    A diferencia de CodeIgniter 4, donde `is_unique` suele requerir parámetros como `is_unique[tabla.campo]`, en Ragnos se ha simplificado su uso: **solo necesitas indicar la palabra clave `is_unique`**.
+
+    El framework detecta automáticamente sobre qué tabla y campo se está operando (usando lo definido en `setTableName` y el nombre del campo en `addField`) para construir la consulta de verificación. Además, maneja correctamente las excepciones al editar un registro (autodetectando la clave primaria definida con `setIdField` para ignorar el registro actual).
+
+    **Casos de uso comunes:**
+    Es ideal para campos que deben ser únicos en todo el sistema, como:
+
+    - Direcciones de **correo electrónico** en un registro de usuarios.
+    - **Nombres de usuario** o alias.
+    - **Códigos de producto** (SKU) o códigos de barras.
+    - **DNI** o documentos de identidad.
+
 ---
 
 ## 2. Campo de texto (string)
@@ -161,7 +175,6 @@ $this->setIdField('customerNumber');
 - Breve descripción: un dropdown (enum) presenta un conjunto cerrado de opciones (clave => etiqueta). Se almacena la clave seleccionada en la base de datos; la etiqueta se usa solo para la interfaz.
 
 - Configuración típica:
-
   - type: "dropdown"
   - options: array asociativo [valor => etiqueta]
   - default: clave por defecto
@@ -202,12 +215,10 @@ $this->addField('categoryId', [
   'options' => ['' => '(Seleccione)'] + $options
 
 - Validación y seguridad:
-
   - Use in_list para evitar valores no permitidos.
   - Si las opciones son dinámicas, regenere la lista en cada carga de formulario para que la in_list coincida.
 
 - UX y performance:
-
   - Dropdown para <~20-30 opciones.
   - Para relaciones con muchas filas, usar addSearch o un componente tipo autocompletar.
   - Si necesita seleccionar múltiples valores, prefiera un componente multiselect (o un campo tipo relación); no use dropdown simple.
