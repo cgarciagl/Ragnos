@@ -295,6 +295,19 @@ Cada campo es una <strong>descripción declarativa</strong> de cómo un atributo
 <p>Ragnos adopta el potente motor de validación de CodeIgniter 4. Puedes usar reglas como <code>required</code>, <code>is_unique</code>, <code>min_length</code>, <code>valid_email</code>, etc.</p>
 <p><a href="https://codeigniter.com/user_guide/libraries/validation.html#available-rules">Consulta todas las reglas disponibles en la documentación oficial de CodeIgniter 4</a></p>
 </div>
+<div class="admonition note">
+<p class="admonition-title">Validación <code>is_unique</code> Simplificada</p>
+<p>A diferencia de CodeIgniter 4, donde <code>is_unique</code> suele requerir parámetros como <code>is_unique[tabla.campo]</code>, en Ragnos se ha simplificado su uso: <strong>solo necesitas indicar la palabra clave <code>is_unique</code></strong>.</p>
+<p>El framework detecta automáticamente sobre qué tabla y campo se está operando (usando lo definido en <code>setTableName</code> y el nombre del campo en <code>addField</code>) para construir la consulta de verificación. Además, maneja correctamente las excepciones al editar un registro (autodetectando la clave primaria definida con <code>setIdField</code> para ignorar el registro actual).</p>
+<p><strong>Casos de uso comunes:</strong>
+Es ideal para campos que deben ser únicos en todo el sistema, como:</p>
+<ul>
+<li>Direcciones de <strong>correo electrónico</strong> en un registro de usuarios.</li>
+<li><strong>Nombres de usuario</strong> o alias.</li>
+<li><strong>Códigos de producto</strong> (SKU) o códigos de barras.</li>
+<li><strong>DNI</strong> o documentos de identidad.</li>
+</ul>
+</div>
 <hr />
 <h2 id="2-campo-de-texto-string">2. Campo de texto (string)</h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="x">$this-&gt;addField(&#39;customerName&#39;, [</span>
@@ -399,9 +412,7 @@ Cada campo es una <strong>descripción declarativa</strong> de cómo un atributo
 <li>
 <p>Configuración típica:</p>
 </li>
-<li>
-<p>type: "dropdown"</p>
-</li>
+<li>type: "dropdown"</li>
 <li>options: array asociativo [valor =&gt; etiqueta]</li>
 <li>default: clave por defecto</li>
 <li>rules: validar con reglas CI4 (ej. required, in_list)</li>
@@ -445,18 +456,14 @@ Cada campo es una <strong>descripción declarativa</strong> de cómo un atributo
 <li>
 <p>Validación y seguridad:</p>
 </li>
-<li>
-<p>Use in_list para evitar valores no permitidos.</p>
-</li>
+<li>Use in_list para evitar valores no permitidos.</li>
 <li>
 <p>Si las opciones son dinámicas, regenere la lista en cada carga de formulario para que la in_list coincida.</p>
 </li>
 <li>
 <p>UX y performance:</p>
 </li>
-<li>
-<p>Dropdown para &lt;~20-30 opciones.</p>
-</li>
+<li>Dropdown para &lt;~20-30 opciones.</li>
 <li>Para relaciones con muchas filas, usar addSearch o un componente tipo autocompletar.</li>
 <li>
 <p>Si necesita seleccionar múltiples valores, prefiera un componente multiselect (o un campo tipo relación); no use dropdown simple.</p>

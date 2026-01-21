@@ -271,6 +271,19 @@ Each field is a <strong>declarative description</strong> of how a domain attribu
 <p>Ragnos adopts the powerful CodeIgniter 4 validation engine. You can use rules such as <code>required</code>, <code>is_unique</code>, <code>min_length</code>, <code>valid_email</code>, etc.</p>
 <p><a href="https://codeigniter.com/user_guide/libraries/validation.html#available-rules">Consult all available rules in the official CodeIgniter 4 documentation</a></p>
 </div>
+<div class="admonition note">
+<p class="admonition-title">Simplified <code>is_unique</code> Validation</p>
+<p>Unlike CodeIgniter 4, where <code>is_unique</code> usually requires parameters like <code>is_unique[table.field]</code>, Ragnos simplifies its usage: <strong>you only need to specify the keyword <code>is_unique</code></strong>.</p>
+<p>The framework automatically detects which table and field are being operated on (using the definitions in <code>setTableName</code> and the field name in <code>addField</code>) to build the verification query. Additionally, it correctly handles exceptions when editing a record (auto-detecting the primary key defined with <code>setIdField</code> to ignore the current record).</p>
+<p><strong>Common Use Cases:</strong>
+It is ideal for fields that must be unique across the system, such as:</p>
+<ul>
+<li><strong>Email addresses</strong> in a user registry.</li>
+<li><strong>Usernames</strong> or aliases.</li>
+<li><strong>Product codes</strong> (SKU) or barcodes.</li>
+<li><strong>National ID</strong> numbers.</li>
+</ul>
+</div>
 <hr />
 <h2 id="2-text-field-string">2. Text Field (string)</h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="x">$this-&gt;addField(&#39;customerName&#39;, [</span>
