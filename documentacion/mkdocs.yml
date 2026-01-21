@@ -54,7 +54,7 @@ plugins:
                 - Personalización UI: frontend/personalizacion_ui.md
                 - Reportes Simples: frontend/reportes_simples.md
                 - Funciones JavaScript: frontend/funciones_javascript.md
-            - "🏠 Sitio web": "https://ragnos.dev"
+            - "🏠 Sitio web": "https://ragnos.build"
         - locale: en
           name: English
           build: true
@@ -82,7 +82,7 @@ plugins:
                 - UI Customization: frontend/personalizacion_ui.md
                 - Simple Reports: frontend/reportes_simples.md
                 - JavaScript Functions: frontend/funciones_javascript.md
-            - "🏠 Website": "https://ragnos.dev"
+            - "🏠 Website": "https://ragnos.build"
 
 markdown_extensions:
   - admonition
