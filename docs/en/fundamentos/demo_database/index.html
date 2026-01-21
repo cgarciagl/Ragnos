@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+
+<html data-bs-theme="light" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://cgarciagl.github.io/Ragnos/docs/en/fundamentos/demo_database/" rel="canonical"/>
+<link href="../../../img/favicon.ico" rel="shortcut icon"/>
+<title>Demo Database - Ragnos Docs</title>
+<link href="../../../css/bootstrap.min.css" rel="stylesheet"/>
+<link href="../../../css/fontawesome.min.css" rel="stylesheet"/>
+<link href="../../../css/brands.min.css" rel="stylesheet"/>
+<link href="../../../css/solid.min.css" rel="stylesheet"/>
+<link href="../../../css/v4-font-face.min.css" rel="stylesheet"/>
+<link href="../../../css/base.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/panda-syntax-dark.min.css" id="hljs-light" rel="stylesheet"/>
+<link disabled="" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" id="hljs-dark" rel="stylesheet"/>
+<link href="../../../css/ragnos_style.css" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<!-- Google tag (gtag.js) -->
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-JGEDJD0GZP"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+  gtag("js", new Date());
+
+  gtag("config", "G-JGEDJD0GZP");
+</script>
+</head>
+<body>
+<div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+<div class="container">
+<a class="navbar-brand" href="../../">Ragnos Docs</a>
+<!-- Expander button -->
+<button aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-bs-target="#navbar-collapse" data-bs-toggle="collapse" type="button">
+<span class="navbar-toggler-icon"></span>
+</button>
+<!-- Expanded navigation -->
+<div class="navbar-collapse collapse" id="navbar-collapse">
+<!-- Main navigation -->
+<ul class="nav navbar-nav">
+<li class="nav-item">
+<a class="nav-link" href="../../">Home</a>
+</li>
+<li class="nav-item dropdown">
+<a aria-current="page" aria-expanded="false" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown" href="#" role="button">Fundamentals</a>
+<ul class="dropdown-menu">
+<li>
+<a class="dropdown-item" href="../instalacion/">Installation</a>
+</li>
+<li>
+<a class="dropdown-item" href="../primeros_pasos/">Getting Started</a>
+</li>
+<li>
+<a aria-current="page" class="dropdown-item active" href="./">Demo Database</a>
+</li>
+<li>
+<a class="dropdown-item" href="../configuracion/">Configuration</a>
+</li>
+<li>
+<a class="dropdown-item" href="../plantilla/">CLI Generator</a>
+</li>
+</ul>
+</li>
+<li class="nav-item dropdown">
+<a aria-expanded="false" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">Datasets &amp; Models</a>
+<ul class="dropdown-menu">
+<li>
+<a class="dropdown-item" href="../../datasets/datasets/">Creating Datasets</a>
+</li>
+<li>
+<a class="dropdown-item" href="../../datasets/campos/">Field Reference</a>
+</li>
+<li>
+<a class="dropdown-item" href="../../datasets/guia_RQueryController/">Advanced Queries (RQuery)</a>
+</li>
+<li>
+<a class="dropdown-item" href="../../datasets/maestro-detalle/">Master-Detail</a>
+</li>
+</ul>
+</li>
+<li class="nav-item dropdown">
+<a aria-expanded="false" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">Advanced Backend</a>
+<ul class="dropdown-menu">
+<li>
+<a class="dropdown-item" href="../../avanzado/guia_modo_api/">API Mode</a>
+</li>
+<li>
+<a class="dropdown-item" href="../../avanzado/helpers/">Helpers &amp; Utilities</a>
+</li>
+<li>
+<a class="dropdown-item" href="../../avanzado/hooks/">Hooks &amp; Events</a>
+</li>
+<li>
+<a class="dropdown-item" href="../../avanzado/autenticacion_integrada/">Authentication</a>
+</li>
+<li>
+<a class="dropdown-item" href="../../avanzado/auditlog/">Audit Log</a>
+</li>
+<li>
+<a class="dropdown-item" href="../../avanzado/server_side_events/">Server Side Events</a>
+</li>
+<li>
+<a class="dropdown-item" href="../../avanzado/despliegue/">Deployment</a>
+</li>
+</ul>
+</li>
+<li class="nav-item dropdown">
+<a aria-expanded="false" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">Frontend &amp; Reports</a>
+<ul class="dropdown-menu">
+<li>
+<a class="dropdown-item" href="../../frontend/personalizacion_ui/">UI Customization</a>
+</li>
+<li>
+<a class="dropdown-item" href="../../frontend/reportes_simples/">Simple Reports</a>
+</li>
+<li>
+<a class="dropdown-item" href="../../frontend/funciones_javascript/">JavaScript Functions</a>
+</li>
+</ul>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="https://ragnos.build">🏠 Website</a>
+</li>
+</ul>
+<ul class="nav navbar-nav ms-md-auto">
+<li class="nav-item">
+<a class="nav-link" data-bs-target="#mkdocs_search_modal" data-bs-toggle="modal" href="#">
+<i class="fa fa-search"></i> Search
+                            </a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="../primeros_pasos/" rel="prev">
+<i class="fa fa-arrow-left"></i> Previous
+                                </a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="../configuracion/" rel="next">
+                                    Next <i class="fa fa-arrow-right"></i>
+</a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="https://github.com/cgarciagl/ragnos"><i class="fa-brands fa-github"></i> GitHub</a>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="container">
+<div class="row">
+<div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+<div class="navbar-header">
+<button class="navbar-toggler collapsed" data-bs-target="#toc-collapse" data-bs-toggle="collapse" title="Table of Contents" type="button">
+<span class="fa fa-angle-down"></span>
+</button>
+</div>
+<div class="navbar-collapse collapse card bg-body-tertiary" id="toc-collapse">
+<ul class="nav flex-column">
+<li class="nav-item" data-bs-level="1"><a class="nav-link" href="#demo-database-classicmodels">Demo Database (Classicmodels)</a>
+<ul class="nav flex-column">
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#database-structure">📊 Database Structure</a>
+<ul class="nav flex-column">
+</ul>
+</li>
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#table-descriptions">📝 Table Descriptions</a>
+<ul class="nav flex-column">
+</ul>
+</li>
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#accessing-the-demo">🔐 Accessing the Demo</a>
+<ul class="nav flex-column">
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div></div>
+<div class="col-md-9" role="main">
+<h1 id="demo-database-classicmodels">Demo Database (Classicmodels)</h1>
+<p>Ragnos includes the <strong>Classicmodels</strong> sample database, a well-known standard implementation in the development world for testing relational database functionalities.</p>
+<p>This database models a <strong>retailer of scale models of classic cars</strong>. It contains typical business information: customers, products, orders, payments, employees, and offices.</p>
+<h2 id="database-structure">📊 Database Structure</h2>
+<p>The database consists of 8 related tables. Below is an Entity-Relationship (ER) diagram illustrating the structure:</p>
+<div class="mermaid">erDiagram
+    CUSTOMERS ||--o{ ORDERS : places
+    CUSTOMERS ||--o{ PAYMENTS : makes
+    CUSTOMERS }|--|| EMPLOYEES : "served by"
+    EMPLOYEES ||--|{ EMPLOYEES : "reports to"
+    EMPLOYEES }|--|| OFFICES : "works in"
+    ORDERS ||--|{ ORDERDETAILS : contains
+    PRODUCTS ||--o{ ORDERDETAILS : "included in"
+    PRODUCTS }|--|| PRODUCTLINES : "category"
+
+    CUSTOMERS {
+        int customerNumber PK
+        string customerName
+        string contactLastName
+        string contactFirstName
+        string phone
+        string addressLine1
+        string city
+        string country
+        int salesRepEmployeeNumber FK
+        decimal creditLimit
+    }
+
+    EMPLOYEES {
+        int employeeNumber PK
+        string lastName
+        string firstName
+        string email
+        string officeCode FK
+        int reportsTo FK
+        string jobTitle
+    }
+
+    OFFICES {
+        string officeCode PK
+        string city
+        string phone
+        string addressLine1
+        string country
+        string territory
+    }
+
+    ORDERDETAILS {
+        int orderNumber PK,FK
+        string productCode PK,FK
+        int quantityOrdered
+        decimal priceEach
+    }
+
+    ORDERS {
+        int orderNumber PK
+        date orderDate
+        date shippedDate
+        string status
+        int customerNumber FK
+    }
+
+    PAYMENTS {
+        int customerNumber PK,FK
+        string checkNumber PK
+        date paymentDate
+        decimal amount
+    }
+
+    PRODUCTS {
+        string productCode PK
+        string productName
+        string productLine FK
+        string productScale
+        string productVendor
+        int quantityInStock
+        decimal buyPrice
+        decimal MSRP
+    }
+
+    PRODUCTLINES {
+        string productLine PK
+        string textDescription
+    }
+</div>
+<h2 id="table-descriptions">📝 Table Descriptions</h2>
+<p>Below is the purpose of each table:</p>
+<h3 id="1-customers">1. Customers</h3>
+<p>Stores information about the company's customers.</p>
+<ul>
+<li><strong>Key Data:</strong> Name, contact, address, phone, credit limit.</li>
+<li><strong>Relationships:</strong> Linked to <code>Employees</code> (assigned sales rep), <code>Orders</code> (placed orders), and <code>Payments</code> (payments made).</li>
+</ul>
+<h3 id="2-products">2. Products</h3>
+<p>Catalog of scale models of cars, motorcycles, and other classic vehicles.</p>
+<ul>
+<li><strong>Key Data:</strong> Code, name, scale, vendor, description, stock, buy price, and Manufacturer's Suggested Retail Price (MSRP).</li>
+<li><strong>Relationships:</strong> Belongs to a <code>ProductLine</code> and appears in <code>OrderDetails</code>.</li>
+</ul>
+<h3 id="3-productlines">3. ProductLines</h3>
+<p>Categories into which products are classified (e.g., "Classic Cars", "Motorcycles").</p>
+<ul>
+<li><strong>Key Data:</strong> Line name, description.</li>
+</ul>
+<h3 id="4-orders">4. Orders</h3>
+<p>Header of orders placed by customers.</p>
+<ul>
+<li><strong>Key Data:</strong> Dates (order, required, shipped), status (Shipped, Cancelled, etc.), comments.</li>
+<li><strong>Relationships:</strong> Linked to the <code>Customer</code> who placed the order.</li>
+</ul>
+<h3 id="5-orderdetails">5. OrderDetails</h3>
+<p>Individual lines of each order, specifying which products were purchased.</p>
+<ul>
+<li><strong>Key Data:</strong> Quantity ordered, actual unit price.</li>
+<li><strong>Relationships:</strong> Links <code>Orders</code> with <code>Products</code> (many-to-many relationship).</li>
+</ul>
+<h3 id="6-payments">6. Payments</h3>
+<p>Record of payments made by customers.</p>
+<ul>
+<li><strong>Key Data:</strong> Check number, payment date, amount.</li>
+<li><strong>Relationships:</strong> Linked to <code>Customers</code>.</li>
+</ul>
+<h3 id="7-employees">7. Employees</h3>
+<p>Information about company staff.</p>
+<ul>
+<li><strong>Key Data:</strong> Name, email, job title.</li>
+<li><strong>Relationships:</strong></li>
+<li>Belongs to an <code>Office</code>.</li>
+<li>Reports to another employee (hierarchical structure).</li>
+<li>Is the sales representative for <code>Customers</code>.</li>
+</ul>
+<h3 id="8-offices">8. Offices</h3>
+<p>Physical locations of sales offices.</p>
+<ul>
+<li><strong>Key Data:</strong> City, phone, address, country, territory.</li>
+</ul>
+<hr/>
+<h2 id="accessing-the-demo">🔐 Accessing the Demo</h2>
+<p>If you have installed the project and loaded these sample data, or are accessing our online demo, you can use the following credentials to access the administrative panel:</p>
+<div class="admonition info">
+<p class="admonition-title">Access Credentials</p>
+<ul>
+<li><strong>Demo URL:</strong> <a href="https://ragnos.yupii.org/">https://ragnos.yupii.org/</a></li>
+<li><strong>User:</strong> <code>admin</code></li>
+<li><strong>Password:</strong> <code>admin</code></li>
+</ul>
+</div>
+<p>Once inside, you will be able to explore the modules built upon this database structure to see Ragnos in action (Master-detail datasets, reports, charts, etc.).</p></div>
+</div>
+</div>
+<footer class="col-md-12">
+<hr/>
+<p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+</footer>
+<script src="../../../js/bootstrap.bundle.min.js"></script>
+<script>
+            var base_url = "../../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+<script src="../../../js/base.js"></script>
+<script src="../../../back_particles.js"></script>
+<script src="../../../search/main.js"></script>
+<div aria-hidden="true" aria-labelledby="searchModalLabel" class="modal" id="mkdocs_search_modal" role="dialog" tabindex="-1">
+<div class="modal-dialog modal-lg">
+<div class="modal-content">
+<div class="modal-header">
+<h4 class="modal-title" id="searchModalLabel">Search</h4>
+<button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+</div>
+<div class="modal-body">
+<p>From here you can search these documents. Enter your search terms below.</p>
+<form>
+<div class="form-group">
+<input class="form-control" id="mkdocs-search-query" placeholder="Search..." title="Type search term here" type="search"/>
+</div>
+</form>
+<div data-no-results-text="No results found" id="mkdocs-search-results"></div>
+</div>
+<div class="modal-footer">
+</div>
+</div>
+</div>
+</div><div aria-hidden="true" aria-labelledby="keyboardModalLabel" class="modal" id="mkdocs_keyboard_modal" role="dialog" tabindex="-1">
+<div class="modal-dialog">
+<div class="modal-content">
+<div class="modal-header">
+<h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+<button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+</div>
+<div class="modal-body">
+<table class="table">
+<thead>
+<tr>
+<th style="width: 20%;">Keys</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="help shortcut"><kbd>?</kbd></td>
+<td>Open this help</td>
+</tr>
+<tr>
+<td class="next shortcut"><kbd>n</kbd></td>
+<td>Next page</td>
+</tr>
+<tr>
+<td class="prev shortcut"><kbd>p</kbd></td>
+<td>Previous page</td>
+</tr>
+<tr>
+<td class="search shortcut"><kbd>s</kbd></td>
+<td>Search</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="modal-footer">
+</div>
+</div>
+</div>
+</div>
+<script type="module">import mermaid from "https://unpkg.com/mermaid@10.6.1/dist/mermaid.esm.min.mjs";
+mermaid.initialize({});</script></body>
+</html>

@@ -66,6 +66,10 @@
 </li>
                                     
 <li>
+    <a href="../demo_database/" class="dropdown-item">Demo Database</a>
+</li>
+                                    
+<li>
     <a href="../configuracion/" class="dropdown-item">Configuration</a>
 </li>
                                     
@@ -257,6 +261,7 @@ Uncomment and configure your database credentials:</p>
 <li>Import the SQL files located in the <code>sampledatabase/</code> folder:</li>
 <li>Run <code>ragnos_mariadb.sql</code> first (or the main dump containing the base structure).</li>
 <li>Run <code>ci_sessions.sql</code> for the sessions table.</li>
+<li>(Optional) Run <code>mysqlsampledatabase.sql</code> if you want to load the <strong>Classicmodels</strong> sample data. See <a href="../demo_database/">Demo Database</a> for more details.</li>
 </ol>
 <h3 id="4-verify-permissions">4. Verify Permissions</h3>
 <p>Ensure that the <code>writable/</code> folder and its subfolders have write permissions by the web server.</p>
@@ -267,12 +272,8 @@ Uncomment and configure your database credentials:</p>
 <p>In the source code, the <code>public</code> folder has been renamed to <code>content</code>. However, it is fine to rename it to whatever suits your server best.</p>
 </div>
 <p>You should see the login screen.</p>
-<h3 id="6-access-credentials-demo">6. Access Credentials (Demo)</h3>
-<p>To access the demo system for the first time, use the following credentials:</p>
-<ul>
-<li><strong>User:</strong> <code>admin</code></li>
-<li><strong>Password:</strong> <code>admin</code></li>
-</ul></div>
+<h3 id="6-access-and-demo-data">6. Access and Demo Data</h3>
+<p>To obtain default access credentials and learn more about the included sample data (<strong>Classicmodels</strong>), please refer to the <a href="../demo_database/">Demo Database</a> section.</p></div>
             </div>
         </div>
 
