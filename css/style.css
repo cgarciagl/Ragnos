@@ -208,6 +208,12 @@ h6 {
   filter: brightness(1.1);
 }
 
+.btn-group {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
 /* --- HEADER --- */
 header {
   position: fixed;
@@ -797,5 +803,8 @@ footer p {
   }
   .nav-links a {
     display: none;
+  }
+  .btn-group {
+    justify-content: center;
   }
 }
