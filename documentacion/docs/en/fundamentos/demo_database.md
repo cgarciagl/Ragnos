@@ -159,7 +159,7 @@ If you have installed the project and loaded these sample data, or are accessing
 
 !!! info "Access Credentials"
 
-    *   **Demo URL:** [https://ragnos.yupii.org/](https://ragnos.yupii.org/)
+    *   **Demo URL:** [https://ragnos.yupii.org/](https://ragnos.yupii.org/){:target="_blank"}
     *   **User:** `admin`
     *   **Password:** `admin`
 

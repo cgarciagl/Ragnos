@@ -159,7 +159,7 @@ Si has instalado el proyecto y cargado estos datos de ejemplo, o estás accedien
 
 !!! info "Credenciales de Acceso"
 
-    *   **URL Demo:** [https://ragnos.yupii.org/](https://ragnos.yupii.org/)
+    *   **URL Demo:** [https://ragnos.yupii.org/](https://ragnos.yupii.org/){:target="_blank"}
     *   **Usuario:** `admin`
     *   **Contraseña:** `admin`
 
