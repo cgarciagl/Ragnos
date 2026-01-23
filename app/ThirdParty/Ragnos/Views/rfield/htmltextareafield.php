@@ -1,14 +1,37 @@
-<div class="divfield col-sm-12 mb-1">
-    <div class='form-control shadow-sm' id='group_<?= $name ?>'>
-        <label class="control-label">
-            <?= $label; ?> :
-        </label>
+<div class="divfield col-sm-12 mb-3">
+    <div class="form-floating" id='group_<?= $name ?>'>
+        <textarea name="<?= $name ?>" id="<?= $name ?>" class="form-control"
+            placeholder="<?= $label ?>"><?= $value ?></textarea>
+        <label for="<?= $name ?>"><?= $label ?></label>
 
-        <div class='input-group'>
-            <textarea name="<?= $name ?>" id="<?= $name ?>" width="100%">
-            <?= $value ?>
-        </textarea>
-        </div>
+        <style>
+            /* Integración de Summernote con estilo Floating Labels */
+            #group_<?= $name ?>>label {
+                /* Forzamos el estado "flotante" permanente */
+                transform: scale(0.85) translateY(-0.5rem) translateX(0.15rem);
+                opacity: 0.65;
+                z-index: 50;
+                /* Por encima de la toolbar */
+                width: auto;
+                height: auto;
+            }
+
+            #group_<?= $name ?> .note-editor.note-frame {
+                /* Coincidir estilo de borde con Bootstrap 5 */
+                border-color: #dee2e6;
+                border-radius: 0.375rem;
+                box-shadow: none;
+            }
+
+            /* Crear espacio seguro para la etiqueta flotante en la barra de herramientas */
+            #group_<?= $name ?> .note-toolbar {
+                padding-top: 1.6rem;
+                background-color: #f8f9fa;
+                /* Fondo ligero para la barra */
+                border-top-left-radius: 0.375rem;
+                border-top-right-radius: 0.375rem;
+            }
+        </style>
     </div>
 </div>
 
@@ -17,11 +40,21 @@
 <script>
     $(document).ready(function () {
         $("textarea[name='<?= $name ?>']").summernote({
-            onkeyup: function (e) {
-                $("textarea[name='<?= $name ?>']").val($("#divsummernote<?= $name ?>").code().trim());
+            callbacks: {
+                onChange: function (contents, $editable) {
+                    $("textarea[name='<?= $name ?>']").val(contents);
+                }
             },
-            height: 100,
+            height: 200,
             width: '100%',
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'underline', 'clear']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['table', ['table']],
+                ['insert', ['link']],
+                ['view', ['fullscreen', 'codeview', 'help']]
+            ]
         });
     });
 </script>

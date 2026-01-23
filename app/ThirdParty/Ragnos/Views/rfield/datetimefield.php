@@ -2,9 +2,9 @@
 <script src="<?= base_url(); ?>/assets/js/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
 <link href="<?= base_url(); ?>/assets/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
 
-<div class="divfield col-sm-4 mb-1">
-    <div class='input-group shadow-sm' id='group_<?= $name ?>'>
-        <label class="control-label">
+<div class="divfield col-sm-4 mb-3">
+    <div id='group_<?= $name ?>'>
+        <label class="form-label">
             <?= $label; ?> :
         </label>
 

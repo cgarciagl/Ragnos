@@ -1,6 +1,6 @@
-<div class="divfield col-sm-4 mb-1">
-    <div class='form-control shadow-sm' id='group_<?= $name ?>'>
-        <label class="control-label">
+<div class="divfield col-sm-4 mb-3">
+    <div id='group_<?= $name ?>'>
+        <label class="form-label">
             <?= $label; ?> :
         </label>
         <?php
