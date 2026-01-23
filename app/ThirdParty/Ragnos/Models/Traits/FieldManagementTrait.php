@@ -93,9 +93,7 @@ trait FieldManagementTrait
 
         switch ($datasetField->getType()) {
             case 'multiselect':
-                $values = array_map(function ($v) use ($datasetField) {
-                    return $datasetField->getOptions()[$v] ?? $v;
-                }, explode(',', $value));
+                $values = array_map(fn($v) => $datasetField->getOptions()[$v] ?? $v, explode(',', $value));
                 $value = implode(',', $values);
                 break;
             case 'dropdown':
@@ -103,6 +101,10 @@ trait FieldManagementTrait
                 break;
             case 'date':
                 $value = date('d/m/Y', strtotime($value));
+                break;
+            case 'switch':
+                /** @var \App\ThirdParty\Ragnos\Models\Fields\RSwitchField $datasetField */
+                $value = ($value == $datasetField->getOnValue()) ? '✅' : '❌';
                 break;
         }
 
