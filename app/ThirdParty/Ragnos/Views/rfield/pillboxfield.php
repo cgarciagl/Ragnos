@@ -1,9 +1,9 @@
 <div class="divfield col-sm-12 mb-3">
     <div class="form-floating" id='group_<?= $name ?>'>
-        <input type="text" class="form-control" id="<?= $name ?>_display" placeholder="<?= $placeholder ?? $label ?>"
-            <?= $extra_attributes ?>>
-        <input type="hidden" id="<?= $name ?>" name="<?= $name ?>" value='<?= $value ?>'>
-        <label for="<?= $name ?>"><?= $label ?></label>
+        <input type="text" class="form-control" id="<?= $name ?>_display"
+            placeholder="<?= esc($placeholder ?? $label) ?>" <?= $extra_attributes ?>>
+        <input type="hidden" id="<?= $name ?>" name="<?= $name ?>" value="<?= esc($value) ?>">
+        <label for="<?= $name ?>_display"><?= esc($label) ?></label>
         <div id="<?= $name ?>_pills" class="mt-2 text-start">
             <!-- Pills will be inserted here -->
         </div>

@@ -6,6 +6,7 @@ use App\ThirdParty\Ragnos\Models\Fields\RField;
 
 class RSwitchField extends RField
 {
+    protected string $type = 'switch';
     protected mixed $onValue = '1';
     protected mixed $offValue = '0';
 

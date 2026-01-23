@@ -30,16 +30,24 @@ class Usuarios extends RDatasetController
             ]
         );
 
-        $this->addField(
-            'usu_activo',
-            [
-                'label'   => 'Activo',
-                'rules'   => 'required',
-                'type'    => 'dropdown',
-                'default' => 'N',
-                'options' => ['S' => 'SI', 'N' => 'NO'],
-            ]
-        );
+        // $this->addField(
+        //     'usu_activo',
+        //     [
+        //         'label'   => 'Activo',
+        //         'rules'   => 'required',
+        //         'type'    => 'dropdown',
+        //         'default' => 'N',
+        //         'options' => ['S' => 'SI', 'N' => 'NO'],
+        //     ]
+        // );
+
+        $this->addField(fieldName: 'usu_activo', extraOptions: [
+            'label'    => 'Activo',
+            'type'     => 'switch',
+            'default'  => 'N',
+            'onValue'  => 'S',
+            'offValue' => 'N'
+        ]);
 
         $this->addField('usu_grupo', ['label' => 'Grupo', 'rules' => 'required']);
         $this->addSearch('usu_grupo', 'Gruposdeusuarios');

@@ -86,7 +86,7 @@ abstract class RField
 
     public function setType(string $type): void
     {
-        $this->type = $type;
+        $this->type = trim($type);
     }
 
     public function getOptions(): array
@@ -203,10 +203,10 @@ abstract class RField
         $viewPath = APPPATH . 'ThirdParty/Ragnos/Views/rfield/' . $this->type . 'field.php';
 
         if (file_exists($viewPath)) {
-            return view('App\ThirdParty\Ragnos\Views\rfield/' . $this->type . 'field', $data);
+            return view('App\ThirdParty\Ragnos\Views\rfield\\' . $this->type . 'field', $data);
         }
 
-        return view('App\ThirdParty\Ragnos\Views\rfield/simpletextfield', $data);
+        return view('App\ThirdParty\Ragnos\Views\rfield\simpletextfield', $data);
     }
 
     // Obtener datos del input

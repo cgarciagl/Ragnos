@@ -13,7 +13,7 @@ trait FieldManagementTrait
     }
     function addFieldFromArray($fieldName, $array)
     {
-        $type     = $array['type'] ?? 'text';
+        $type     = trim($array['type'] ?? 'text');
         $classMap = [
             'switch'  => \App\ThirdParty\Ragnos\Models\Fields\RSwitchField::class,
             'pillbox' => \App\ThirdParty\Ragnos\Models\Fields\RPillboxField::class,
