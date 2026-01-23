@@ -264,6 +264,10 @@ Each field is a <strong>declarative description</strong> of how a domain attribu
 <td><code>query</code></td>
 <td>SQL expression for calculated fields</td>
 </tr>
+<tr>
+<td><code>tab</code></td>
+<td>Tab name (optional)</td>
+</tr>
 </tbody>
 </table>
 <div class="admonition tip">
@@ -284,12 +288,24 @@ It is ideal for fields that must be unique across the system, such as:</p>
 <li><strong>National ID</strong> numbers.</li>
 </ul>
 </div>
+<h3 id="tabbed-organization">Tabbed Organization</h3>
+<p>Ragnos allows you to organize form fields into tabs to improve usability in extensive forms.
+Simply add the <code>tab</code> key to the field configuration array with the desired tab name.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="x">$this-&gt;addField(&#39;basic_info&#39;, [ ... , &#39;tab&#39; =&gt; &#39;General&#39; ]);</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="x">$this-&gt;addField(&#39;technical_details&#39;, [ ... , &#39;tab&#39; =&gt; &#39;Details&#39; ]);</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="x">$this-&gt;addField(&#39;pricing&#39;, [ ... , &#39;tab&#39; =&gt; &#39;Finance&#39; ]);</span>
+</code></pre></div>
+<ul>
+<li>Fields without a defined tab will automatically be placed in a tab labeled <strong>"General"</strong>.</li>
+<li>If no field has a tab defined, the form will be displayed without tabs (classic behavior).</li>
+<li>If a validation error occurs in a field hidden by a tab, Ragnos will automatically activate that tab to show the error.</li>
+</ul>
 <hr />
 <h2 id="2-text-field-string">2. Text Field (string)</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="x">$this-&gt;addField(&#39;customerName&#39;, [</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="x">    &#39;label&#39; =&gt; &#39;Name&#39;,</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="x">    &#39;rules&#39; =&gt; &#39;required&#39;</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="x">]);</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="x">$this-&gt;addField(&#39;customerName&#39;, [</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="x">    &#39;label&#39; =&gt; &#39;Name&#39;,</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="x">    &#39;rules&#39; =&gt; &#39;required&#39;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="x">]);</span>
 </code></pre></div>
 <ul>
 <li>Persistent</li>
@@ -298,10 +314,10 @@ It is ideal for fields that must be unique across the system, such as:</p>
 </ul>
 <hr />
 <h2 id="3-numeric-field">3. Numeric Field</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="x">$this-&gt;addField(&#39;postalCode&#39;, [</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="x">    &#39;label&#39; =&gt; &#39;Postal code&#39;,</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="x">    &#39;rules&#39; =&gt; &#39;required|numeric&#39;</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="x">]);</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="x">$this-&gt;addField(&#39;postalCode&#39;, [</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="x">    &#39;label&#39; =&gt; &#39;Postal code&#39;,</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="x">    &#39;rules&#39; =&gt; &#39;required|numeric&#39;</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="x">]);</span>
 </code></pre></div>
 <ul>
 <li>Persistent</li>
@@ -310,10 +326,10 @@ It is ideal for fields that must be unique across the system, such as:</p>
 </ul>
 <hr />
 <h2 id="4-monetary-field-money">4. Monetary Field (<code>money</code>)</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="x">$this-&gt;addField(&#39;creditLimit&#39;, [</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="x">    &#39;label&#39; =&gt; &#39;Credit limit&#39;,</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="x">    &#39;rules&#39; =&gt; &#39;required|money&#39;</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="x">]);</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="x">$this-&gt;addField(&#39;creditLimit&#39;, [</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="x">    &#39;label&#39; =&gt; &#39;Credit limit&#39;,</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="x">    &#39;rules&#39; =&gt; &#39;required|money&#39;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="x">]);</span>
 </code></pre></div>
 <ul>
 <li>Custom validator</li>
@@ -322,10 +338,10 @@ It is ideal for fields that must be unique across the system, such as:</p>
 </ul>
 <hr />
 <h2 id="5-readonly-field">5. Readonly Field</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="x">$this-&gt;addField(&#39;Contact&#39;, [</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="x">    &#39;label&#39; =&gt; &#39;Contact&#39;,</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="x">    &#39;rules&#39; =&gt; &#39;readonly&#39;</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="x">]);</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="x">$this-&gt;addField(&#39;Contact&#39;, [</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="x">    &#39;label&#39; =&gt; &#39;Contact&#39;,</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="x">    &#39;rules&#39; =&gt; &#39;readonly&#39;</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="x">]);</span>
 </code></pre></div>
 <ul>
 <li>Visible</li>
