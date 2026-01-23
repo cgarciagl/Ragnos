@@ -201,15 +201,55 @@
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#3-numeric-field" class="nav-link">3. Numeric Field</a>
+            <li class="nav-item" data-bs-level="2"><a href="#3-multiline-text-field-textarea" class="nav-link">3. Multiline Text Field (textarea)</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#4-monetary-field-money" class="nav-link">4. Monetary Field (money)</a>
+            <li class="nav-item" data-bs-level="2"><a href="#4-date-and-time-field" class="nav-link">4. Date and Time Field</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#5-readonly-field" class="nav-link">5. Readonly Field</a>
+            <li class="nav-item" data-bs-level="2"><a href="#5-numeric-field" class="nav-link">5. Numeric Field</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#6-monetary-field-money" class="nav-link">6. Monetary Field (money)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#7-readonly-field" class="nav-link">7. Readonly Field</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#8-hidden-field" class="nav-link">8. Hidden Field</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#9-calculated-field-query" class="nav-link">9. Calculated Field (query)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#10-related-field-addsearch" class="nav-link">10. Related Field (addSearch)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#11-primary-key-field" class="nav-link">11. Primary Key Field</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#12-dropdown-field-enum" class="nav-link">12. Dropdown Field (Enum)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#13-switch-field-boolean" class="nav-link">13. Switch Field (Boolean)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#14-pillbox-field-tags" class="nav-link">14. Pillbox Field (Tags)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#15-summary" class="nav-link">15. Summary</a>
               <ul class="nav flex-column">
               </ul>
             </li>
@@ -313,11 +353,35 @@ Simply add the <code>tab</code> key to the field configuration array with the de
 <li>Free text</li>
 </ul>
 <hr />
-<h2 id="3-numeric-field">3. Numeric Field</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="x">$this-&gt;addField(&#39;postalCode&#39;, [</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="x">    &#39;label&#39; =&gt; &#39;Postal code&#39;,</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="x">    &#39;rules&#39; =&gt; &#39;required|numeric&#39;</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="x">]);</span>
+<h2 id="3-multiline-text-field-textarea">3. Multiline Text Field (<code>textarea</code>)</h2>
+<p>For long texts like descriptions or comments.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="x">$this-&gt;addField(&#39;productDescription&#39;, [</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="x">    &#39;label&#39; =&gt; &#39;Description&#39;,</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="x">    &#39;type&#39;  =&gt; &#39;textarea&#39;,</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="x">    &#39;rules&#39; =&gt; &#39;required&#39;</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="x">]);</span>
+</code></pre></div>
+<ul>
+<li><strong>HTML Variant:</strong> Use <code>type =&gt; 'htmltextarea'</code> for a basic rich text editor.</li>
+</ul>
+<hr />
+<h2 id="4-date-and-time-field">4. Date and Time Field</h2>
+<p>Ragnos automatically handles date selection.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="x">$this-&gt;addField(&#39;orderDate&#39;, [</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="x">    &#39;label&#39; =&gt; &#39;Order Date&#39;,</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="x">    &#39;type&#39;  =&gt; &#39;datetime&#39;, // or &#39;date&#39;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="x">    &#39;rules&#39; =&gt; &#39;required&#39;</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="x">]);</span>
+</code></pre></div>
+<ul>
+<li>Includes date/time picker (datepicker).</li>
+</ul>
+<hr />
+<h2 id="5-numeric-field">5. Numeric Field</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="x">$this-&gt;addField(&#39;postalCode&#39;, [</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="x">    &#39;label&#39; =&gt; &#39;Postal code&#39;,</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="x">    &#39;rules&#39; =&gt; &#39;required|numeric&#39;</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="x">]);</span>
 </code></pre></div>
 <ul>
 <li>Persistent</li>
@@ -325,11 +389,11 @@ Simply add the <code>tab</code> key to the field configuration array with the de
 <li>Numeric</li>
 </ul>
 <hr />
-<h2 id="4-monetary-field-money">4. Monetary Field (<code>money</code>)</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="x">$this-&gt;addField(&#39;creditLimit&#39;, [</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="x">    &#39;label&#39; =&gt; &#39;Credit limit&#39;,</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="x">    &#39;rules&#39; =&gt; &#39;required|money&#39;</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="x">]);</span>
+<h2 id="6-monetary-field-money">6. Monetary Field (<code>money</code>)</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="x">$this-&gt;addField(&#39;creditLimit&#39;, [</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="x">    &#39;label&#39; =&gt; &#39;Credit limit&#39;,</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="x">    &#39;rules&#39; =&gt; &#39;required|money&#39;</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="x">]);</span>
 </code></pre></div>
 <ul>
 <li>Custom validator</li>
@@ -337,17 +401,223 @@ Simply add the <code>tab</code> key to the field configuration array with the de
 <li>Financial use</li>
 </ul>
 <hr />
-<h2 id="5-readonly-field">5. Readonly Field</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="x">$this-&gt;addField(&#39;Contact&#39;, [</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="x">    &#39;label&#39; =&gt; &#39;Contact&#39;,</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="x">    &#39;rules&#39; =&gt; &#39;readonly&#39;</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="x">]);</span>
+<h2 id="7-readonly-field">7. Readonly Field</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="x">$this-&gt;addField(&#39;Contact&#39;, [</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="x">    &#39;label&#39; =&gt; &#39;Contact&#39;,</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="x">    &#39;rules&#39; =&gt; &#39;readonly&#39;</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="x">]);</span>
 </code></pre></div>
 <ul>
 <li>Visible</li>
 <li>Not editable</li>
 </ul>
-<hr /></div>
+<hr />
+<h2 id="8-hidden-field">8. Hidden Field</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="x">$this-&gt;addField(&#39;Contact&#39;, [</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="x">    &#39;label&#39; =&gt; &#39;Contact&#39;,</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="x">    &#39;rules&#39; =&gt; &#39;readonly&#39;,</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="x">    &#39;type&#39;  =&gt; &#39;hidden&#39;</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="x">]);</span>
+</code></pre></div>
+<ul>
+<li>Not visible in forms</li>
+<li>Useful for logic or UX</li>
+</ul>
+<hr />
+<h2 id="9-calculated-field-query">9. Calculated Field (<code>query</code>)</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="x">$this-&gt;addField(&#39;fullName&#39;, [</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="x">    &#39;label&#39; =&gt; &#39;Full Name&#39;,</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="x">    &#39;rules&#39; =&gt; &#39;readonly&#39;,</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="x">    &#39;query&#39; =&gt; &quot;concat(contactLastName, &#39;, &#39;, contactFirstName)&quot;,</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="x">    &#39;type&#39;  =&gt; &#39;hidden&#39;</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="x">]);</span>
+</code></pre></div>
+<ul>
+<li>Non-persistent (not a real column in the table)</li>
+<li>Dynamic SQL expression</li>
+<li>Read-only</li>
+</ul>
+<hr />
+<h2 id="10-related-field-addsearch">10. Related Field (<code>addSearch</code>)</h2>
+<p>Links a field to another controller for selection (Foreign Key).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="x">$this-&gt;addSearch(&#39;salesRepEmployeeNumber&#39;, &#39;Shop\\Employees&#39;);</span>
+</code></pre></div>
+<ul>
+<li>Logical foreign key</li>
+<li>Dynamic selector (modal or autocomplete)</li>
+<li>Automatic JOIN handling</li>
+</ul>
+<hr />
+<h2 id="11-primary-key-field">11. Primary Key Field</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="x">$this-&gt;setIdField(&#39;customerNumber&#39;);</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="x">// Disable auto-increment if needed (e.g., for alphanumeric codes)</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="x">$this-&gt;setAutoIncrement(false);</span>
+</code></pre></div>
+<ul>
+<li>Dataset identity</li>
+<li>Mandatory</li>
+<li>Defaults to auto-increment</li>
+</ul>
+<hr />
+<h2 id="12-dropdown-field-enum">12. Dropdown Field (Enum)</h2>
+<ul>
+<li>
+<p><strong>Brief description:</strong> A dropdown (enum) presents a closed set of options (key =&gt; label). The selected key is stored in the database; the label is used only for the interface.</p>
+</li>
+<li>
+<p><strong>Typical configuration:</strong></p>
+</li>
+<li><code>type</code>: "dropdown"</li>
+<li><code>options</code>: associative array [value =&gt; label]</li>
+<li><code>default</code>: default key</li>
+<li><code>rules</code>: validate with CI4 rules (e.g. required, in_list)</li>
+<li>
+<p>Recommended for short and stable lists; for large volumes use <code>addSearch</code> (related selector).</p>
+</li>
+<li>
+<p><strong>Static Example:</strong></p>
+</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="x">$this-&gt;addField(&#39;status&#39;, [</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="x">    &#39;label&#39;   =&gt; &#39;Status&#39;,</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="x">    &#39;type&#39;    =&gt; &#39;dropdown&#39;,</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="x">    &#39;options&#39; =&gt; [</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="x">        &#39;shipped&#39;   =&gt; &#39;Shipped&#39;,</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="x">        &#39;pending&#39;   =&gt; &#39;Pending&#39;,</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="x">        &#39;cancelled&#39; =&gt; &#39;Cancelled&#39;</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="x">    ],</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="x">    &#39;default&#39; =&gt; &#39;pending&#39;,</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="x">    &#39;rules&#39;   =&gt; &#39;required|in_list[shipped,pending,cancelled]&#39;</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="x">]);</span>
+</code></pre></div>
+<ul>
+<li><strong>Dynamic Example (load from DB):</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="x">$rows = $this-&gt;db-&gt;table(&#39;categories&#39;)-&gt;select(&#39;id, name&#39;)-&gt;get()-&gt;getResultArray();</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="x">$options = array_column($rows, &#39;name&#39;, &#39;id&#39;);</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="x">$this-&gt;addField(&#39;categoryId&#39;, [</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="x">    &#39;label&#39;   =&gt; &#39;Category&#39;,</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="x">    &#39;type&#39;    =&gt; &#39;dropdown&#39;,</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="x">    &#39;options&#39; =&gt; $options,</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="x">    &#39;rules&#39;   =&gt; &#39;required|in_list[&#39; . implode(&#39;,&#39;, array_keys($options)) . &#39;]&#39;</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="x">]);</span>
+</code></pre></div>
+<ul>
+<li>
+<p><strong>Placeholder / empty option:</strong> Add an entry with an empty key to force selection: <code>options =&gt; ['' =&gt; '(Select)'] + $options</code>.</p>
+</li>
+<li>
+<p><strong>Validation and Security:</strong></p>
+</li>
+<li>Use <code>in_list</code> to avoid disallowed values.</li>
+<li>
+<p>If options are dynamic, regenerate the list on each form load so <code>in_list</code> matches.</p>
+</li>
+<li>
+<p><strong>UX and Performance:</strong></p>
+</li>
+<li>Dropdown for &lt;~20-30 options.</li>
+<li>For relations with many rows, use <code>addSearch</code> or an autocomplete component.</li>
+<li>
+<p>If you need to select multiple values, prefer a multiselect component (or a relation type field); do not use a simple dropdown.</p>
+</li>
+<li>
+<p><strong>Internationalization:</strong> Store stable keys and translate labels when generating options to facilitate language changes.</p>
+</li>
+<li>
+<p><strong>Persistence:</strong> The stored value is the key; if you need to save the label, consider a calculated field or a view.</p>
+</li>
+</ul>
+<hr />
+<h2 id="13-switch-field-boolean">13. Switch Field (Boolean)</h2>
+<p>Renders a modern toggle switch. Ideal for boolean or status fields (active/inactive).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="x">$this-&gt;addField(&#39;isActive&#39;, [</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="x">    &#39;label&#39;   =&gt; &#39;Published&#39;,</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="x">    &#39;type&#39;    =&gt; &#39;switch&#39;,</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="x">    &#39;default&#39; =&gt; 1,          // Default value (checked)</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="x">    // Optional: Customize values (defaults are 1 and 0)</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="x">    &#39;onValue&#39; =&gt; &#39;Y&#39;,</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="x">    &#39;offValue&#39;=&gt; &#39;N&#39;</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="x">]);</span>
+</code></pre></div>
+<ul>
+<li>Handles <code>1/0</code> values (or custom).</li>
+<li>Modern UI (Bootstrap switch).</li>
+</ul>
+<hr />
+<h2 id="14-pillbox-field-tags">14. Pillbox Field (Tags)</h2>
+<p>Allows managing a list of simple tags. It is stored in the database as a JSON array.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="x">$this-&gt;addField(&#39;tags&#39;, [</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="x">    &#39;label&#39; =&gt; &#39;Tags&#39;,</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="x">    &#39;type&#39;  =&gt; &#39;pillbox&#39;</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="x">]);</span>
+</code></pre></div>
+<ul>
+<li><strong>Interface:</strong> Text input that converts entries into "pills" upon pressing Enter or Comma.</li>
+<li><strong>Storage:</strong> JSON Array (e.g., <code>["Red", "Sale"]</code>). Requires a <code>JSON</code> or <code>TEXT</code> field in DB.</li>
+<li><strong>Usage:</strong> Simple categorization, keywords.</li>
+</ul>
+<hr />
+<h2 id="15-summary">15. Summary</h2>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Persistent</th>
+<th>Editable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Text</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Numeric</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Money</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Readonly</td>
+<td>Depends</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Hidden</td>
+<td>Depends</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Calculated</td>
+<td>No</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Relation</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Dropdown</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>PK Key</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<p><strong>In Ragnos, fields are domain declarations, not simple inputs.</strong></p></div>
             </div>
         </div>
 

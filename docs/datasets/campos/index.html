@@ -201,39 +201,55 @@
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#3-campo-numerico" class="nav-link">3. Campo numérico</a>
+            <li class="nav-item" data-bs-level="2"><a href="#3-campo-de-texto-multilinea-textarea" class="nav-link">3. Campo de texto multilínea (textarea)</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#4-campo-monetario-money" class="nav-link">4. Campo monetario (money)</a>
+            <li class="nav-item" data-bs-level="2"><a href="#4-campo-de-fecha-y-hora" class="nav-link">4. Campo de Fecha y Hora</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#5-campo-readonly" class="nav-link">5. Campo readonly</a>
+            <li class="nav-item" data-bs-level="2"><a href="#5-campo-numerico" class="nav-link">5. Campo numérico</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#6-campo-hidden" class="nav-link">6. Campo hidden</a>
+            <li class="nav-item" data-bs-level="2"><a href="#6-campo-monetario-money" class="nav-link">6. Campo monetario (money)</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#7-campo-calculado-query" class="nav-link">7. Campo calculado (query)</a>
+            <li class="nav-item" data-bs-level="2"><a href="#7-campo-readonly" class="nav-link">7. Campo readonly</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#8-campo-relacionado-addsearch" class="nav-link">8. Campo relacionado (addSearch)</a>
+            <li class="nav-item" data-bs-level="2"><a href="#8-campo-hidden" class="nav-link">8. Campo hidden</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#9-campo-clave-primaria" class="nav-link">9. Campo clave primaria</a>
+            <li class="nav-item" data-bs-level="2"><a href="#9-campo-calculado-query" class="nav-link">9. Campo calculado (query)</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#10-campo-dropdown-enum" class="nav-link">10. Campo dropdown (enum)</a>
+            <li class="nav-item" data-bs-level="2"><a href="#10-campo-relacionado-addsearch" class="nav-link">10. Campo relacionado (addSearch)</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#11-resumen" class="nav-link">11. Resumen</a>
+            <li class="nav-item" data-bs-level="2"><a href="#11-campo-clave-primaria" class="nav-link">11. Campo clave primaria</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#12-campo-dropdown-enum" class="nav-link">12. Campo dropdown (enum)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#13-campo-switch-booleano" class="nav-link">13. Campo Switch (Booleano)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#14-campo-pillbox-etiquetas" class="nav-link">14. Campo Pillbox (Etiquetas)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#15-resumen" class="nav-link">15. Resumen</a>
               <ul class="nav flex-column">
               </ul>
             </li>
@@ -337,11 +353,35 @@ Simplemente agrega la clave <code>tab</code> al array de configuracion del campo
 <li>Texto libre</li>
 </ul>
 <hr />
-<h2 id="3-campo-numerico">3. Campo numérico</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="x">$this-&gt;addField(&#39;postalCode&#39;, [</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="x">    &#39;label&#39; =&gt; &#39;Código postal&#39;,</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="x">    &#39;rules&#39; =&gt; &#39;required|numeric&#39;</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="x">]);</span>
+<h2 id="3-campo-de-texto-multilinea-textarea">3. Campo de texto multilínea (<code>textarea</code>)</h2>
+<p>Para textos largos como descripciones o comentarios.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="x">$this-&gt;addField(&#39;productDescription&#39;, [</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="x">    &#39;label&#39; =&gt; &#39;Descripción&#39;,</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="x">    &#39;type&#39;  =&gt; &#39;textarea&#39;,</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="x">    &#39;rules&#39; =&gt; &#39;required&#39;</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="x">]);</span>
+</code></pre></div>
+<ul>
+<li><strong>Variante HTML:</strong> Si necesitas un editor básico, usa <code>type =&gt; 'htmltextarea'</code>.</li>
+</ul>
+<hr />
+<h2 id="4-campo-de-fecha-y-hora">4. Campo de Fecha y Hora</h2>
+<p>Ragnos maneja automáticamente la selección de fechas.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="x">$this-&gt;addField(&#39;orderDate&#39;, [</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="x">    &#39;label&#39; =&gt; &#39;Fecha de Orden&#39;,</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="x">    &#39;type&#39;  =&gt; &#39;datetime&#39;, // o &#39;date&#39;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="x">    &#39;rules&#39; =&gt; &#39;required&#39;</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="x">]);</span>
+</code></pre></div>
+<ul>
+<li>Incluye selector de fecha (datepicker).</li>
+</ul>
+<hr />
+<h2 id="5-campo-numerico">5. Campo numérico</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="x">$this-&gt;addField(&#39;postalCode&#39;, [</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="x">    &#39;label&#39; =&gt; &#39;Código postal&#39;,</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="x">    &#39;rules&#39; =&gt; &#39;required|numeric&#39;</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="x">]);</span>
 </code></pre></div>
 <ul>
 <li>Persistente</li>
@@ -349,11 +389,11 @@ Simplemente agrega la clave <code>tab</code> al array de configuracion del campo
 <li>Numérico</li>
 </ul>
 <hr />
-<h2 id="4-campo-monetario-money">4. Campo monetario (<code>money</code>)</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="x">$this-&gt;addField(&#39;creditLimit&#39;, [</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="x">    &#39;label&#39; =&gt; &#39;Límite de crédito&#39;,</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="x">    &#39;rules&#39; =&gt; &#39;required|money&#39;</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="x">]);</span>
+<h2 id="6-campo-monetario-money">6. Campo monetario (<code>money</code>)</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="x">$this-&gt;addField(&#39;creditLimit&#39;, [</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="x">    &#39;label&#39; =&gt; &#39;Límite de crédito&#39;,</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="x">    &#39;rules&#39; =&gt; &#39;required|money&#39;</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="x">]);</span>
 </code></pre></div>
 <ul>
 <li>Validador custom</li>
@@ -361,36 +401,36 @@ Simplemente agrega la clave <code>tab</code> al array de configuracion del campo
 <li>Uso financiero</li>
 </ul>
 <hr />
-<h2 id="5-campo-readonly">5. Campo readonly</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="x">$this-&gt;addField(&#39;Contacto&#39;, [</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="x">    &#39;label&#39; =&gt; &#39;Contacto&#39;,</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="x">    &#39;rules&#39; =&gt; &#39;readonly&#39;</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="x">]);</span>
+<h2 id="7-campo-readonly">7. Campo readonly</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="x">$this-&gt;addField(&#39;Contacto&#39;, [</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="x">    &#39;label&#39; =&gt; &#39;Contacto&#39;,</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="x">    &#39;rules&#39; =&gt; &#39;readonly&#39;</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="x">]);</span>
 </code></pre></div>
 <ul>
 <li>Visible</li>
 <li>No editable</li>
 </ul>
 <hr />
-<h2 id="6-campo-hidden">6. Campo hidden</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="x">$this-&gt;addField(&#39;Contacto&#39;, [</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="x">    &#39;label&#39; =&gt; &#39;Contacto&#39;,</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="x">    &#39;rules&#39; =&gt; &#39;readonly&#39;,</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="x">    &#39;type&#39;  =&gt; &#39;hidden&#39;</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="x">]);</span>
+<h2 id="8-campo-hidden">8. Campo hidden</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="x">$this-&gt;addField(&#39;Contacto&#39;, [</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="x">    &#39;label&#39; =&gt; &#39;Contacto&#39;,</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="x">    &#39;rules&#39; =&gt; &#39;readonly&#39;,</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="x">    &#39;type&#39;  =&gt; &#39;hidden&#39;</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="x">]);</span>
 </code></pre></div>
 <ul>
 <li>No visible en formularios</li>
 <li>Útil para UX</li>
 </ul>
 <hr />
-<h2 id="7-campo-calculado-query">7. Campo calculado (<code>query</code>)</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="x">$this-&gt;addField(&#39;Contacto&#39;, [</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="x">    &#39;label&#39; =&gt; &#39;Contacto&#39;,</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="x">    &#39;rules&#39; =&gt; &#39;readonly&#39;,</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="x">    &#39;query&#39; =&gt; &quot;concat(contactLastName, &#39;, &#39;, contactFirstName)&quot;,</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="x">    &#39;type&#39;  =&gt; &#39;hidden&#39;</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="x">]);</span>
+<h2 id="9-campo-calculado-query">9. Campo calculado (<code>query</code>)</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="x">$this-&gt;addField(&#39;Contacto&#39;, [</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="x">    &#39;label&#39; =&gt; &#39;Contacto&#39;,</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="x">    &#39;rules&#39; =&gt; &#39;readonly&#39;,</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="x">    &#39;query&#39; =&gt; &quot;concat(contactLastName, &#39;, &#39;, contactFirstName)&quot;,</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="x">    &#39;type&#39;  =&gt; &#39;hidden&#39;</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="x">]);</span>
 </code></pre></div>
 <ul>
 <li>No persistente</li>
@@ -398,8 +438,8 @@ Simplemente agrega la clave <code>tab</code> al array de configuracion del campo
 <li>Solo lectura</li>
 </ul>
 <hr />
-<h2 id="8-campo-relacionado-addsearch">8. Campo relacionado (<code>addSearch</code>)</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="x">$this-&gt;addSearch(&#39;salesRepEmployeeNumber&#39;, &#39;Tienda\\Empleados&#39;);</span>
+<h2 id="10-campo-relacionado-addsearch">10. Campo relacionado (<code>addSearch</code>)</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="x">$this-&gt;addSearch(&#39;salesRepEmployeeNumber&#39;, &#39;Tienda\\Empleados&#39;);</span>
 </code></pre></div>
 <ul>
 <li>Clave foránea lógica</li>
@@ -407,8 +447,8 @@ Simplemente agrega la clave <code>tab</code> al array de configuracion del campo
 <li>Sin JOIN manual</li>
 </ul>
 <hr />
-<h2 id="9-campo-clave-primaria">9. Campo clave primaria</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="x">$this-&gt;setIdField(&#39;customerNumber&#39;);</span>
+<h2 id="11-campo-clave-primaria">11. Campo clave primaria</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="x">$this-&gt;setIdField(&#39;customerNumber&#39;);</span>
 </code></pre></div>
 <ul>
 <li>Identidad del dataset</li>
@@ -420,7 +460,7 @@ Simplemente agrega la clave <code>tab</code> al array de configuracion del campo
 </li>
 </ul>
 <hr />
-<h2 id="10-campo-dropdown-enum">10. Campo dropdown (enum)</h2>
+<h2 id="12-campo-dropdown-enum">12. Campo dropdown (enum)</h2>
 <ul>
 <li>
 <p>Breve descripción: un dropdown (enum) presenta un conjunto cerrado de opciones (clave =&gt; etiqueta). Se almacena la clave seleccionada en la base de datos; la etiqueta se usa solo para la interfaz.</p>
@@ -439,30 +479,30 @@ Simplemente agrega la clave <code>tab</code> al array de configuracion del campo
 <p>Ejemplo estático:</p>
 </li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="x">$this-&gt;addField(&#39;status&#39;, [</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="x">        &#39;label&#39;   =&gt; &#39;Estado&#39;,</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="x">        &#39;type&#39;    =&gt; &#39;dropdown&#39;,</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="x">        &#39;options&#39; =&gt; [</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="x">                &#39;shipped&#39;   =&gt; &#39;Enviado&#39;,</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="x">                &#39;pending&#39;   =&gt; &#39;Pendiente&#39;,</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="x">                &#39;cancelled&#39; =&gt; &#39;Cancelado&#39;</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="x">        ],</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="x">        &#39;default&#39; =&gt; &#39;pending&#39;,</span>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="x">        &#39;rules&#39;   =&gt; &#39;required|in_list[shipped,pending,cancelled]&#39;</span>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="x">]);</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="x">$this-&gt;addField(&#39;status&#39;, [</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="x">        &#39;label&#39;   =&gt; &#39;Estado&#39;,</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="x">        &#39;type&#39;    =&gt; &#39;dropdown&#39;,</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="x">        &#39;options&#39; =&gt; [</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="x">                &#39;shipped&#39;   =&gt; &#39;Enviado&#39;,</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="x">                &#39;pending&#39;   =&gt; &#39;Pendiente&#39;,</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="x">                &#39;cancelled&#39; =&gt; &#39;Cancelado&#39;</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="x">        ],</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="x">        &#39;default&#39; =&gt; &#39;pending&#39;,</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="x">        &#39;rules&#39;   =&gt; &#39;required|in_list[shipped,pending,cancelled]&#39;</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="x">]);</span>
 </code></pre></div>
 <ul>
 <li>Ejemplo dinámico (cargar desde DB):</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="x">$rows   = $this-&gt;db-&gt;table(&#39;categories&#39;)-&gt;select(&#39;id, name&#39;)-&gt;get()-&gt;getResultArray();</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="x">$options = array_column($rows, &#39;name&#39;, &#39;id&#39;);</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="x">$this-&gt;addField(&#39;categoryId&#39;, [</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="x">        &#39;label&#39;   =&gt; &#39;Categoría&#39;,</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="x">        &#39;type&#39;    =&gt; &#39;dropdown&#39;,</span>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="x">        &#39;options&#39; =&gt; $options,</span>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="x">        &#39;rules&#39;   =&gt; &#39;required|in_list[&#39; . implode(&#39;,&#39;, array_keys($options)) . &#39;]&#39;</span>
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="x">]);</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="x">$rows   = $this-&gt;db-&gt;table(&#39;categories&#39;)-&gt;select(&#39;id, name&#39;)-&gt;get()-&gt;getResultArray();</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="x">$options = array_column($rows, &#39;name&#39;, &#39;id&#39;);</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="x">$this-&gt;addField(&#39;categoryId&#39;, [</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="x">        &#39;label&#39;   =&gt; &#39;Categoría&#39;,</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="x">        &#39;type&#39;    =&gt; &#39;dropdown&#39;,</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="x">        &#39;options&#39; =&gt; $options,</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="x">        &#39;rules&#39;   =&gt; &#39;required|in_list[&#39; . implode(&#39;,&#39;, array_keys($options)) . &#39;]&#39;</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="x">]);</span>
 </code></pre></div>
 <ul>
 <li>
@@ -491,7 +531,37 @@ Simplemente agrega la clave <code>tab</code> al array de configuracion del campo
 <p>Persistencia: el valor guardado es la clave; si necesita guardar la etiqueta, considere un campo calculado o una vista.</p>
 </li>
 </ul>
-<h2 id="11-resumen">11. Resumen</h2>
+<hr />
+<h2 id="13-campo-switch-booleano">13. Campo Switch (Booleano)</h2>
+<p>Renderiza un interruptor (toggle) moderno. Ideal para campos booleanos o de estado (activo/inactivo).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="x">$this-&gt;addField(&#39;isActive&#39;, [</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="x">    &#39;label&#39;   =&gt; &#39;Publicado&#39;,</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="x">    &#39;type&#39;    =&gt; &#39;switch&#39;,</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="x">    &#39;default&#39; =&gt; 1,          // Valor por defecto (checkbox marcado)</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="x">    // Opcional: Personalizar valores (por defecto 1 y 0)</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="x">    &#39;onValue&#39; =&gt; &#39;Y&#39;,</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="x">    &#39;offValue&#39;=&gt; &#39;N&#39;</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="x">]);</span>
+</code></pre></div>
+<ul>
+<li>Interactúa con valores <code>1/0</code> (o personalizados).</li>
+<li>UI moderna (Bootstrap switch).</li>
+</ul>
+<hr />
+<h2 id="14-campo-pillbox-etiquetas">14. Campo Pillbox (Etiquetas)</h2>
+<p>Permite gestionar una lista de etiquetas (tags) simples. Se almacena en la base de datos como un array JSON.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="x">$this-&gt;addField(&#39;tags&#39;, [</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="x">    &#39;label&#39; =&gt; &#39;Etiquetas&#39;,</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="x">    &#39;type&#39;  =&gt; &#39;pillbox&#39;</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="x">]);</span>
+</code></pre></div>
+<ul>
+<li><strong>Interfaz:</strong> Input de texto que convierte entradas en "pastillas" al presionar Enter o Coma.</li>
+<li><strong>Almacenamiento:</strong> JSON Array (ej. <code>["Rojo", "Oferta"]</code>). Requiere un campo tipo <code>JSON</code> o <code>TEXT</code> en BD.</li>
+<li><strong>Uso:</strong> Categorización simple, palabras clave.</li>
+</ul>
+<hr />
+<h2 id="15-resumen">15. Resumen</h2>
 <table>
 <thead>
 <tr>
