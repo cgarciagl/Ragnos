@@ -32,7 +32,11 @@ class Oficinas extends RDatasetController
         $this->addField('state', ['label' => 'Estado', 'rules' => '']);
         $this->addField('country', ['label' => 'País', 'rules' => 'required']);
         $this->addField('postalcode', ['label' => 'Código postal', 'rules' => 'required']);
-        $this->addField('territory', ['label' => 'Territorio', 'rules' => 'required', 'type' => 'pilllbox']);
+        $this->addField('territory', [
+            'label' => 'Territorio',
+            'rules' => 'required',
+            'type'  => 'pillbox'
+        ]);
 
         $this->setTableFields(['nombreCiudad', 'state', 'territory']);
     }

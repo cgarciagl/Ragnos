@@ -17,19 +17,29 @@
         const pillsContainer = document.getElementById('<?= $name ?>_pills');
 
         let tags = [];
+        const rawValue = hiddenInput.value;
+
+        // Logic to determine initial tags:
+        // 1. Try to parse as JSON Array
+        // 2. If fail, treat as simple comma-separated string
         try {
-            const rawValue = hiddenInput.value;
-            if (rawValue) {
-                tags = JSON.parse(rawValue);
-                if (!Array.isArray(tags)) {
-                    // Try to handle existing comma-separated strings if any
-                    tags = rawValue.split(',').map(s => s.trim()).filter(s => s);
-                }
+            const parsed = JSON.parse(rawValue);
+            if (Array.isArray(parsed)) {
+                tags = parsed;
+            } else {
+                // Determine if it was a JSON string or number that is not an array
+                // If so, we treat the raw string value as the input
+                throw new Error("Parsed JSON is not an array");
             }
         } catch (e) {
-            console.warn("Could not parse existing tags for <?= $name ?>", e);
-            tags = [];
+            // Fallback for non-JSON content (e.g. "EMEA", "Tag1, Tag2")
+            if (rawValue && rawValue.trim() !== '') {
+                tags = rawValue.split(',').map(s => s.trim()).filter(s => s.length > 0);
+            }
         }
+
+        // Debug info
+        // console.log('Pillbox [<?= $name ?>] init. Raw:', rawValue, 'Tags:', tags);
 
         function updateHiddenInput() {
             hiddenInput.value = JSON.stringify(tags);
@@ -57,22 +67,48 @@
             });
         }
 
+        function addTagsFromInput(inputValue) {
+            if (!inputValue) return;
+
+            // Split by comma or newline, trim, and filter empties
+            const newTags = inputValue.split(/,|\n/).map(s => s.trim()).filter(s => s.length > 0);
+
+            let changed = false;
+            newTags.forEach(tag => {
+                if (!tags.includes(tag)) {
+                    tags.push(tag);
+                    changed = true;
+                }
+            });
+
+            if (changed) {
+                renderPills();
+                updateHiddenInput();
+            }
+        }
+
         displayInput.addEventListener('keydown', function (e) {
             if (e.key === 'Enter' || e.key === ',') {
                 e.preventDefault();
-                const val = this.value.trim().replace(',', '');
-                if (val && !tags.includes(val)) {
-                    tags.push(val);
-                    renderPills();
-                    updateHiddenInput();
-                    this.value = '';
-                }
+                addTagsFromInput(this.value);
+                this.value = '';
             } else if (e.key === 'Backspace' && this.value === '' && tags.length > 0) {
-                // Optional: remove last tag on backspace if input is empty
                 tags.pop();
                 renderPills();
                 updateHiddenInput();
             }
+        });
+
+        displayInput.addEventListener('blur', function () {
+            addTagsFromInput(this.value);
+            this.value = '';
+        });
+
+        displayInput.addEventListener('paste', function (e) {
+            e.preventDefault();
+            const pastedData = (e.clipboardData || window.clipboardData).getData('text');
+            addTagsFromInput(pastedData);
+            this.value = '';
         });
 
         // Initialize display
