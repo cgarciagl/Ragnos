@@ -20,10 +20,10 @@ class Productos extends RDatasetController
         $this->addSearch('productLine', 'Tienda\Lineas');
         $this->addField('productScale', ['label' => 'Escala', 'rules' => 'required']);
         $this->addField('productVendor', ['label' => 'Proveedor', 'rules' => 'required']);
-        $this->addField('productDescription', ['label' => 'Descripción', 'rules' => 'required', 'type' => 'textarea', 'tab' => 'Detalles']);
+        $this->addField('productDescription', ['label' => 'Descripción', 'rules' => 'required', 'type' => 'textarea']);
         $this->addField('quantityInStock', ['label' => 'Cantidad en stock', 'rules' => 'required|numeric']);
-        $this->addField('buyPrice', ['label' => 'Precio de compra', 'rules' => 'required|numeric|money', 'tab' => 'Detalles']);
-        $this->addField('MSRP', ['label' => 'Precio de Venta Sugerido', 'rules' => 'required|numeric|money', 'tab' => 'Detalles']);
+        $this->addField('buyPrice', ['label' => 'Precio de compra', 'rules' => 'required|numeric|money']);
+        $this->addField('MSRP', ['label' => 'Precio de Venta Sugerido', 'rules' => 'required|numeric|money']);
 
         $this->setTableFields(['productName', 'productCode', 'productLine', 'productVendor', 'quantityInStock', 'MSRP']);
     }

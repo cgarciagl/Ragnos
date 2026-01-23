@@ -1,4 +1,4 @@
-# Tipos de campo soportados en Ragnos
+﻿# Tipos de campo soportados en Ragnos
 
 En Ragnos, los campos de un dataset se definen mediante el método `addField()`. Este método es parte fundamental de la configuración de un [RDatasetController](datasets.md).
 Cada campo es una **descripción declarativa** de cómo un atributo del dominio:
@@ -85,7 +85,39 @@ $this->addField('customerName', [
 
 ---
 
-## 3. Campo numérico
+## 3. Campo de texto multilínea (`textarea`)
+
+Para textos largos como descripciones o comentarios.
+
+```php
+$this->addField('productDescription', [
+    'label' => 'Descripción',
+    'type'  => 'textarea',
+    'rules' => 'required'
+]);
+```
+
+- **Variante HTML:** Si necesitas un editor básico, usa `type => 'htmltextarea'`.
+
+---
+
+## 4. Campo de Fecha y Hora
+
+Ragnos maneja automáticamente la selección de fechas.
+
+```php
+$this->addField('orderDate', [
+    'label' => 'Fecha de Orden',
+    'type'  => 'datetime', // o 'date'
+    'rules' => 'required'
+]);
+```
+
+- Incluye selector de fecha (datepicker).
+
+---
+
+## 5. Campo numérico
 
 ```php
 $this->addField('postalCode', [
@@ -100,7 +132,7 @@ $this->addField('postalCode', [
 
 ---
 
-## 4. Campo monetario (`money`)
+## 6. Campo monetario (`money`)
 
 ```php
 $this->addField('creditLimit', [
@@ -115,7 +147,7 @@ $this->addField('creditLimit', [
 
 ---
 
-## 5. Campo readonly
+## 7. Campo readonly
 
 ```php
 $this->addField('Contacto', [
@@ -129,7 +161,7 @@ $this->addField('Contacto', [
 
 ---
 
-## 6. Campo hidden
+## 8. Campo hidden
 
 ```php
 $this->addField('Contacto', [
@@ -144,7 +176,7 @@ $this->addField('Contacto', [
 
 ---
 
-## 7. Campo calculado (`query`)
+## 9. Campo calculado (`query`)
 
 ```php
 $this->addField('Contacto', [
@@ -161,7 +193,7 @@ $this->addField('Contacto', [
 
 ---
 
-## 8. Campo relacionado (`addSearch`)
+## 10. Campo relacionado (`addSearch`)
 
 ```php
 $this->addSearch('salesRepEmployeeNumber', 'Tienda\\Empleados');
@@ -173,7 +205,7 @@ $this->addSearch('salesRepEmployeeNumber', 'Tienda\\Empleados');
 
 ---
 
-## 9. Campo clave primaria
+## 11. Campo clave primaria
 
 ```php
 $this->setIdField('customerNumber');
@@ -186,7 +218,7 @@ $this->setIdField('customerNumber');
 
 ---
 
-## 10. Campo dropdown (enum)
+## 12. Campo dropdown (enum)
 
 - Breve descripción: un dropdown (enum) presenta un conjunto cerrado de opciones (clave => etiqueta). Se almacena la clave seleccionada en la base de datos; la etiqueta se usa solo para la interfaz.
 
@@ -243,7 +275,46 @@ $this->addField('categoryId', [
 
 - Persistencia: el valor guardado es la clave; si necesita guardar la etiqueta, considere un campo calculado o una vista.
 
-## 11. Resumen
+---
+
+## 13. Campo Switch (Booleano)
+
+Renderiza un interruptor (toggle) moderno. Ideal para campos booleanos o de estado (activo/inactivo).
+
+```php
+$this->addField('isActive', [
+    'label'   => 'Publicado',
+    'type'    => 'switch',
+    'default' => 1,          // Valor por defecto (checkbox marcado)
+    // Opcional: Personalizar valores (por defecto 1 y 0)
+    'onValue' => 'Y',
+    'offValue'=> 'N'
+]);
+```
+
+- Interactúa con valores `1/0` (o personalizados).
+- UI moderna (Bootstrap switch).
+
+---
+
+## 14. Campo Pillbox (Etiquetas)
+
+Permite gestionar una lista de etiquetas (tags) simples. Se almacena en la base de datos como un array JSON.
+
+```php
+$this->addField('tags', [
+    'label' => 'Etiquetas',
+    'type'  => 'pillbox'
+]);
+```
+
+- **Interfaz:** Input de texto que convierte entradas en "pastillas" al presionar Enter o Coma.
+- **Almacenamiento:** JSON Array (ej. `["Rojo", "Oferta"]`). Requiere un campo tipo `JSON` o `TEXT` en BD.
+- **Uso:** Categorización simple, palabras clave.
+
+---
+
+## 15. Resumen
 
 | Tipo      | Persistente | Editable |
 | --------- | ----------- | -------- |

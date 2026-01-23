@@ -13,7 +13,22 @@ trait FieldManagementTrait
     }
     function addFieldFromArray($fieldName, $array)
     {
-        $this->ofieldlist[$fieldName] = new RSimpleTextField($fieldName);
+        $type     = $array['type'] ?? 'text';
+        $classMap = [
+            'switch'  => \App\ThirdParty\Ragnos\Models\Fields\RSwitchField::class,
+            'pillbox' => \App\ThirdParty\Ragnos\Models\Fields\RPillboxField::class,
+            // Add other specialized fields here in the future
+            // 'file' => ..., 'color' => ...
+        ];
+
+        if (array_key_exists($type, $classMap)) {
+            $className                    = $classMap[$type];
+            $this->ofieldlist[$fieldName] = new $className($fieldName);
+        } else {
+            // Default to SimpleTextField for 'text', 'password', 'date', etc.
+            $this->ofieldlist[$fieldName] = new RSimpleTextField($fieldName);
+        }
+
         $this->ofieldlist[$fieldName]->loadFromArray($array);
         $this->ofieldlist[$fieldName]->setDefaults();
         return $this->ofieldlist[$fieldName];
