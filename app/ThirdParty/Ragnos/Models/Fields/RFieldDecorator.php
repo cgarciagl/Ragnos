@@ -19,5 +19,6 @@ abstract class RFieldDecorator extends RField
         $this->value       = &$Field->value;
         $this->default     = &$Field->default;
         $this->placeholder = &$Field->placeholder;
+        $this->tab         = &$Field->tab;
     }
 }

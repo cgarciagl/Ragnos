@@ -31,6 +31,7 @@ $this->addField('fieldName', [
 | `rules`   | Validation rules (CI4 + Ragnos)      |
 | `type`    | Field type (optional)                |
 | `query`   | SQL expression for calculated fields |
+| `tab`     | Tab name (optional)                  |
 
 !!! tip "Validation Rules"
 
@@ -51,6 +52,21 @@ $this->addField('fieldName', [
     - **Usernames** or aliases.
     - **Product codes** (SKU) or barcodes.
     - **National ID** numbers.
+
+### Tabbed Organization
+
+Ragnos allows you to organize form fields into tabs to improve usability in extensive forms.
+Simply add the `tab` key to the field configuration array with the desired tab name.
+
+```php
+$this->addField('basic_info', [ ... , 'tab' => 'General' ]);
+$this->addField('technical_details', [ ... , 'tab' => 'Details' ]);
+$this->addField('pricing', [ ... , 'tab' => 'Finance' ]);
+```
+
+- Fields without a defined tab will automatically be placed in a tab labeled **"General"**.
+- If no field has a tab defined, the form will be displayed without tabs (classic behavior).
+- If a validation error occurs in a field hidden by a tab, Ragnos will automatically activate that tab to show the error.
 
 ---
 

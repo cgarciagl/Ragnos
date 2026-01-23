@@ -15,6 +15,7 @@ abstract class RField
     protected array $options = [];
     protected mixed $default = null;
     protected ?string $placeholder = null;
+    protected ?string $tab = null;
 
     public function __construct(string $fieldname)
     {
@@ -25,6 +26,16 @@ abstract class RField
     public function getFieldName(): string
     {
         return $this->fieldname;
+    }
+
+    public function getTab(): ?string
+    {
+        return $this->tab;
+    }
+
+    public function setTab(string $tab): void
+    {
+        $this->tab = $tab;
     }
 
     public function getFieldToShow()
@@ -121,7 +132,7 @@ abstract class RField
     // Carga de propiedades desde un array
     public function loadFromArray(array $array): void
     {
-        $properties = ['label', 'value', 'rules', 'type', 'options', 'default', 'query', 'placeholder'];
+        $properties = ['label', 'value', 'rules', 'type', 'options', 'default', 'query', 'placeholder', 'tab'];
         foreach ($properties as $prop) {
             $method = "set" . ucfirst($prop);
             if (array_key_exists($prop, $array) && method_exists($this, $method)) {

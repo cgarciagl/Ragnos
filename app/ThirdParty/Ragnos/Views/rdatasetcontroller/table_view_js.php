@@ -29,7 +29,11 @@
         form.find('input[money]').each(function () {
             const name = $(this).attr('name');
             const rawValue = $(this).val();
-            formData[name] = moneyToNumber(rawValue);
+            if (rawValue === '') {
+                formData[name] = '';
+            } else {
+                formData[name] = moneyToNumber(rawValue);
+            }
         })
 
         // Add previous values for controls
@@ -52,6 +56,22 @@
                 $.each(response.errors, function (field, errorMessage) {
                     const group = $(`#group_${field}`);
                     group.append(`<span class="ui-state-error badge text-bg-danger">${errorMessage}</span>`);
+
+                    // Logic to switch tab if field is inside one
+                    const tabPane = group.closest('.tab-pane');
+                    if (tabPane.length > 0) {
+                        const tabId = tabPane.attr('id');
+                        const tabButton = $(`button[data-bs-target="#${tabId}"]`);
+                        if (tabButton.length > 0) {
+                            if (typeof bootstrap !== 'undefined') {
+                                const tab = bootstrap.Tab.getOrCreateInstance(tabButton[0]);
+                                tab.show();
+                            } else {
+                                tabButton.click();
+                            }
+                        }
+                    }
+
                     $(`#${field}`).focus();
                     group.addClass('has-error');
 

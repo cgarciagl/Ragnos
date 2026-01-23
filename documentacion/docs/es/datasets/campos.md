@@ -31,6 +31,7 @@ $this->addField('nombreCampo', [
 | `rules`   | Reglas de validación (CI4 + Ragnos)    |
 | `type`    | Tipo de campo (opcional)               |
 | `query`   | Expresión SQL para campos calculados   |
+| `tab`     | Nombre de la pestaña (opcional)        |
 
 !!! tip "Reglas de Validación"
 
@@ -51,6 +52,21 @@ $this->addField('nombreCampo', [
     - **Nombres de usuario** o alias.
     - **Códigos de producto** (SKU) o códigos de barras.
     - **DNI** o documentos de identidad.
+
+### Organización en Pestañas
+
+Ragnos permite organizar los campos del formulario en pestañas para mejorar la usabilidad en formularios extensos.
+Simplemente agrega la clave `tab` al array de configuracion del campo con el nombre de la pestaña deseada.
+
+```php
+$this->addField('informacion_basica', [ ... , 'tab' => 'General' ]);
+$this->addField('detalles_tecnicos', [ ... , 'tab' => 'Detalles' ]);
+$this->addField('precios', [ ... , 'tab' => 'Finanzas' ]);
+```
+
+- Los campos que no tengan definida una pestaña irán automáticamente a una pestaña etiquetada como **"General"**.
+- Si ningún campo tiene definida una pestaña, el formulario se mostrará sin pestañas (comportamiento clásico).
+- Si ocurre un error de validación en un campo oculto por una pestaña, Ragnos activará automáticamente esa pestaña para mostrar el error.
 
 ---
 
