@@ -224,9 +224,10 @@
 <p>The <code>RSimpleLevelReport</code> class allows generating reports in HTML table format quickly and structured directly from a data array. Ideal for displaying lists, financial summaries or any dataset requiring tabular presentation, with support for grouping levels (control breaks).</p>
 <h2 id="main-features">Main Features</h2>
 <ul>
-<li>Automatic HTML table generation.</li>
+<li>Automatic HTML table generation with professional design.</li>
 <li>Support for multiple grouping levels (headers per group).</li>
 <li>Automatic record total calculation.</li>
+<li><strong>Detection and calculation of sums for numeric columns (subtotals and grand totals).</strong></li>
 <li>Easy integration with Ragnos views.</li>
 </ul>
 <h2 id="basic-usage-flow">Basic Usage Flow</h2>
@@ -250,7 +251,13 @@
 <li><strong><code>$desc_filter</code></strong> (string): (Optional) Subtitle or description of applied filters.</li>
 </ul>
 <h3 id="setshowtotalsbool-showtotals"><code>setShowTotals(bool $showTotals)</code></h3>
-<p>Enables or disables total record count display at report end (default <code>true</code>).</p>
+<p>Enables or disables totals display (record count and financial sums) at the end of each group and report (default <code>true</code>).</p>
+<h3 id="setsummablefieldsarray-fields"><code>setSummableFields(array $fields)</code></h3>
+<p>Explicitly defines which fields should be mathematically summed in table footers.</p>
+<ul>
+<li><strong><code>$fields</code></strong> (array): List of field names (labels) containing numeric values.</li>
+<li><em>Note:</em> If this method is not used, the class attempts to automatically detect summable fields by looking for names like 'Total', 'Price', 'Balance', 'Debt', etc.</li>
+</ul>
 <h3 id="renderreturnroute-adminindex"><code>render($returnRoute = 'admin/index')</code></h3>
 <p>Returns rendered report HTML inside standard report view. Useful embedding in existing layouts.</p>
 <h3 id="generate"><code>generate()</code></h3>
@@ -346,6 +353,28 @@
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="x">// Data must come sorted by country then state</span>
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="x">$report-&gt;quickSetup(&#39;Geographic Report&#39;, $data, [&#39;city&#39;, &#39;population&#39;], $groups);</span>
+</code></pre></div>
+<h3 id="4-financial-report-with-totals">4. Financial Report with Totals</h3>
+<p>This example shows how the class automatically handles sums and grand totals.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="x">// Sales data</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="x">$data = [</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="x">    [&#39;salesperson&#39; =&gt; &#39;John&#39;, &#39;sale&#39; =&gt; 100.50, &#39;commission&#39; =&gt; 10],</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="x">    [&#39;salesperson&#39; =&gt; &#39;Mary&#39;, &#39;sale&#39; =&gt; 200.00, &#39;commission&#39; =&gt; 20],</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="x">    [&#39;salesperson&#39; =&gt; &#39;Pete&#39;, &#39;sale&#39; =&gt; 150.00, &#39;commission&#39; =&gt; 15],</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="x">];</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="x">$report = new RSimpleLevelReport();</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="x">$report-&gt;quickSetup(&#39;Commission Report&#39;, $data, [&#39;salesperson&#39;, &#39;sale&#39;, &#39;commission&#39;]);</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="x">// Optional: Force which fields to sum (if not automatically detected)</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="x">// $report-&gt;setSummableFields([&#39;sale&#39;, &#39;commission&#39;]);</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="x">// Rendering will generate:</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="x">// - A table with the data.</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="x">// - A &quot;GRAND TOTAL&quot; footer aligned correctly.</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="x">// - The &#39;sale&#39; column will sum to 450.50</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="x">// - The &#39;commission&#39; column will sum to 45</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="x">return $report-&gt;render();</span>
 </code></pre></div>
 <h2 id="common-applications">Common Applications</h2>
 <ul>
