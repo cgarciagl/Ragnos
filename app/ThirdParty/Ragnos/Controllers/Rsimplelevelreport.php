@@ -10,241 +10,342 @@ class RSimpleLevelReport
 {
     private string $title = '';
     private string $descfilter = '';
-    private string $encab = '';
+    private string $buffer = '';
     private array $groups = [];
     private int $totalrecords = 0;
     private int $grouprecords = 0;
     private array $listfields = [];
     private array $data = [];
-    private bool $showTotals = true; //
+    private bool $showTotals = true;
 
-    private bool $showldwritelevelheader = false; //
-    private bool $showldwritelevelfooter = true; //
+    // Nuevas propiedades para acumular sumas
+    private array $summableFields = [];
+    private array $groupTotals = [];
+    private array $grandTotals = [];
+
+    // Propiedades renombradas para mayor legibilidad
+    private bool $shouldWriteGroupHeader = false;
+    private bool $shouldWriteGroupFooter = true;
 
     public function __construct()
     {
-        // Cargar el helper de Ragnos una sola vez si se usa en la clase
-        helper('App\ThirdParty\Ragnos\Helpers\ragnos_helper'); // Cargar el helper aquí o en app/Config/Autoload.php
+        helper('App\ThirdParty\Ragnos\Helpers\ragnos_helper');
     }
 
-    public function setShowTotals(bool $showTotals): void //
+    public function setShowTotals(bool $showTotals): void
     {
-        $this->showTotals = $showTotals; //
+        $this->showTotals = $showTotals;
     }
 
-    // El método __get() se mantiene dado el contexto de su framework Ragnos.
+    // Define qué campos deben sumarse automáticamente (ej: ['Total', 'Deuda'])
+    public function setSummableFields(array $fields): void
+    {
+        $this->summableFields = $fields;
+    }
+
     public function __get(string $attr)
     {
-        $CI = Ragnos::get_CI(); //
-        if (isset($CI->$attr)) { //
-            return $CI->$attr; //
+        $CI = Ragnos::get_CI();
+        if (isset($CI->$attr)) {
+            return $CI->$attr;
         }
-        return NULL; //
+        return NULL;
     }
 
-    public function getData(): array //
+    public function getData(): array
     {
-        return $this->data; //
+        return $this->data;
     }
 
-    public function setData(array $data): void //
+    public function setData(array $data): void
     {
-        $this->data = $data; //
+        $this->data = $data;
     }
 
-    public function getDescfilter(): string //
+    public function getDescfilter(): string
     {
-        return $this->descfilter; //
+        return $this->descfilter;
     }
 
-    public function setDescfilter(string $descfilter): void //
+    public function setDescfilter(string $descfilter): void
     {
-        $this->descfilter = $descfilter; //
+        $this->descfilter = $descfilter;
     }
 
-    public function getGroups(): array //
+    public function getGroups(): array
     {
-        return $this->groups; //
+        return $this->groups;
     }
 
-    public function setGroups(array $groups): void //
+    public function setGroups(array $groups): void
     {
-        $this->groups = $groups; //
+        $this->groups = $groups;
     }
 
-    public function getListFields(): array //
+    public function getListFields(): array
     {
-        return $this->listfields; //
+        return $this->listfields;
     }
 
-    public function setListFields(array $listfields): void //
+    public function setListFields(array $listfields): void
     {
-        $this->listfields = $listfields; //
+        $this->listfields = $listfields;
     }
 
-    public function getTitle(): string //
+    public function getTitle(): string
     {
-        return $this->title; //
+        return $this->title;
     }
 
-    public function setTitle(string $title): void //
+    public function setTitle(string $title): void
     {
-        $this->title = $title; //
+        $this->title = $title;
     }
 
-    public function quickSetup(string $title, array $data, array $listfields, array $groups = [], string $desc_filter = ''): void //
+    public function quickSetup(string $title, array $data, array $listfields, array $groups = [], string $desc_filter = ''): void
     {
-        $this->title        = $title; //
-        $this->data         = $data; //
-        $this->listfields   = $listfields; //
-        $this->groups       = $groups; //
-        $this->descfilter   = $desc_filter; //
-        $this->totalrecords = 0; //
-    }
+        $this->title        = $title;
+        $this->data         = $data;
+        $this->listfields   = $listfields;
+        $this->groups       = $groups;
+        $this->descfilter   = $desc_filter;
+        $this->totalrecords = 0;
 
-    public function generateTableHeader(): string //
-    {
-        $this->grouprecords  = 0; //
-        $output              = '<table>'; //
-        $output             .= '<thead><tr>'; //
-
-        // Asegurarse de que $this->listfields no esté vacío para evitar división por cero.
-        $numFields          = count($this->listfields); //
-        $percentagePerField = $numFields > 0 ? (int) (100 / $numFields) : 0; //
-
-        foreach ($this->listfields as $fieldIndex => $fieldLabel) { //
-            $output .= '<th width="' . $percentagePerField . '%">' . htmlspecialchars($fieldLabel) . '</th>'; //
+        // Intentar detectar campos sumables automáticamente si no se han definido
+        if (empty($this->summableFields)) {
+            $candidates           = ['Total', 'Monto', 'Precio', 'Importe', 'Saldo', 'Deuda', 'Pagado', 'Comprado', 'LimiteDeCredito', 'TotalVentasTrimestre', 'TotalVendidoUltimos6Meses', 'MargenTotal'];
+            $this->summableFields = array_filter($listfields, function ($field) use ($candidates) {
+                // Si la etiqueta o la clave está en candidatos
+                return in_array($field, $candidates);
+            });
         }
-
-        $output .= '</tr></thead><tbody>'; //
-
-        return $output; //
     }
 
-    public function generateTableFooter(): string //
+    private function generateTableHeader(): string
     {
-        $output  = '</tbody><tfoot><tr>'; //
-        $output .= '<td colspan="' . count($this->listfields) . '">'; //
+        // Reiniciar acumuladores de grupo
+        $this->grouprecords = 0;
+        $this->groupTotals  = array_fill_keys($this->summableFields, 0);
 
-        if ($this->showTotals) { //
-            $output .= '<h5 style="float:right"> Total = ' . htmlspecialchars($this->grouprecords) . ' ' . htmlspecialchars($this->title) . '</h5>'; //
+        $html  = '<div class="table-responsive mt-3 mb-4 shadow-sm rounded border">';
+        $html .= '<table class="table table-sm table-striped table-hover mb-0 align-middle">';
+        $html .= '<thead class="bg-light text-uppercase small text-secondary"><tr>';
+
+        foreach ($this->listfields as $label) {
+            $align  = in_array($label, $this->summableFields) ? 'text-end' : 'text-start';
+            $html  .= "<th scope=\"col\" class=\"py-2 px-3 {$align}\">" . htmlspecialchars($label) . "</th>";
         }
 
-        $output .= '</td></tr></tfoot></table>'; //
-
-        return $output; //
+        $html .= '</tr></thead><tbody>';
+        return $html;
     }
 
-    public function generateTableRow(array $row): string //
+    private function generateTableFooter(bool $isGrandTotal = false): string
     {
-        $temp_string = "<tr>"; //
-        foreach ($this->listfields as $fieldIndex => $listFieldLabel) { //
-            // Mejorar la lógica para obtener el valor del campo
-            // Primero intentar con $fieldIndex (nombre de la columna real)
-            // Luego con $listFieldLabel (etiqueta, si se usa como clave en $row)
-            $value        = $row[$fieldIndex] ?? ($row[$listFieldLabel] ?? ''); // Usar operador de coalescencia nula doblemente
-            $temp_string .= "<td> " . htmlspecialchars((string) $value) . " </td>"; // Escapar HTML y asegurar que sea string
+        // Si no mostramos totales, cerramos simple
+        if (!$this->showTotals) {
+            return '</tbody></table></div>';
         }
-        $temp_string .= "</tr>"; //
-        $this->totalrecords++; //
-        $this->grouprecords++; //
-        return $temp_string; //
+
+        $html = $isGrandTotal
+            ? '<tfoot><tr class="bg-secondary text-white fw-bold">'
+            : '</tbody><tfoot class="fw-bold fs-6 text-dark border-top bg-white"><tr>';
+
+        $totalsSource = $isGrandTotal ? $this->grandTotals : $this->groupTotals;
+        $label        = $isGrandTotal ? 'RESUMEN GENERAL' : 'SUBTOTAL';
+
+        $isFirstColumn = true;
+
+        foreach ($this->listfields as $key => $colLabel) {
+            $isSummable = in_array($colLabel, $this->summableFields);
+            $align      = $isSummable ? 'text-end' : 'text-start';
+            $content    = '';
+
+            if ($isFirstColumn) {
+                $content       = $isGrandTotal ? $label : $label . " <span class='badge bg-light text-dark border ms-1'>{$this->grouprecords}</span>";
+                $isFirstColumn = false;
+            }
+
+            if ($isSummable) {
+                $val = $totalsSource[$colLabel] ?? 0;
+                if (function_exists('moneyFormat')) {
+                    $content = moneyFormat($val);
+                } else {
+                    $content = number_format($val, 2);
+                }
+            }
+
+            $padding  = $isGrandTotal ? 'py-3 px-3' : 'py-2 px-3';
+            $html    .= "<td class=\"{$align} {$padding}\">" . $content . "</td>";
+        }
+
+        $html .= '</tr></tfoot>';
+
+        if (!$isGrandTotal) {
+            $html .= '</table></div>';
+        }
+
+        return $html;
     }
 
-    public function generateRowOrLevel(array $row): string //
+    // Helper para limpiar strings de moneda ($ 1,500.00 -> 1500.00)
+    private function cleanNumber($val)
     {
-        $this->showldwritelevelheader = FALSE; //
-        $this->showldwritelevelfooter = TRUE; //
-        $this->encab                  = ''; //
-        $this->calculateEncab($row); //
-        return $this->generateEncabAndDetail($row); //
+        if (is_numeric($val))
+            return $val;
+        if (is_string($val)) {
+            // Eliminar todo excepto números, punto y signo menos
+            return (float) preg_replace('/[^0-9.-]/', '', $val);
+        }
+        return 0;
     }
 
-    private function calculateEncab(array $row): void //
+    private function generateTableRow(array $row): string
     {
-        $i = 2; //
-        if (!empty($this->groups)) { // // Verificar si hay grupos
-            foreach ($this->groups as $f => &$g) { //
-                $i++; //
+        $html = "<tr>";
+        foreach ($this->listfields as $key => $label) {
+            $fieldName = is_string($key) ? $key : $label;
+            $value     = $row[$fieldName] ?? '';
 
-                // Asegurar que la clave $f existe en $row
-                $currentGroupValue = $row[$f] ?? null; // Usar coalescencia nula
+            // Acumular totales
+            if (in_array($label, $this->summableFields)) {
+                $numericVal = $this->cleanNumber($value);
 
-                // La condición @$g['current'] es problemática. Es mejor inicializar $g['current']
-                // o manejar su ausencia de forma explícita. Asumiremos que $g['current'] existe o es null.
-                $gCurrent = $g['current'] ?? null;
+                if (!isset($this->groupTotals[$label]))
+                    $this->groupTotals[$label] = 0;
+                $this->groupTotals[$label] += $numericVal;
 
-                if (($gCurrent !== $currentGroupValue) || ($this->showldwritelevelheader)) { //
-                    if ($gCurrent === null || $gCurrent === '') { // // Si no tiene un valor previo
-                        $this->showldwritelevelfooter = FALSE; //
+                if (!isset($this->grandTotals[$label]))
+                    $this->grandTotals[$label] = 0;
+                $this->grandTotals[$label] += $numericVal;
+
+                $html .= "<td class=\"text-end px-3\">" . htmlspecialchars((string) $value) . "</td>";
+            } else {
+                $html .= "<td class=\"px-3\">" . htmlspecialchars((string) $value) . "</td>";
+            }
+        }
+        $html .= "</tr>";
+        $this->totalrecords++;
+        $this->grouprecords++;
+        return $html;
+    }
+
+    // --- Lógica Principal de Control Break ---
+
+    private function processRowLogic(array $row): string
+    {
+        $this->shouldWriteGroupHeader = false;
+        $this->shouldWriteGroupFooter = true;
+        $headerHtml                   = '';
+
+        // Si hay grupos definidos, verificamos si cambiaron
+        if (!empty($this->groups)) {
+            $level = 2; // Niveles de título h3, h4...
+
+            foreach ($this->groups as $fieldKey => &$groupConfig) {
+                $level++;
+                $currentVal = $row[$fieldKey] ?? null;
+                $lastVal    = $groupConfig['current'] ?? null;
+
+                // Si cambió el valor, o si un nivel superior cambió (flag activado)
+                if (($lastVal !== $currentVal) || $this->shouldWriteGroupHeader) {
+
+                    // Si es el primer registro del TODO (lastVal es null), no hay grupo anterior que cerrar
+                    if ($lastVal === null) {
+                        $this->shouldWriteGroupFooter = false;
                     }
-                    $g['current']                 = $currentGroupValue; //
-                    $this->showldwritelevelheader = TRUE; //
-                    // El helper 'App\ThirdParty\Ragnos\Helpers\ragnos_helper' ya se carga en el constructor.
-                    $labelToUse   = isset($g['label']) ? $g['label'] : $f; // Usar isset para $g['label']
-                    $this->encab .= "<h{$i}> " . htmlspecialchars($labelToUse) . ": " . htmlspecialchars((string) $currentGroupValue) . " </h{$i}>"; // Escapar HTML
+
+                    // Actualizamos valor actual
+                    $groupConfig['current']       = $currentVal;
+                    $this->shouldWriteGroupHeader = true;
+
+                    // Construimos el título del nuevo grupo
+                    $label       = $groupConfig['label'] ?? $fieldKey;
+                    $headerHtml .= "<div class='mt-4 mb-2 bg-light p-2 ps-3 border-start border-4 border-primary rounded-end shadow-sm d-flex align-items-center'>" .
+                        "<span class='text-uppercase text-muted small fw-bold me-2'>" . htmlspecialchars($label) . ":</span>" .
+                        "<span class='fs-5 fw-bold text-dark'>" . htmlspecialchars((string) $currentVal) . "</span>" .
+                        "</div>";
                 }
             }
         }
-    }
 
-    public function generateEncabAndDetail(array $row): string //
-    {
-        $summary = ''; //
-        if ($this->showldwritelevelheader) { //
-            if ($this->showldwritelevelfooter) { //
-                $summary .= $this->generateTableFooter(); //
+        $output = '';
+
+        // 1. Si cambiamos de grupo
+        if ($this->shouldWriteGroupHeader) {
+            // Cerrar tabla anterior si corresponde
+            if ($this->shouldWriteGroupFooter) {
+                $output .= $this->generateTableFooter();
             }
-            $summary .= $this->encab; //
-            $summary .= $this->generateTableHeader(); //
+            // Imprimir títulos de nuevos grupos
+            $output .= $headerHtml;
+            // Abrir nueva tabla
+            $output .= $this->generateTableHeader();
         }
-        $summary .= $this->generateTableRow($row); //
-        return $summary; //
+
+        // 2. Imprimir la fila de datos
+        $output .= $this->generateTableRow($row);
+
+        return $output;
     }
 
-    public function generate(): string //
+    public function generate(): string
     {
-        $output  = '<div id="imprimible" class="row">'; //
-        $output .= '<h1>' . htmlspecialchars($this->title) . '</h1>'; //
+        $output = '<div id="imprimible" class="ragnos-report-container p-4 bg-white shadow rounded mb-5">';
 
-        if (!empty($this->descfilter)) { //
-            $output .= '<h4 style="text-align: center">' . htmlspecialchars($this->descfilter) . '</h4>'; //
+        // Header del reporte con fecha
+        $output .= '<div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">';
+        $output .= '<div>';
+        $output .= '<h2 class="mb-0 fw-bold text-dark">' . htmlspecialchars($this->title) . '</h2>';
+        if (!empty($this->descfilter)) {
+            $output .= '<p class="text-muted mb-0 mt-1">' . htmlspecialchars($this->descfilter) . '</p>';
+        }
+        $output .= '</div>';
+        $output .= '<div class="text-end text-muted small">';
+        $output .= '<div>' . date('d/m/Y') . '</div>';
+        $output .= '<div>' . date('H:i') . '</div>';
+        $output .= '</div>';
+        $output .= '</div>';
+
+        // Inicializar acumuladores globales
+        $this->grandTotals = [];
+
+        // Si no hay grupos, abrimos la tabla una única vez al inicio
+        if (empty($this->groups)) {
+            $output .= $this->generateTableHeader();
         }
 
-        if (empty($this->groups)) { //
-            $output .= $this->generateTableHeader(); //
+        foreach ($this->data as $row) {
+            $output .= $this->processRowLogic($row);
         }
 
-        foreach ($this->data as $row) { //
-            $output .= $this->generateRowOrLevel($row); //
+        // Cerramos la última tabla abierta
+        $output .= $this->generateTableFooter();
+
+        $output .= '<hr class="my-4"/>';
+
+        // Generar Tabla de Totales Generales (Resumen)
+        if ($this->showTotals && !empty($this->summableFields)) {
+            $output .= '<h4 class="mt-4">Resumen General</h4>';
+            $output .= '<div class="table-responsive"><table class="table table-sm table-bordered">';
+            // Reutilizamos la lógica del footer pero pasándole flag de GrandTotal
+            $output .= $this->generateTableFooter(true);
+            $output .= '</table></div>';
+        } else if ($this->showTotals) {
+            $output .= '<h4 class="text-end">Total General: ' .
+                htmlspecialchars((string) $this->totalrecords) . ' registros</h4>';
         }
 
-        $output .= $this->generateTableFooter(); //
-        $output .= '<hr />'; //
+        $output .= '</div>';
 
-        if ($this->showTotals) { //
-            $output .= '<h3 style="text-align:right">Total: ' . htmlspecialchars((string) $this->totalrecords) . ' ' . htmlspecialchars($this->title) . '</h3>'; // // Castear a string y escapar
-        }
-
-        $output .= '</div>'; //
-
-        return $output; //
+        return $output;
     }
 
-    public function showSimpleView(string $rutadevuelta = 'admin/index'): void //
+    public function render(string $rutadevuelta = 'admin/index'): string
     {
-        $data['rutadevuelta'] = $rutadevuelta; //
-        $data['yo']           = $this; //
-        // Se recomienda devolver la vista en lugar de hacer echo aquí.
-        // El controlador debería ser responsable de enviar la respuesta HTTP.
-        echo view('App\ThirdParty\Ragnos\Views\rreportlib/ysimplelevelreport', $data); //
-    }
+        $data['rutadevuelta'] = $rutadevuelta;
+        $data['yo']           = $this;
 
-    public function render(string $rutadevuelta = 'admin/index'): string //
-    {
-        $data['rutadevuelta'] = $rutadevuelta; //
-        $data['yo']           = $this; //
-        // Este método ya devuelve la vista, lo cual es la práctica preferida en CI4.
-        return view('App\ThirdParty\Ragnos\Views\rreportlib/ysimplelevelreport', $data); //
+        return view('App\ThirdParty\Ragnos\Views\rreportlib/ysimplelevelreport', $data);
     }
 }

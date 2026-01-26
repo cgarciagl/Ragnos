@@ -4,9 +4,10 @@ The `RSimpleLevelReport` class allows generating reports in HTML table format qu
 
 ## Main Features
 
-- Automatic HTML table generation.
+- Automatic HTML table generation with professional design.
 - Support for multiple grouping levels (headers per group).
 - Automatic record total calculation.
+- **Detection and calculation of sums for numeric columns (subtotals and grand totals).**
 - Easy integration with Ragnos views.
 
 ## Basic Usage Flow
@@ -33,7 +34,14 @@ Configures main report parameters at once.
 
 ### `setShowTotals(bool $showTotals)`
 
-Enables or disables total record count display at report end (default `true`).
+Enables or disables totals display (record count and financial sums) at the end of each group and report (default `true`).
+
+### `setSummableFields(array $fields)`
+
+Explicitly defines which fields should be mathematically summed in table footers.
+
+- **`$fields`** (array): List of field names (labels) containing numeric values.
+- _Note:_ If this method is not used, the class attempts to automatically detect summable fields by looking for names like 'Total', 'Price', 'Balance', 'Debt', etc.
 
 ### `render($returnRoute = 'admin/index')`
 
@@ -148,6 +156,32 @@ $groups = [
 
 // Data must come sorted by country then state
 $report->quickSetup('Geographic Report', $data, ['city', 'population'], $groups);
+```
+
+### 4. Financial Report with Totals
+
+This example shows how the class automatically handles sums and grand totals.
+
+```php
+// Sales data
+$data = [
+    ['salesperson' => 'John', 'sale' => 100.50, 'commission' => 10],
+    ['salesperson' => 'Mary', 'sale' => 200.00, 'commission' => 20],
+    ['salesperson' => 'Pete', 'sale' => 150.00, 'commission' => 15],
+];
+
+$report = new RSimpleLevelReport();
+$report->quickSetup('Commission Report', $data, ['salesperson', 'sale', 'commission']);
+
+// Optional: Force which fields to sum (if not automatically detected)
+// $report->setSummableFields(['sale', 'commission']);
+
+// Rendering will generate:
+// - A table with the data.
+// - A "GRAND TOTAL" footer aligned correctly.
+// - The 'sale' column will sum to 450.50
+// - The 'commission' column will sum to 45
+return $report->render();
 ```
 
 ## Common Applications

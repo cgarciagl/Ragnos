@@ -4,9 +4,10 @@ La clase `RSimpleLevelReport` permite generar reportes en formato de tabla HTML 
 
 ## Características Principales
 
-- Generación automática de tablas HTML.
+- Generación automática de tablas HTML con diseño profesional.
 - Soporte para múltiples niveles de agrupación (encabezados por grupo).
 - Cálculo automático de totales de registros.
+- **Detección y cálculo de sumas en columnas numéricas (subtotales y totales generales).**
 - Fácil integración con vistas de Ragnos.
 
 ## Flujo Básico de Uso
@@ -33,7 +34,14 @@ Configura los parámetros principales del reporte de una sola vez.
 
 ### `setShowTotals(bool $showTotals)`
 
-Habilita o deshabilita la visualización del conteo total de registros al final del reporte (por defecto `true`).
+Habilita o deshabilita la visualización de los totales (conteo de registros y sumas financieras) al final de cada grupo y al final del reporte (por defecto `true`).
+
+### `setSummableFields(array $fields)`
+
+Define explícitamente qué campos deben ser sumados matemáticamente en los pies de tabla.
+
+- **`$fields`** (array): Lista de nombres de campos (etiquetas) que contienen valores numéricos.
+- _Nota:_ Si no se utiliza este método, la clase intentará detectar automáticamente campos sumables buscando nombres como 'Total', 'Precio', 'Saldo', 'Deuda', etc.
 
 ### `render($rutadevuelta = 'admin/index')`
 
@@ -148,6 +156,32 @@ $grupos = [
 
 // Los datos deben venir ordenados por pais y luego por estado
 $reporte->quickSetup('Reporte Geográfico', $data, ['ciudad', 'poblacion'], $grupos);
+```
+
+### 4. Reporte Financiero con Totales
+
+Este ejemplo muestra cómo la clase maneja automáticamente las sumas y totales generales.
+
+```php
+// Datos de ventas
+$data = [
+    ['vendedor' => 'Juan',  'venta' => 100.50, 'comision' => 10],
+    ['vendedor' => 'Maria', 'venta' => 200.00, 'comision' => 20],
+    ['vendedor' => 'Pedro', 'venta' => 150.00, 'comision' => 15],
+];
+
+$reporte = new RSimpleLevelReport();
+$reporte->quickSetup('Reporte de Comisiones', $data, ['vendedor', 'venta', 'comision']);
+
+// Opcional: Forzar qué campos sumar (si no se detectan automáticamente)
+// $reporte->setSummableFields(['venta', 'comision']);
+
+// Al renderizar, se generará:
+// - Una tabla con los datos.
+// - Un pie de tabla "TOTAL GENERAL" alineado.
+// - La columna 'venta' sumará 450.50
+// - La columna 'comision' sumará 45
+return $reporte->render();
 ```
 
 ## Aplicaciones Comunes
