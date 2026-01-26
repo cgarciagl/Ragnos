@@ -9,8 +9,8 @@
         </label>
 
         <div class='input-group date' id='<?= $name ?>datetimepicker'>
-            <input name="<?= $name; ?>" type='text' class="form-control" value="<?= $value ?>"
-                data-valueant="<?= $value ?>" <?= $extra_attributes; ?> />
+            <input name="<?= $name; ?>" type='text' class="form-control" value="<?= esc($value) ?>"
+                data-valueant="<?= esc($value) ?>" <?= $extra_attributes; ?> />
             <span class="input-group-text">
                 <i class="bi bi-calendar-event"></i>
             </span>

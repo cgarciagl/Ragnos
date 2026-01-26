@@ -19,7 +19,7 @@ class Usuarios extends RDatasetController
         $this->setIdField('usu_id');
 
         $this->addField('usu_nombre', ['label' => 'Nombre', 'rules' => 'required']);
-        $this->addField('usu_login', extraOptions: ['label' => 'Login', 'rules' => 'required|is_unique']);
+        $this->addField('usu_login', ['label' => 'Login', 'rules' => 'required|is_unique']);
         $this->addField(
             'usu_pword',
             [
@@ -41,7 +41,7 @@ class Usuarios extends RDatasetController
         //     ]
         // );
 
-        $this->addField(fieldName: 'usu_activo', extraOptions: [
+        $this->addField('usu_activo', [
             'label'    => 'Activo',
             'type'     => 'switch',
             'default'  => 'N',
