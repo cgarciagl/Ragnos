@@ -376,20 +376,26 @@ $this->addField('profile_photo', [
 
 ---
 
-## 17. Summary
-
-| Type       | Persistent | Editable |
-| ---------- | ---------- | -------- |
-| Text       | Yes        | Yes      |
-| Numeric    | Yes        | Yes      |
-| Money      | Yes        | Yes      |
-| Readonly   | Depends    | No       |
-| Hidden     | Depends    | No       |
-| Calculated | No         | No       |
-| Relation   | Yes        | Yes      |
-| Dropdown   | Yes        | Yes      |
-| PK Key     | Yes        | Yes      |
+**In Ragnos, fields are domain declarations, not simple inputs.**
 
 ---
 
-**In Ragnos, fields are domain declarations, not simple inputs.**
+## 17. Summary
+
+| Type             | Persistent | Editable |
+| ---------------- | ---------- | -------- |
+| Text             | Yes        | Yes      |
+| Multiline Text   | Yes        | Yes      |
+| Date / Time      | Yes        | Yes      |
+| Numeric          | Yes        | Yes      |
+| Money            | Yes        | Yes      |
+| Switch (Boolean) | Yes        | Yes      |
+| Pillbox (Tags)   | Yes (JSON) | Yes      |
+| File Upload      | Yes (Path) | Yes      |
+| Image Upload     | Yes (Path) | Yes      |
+| Readonly         | Depends    | No       |
+| Hidden           | Depends    | No       |
+| Calculated       | No         | No       |
+| Relation         | Yes        | Yes      |
+| Dropdown         | Yes        | Yes      |
+| PK Key           | Yes        | Yes      |

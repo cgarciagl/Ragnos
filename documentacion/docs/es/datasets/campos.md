@@ -374,20 +374,26 @@ $this->addField('foto_perfil', [
 
 ---
 
-## 17. Resumen
-
-| Tipo      | Persistente | Editable |
-| --------- | ----------- | -------- |
-| Texto     | Sí          | Sí       |
-| Numérico  | Sí          | Sí       |
-| Money     | Sí          | Sí       |
-| Readonly  | Depende     | No       |
-| Hidden    | Depende     | No       |
-| Calculado | No          | No       |
-| Relación  | Sí          | Sí       |
-| Dropdown  | Sí          | Sí       |
-| Clave PK  | Sí          | Sí       |
+**En Ragnos, los campos son declaraciones del dominio, no simples inputs.**
 
 ---
 
-**En Ragnos, los campos son declaraciones del dominio, no simples inputs.**
+## 17. Resumen
+
+| Tipo              | Persistente | Editable |
+| ----------------- | ----------- | -------- |
+| Texto             | Sí          | Sí       |
+| Texto Multilínea  | Sí          | Sí       |
+| Fecha / Hora      | Sí          | Sí       |
+| Numérico          | Sí          | Sí       |
+| Money             | Sí          | Sí       |
+| Switch (Booleano) | Sí          | Sí       |
+| Pillbox (Tags)    | Sí (JSON)   | Sí       |
+| Archivo           | Sí (Ruta)   | Sí       |
+| Imagen            | Sí (Ruta)   | Sí       |
+| Readonly          | Depende     | No       |
+| Hidden            | Depende     | No       |
+| Calculado         | No          | No       |
+| Relación          | Sí          | Sí       |
+| Dropdown          | Sí          | Sí       |
+| Clave PK          | Sí          | Sí       |
