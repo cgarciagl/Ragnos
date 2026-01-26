@@ -249,7 +249,15 @@
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#15-resumen" class="nav-link">15. Resumen</a>
+            <li class="nav-item" data-bs-level="2"><a href="#15-carga-de-archivos-fileupload" class="nav-link">15. Carga de Archivos (fileupload)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#16-carga-de-imagenes-imageupload" class="nav-link">16. Carga de Imágenes (imageupload)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#17-resumen" class="nav-link">17. Resumen</a>
               <ul class="nav flex-column">
               </ul>
             </li>
@@ -561,7 +569,69 @@ Simplemente agrega la clave <code>tab</code> al array de configuracion del campo
 <li><strong>Uso:</strong> Categorización simple, palabras clave.</li>
 </ul>
 <hr />
-<h2 id="15-resumen">15. Resumen</h2>
+<h2 id="15-carga-de-archivos-fileupload">15. Carga de Archivos (<code>fileupload</code>)</h2>
+<p>Permite subir archivos generales al servidor.</p>
+<ul>
+<li><strong>Persistencia:</strong> Guarda la <strong>ruta relativa</strong> del archivo en la base de datos (ej: <code>assets/uploads/documento.pdf</code>).</li>
+<li><strong>Validación Inteligente:</strong> Detecta automáticamente si se está insertando o editando.</li>
+<li>Al editar, si el usuario no sube un nuevo archivo, se <strong>mantiene el archivo anterior</strong>.</li>
+<li>Si el campo tiene reglas de archivo (ej: <code>max_size</code>, <code>ext_in</code>), estas se ignoran automáticamente si no se sube un nuevo archivo en edición, evitando errores de validación.</li>
+<li><strong>Creación automática de carpetas:</strong> Si la ruta destino no existe, el sistema intenta crearla recursivamente.</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="x">$this-&gt;addField(&#39;documento_adjunto&#39;, [</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="x">    &#39;label&#39;      =&gt; &#39;Documento PDF&#39;,</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="x">    &#39;type&#39;       =&gt; &#39;fileupload&#39;,</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="x">    &#39;uploadPath&#39; =&gt; &#39;assets/docs/contratos&#39;,  // Carpeta destino (relativa a public/)</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="x">    &#39;rules&#39;      =&gt; &#39;uploaded[documento_adjunto]|ext_in[documento_adjunto,pdf,docx]|max_size[documento_adjunto,4096]&#39;</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="x">]);</span>
+</code></pre></div>
+<h3 id="parametros-especificos">Parámetros Específicos</h3>
+<table>
+<thead>
+<tr>
+<th>Parámetro</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>uploadPath</code></td>
+<td>Ruta relativa a la carpeta pública donde se guardarán los archivos. Por defecto: <code>assets/uploads</code>.</td>
+</tr>
+<tr>
+<td><code>rules</code></td>
+<td>Reglas de validación estándar de CodeIgniter 4 para archivos (<code>uploaded</code>, <code>max_size</code>, <code>ext_in</code>, <code>mime_in</code>, etc).</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="admonition-title">Importante sobre <code>uploaded</code></p>
+<p>Aunque Ragnos maneja la opcionalidad en edición, si deseas que el archivo sea <strong>obligatorio al crear</strong>, debes incluir la regla <code>uploaded[campo]</code>. Ragnos la removerá automáticamente solo cuando sea seguro hacerlo (edición manteniendo archivo previo).</p>
+</div>
+<hr />
+<h2 id="16-carga-de-imagenes-imageupload">16. Carga de Imágenes (<code>imageupload</code>)</h2>
+<p>Una especialización de <code>fileupload</code> optimizada para imágenes.</p>
+<ul>
+<li><strong>Previsualización:</strong> Muestra una vista previa inmediata de la imagen seleccionada antes de guardar.</li>
+<li><strong>Visualización:</strong> Muestra la imagen actual almacenada si existe.</li>
+<li><strong>Validación:</strong> Idéntica a <code>fileupload</code>, compatible con reglas <code>is_image</code>, <code>max_dims</code>, etc.</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="x">$this-&gt;addField(&#39;foto_perfil&#39;, [</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="x">    &#39;label&#39;      =&gt; &#39;Avatar&#39;,</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="x">    &#39;type&#39;       =&gt; &#39;imageupload&#39;,</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="x">    &#39;uploadPath&#39; =&gt; &#39;assets/img/usuarios&#39;,</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="x">    &#39;rules&#39;      =&gt; &#39;is_image[foto_perfil]|max_size[foto_perfil,2048]&#39;,</span>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="x">    &#39;accept&#39;     =&gt; &#39;image/*&#39; // Atributo HTML para el input file</span>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="x">]);</span>
+</code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Hacer la imagen opcional</p>
+<p>Si quieres que la imagen sea opcional incluso al crear el registro, simplemente <strong>omite</strong> la regla <code>uploaded</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="x">&#39;rules&#39; =&gt; &#39;is_image[foto_perfil]&#39; // Opcional, pero si subes algo, debe ser imagen</span>
+</code></pre></div>
+</div>
+<hr />
+<h2 id="17-resumen">17. Resumen</h2>
 <table>
 <thead>
 <tr>
