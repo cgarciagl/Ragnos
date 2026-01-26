@@ -31,6 +31,7 @@ CREATE TABLE `gen_usuarios`  (
   `usu_activo` varchar(1) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL DEFAULT 'S',
   `usu_grupo` int NULL DEFAULT NULL,
   `usu_token` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL,
+  `usu_avatar` varchar(250) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`usu_id`) USING BTREE,
   UNIQUE INDEX `usu_login`(`usu_login` ASC) USING BTREE,
   INDEX `usu_grupo`(`usu_grupo` ASC) USING BTREE,
@@ -40,11 +41,11 @@ CREATE TABLE `gen_usuarios`  (
 -- ----------------------------
 -- Records of gen_usuarios
 -- ----------------------------
-INSERT INTO `gen_usuarios` VALUES (1, 'ADMIN', '73acd9a5972130b75066c82595a1fae3', 'ADMINISTRADOR', 'S', 1, '36fc59a445906c482674e587434c766b2b912c045ea6f4e76e5eb14509e34913');
-INSERT INTO `gen_usuarios` VALUES (4, 'CGARCIA', '73acd9a5972130b75066c82595a1fae3', 'CARLOS GARCIA', 'S', 2, NULL);
-INSERT INTO `gen_usuarios` VALUES (5, 'GUEST', '202cb962ac59075b964b07152d234b70', 'GUEST', 'N', 3, NULL);
-INSERT INTO `gen_usuarios` VALUES (7, 'NUEVO', '73acd9a5972130b75066c82595a1fae3', 'NUEVO', 'N', 3, NULL);
-INSERT INTO `gen_usuarios` VALUES (8, 'JAHIR', 'd797c923b65fc09a009aae45aeb2c726', 'JAHIR CASTILLO', 'S', 1, '12345');
+INSERT INTO `gen_usuarios` VALUES (1, 'ADMIN', '73acd9a5972130b75066c82595a1fae3', 'ADMINISTRADOR', 'S', 1, '36fc59a445906c482674e587434c766b2b912c045ea6f4e76e5eb14509e34913', NULL);
+INSERT INTO `gen_usuarios` VALUES (4, 'CGARCIA', '73acd9a5972130b75066c82595a1fae3', 'CARLOS GARCIA', 'S', 2, NULL, NULL);
+INSERT INTO `gen_usuarios` VALUES (5, 'GUEST', '202cb962ac59075b964b07152d234b70', 'GUEST', 'N', 3, NULL, NULL);
+INSERT INTO `gen_usuarios` VALUES (7, 'NUEVO', '73acd9a5972130b75066c82595a1fae3', 'NUEVO', 'N', 3, NULL, NULL);
+INSERT INTO `gen_usuarios` VALUES (8, 'JAHIR', 'd797c923b65fc09a009aae45aeb2c726', 'JAHIR CASTILLO', 'S', 1, '12345', NULL);
 
 -- ----------------------------
 -- Table structure for gen_audit_logs

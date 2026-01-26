@@ -8,12 +8,12 @@ if (!base_url || typeof base_url !== "string") {
       .filter(Boolean);
 
     base_url = `${url.protocol}//${url.host}/${encodeURIComponent(
-      pathSegments[0] || ""
+      pathSegments[0] || "",
     )}/`;
   } catch (error) {
     console.error(
       "Error al establecer base_url. Usando raíz como fallback:",
-      error
+      error,
     );
     base_url = "/";
   }
@@ -231,7 +231,7 @@ $(document)
 function ponTotalesEnTabla(
   targetTable,
   enRenglonFinal = true,
-  enColumnaFinal = false
+  enColumnaFinal = false,
 ) {
   if (
     !targetTable ||
@@ -340,7 +340,7 @@ function calcularFilaTotal(row, columnCount) {
   let sum = 0;
   const cells = Array.from(row.querySelectorAll("td")).slice(
     1,
-    columnCount - 1
+    columnCount - 1,
   ); // Ignora primera/última si aplica
   cells.forEach((cell) => {
     let valor = cell.textContent.trim();
@@ -384,7 +384,7 @@ function quitaTotaldeColumna(targetTable, colIndex) {
   // Validar que sea una tabla HTML
   if (!(targetTable instanceof HTMLTableElement)) {
     console.error(
-      "quitaTotaldeColumna: El elemento proporcionado no es una tabla válida."
+      "quitaTotaldeColumna: El elemento proporcionado no es una tabla válida.",
     );
     return;
   }
@@ -428,7 +428,7 @@ function quitaTotaldeRenglon(targetTable, rowIndex) {
   // Validar que sea una tabla HTML
   if (!(targetTable instanceof HTMLTableElement)) {
     console.error(
-      "quitaTotaldeRenglon: El elemento proporcionado no es una tabla válida."
+      "quitaTotaldeRenglon: El elemento proporcionado no es una tabla válida.",
     );
     return;
   }
@@ -514,7 +514,7 @@ function exportToExcel(fileName, htmlContent) {
         format(EXCEL_TEMPLATE, {
           worksheet: "Worksheet",
           table: htmlContent,
-        })
+        }),
       );
 
     // Trigger download
@@ -562,7 +562,7 @@ function tablaCompleta(tableElement) {
     tableHtml += "<thead><tr>";
     fieldNames.slice(0, -1).forEach((fieldName) => {
       tableHtml += `<th style="background-color: #f2f2f2; padding: 8px;">${escapeHtml(
-        fieldName
+        fieldName,
       )}</th>`;
     });
     tableHtml += "</tr></thead>";
@@ -573,7 +573,7 @@ function tablaCompleta(tableElement) {
       tableHtml += "<tr>";
       Object.values(row).forEach((value) => {
         tableHtml += `<td style="padding: 6px;">${escapeHtml(
-          String(value)
+          String(value),
         )}</td>`;
       });
       tableHtml += "</tr>";
@@ -1031,7 +1031,7 @@ async function getValue(url, params = {}, callback) {
         const response = await Promise.race([
           resPromise,
           new Promise((_, reject) =>
-            setTimeout(() => reject(new Error("Timeout")), config.timeout)
+            setTimeout(() => reject(new Error("Timeout")), config.timeout),
           ),
         ]);
         const text = await response.text();
@@ -1243,4 +1243,111 @@ function moneyFormat(amt, currency = "USD") {
     style: "currency",
     currency: currency,
   }).format(numAmt);
+}
+
+/**
+ * Envía datos usando FormData (para subida de archivos)
+ * Similar a getValue pero respeta el multipart/form-data
+ */
+async function postFormData(url, formData, callback) {
+  const config = {
+    timeout: 0, // Las subidas pueden tardar
+    retryAttempts: 1,
+    retryDelay: 1000,
+  };
+
+  const makeRequest = async () => {
+    let attempts = 0;
+    let lastError = null;
+
+    while (attempts < config.retryAttempts) {
+      try {
+        const resPromise = fetch(fixUrl(url), {
+          method: "POST",
+          headers: {
+            "X-Requested-With": "XMLHttpRequest",
+            // IMPORTANTE: No definir Content-Type, fetch lo pone automáticamente
+            // junto con el boundary correcto para multipart/form-data
+          },
+          body: formData,
+        });
+
+        const response = await resPromise;
+        const text = await response.text();
+
+        if (!response.ok) {
+          throw {
+            status: response.status,
+            statusText: response.statusText,
+            response: text,
+          };
+        }
+
+        return { response: text, error: null };
+      } catch (error) {
+        lastError = {
+          error: error.message || "Error desconocido",
+          status: error.status || 0,
+        };
+        manejaError(lastError);
+        attempts++;
+        if (attempts < config.retryAttempts) {
+          await new Promise((res) => setTimeout(res, config.retryDelay));
+        }
+      }
+    }
+    return { response: null, error: lastError };
+  };
+
+  if (typeof callback === "function") {
+    const result = await makeRequest();
+    callback(result.response, result.error);
+    return;
+  }
+  const result = await makeRequest();
+  if (result.error) throw result.error;
+  return result.response;
+}
+
+/**
+ * Wrapper de postFormData que parsea el resultado JSON automáticamente.
+ * Equivalente a getObject pero para subir archivos.
+ *
+ * @param {string} purl - Url relativa
+ * @param {FormData} formData - Objeto FormData con los archivos y campos
+ * @param {function} callbackfunction - (Opcional) Callback
+ */
+async function uploadObject(purl, formData, callbackfunction) {
+  const processResponse = async (response) => {
+    try {
+      const obj = JSON.parse(response);
+      return { result: obj, error: null };
+    } catch (error) {
+      return { result: null, error };
+    }
+  };
+
+  if (typeof callbackfunction !== "function") {
+    try {
+      const response = await postFormData(purl, formData);
+      const { result, error } = await processResponse(response);
+      if (error) throw error;
+      return result;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  try {
+    await postFormData(purl, formData, async (response, errors) => {
+      if (errors) {
+        callbackfunction(null, errors);
+        return;
+      }
+      const { result, error } = await processResponse(response);
+      callbackfunction(result, error);
+    });
+  } catch (error) {
+    callbackfunction(null, error);
+  }
 }
