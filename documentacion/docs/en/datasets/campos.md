@@ -316,7 +316,67 @@ $this->addField('tags', [
 
 ---
 
-## 15. Summary
+## 15. File Upload (`fileupload`)
+
+Allows uploading general files to the server.
+
+- **Persistence:** Saves the **relative path** of the file in the database (e.g., `assets/uploads/document.pdf`).
+- **Smart Validation:** Automatically detects insert vs. update scenarios.
+  - When editing, if the user does not upload a new file, the **previous file is preserved**.
+  - If the field has file-specific rules (e.g., `max_size`, `ext_in`), they are automatically ignored if no new file is uploaded during an update, preventing validation errors.
+- **Automatic Folder Creation:** If the destination path does not exist, the system attempts to create it recursively.
+
+```php
+$this->addField('attached_document', [
+    'label'      => 'PDF Document',
+    'type'       => 'fileupload',
+    'uploadPath' => 'assets/docs/contracts',  // Destination folder (relative to public/)
+    'rules'      => 'uploaded[attached_document]|ext_in[attached_document,pdf,docx]|max_size[attached_document,4096]'
+]);
+```
+
+### Specific Parameters
+
+| Parameter    | Description                                                                                      |
+| ------------ | ------------------------------------------------------------------------------------------------ |
+| `uploadPath` | Path relative to the public folder where files will be saved. Default: `assets/uploads`.         |
+| `rules`      | Standard CodeIgniter 4 file validation rules (`uploaded`, `max_size`, `ext_in`, `mime_in`, etc). |
+
+!!! warning "Important on `uploaded`"
+
+    Although Ragnos handles optionality during editing, if you want the file to be **mandatory upon creation**, you must include the `uploaded[field]` rule. Ragnos will automatically remove it only when it is safe to do so (editing while keeping the previous file).
+
+---
+
+## 16. Image Upload (`imageupload`)
+
+A specialization of `fileupload` optimized for images.
+
+- **Preview:** Shows an immediate preview of the selected image before saving.
+- **Visualization:** Displays the currently stored image if it exists.
+- **Validation:** Identical to `fileupload`, compatible with `is_image`, `max_dims`, etc.
+
+```php
+$this->addField('profile_photo', [
+    'label'      => 'Avatar',
+    'type'       => 'imageupload',
+    'uploadPath' => 'assets/img/users',
+    'rules'      => 'is_image[profile_photo]|max_size[profile_photo,2048]',
+    'accept'     => 'image/*' // HTML attribute for input file
+]);
+```
+
+!!! tip "Making the image optional"
+
+    If you want the image to be optional even when creating the record, simply **omit** the `uploaded` rule.
+
+    ```php
+    'rules' => 'is_image[profile_photo]' // Optional, but if something is uploaded, it must be an image
+    ```
+
+---
+
+## 17. Summary
 
 | Type       | Persistent | Editable |
 | ---------- | ---------- | -------- |

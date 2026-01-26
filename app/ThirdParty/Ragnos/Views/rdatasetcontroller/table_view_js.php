@@ -23,92 +23,114 @@
         const form = $('#<?= $controllerUniqueID ?>_FormContent form');
         const formElement = document.querySelector('#<?= $controllerUniqueID ?>_FormContent form');
 
-        const formData = serializeForm(formElement);
+        // Use FormData to support file uploads
+        const formData = new FormData(formElement);
 
-        //convertimos los valores monetarios antes de enviarlos
+        // Convert money values manually as FormData just reads inputs
         form.find('input[money]').each(function () {
             const name = $(this).attr('name');
             const rawValue = $(this).val();
-            if (rawValue === '') {
-                formData[name] = '';
-            } else {
-                formData[name] = moneyToNumber(rawValue);
+            if (rawValue !== '') {
+                formData.set(name, moneyToNumber(rawValue));
             }
-        })
+        });
 
         // Add previous values for controls
         form.find('[data-valueant]').each(function () {
             const fieldName = $(this).attr('name');
-            formData[`Ragnos_value_ant_${fieldName}`] = $(this).attr('data-valueant');
+            formData.append(`Ragnos_value_ant_${fieldName}`, $(this).attr('data-valueant'));
         });
 
         // Add CSRF token
-        $.extend(formData, Ragnos_csrf);
+        if (typeof Ragnos_csrf !== 'undefined') {
+            for (const key in Ragnos_csrf) {
+                if (Object.hasOwnProperty.call(Ragnos_csrf, key)) {
+                    formData.append(key, Ragnos_csrf[key]);
+                }
+            }
+        }
 
         // Clear previous errors
         form.find('.ui-state-error').remove();
         $('#<?= $controllerUniqueID ?> .has-error').removeClass('has-error');
 
-        // Submit form data
-        getObject('<?= $clase ?>/formProcess', formData, function (response) {
-            if (response.result !== 'ok') {
-                // Handle validation errors
-                $.each(response.errors, function (field, errorMessage) {
-                    const group = $(`#group_${field}`);
-                    group.append(`<span class="ui-state-error badge text-bg-danger">${errorMessage}</span>`);
+        // Submit form data using fetch directly to support FormData
+        fetch(fixUrl('<?= $clase ?>/formProcess'), {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+            .then(response => response.json())
+            .then(response => {
+                if (response.result !== 'ok') {
+                    // Handle validation errors
+                    $.each(response.errors, function (field, errorMessage) {
+                        const group = $(`#group_${field}`);
+                        group.append(`<span class="ui-state-error badge text-bg-danger">${errorMessage}</span>`);
 
-                    // Logic to switch tab if field is inside one
-                    const tabPane = group.closest('.tab-pane');
-                    if (tabPane.length > 0) {
-                        const tabId = tabPane.attr('id');
-                        const tabButton = $(`button[data-bs-target="#${tabId}"]`);
-                        if (tabButton.length > 0) {
-                            if (typeof bootstrap !== 'undefined') {
-                                const tab = bootstrap.Tab.getOrCreateInstance(tabButton[0]);
-                                tab.show();
-                            } else {
-                                tabButton.click();
+                        // Logic to switch tab if field is inside one
+                        const tabPane = group.closest('.tab-pane');
+                        if (tabPane.length > 0) {
+                            const tabId = tabPane.attr('id');
+                            const tabButton = $(`button[data-bs-target="#${tabId}"]`);
+                            if (tabButton.length > 0) {
+                                if (typeof bootstrap !== 'undefined') {
+                                    const tab = bootstrap.Tab.getOrCreateInstance(tabButton[0]);
+                                    tab.show();
+                                } else {
+                                    tabButton.click();
+                                }
                             }
                         }
+
+                        $(`#${field}`).focus();
+                        group.addClass('has-error');
+
+                        // Shake elements with errors
+                        try {
+                            document.querySelectorAll('#<?= $controllerUniqueID ?> .has-error').forEach(el => {
+                                if (typeof shakeElement === 'function') shakeElement(el);
+                            });
+                        } catch (err) { }
+                    });
+
+                    // Show general error message
+                    if (response.errors['general_error']) {
+                        Swal.fire({
+                            icon: 'error',
+                            text: response.errors['general_error'],
+                        });
                     }
-
-                    $(`#${field}`).focus();
-                    group.addClass('has-error');
-
-                    // Shake elements with errors
-                    document.querySelectorAll('#<?= $controllerUniqueID ?> .has-error').forEach(el => {
-                        shakeElement(el);
-                    });
-                });
-
-                // Show general error message
-                if (response.errors['general_error']) {
-                    Swal.fire({
-                        icon: 'error',
-                        text: response.errors['general_error'],
-                    });
-                }
-            } else {
-                // Handle successful form submission
-                <?php if ($hasdetails): ?>
-                    if (response.insertedid) {
-                        ;<?= $controllerUniqueID ?>getform(response.insertedid);
-                    } else {
+                } else {
+                    // Handle successful form submission
+                    <?php if ($hasdetails): ?>
+                        if (response.insertedid) {
+                            ;<?= $controllerUniqueID ?>getform(response.insertedid);
+                        } else {
+                            $('#tab_<?= $controllerUniqueID ?>_Table').click();
+                            ;<?= $controllerUniqueID ?>refreshAjax();
+                        }
+                    <?php else: ?>
                         $('#tab_<?= $controllerUniqueID ?>_Table').click();
                         ;<?= $controllerUniqueID ?>refreshAjax();
-                    }
-                <?php else: ?>
-                    $('#tab_<?= $controllerUniqueID ?>_Table').click();
-                    ;<?= $controllerUniqueID ?>refreshAjax();
-                <?php endif; ?>
+                    <?php endif; ?>
 
-                // Show success message
-                const successMessage = response.insertedid
-                    ? '<?= lang('Ragnos.Ragnos_record_inserted') ?>'
-                    : '<?= lang('Ragnos.Ragnos_record_updated') ?>';
-                showToast(successMessage, 'success');
-            }
-        });
+                    // Show success message
+                    const successMessage = response.insertedid
+                        ? '<?= lang('Ragnos.Ragnos_record_inserted') ?>'
+                        : '<?= lang('Ragnos.Ragnos_record_updated') ?>';
+                    showToast(successMessage, 'success');
+                }
+            })
+            .catch(error => {
+                console.error('Error submitting form:', error);
+                Swal.fire({
+                    icon: 'error',
+                    text: 'Error saving data. See console for details.',
+                });
+            });
     });
 
     function <?= $controllerUniqueID ?>getform(id) {

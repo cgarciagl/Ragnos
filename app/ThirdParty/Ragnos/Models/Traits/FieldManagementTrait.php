@@ -15,10 +15,10 @@ trait FieldManagementTrait
     {
         $type     = trim($array['type'] ?? 'text');
         $classMap = [
-            'switch'  => \App\ThirdParty\Ragnos\Models\Fields\RSwitchField::class,
-            'pillbox' => \App\ThirdParty\Ragnos\Models\Fields\RPillboxField::class,
-            // Add other specialized fields here in the future
-            // 'file' => ..., 'color' => ...
+            'switch'      => \App\ThirdParty\Ragnos\Models\Fields\RSwitchField::class,
+            'pillbox'     => \App\ThirdParty\Ragnos\Models\Fields\RPillboxField::class,
+            'fileupload'  => \App\ThirdParty\Ragnos\Models\Fields\RFileUploadField::class,
+            'imageupload' => \App\ThirdParty\Ragnos\Models\Fields\RImageUploadField::class,
         ];
 
         if (array_key_exists($type, $classMap)) {

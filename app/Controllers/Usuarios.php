@@ -52,6 +52,14 @@ class Usuarios extends RDatasetController
         $this->addField('usu_grupo', ['label' => 'Grupo', 'rules' => 'required']);
         $this->addSearch('usu_grupo', 'Gruposdeusuarios');
 
+        $this->addField('usu_avatar', [
+            'label'      => 'Foto de Perfil',
+            'type'       => 'imageupload',
+            'uploadPath' => 'assets/img/usuarios',
+            'rules'      => 'is_image[usu_avatar]',
+            'accept'     => 'image/*'
+        ]);
+
         $this->setTableFields(['usu_nombre', 'usu_login', 'usu_grupo', 'usu_activo']);
     }
 

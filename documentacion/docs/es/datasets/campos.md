@@ -314,7 +314,67 @@ $this->addField('tags', [
 
 ---
 
-## 15. Resumen
+## 15. Carga de Archivos (`fileupload`)
+
+Permite subir archivos generales al servidor.
+
+- **Persistencia:** Guarda la **ruta relativa** del archivo en la base de datos (ej: `assets/uploads/documento.pdf`).
+- **Validación Inteligente:** Detecta automáticamente si se está insertando o editando.
+  - Al editar, si el usuario no sube un nuevo archivo, se **mantiene el archivo anterior**.
+  - Si el campo tiene reglas de archivo (ej: `max_size`, `ext_in`), estas se ignoran automáticamente si no se sube un nuevo archivo en edición, evitando errores de validación.
+- **Creación automática de carpetas:** Si la ruta destino no existe, el sistema intenta crearla recursivamente.
+
+```php
+$this->addField('documento_adjunto', [
+    'label'      => 'Documento PDF',
+    'type'       => 'fileupload',
+    'uploadPath' => 'assets/docs/contratos',  // Carpeta destino (relativa a public/)
+    'rules'      => 'uploaded[documento_adjunto]|ext_in[documento_adjunto,pdf,docx]|max_size[documento_adjunto,4096]'
+]);
+```
+
+### Parámetros Específicos
+
+| Parámetro    | Descripción                                                                                                      |
+| ------------ | ---------------------------------------------------------------------------------------------------------------- |
+| `uploadPath` | Ruta relativa a la carpeta pública donde se guardarán los archivos. Por defecto: `assets/uploads`.               |
+| `rules`      | Reglas de validación estándar de CodeIgniter 4 para archivos (`uploaded`, `max_size`, `ext_in`, `mime_in`, etc). |
+
+!!! warning "Importante sobre `uploaded`"
+
+    Aunque Ragnos maneja la opcionalidad en edición, si deseas que el archivo sea **obligatorio al crear**, debes incluir la regla `uploaded[campo]`. Ragnos la removerá automáticamente solo cuando sea seguro hacerlo (edición manteniendo archivo previo).
+
+---
+
+## 16. Carga de Imágenes (`imageupload`)
+
+Una especialización de `fileupload` optimizada para imágenes.
+
+- **Previsualización:** Muestra una vista previa inmediata de la imagen seleccionada antes de guardar.
+- **Visualización:** Muestra la imagen actual almacenada si existe.
+- **Validación:** Idéntica a `fileupload`, compatible con reglas `is_image`, `max_dims`, etc.
+
+```php
+$this->addField('foto_perfil', [
+    'label'      => 'Avatar',
+    'type'       => 'imageupload',
+    'uploadPath' => 'assets/img/usuarios',
+    'rules'      => 'is_image[foto_perfil]|max_size[foto_perfil,2048]',
+    'accept'     => 'image/*' // Atributo HTML para el input file
+]);
+```
+
+!!! tip "Hacer la imagen opcional"
+
+    Si quieres que la imagen sea opcional incluso al crear el registro, simplemente **omite** la regla `uploaded`.
+
+    ```php
+    'rules' => 'is_image[foto_perfil]' // Opcional, pero si subes algo, debe ser imagen
+    ```
+
+---
+
+## 17. Resumen
 
 | Tipo      | Persistente | Editable |
 | --------- | ----------- | -------- |
