@@ -75,14 +75,23 @@ $clase              = mapClassToURL($controller_class);
                 </div>
                 <div class="btn-toolbar" style="margin-top:10px;margin-bottom:10px;">
 
-                    <?php if ($modelo->canInsert): ?>
-                        <button id="btn_<?= $controllerUniqueID ?>_New" class="toolbtn btn btn-primary">
-                            <i class="bi bi-plus-circle"></i>
+                    <div class="btn-group shadow-sm me-4">
+                        <?php if ($modelo->canInsert): ?>
+                            <button id="btn_<?= $controllerUniqueID ?>_New" class="toolbtn btn btn-outline-dark shadow-sm"
+                                title="Nuevo Registro">
+                                <i class="bi bi-plus-lg"></i>
+                            </button>
+                        <?php endif; ?>
+                        <button id="btn_<?= $controllerUniqueID ?>_Refresh"
+                            class="toolbtn btn btn-outline-dark shadow-sm" title="Actualizar Datos">
+                            <i class="bi bi-arrow-repeat text-primary"></i>
                         </button>
-                    <?php endif; ?>
-                    <button id="btn_<?= $controllerUniqueID ?>_Refresh" class="toolbtn btn btn-primary">
-                        <i class="bi bi-arrow-repeat"></i>
-                    </button>
+                    </div>
+
+                    <a href="<?= site_url($clase . '/genericAdvancedReport') ?>"
+                        class="toolbtn btn btn-outline-dark shadow-sm" title="Generar Reporte Avanzado">
+                        <i class="bi bi-printer-fill"></i>
+                    </a>
 
 
                     <h4> <span class=" badge text-bg-danger Ragnos-searchingtitle"
