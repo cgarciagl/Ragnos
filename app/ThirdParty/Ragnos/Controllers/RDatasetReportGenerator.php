@@ -225,6 +225,12 @@ class RDatasetReportGenerator
         // 2. Obtener Datos
         // Usamos los campos definidos en setTableFields del controlador si existen
         $selectFields = $this->controller->getTableFields();
+        // Aseguramos que el modelo tenga la lista completa si no hay campos seleccionados
+        if (empty($selectFields) && method_exists($this->model, 'completeFieldList')) {
+            $this->model->completeFieldList();
+            $selectFields = $this->controller->getTableFields();
+        }
+
         if (empty($selectFields)) {
             $selectFields = array_keys($this->controller->getFieldsConfig());
         }
@@ -278,10 +284,30 @@ class RDatasetReportGenerator
         foreach ($data as &$row) {
             foreach ($selectFields as $field) {
                 // Config del campo especifico
-                $config = $fieldsConfig[$field] ?? [];
+                $config = $fieldsConfig[$field] ?? null;
 
                 // Normalizar acceso (Array u Objeto)
-                $rules = is_array($config) ? ($config['rules'] ?? '') : ($config->rules ?? '');
+                $rules = '';
+                if (is_array($config)) {
+                    $rules = $config['rules'] ?? '';
+                } elseif (is_object($config)) {
+                    // Intentar usar método específico o propiedad
+                    // RField tiene getRules() pero es protected en la definición que vi, 
+                    // aunque la propiedad $rules también es protected...
+                    // Pero RSimpleTextField extiende RField. Si RField tiene protected $rules, no se puede acceder directamente.
+                    // Pero tal vez tenga getter público? RField.php muestra public function getLabel().
+                    // RField.php no mostró getRules() en las 30 lineas que leí, pero quizás más abajo.
+                    // Asumamos que si no hay getRules, no podemos saberlo.
+                    // Sin embargo, el código anterior usaba $config->rules que fallaría si es protected.
+                    // Revisemos RField de nuevo más tarde si falla.
+                    // Por ahora, usemos reflection o asumamos que hay getter o propiedad accesible.
+                    // Voy a asumir que getRules() podría existir o que la propiedad es mágica o pública en la subclase.
+                    if (method_exists($config, 'getRules')) {
+                        $rules = $config->getRules();
+                    } elseif (isset($config->rules)) {
+                        $rules = $config->rules;
+                    }
+                }
 
                 if (strpos($rules, 'money') !== false) {
                     $row[$field] = moneyFormat($row[$field]);
@@ -299,12 +325,19 @@ class RDatasetReportGenerator
         $summables        = [];
 
         foreach ($selectFields as $f) {
-            // Si agrupamos por fecha, quizás no queramos ver la columna de fecha cruda repetida, 
-            // pero para simplificar la dejamos o el usuario la define en tableFields
-
             // Re-fetch config helper
-            $config   = $fieldsConfig[$f] ?? [];
-            $valLabel = is_array($config) ? ($config['label'] ?? null) : ($config->label ?? null);
+            $config = $fieldsConfig[$f] ?? null;
+
+            $valLabel = null;
+            if (is_array($config)) {
+                $valLabel = $config['label'] ?? null;
+            } elseif (is_object($config)) {
+                if (method_exists($config, 'getLabel')) {
+                    $valLabel = $config->getLabel();
+                } elseif (isset($config->label)) {
+                    $valLabel = $config->label;
+                }
+            }
 
             $label                = $valLabel ?? $f;
             $listFieldsLabels[$f] = $label;

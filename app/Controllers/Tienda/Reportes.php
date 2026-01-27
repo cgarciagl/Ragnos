@@ -5,9 +5,16 @@ namespace App\Controllers\Tienda;
 use App\ThirdParty\Ragnos\Controllers\BaseController;
 use App\ThirdParty\Ragnos\Controllers\RSimpleLevelReport;
 
-
 class Reportes extends BaseController
 {
+
+    public function reporte_avanzado()
+    {
+        // Instanciamos el controlador de Pagos para obtener su configuración
+        $pagosController = new Pagos();
+
+        return $pagosController->genericAdvancedReport();
+    }
 
     function ventaspormes()
     {

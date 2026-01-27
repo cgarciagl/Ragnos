@@ -510,4 +510,53 @@ abstract class RDatasetController extends RDataset
 
         return $this->respond(['data' => $logs]);
     }
+
+    /**
+     * Obtiene la configuración de campos (usado por el generador de reportes)
+     */
+    public function getFieldsConfig()
+    {
+        return $this->modelo->ofieldlist ?? [];
+    }
+
+    /**
+     * Obtiene los campos visibles en tabla (usado por el generador de reportes)
+     */
+    public function getTableFields()
+    {
+        return $this->modelo->tablefields ?? [];
+    }
+
+    /**
+     * Genera un reporte avanzado basado en la configuración del Dataset actual.
+     * Esta función maneja tanto la visualización del formulario de configuración
+     * como el procesamiento del mismo.
+     *
+     * @param string|null $configUrl La URL a la que debe apuntar el formulario. Si es null, se usa la URL actual.
+     * @return mixed string|view Retorna la vista de configuración o el resultado del reporte
+     */
+    public function genericAdvancedReport($configUrl = null)
+    {
+        helper(['form', 'url']);
+
+        // Si no se define URL, usamos cadena vacía para que el form haga POST a la misma URL actual
+        // esto evita problemas con current_url() vs site_url() y posibles redirecciones que pierdan el POST
+        if ($configUrl === null) {
+            $configUrl = '';
+        }
+
+        // $this es la instancia del controlador Dataset
+        $generator = new RDatasetReportGenerator($this);
+
+        $request = \Config\Services::request();
+
+        // A. Procesar POST (Generación)
+        if (strtolower($request->getMethod()) === 'post') {
+            $generator->processRequest($request);
+            return $generator->renderResultView();
+        }
+
+        // B. Renderizar Configuración (GET)
+        return $generator->renderConfigView($configUrl);
+    }
 }

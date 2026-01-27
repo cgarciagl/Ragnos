@@ -113,11 +113,20 @@ class RSimpleLevelReport
 
         // Intentar detectar campos sumables automáticamente si no se han definido
         if (empty($this->summableFields)) {
-            $candidates           = ['Total', 'Monto', 'Precio', 'Importe', 'Saldo', 'Deuda', 'Pagado', 'Comprado', 'LimiteDeCredito', 'TotalVentasTrimestre', 'TotalVendidoUltimos6Meses', 'MargenTotal'];
-            $this->summableFields = array_filter($listfields, function ($field) use ($candidates) {
-                // Si la etiqueta o la clave está en candidatos
-                return in_array($field, $candidates);
+            $candidates           = ['Total', 'Monto', 'Precio', 'Importe', 'Saldo', 'Deuda', 'Pagado', 'Comprado', 'amount', 'creditLimit', 'quantityInStock', 'MSRP', 'buyPrice', 'LimiteDeCredito', 'TotalVentasTrimestre', 'TotalVendidoUltimos6Meses', 'MargenTotal'];
+            $this->summableFields = array_filter(array_keys($listfields), function ($field) use ($candidates, $listfields) {
+                // Verificamos tanto la llave (campo) como el valor (label)
+                $label = $listfields[$field];
+                return in_array($field, $candidates) || in_array($label, $candidates);
             });
+            // Si el array era indexado numéricamente, array_keys devolvió indices, lo cual no nos sirve para los datos
+            // Detectar si fue asociativo
+            if (array_keys($listfields) === range(0, count($listfields) - 1)) {
+                // Indexado: Resetear y usar valores
+                $this->summableFields = array_filter($listfields, function ($field) use ($candidates) {
+                    return in_array($field, $candidates);
+                });
+            }
         }
     }
 
@@ -131,8 +140,21 @@ class RSimpleLevelReport
         $html .= '<table class="table table-sm table-striped table-hover mb-0 align-middle">';
         $html .= '<thead class="bg-light text-uppercase small text-secondary"><tr>';
 
-        foreach ($this->listfields as $label) {
-            $align  = in_array($label, $this->summableFields) ? 'text-end' : 'text-start';
+        foreach ($this->listfields as $key => $label) {
+            // Si la clave es string, asumimos que es el nombre del campo y el valor la etiqueta
+            // Si la clave es numérica, asumimos que el valor es directamente (campo/etiqueta) o solo etiqueta
+            // Para mantener compatibilidad si alguien mandó ['Mes', 'Total'] -> label=Mes, label=Total
+
+            // Lógica ajustada: 
+            // - $key es el nombre del campo, $label es el texto visible
+            // - o $key es indice num, $label es ambas cosas?
+            // RSimpleLevelReport parece haber sido diseñada para recibir un array de labels simplemente.
+            // Pero para soportar que $key sea el field name (para detectar summable fields correctamente), 
+            // ajustamos aqui para usar $key si es string en la deteccion de summable
+
+            $fieldNameToCheck = is_string($key) ? $key : $label;
+
+            $align  = in_array($fieldNameToCheck, $this->summableFields) ? 'text-end' : 'text-start';
             $html  .= "<th scope=\"col\" class=\"py-2 px-3 {$align}\">" . htmlspecialchars($label) . "</th>";
         }
 
@@ -157,7 +179,9 @@ class RSimpleLevelReport
         $isFirstColumn = true;
 
         foreach ($this->listfields as $key => $colLabel) {
-            $isSummable = in_array($colLabel, $this->summableFields);
+            $fieldNameToCheck = is_string($key) ? $key : $colLabel;
+
+            $isSummable = in_array($fieldNameToCheck, $this->summableFields);
             $align      = $isSummable ? 'text-end' : 'text-start';
             $content    = '';
 
@@ -167,7 +191,8 @@ class RSimpleLevelReport
             }
 
             if ($isSummable) {
-                $val = $totalsSource[$colLabel] ?? 0;
+                // Usamos fieldNameToCheck para recuperar el valor correcto del array de totales
+                $val = $totalsSource[$fieldNameToCheck] ?? 0;
                 if (function_exists('moneyFormat')) {
                     $content = moneyFormat($val);
                 } else {
@@ -207,17 +232,23 @@ class RSimpleLevelReport
             $fieldName = is_string($key) ? $key : $label;
             $value     = $row[$fieldName] ?? '';
 
+            // Revisamos contra el campo (fieldName) y no contra label para la suma
+            $checkSummable = in_array($fieldName, $this->summableFields);
+
             // Acumular totales
-            if (in_array($label, $this->summableFields)) {
+            if ($checkSummable) {
+                // Usamos el val raw si existe en la fila con otro nombre o asumimos que value ya viene formateado
+                // cleanNumber limpia símbolos
                 $numericVal = $this->cleanNumber($value);
 
-                if (!isset($this->groupTotals[$label]))
-                    $this->groupTotals[$label] = 0;
-                $this->groupTotals[$label] += $numericVal;
+                // Usamos fieldName como key para los totales internos
+                if (!isset($this->groupTotals[$fieldName]))
+                    $this->groupTotals[$fieldName] = 0;
+                $this->groupTotals[$fieldName] += $numericVal;
 
-                if (!isset($this->grandTotals[$label]))
-                    $this->grandTotals[$label] = 0;
-                $this->grandTotals[$label] += $numericVal;
+                if (!isset($this->grandTotals[$fieldName]))
+                    $this->grandTotals[$fieldName] = 0;
+                $this->grandTotals[$fieldName] += $numericVal;
 
                 $html .= "<td class=\"text-end px-3\">" . htmlspecialchars((string) $value) . "</td>";
             } else {

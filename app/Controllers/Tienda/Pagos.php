@@ -3,7 +3,6 @@
 namespace App\Controllers\Tienda;
 
 use App\ThirdParty\Ragnos\Controllers\RDatasetController;
-use App\ThirdParty\Ragnos\Controllers\RDatasetReportGenerator;
 
 class Pagos extends RDatasetController
 {
@@ -23,25 +22,5 @@ class Pagos extends RDatasetController
         $this->setTableFields(['customerNumber', 'checkNumber', 'paymentDate', 'amount']);
 
         $this->setSortingField('paymentDate', 'desc');
-    }
-
-    /* -------------------------------------------------------------------------- */
-    /* Nueva Funcionalidad de Reporte Avanzado (Genérico)                         */
-    /* -------------------------------------------------------------------------- */
-
-    public function reporte_avanzado()
-    {
-        helper('form');
-
-        $generator = new RDatasetReportGenerator($this);
-
-        // A. Procesar POST (Generación)
-        if ($this->request->getMethod() === 'post') {
-            $generator->processRequest($this->request);
-            return $generator->renderResultView();
-        }
-
-        // B. Renderizar Configuración (GET)
-        return $generator->renderConfigView(site_url('Tienda/Pagos/reporte_avanzado'));
     }
 }

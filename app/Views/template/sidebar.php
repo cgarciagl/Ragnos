@@ -102,7 +102,7 @@ $auth = service('Admin_aut');
                             </a>
                         </li> <!-- Nuevo Reporte Avanzado -->
                         <li class="nav-item">
-                            <a href="<?= site_url('tienda/pagos/reporte_avanzado') ?>" class="nav-link">
+                            <a href="<?= site_url('Tienda/Reportes/reporte_avanzado') ?>" class="nav-link">
                                 <i class="bi bi-sliders nav-icon"></i>
                                 <p>Reporte de Pagos Avanzado</p>
                             </a>
