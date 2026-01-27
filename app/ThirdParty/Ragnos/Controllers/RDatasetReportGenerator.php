@@ -37,9 +37,14 @@ class RDatasetReportGenerator
 
         foreach ($fields as $field => $config) {
             // Normalizar acceso (Array u Objeto)
-            $label      = is_array($config) ? ($config['label'] ?? ucfirst($field)) : ($config->label ?? ucfirst($field));
-            $type       = is_array($config) ? ($config['type'] ?? 'text') : ($config->type ?? 'text');
-            $hasOptions = is_array($config) ? isset($config['options']) : isset($config->options);
+            $label = is_array($config) ? ($config['label'] ?? ucfirst($field)) :
+                (method_exists($config, 'getLabel') ? $config->getLabel() : ($config->label ?? ucfirst($field)));
+
+            $type = is_array($config) ? ($config['type'] ?? 'text') :
+                (method_exists($config, 'getType') ? $config->getType() : ($config->type ?? 'text'));
+
+            $hasOptions = is_array($config) ? isset($config['options']) :
+                (method_exists($config, 'getOptions') ? !empty($config->getOptions()) : isset($config->options));
 
             // 1. Detectar Filtros
             if ($type === 'date' || $type === 'datetime') {
@@ -49,10 +54,19 @@ class RDatasetReportGenerator
                 ];
             } else {
                 // Asumimos que todo lo demás es filtrable por texto/match simple
-                $this->availableFilters[$field] = [
+                $filterData = [
                     'label' => $label,
                     'type'  => 'text'
                 ];
+
+                if (is_object($config) && method_exists($config, 'getController')) {
+                    $c = $config->getController();
+                    if (!empty($c)) {
+                        $filterData['search_controller'] = $c;
+                    }
+                }
+
+                $this->availableFilters[$field] = $filterData;
             }
 
             // 2. Detectar Agrupamiento

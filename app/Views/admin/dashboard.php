@@ -144,11 +144,11 @@
                 <div class="col">
                     <div class="card card-primary card-outline mb-4">
                         <div class="card-header">
-                            <h3 class="card-title"> <i class="fas fa-globe-americas"></i> Distribución Global de Ventas
+                            <h3 class="card-title"> <i class="bi bi-globe-americas"></i> Distribución Global de Ventas
                             </h3>
                             <div class="card-tools">
                                 <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                    <i class="fas fa-minus"></i>
+                                    <i class="bi bi-dash"></i>
                                 </button>
                             </div>
                         </div>
@@ -176,7 +176,7 @@
                                                     ?>
                                                     <tr>
                                                         <td>
-                                                            <i class="fas fa-flag text-muted"></i>
+                                                            <i class="bi bi-flag-fill text-muted"></i>
                                                             <?= $pais['Pais'] ?>
                                                         </td>
                                                         <td class="text-right text-success text-bold">

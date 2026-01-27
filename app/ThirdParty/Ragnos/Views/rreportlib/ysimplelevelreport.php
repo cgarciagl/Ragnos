@@ -3,28 +3,29 @@ $totalrecords = 0;
 $grouprecords = 0; ?>
 
 
-<div class="d-print-none  bg-light shadow-sm" id="barradebotones">
-    <div class="row">
-        <div class="col-auto">
-            <button id="imprimirbtn" class="btn btn-primary btn-sm">
-                <?= 'Imprimir'//$this->lang->line('Ragnos_print') ?>
-            </button>
+<div class="d-print-none bg-white p-3 rounded shadow-sm border mb-3" id="barradebotones">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <a href="javascript:history.back()" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-1"></i> <?= lang('Ragnos.Ragnos_back') ?>
+            </a>
         </div>
-        <div class="col-auto">
-            <button id="exporttoexcel" class="btn btn-success btn-sm">
-                Guardar como Documento de Excel
+        <div class="d-flex align-items-center">
+            <button id="imprimirbtn" class="btn btn-primary me-2">
+                <i class="bi bi-printer-fill me-1"></i> <?= lang('Ragnos.Ragnos_print') ?>
+            </button>
+            <button id="exporttoexcel" class="btn btn-success">
+                <i class="bi bi-file-earmark-excel-fill me-1"></i> <?= lang('Ragnos.Ragnos_excel') ?>
             </button>
         </div>
     </div>
 </div>
 
-<div class="card">
-    <div class="card-body">
-        <?php echo $yo->generate(); ?>
-    </div>
+<div class="report-wrapper animate__animated animate__fadeIn">
+    <?php echo $yo->generate(); ?>
 </div>
 
-</div>
+
 
 <script src="<?= base_url(); ?>/assets/js/printThis.min.js" type="text/javascript"></script>
 

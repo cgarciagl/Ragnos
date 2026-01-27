@@ -15,7 +15,7 @@
                     chartDom.className = "d-flex align-items-center justify-content-center";
                     chartDom.innerHTML = `
                 <div class="text-center text-muted">
-                    <i class="fas fa-chart-line fa-2x mb-2"></i><br>
+                    <i class="bi bi-graph-up h2 mb-2"></i><br>
                     <h6 class="mb-0">No tiene ventas registradas</h6>
                 </div>
             `;
