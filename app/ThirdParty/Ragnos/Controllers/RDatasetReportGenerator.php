@@ -90,7 +90,7 @@ class RDatasetReportGenerator
     /**
      * Procesa automáticamente el request POST de la vista genérica
      */
-    public function processRequest(\CodeIgniter\HTTP\Request $request): void
+    public function processRequest(\CodeIgniter\HTTP\IncomingRequest $request): void
     {
         // 1. Procesar Filtros
         foreach ($this->availableFilters as $field => $conf) {
