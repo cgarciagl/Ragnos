@@ -326,13 +326,16 @@ class RSimpleLevelReport
 
         // Header del reporte con fecha
         $output .= '<div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">';
-        $output .= '<div>';
+        $output .= '<div class="w-100">';
         $output .= '<h2 class="mb-0 fw-bold text-dark">' . htmlspecialchars($this->title) . '</h2>';
         if (!empty($this->descfilter)) {
-            $output .= '<p class="text-muted mb-0 mt-1">' . htmlspecialchars($this->descfilter) . '</p>';
+            $output .= '<div class="alert alert-light border border-secondary border-start-0 border-end-0 border-top-0 border-bottom-0 border-start border-5 border-primary shadow-sm mt-3 mb-0 d-flex align-items-center">';
+            $output .= '<div class="fs-4 text-primary me-3">&#9873;</div>'; // Icono Unicode de filtro/bandera o similar si no hay FA
+            $output .= '<div><span class="text-uppercase small fw-bold text-muted d-block">Filtros Activos</span><span class="fs-5 text-dark fw-medium">' . htmlspecialchars($this->descfilter) . '</span></div>';
+            $output .= '</div>';
         }
         $output .= '</div>';
-        $output .= '<div class="text-end text-muted small">';
+        $output .= '<div class="text-end text-muted small ms-3" style="min-width: 100px;">';
         $output .= '<div>' . date('d/m/Y') . '</div>';
         $output .= '<div>' . date('H:i') . '</div>';
         $output .= '</div>';
