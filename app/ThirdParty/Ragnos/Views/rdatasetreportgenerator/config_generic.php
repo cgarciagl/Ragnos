@@ -150,7 +150,6 @@
                                                     <label class="form-label fw-bold small text-secondary"
                                                         for="filter_<?= $field ?>_display"><?= esc($config['label']) ?></label>
                                                     <div class="input-group">
-                                                        <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
                                                         <input type="text" id="filter_<?= $field ?>_display"
                                                             name="filter_<?= $field ?>_display_text" class="form-control"
                                                             placeholder="Buscar <?= strtolower($config['label']) ?>...">
