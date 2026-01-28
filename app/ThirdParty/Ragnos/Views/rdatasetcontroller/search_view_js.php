@@ -92,6 +92,8 @@
     // Configurar búsqueda en DataTable
     $('#<?= $controllerUniqueID ?>_Tablediv .dt-search').append($('#<?= $controllerUniqueID ?>_combo'));
 
+    $('#<?= $controllerUniqueID ?>_Tablediv .dt-search').addClass('d-flex flex-wrap justify-content-between align-items-center ps-4 bg-light rounded border-start border-4 border-primary shadow-sm');
+
     // Configurar eventos de teclado en el modal
     $("#<?= $controllerUniqueID ?>_table tbody").closest('.modal').removeAttr('data-bs-keyboard').removeClass('fade').on('keydown', function (event) {
         if (['ArrowDown', 'ArrowUp', ' ', 'Enter'].includes(event.key)) {

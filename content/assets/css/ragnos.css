@@ -11,7 +11,6 @@
   display: inline-block;
   vertical-align: top;
   zoom: 1;
-  padding: 10px !important;
 }
 
 .fg-toolbar {
@@ -77,8 +76,9 @@
   margin-bottom: 10px !important;
 }
 .Ragnos-search-widget {
-  padding: 1% !important;
-  background-color: antiquewhite;
+  padding: 0 !important;
+  background-color: #ffffff !important;
+  border-top: 5px solid #fd7e14 !important;
 }
 .Ragnos-searchingtitle {
   text-align: center;

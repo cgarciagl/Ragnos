@@ -16,62 +16,74 @@ $clase              = mapClassToURL($controller_class);
             </h4>
         </div>
     <?php endif; ?>
-    <h4><span class=" badge text-bg-danger Ragnos-searchingtitle"
-            id="<?= $controllerUniqueID ?>_searching_title"></span>
-    </h4>
 
-    <div id="<?= $controllerUniqueID ?>_Tablediv" class="tablediv card-body">
-        <div id="<?= $controllerUniqueID ?>_combo" style="display:inline;">
-            <span>
-                <?= lang('Ragnos.Ragnos_in') ?>:
-            </span>
-            <?php
-            // Primero, construye el array de opciones a partir de tus datos
-            $options = [];
-            foreach ($tablefields as $fieldItem) {
-                // Cada elemento del array de opciones debe tener el 'valueField' y el 'textField'
-                $options[] = [
-                    'value' => $fieldItem,
-                    'label' => $fieldlist[$fieldItem]->getLabel()
-                ];
-            }
+    <div id="<?= $controllerUniqueID ?>_Tablediv" class="tablediv card-body p-3">
+        <!-- Toolbar & Filters -->
+        <div
+            class="flex-wrap justify-content-between align-items-center bg-light rounded border-start border-4 border-primary shadow-sm mb-2">
+            <div id="<?= $controllerUniqueID ?>_combo" class="d-flex align-items-center gap-2 mb-2 mb-lg-0">
+                <span class="fw-bold text-secondary text-uppercase small ms-2">
+                    <?= lang('Ragnos.Ragnos_in') ?>:
+                </span>
+                <div style="min-width: 200px;">
+                    <?php
+                    // Primero, construye el array de opciones a partir de tus datos
+                    $options = [];
+                    foreach ($tablefields as $fieldItem) {
+                        // Cada elemento del array de opciones debe tener el 'valueField' y el 'textField'
+                        $options[] = [
+                            'value' => $fieldItem,
+                            'label' => $fieldlist[$fieldItem]->getLabel()
+                        ];
+                    }
 
-            // Opcional: añade la opción 'all' al inicio del array
-            array_unshift($options, [
-                'value' => '',
-                'label' => lang('Ragnos.Ragnos_all')
-            ]);
+                    // Opcional: añade la opción 'all' al inicio del array
+                    array_unshift($options, [
+                        'value' => '',
+                        'label' => lang('Ragnos.Ragnos_all')
+                    ]);
 
-            echo arrayToSelect(
-                $controllerUniqueID . '_sel', // Nombre del campo
-                $options,                     // El array de opciones que creamos
-                'value',                      // La clave para el valor de la opción
-                'label',                      // La clave para el texto de la opción
-                null,                         // No hay valor preseleccionado
-                [
-                    'id'    => $controllerUniqueID . '_sel',
-                    'class' => 'form-control-sm'
-                ]
-            );
-            ?>
+                    echo arrayToSelect(
+                        $controllerUniqueID . '_sel', // Nombre del campo
+                        $options,                     // El array de opciones que creamos
+                        'value',                      // La clave para el valor de la opción
+                        'label',                      // La clave para el texto de la opción
+                        null,                         // No hay valor preseleccionado
+                        [
+                            'id'    => $controllerUniqueID . '_sel',
+                            'class' => 'form-select shadow-sm'
+                        ]
+                    );
+                    ?>
+                </div>
+                <i class="bi bi-filter"></i>
+            </div>
+
+            <span
+                class="px-3 py-2 border rounded bg-white text-danger fw-bold shadow-sm Ragnos-searchingtitle align-items-center"
+                id="<?= $controllerUniqueID ?>_searching_title"></span>
         </div>
 
-        <table class="Ragnos_table table table-bordered table-condensed" id="<?= $controllerUniqueID ?>_table">
-            <thead>
-                <tr>
-                    <?php foreach ($tablefields as $fieldItem): ?>
-                        <th>
-                            <?= $fieldlist[$fieldItem]->getLabel(); ?>
-                        </th>
-                    <?php endforeach; ?>
-                    <th width="30px"></th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-            <tfoot>
-            </tfoot>
-        </table>
+        <!-- Table -->
+        <div class="table-responsive shadow-sm rounded border">
+            <table class="Ragnos_table table table-hover table-striped mb-0 align-middle"
+                id="<?= $controllerUniqueID ?>_table">
+                <thead class="bg-light">
+                    <tr>
+                        <?php foreach ($tablefields as $fieldItem): ?>
+                            <th class="text-secondary text-uppercase small py-3 fw-bold border-bottom-0">
+                                <?= $fieldlist[$fieldItem]->getLabel(); ?>
+                            </th>
+                        <?php endforeach; ?>
+                        <th width="30px" class="border-bottom-0"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+                <tfoot>
+                </tfoot>
+            </table>
+        </div>
     </div>
     <div class="card-footer">
         <button id="<?= $controllerUniqueID ?>btn_ok_search" class="btn btn-success">

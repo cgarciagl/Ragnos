@@ -174,6 +174,8 @@
 
     $('#<?= $controllerUniqueID ?>_Tablediv .dt-search').append($('#<?= $controllerUniqueID ?>_combo'));
 
+    $('#<?= $controllerUniqueID ?>_Tablediv .dt-search').addClass('d-flex flex-wrap justify-content-between align-items-center ps-4 bg-light rounded border-start border-4 border-primary shadow-sm');
+
     // 1. Definimos la lógica de lo que debe pasar (para reutilizarla)
     function <?= $controllerUniqueID ?>_ejecutarAccionDobleClick($row) {
         var lastCell = $row.find("td").last();
