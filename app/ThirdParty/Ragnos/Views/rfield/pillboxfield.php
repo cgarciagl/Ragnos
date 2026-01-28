@@ -1,4 +1,4 @@
-<div class="divfield col-sm-12 mb-3">
+<div class="divfield col-sm-12 mb-2">
     <div class="form-floating" id='group_<?= $name ?>'>
         <select class="form-select" id="<?= $name ?>_select" multiple="multiple" aria-label="<?= esc($label) ?>"
             <?= $extra_attributes ?>>

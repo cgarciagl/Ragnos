@@ -1,159 +1,148 @@
 .boxshadowround {
-  box-shadow: 0 0 50px #999;
-  -webkit-box-shadow: 0 0 50px #999;
-  -moz-box-shadow: 0 0 50px #999;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
 }
 
-.divfield legend {
-  font-weight: bolder;
-}
-.divfield {
-  display: inline-block;
-  vertical-align: top;
-  zoom: 1;
-}
-
-.fg-toolbar {
-  padding: 5px;
-}
 .general_error {
-  font-size: 3em;
-}
-.grupos {
-  display: inline-block;
-}
-.input-group {
-  padding: 0;
-  width: 100%;
+  font-size: 2.5em;
+  color: #dc3545;
+  font-weight: 300;
 }
 
-.rpfilter a {
-  margin-top: -8px;
-}
-.rplevel {
-  display: inline-block;
-  vertical-align: top;
-  zoom: 1;
-  margin-left: 1%;
-  margin-right: 1%;
-}
 .tablediv table {
   width: 100% !important;
-  -moz-user-select: none;
-  -khtml-user-select: none;
   user-select: none;
-  display: inline-table;
 }
-.ui-widget {
-  font-size: inherit;
-  padding: 0.2em;
-}
+
 .ybtndelete {
-  color: red;
+  color: #dc3545;
   display: none;
+  font-size: 1.1em;
+  transition: opacity 0.2s;
 }
+
 .Ragnos_selected_row .ybtndelete {
-  display: inline;
+  display: inline-block;
 }
-.Ragnos-formcontent form {
-  margin: 0;
-}
-.Ragnos-formcontent label {
-  color: inherit;
-  font-weight: 700;
-  min-width: 50%;
-}
-.Ragnos-formcontent legend {
-  color: inherit;
-  font-weight: inherit;
-}
-.Ragnos-formcontent {
-  width: auto;
-  margin-bottom: 10px;
-}
+
 .Ragnos-search-widget > .tablediv {
-  margin-top: 10px !important;
-  margin-bottom: 10px !important;
+  margin-top: 1rem !important;
+  margin-bottom: 1rem !important;
 }
+
 .Ragnos-search-widget {
   padding: 0 !important;
   background-color: #ffffff !important;
-  border-top: 5px solid #fd7e14 !important;
+  border-top: 4px solid #fd7e14 !important;
+  border-radius: 0.375rem;
+  overflow: hidden;
 }
+
 .Ragnos-searchingtitle {
-  text-align: center;
-  display: inline-block;
-  margin-left: 2em;
-  padding: 2px;
-  vertical-align: top;
-  background-color: indianred;
-  border-radius: 0.5em;
+  display: inline-flex;
+  align-items: center;
+  margin-left: 1rem;
+  padding: 0.35em 0.8em;
+  background-color: #dc3545;
   color: white;
+  font-size: 0.85em;
+  font-weight: 600;
+  border-radius: 50rem;
+  vertical-align: middle;
+  box-shadow: 0 2px 4px rgba(220, 53, 69, 0.25);
 }
+
 .Ragnos-widget td {
-  padding: 0.05rem 0.5rem !important;
+  padding: 0.1rem 0.5rem !important;
+  vertical-align: middle;
 }
+
 .Ragnos-widget {
-  margin-top: 10px;
+  margin-top: 1.5rem;
+  border: none;
 }
+
 .Ragnos_selected_row,
 .Ragnos_selected_row td {
-  background-color: #fece2f !important;
-  color: #000 !important;
+  background-color: #fff3cd !important;
+  color: #664d03 !important;
   cursor: pointer;
-  font-weight: 700;
+  font-weight: 600;
 }
+
 .Ragnos_table {
   width: 100% !important;
 }
+
 .Ragnos_table tr {
-  -moz-user-select: none;
-  -webkit-user-select: none;
   user-select: none;
   cursor: pointer;
 }
+
 hr.space {
-  background: #fff;
-  color: #fff;
-  visibility: hidden;
+  border: 0;
+  height: 1px;
+  background: transparent;
+  margin: 1rem 0;
 }
+
 input:invalid {
-  border: 1px solid red !important;
+  border-color: #dc3545 !important;
+  padding-right: calc(1.5em + 0.75rem);
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5zM6 8.2a.3.3 0 000 .6.3.3 0 000-.6z'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right calc(0.375em + 0.1875rem) center;
+  background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
 }
+
 table.display td.center {
   text-align: center;
 }
+
 table.display td {
-  padding: 3px 10px;
+  padding: 0.2rem 0.5rem;
+  border-bottom: 1px solid #dee2e6;
 }
+
 table.display tfoot th {
-  padding: 3px 10px;
-  border-top: 1px solid #000;
-  font-weight: 700;
+  padding: 0.2rem 0.5rem;
+  font-weight: 600;
+  color: #495057;
+  border-top: 2px solid #dee2e6;
 }
+
 table.display thead th {
-  padding: 3px 0 3px 10px;
+  padding: 0.5rem 0.5rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  color: #6c757d;
+  border-bottom: 2px solid #dee2e6;
   cursor: pointer;
-  cursor: hand;
 }
+
 table.display tr.heading2 td {
-  border-bottom: 1px solid #aaa;
+  border-bottom: 1px solid #ced4da;
 }
+
 table.display {
   margin: 0 auto;
   width: 100%;
   clear: both;
+  border-collapse: collapse;
 }
+
 th {
-  font-size: large;
+  font-size: 0.9rem;
+  font-weight: 600;
 }
+
 .verticalcenter {
   position: relative;
   top: 50%;
   transform: translateY(-50%);
 }
-
 .dt-container label {
   min-width: auto;
   font-weight: normal;
+  margin-bottom: 0.5rem;
 }

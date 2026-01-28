@@ -1,4 +1,4 @@
-<div class="divfield col-sm-4 mb-3">
+<div class="divfield col-sm-3 mb-2">
     <div class="form-floating" id='group_<?= $name ?>'>
         <?php
         $data = [

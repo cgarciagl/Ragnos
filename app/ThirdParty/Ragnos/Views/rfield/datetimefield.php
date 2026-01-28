@@ -2,7 +2,7 @@
 <script src="<?= base_url(); ?>/assets/js/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
 <link href="<?= base_url(); ?>/assets/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
 
-<div class="divfield col-sm-4 mb-3">
+<div class="divfield col-sm-3 mb-2">
     <div id='group_<?= $name ?>'>
         <label class="form-label">
             <?= $label; ?> :

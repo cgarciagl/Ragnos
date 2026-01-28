@@ -3,7 +3,7 @@
 $controller = str_replace('\\', '/', $controller);
 ?>
 
-<div class="divfield col-sm-4 mb-3">
+<div class="divfield col-sm-3 mb-2">
     <div id="group_<?= $name ?>">
         <div class="input-group" id="inputgroup_<?= $name ?>">
             <div class="form-floating">

@@ -1,4 +1,4 @@
-<div class="divfield col-sm-4 mb-3">
+<div class="divfield col-sm-3 mb-2">
     <label class="form-label" for="<?= $name ?>"><?= $label ?></label>
     <div class="position-relative" id='group_<?= $name ?>'>
         <div class="p-2 text-center border rounded bg-light d-flex justify-content-center align-items-center"

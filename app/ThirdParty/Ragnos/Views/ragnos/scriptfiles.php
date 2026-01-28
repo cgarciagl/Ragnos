@@ -23,5 +23,5 @@
 
 <link rel="stylesheet" href="<?= base_url(); ?>/assets/css/datatables.min.css?v=2.1.6" type="text/css" media="all" />
 
-<link rel="stylesheet" href="<?= base_url(); ?>/assets/css/ragnos.min.css?v=3.2" type="text/css" />
+<link rel="stylesheet" href="<?= base_url(); ?>/assets/css/ragnos.css?v=3.2" type="text/css" />
 <link rel="stylesheet" href="<?= base_url(); ?>/assets/css/custom.css" type="text/css" />

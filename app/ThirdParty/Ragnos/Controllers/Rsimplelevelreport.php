@@ -380,6 +380,6 @@ class RSimpleLevelReport
         $data['rutadevuelta'] = $rutadevuelta;
         $data['yo']           = $this;
 
-        return view('App\ThirdParty\Ragnos\Views\rreportlib/ysimplelevelreport', $data);
+        return view('App\ThirdParty\Ragnos\Views\rdatasetreportgenerator/rsimplelevelreport', $data);
     }
 }

@@ -183,23 +183,6 @@ abstract class RDatasetController extends RDataset
 
 
     /**
-     * Devuelve una vista construida para generar reportes automatizados para el catálogo
-     *
-     * @return string
-     */
-    function renderReport(): string
-    {
-        helper('form');
-        $data['controller_name']  = (new \ReflectionClass($this))->getShortName();
-        $data['controller_class'] = get_class($this);
-        $data['title']            = $this->title;
-        $this->modelo->completeFieldList();
-        $data['tablefields'] = $this->modelo->tablefields;
-        $data['fieldlist']   = $this->modelo->ofieldlist;
-        return view('App\ThirdParty\Ragnos\Views\rdatasetcontroller/report_view', $data);
-    }
-
-    /**
      * devuelve un objeto JSON, ya sea con los errores generados o con el resultado 'ok'
      */
     private function showErrorsOrOk()
@@ -308,14 +291,6 @@ abstract class RDatasetController extends RDataset
         echo view('App\ThirdParty\Ragnos\Views\ragnos/template', $data);
     }
 
-    /**
-     * Devuelve el formulario del reporte del catálogo, via AJAX
-     */
-    function reportByAjax()
-    {
-        checkAjaxRequest();
-        echo $this->renderReport();
-    }
 
     /**
      * Devuelve la vista de tabla para administrar el catálogo, solo via AJAX
@@ -326,26 +301,6 @@ abstract class RDatasetController extends RDataset
         echo $this->renderTable();
     }
 
-    /**
-     * Devuelve una vista construida para generar el reporte del catálogo
-     */
-    function report()
-    {
-        $data['content'] = $this->renderReport();
-        echo view('App\ThirdParty\Ragnos\Views\ragnos/template', $data);
-    }
-
-    /**
-     * Muestra los resultados del reporte en diferentes formatos
-     */
-    function showReport()
-    {
-        // $this->ydatasetreportlib = new YDatasetReportLib;
-        // helper('url');
-        // $this->applyFilters();
-        // $data['tabla'] = $this->ydatasetreportlib->buildReport($this);
-        // $this->ydatasetreportlib->renderReportOutput($data);
-    }
 
     /**
      * Devuelve un JSON con los datos de un registro , solo via AJAX

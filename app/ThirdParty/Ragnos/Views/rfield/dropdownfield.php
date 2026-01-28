@@ -1,4 +1,4 @@
-<div class="divfield col-sm-4 mb-3">
+<div class="divfield col-sm-3 mb-2">
     <div class="form-floating" id='group_<?= $name ?>'>
         <?php
         helper('form');
@@ -9,22 +9,26 @@
             'id="' . $name . '" data-valueant ="' . $value . '" class="form-select" placeholder="' . $label . '" ' . $extra_attributes
         ); ?>
         <label for="<?= $name ?>"><?= $label ?></label>
-        
+
         <style>
             /* Ajustes para Select2 dentro de Form Floating */
             #group_<?= $name ?> .select2-container .select2-selection {
-                height: 58px; 
+                height: 58px;
                 padding-top: 1.625rem;
                 padding-bottom: 0.625rem;
             }
+
             #group_<?= $name ?> .select2-container .select2-selection__arrow {
                 height: 58px;
             }
+
             #group_<?= $name ?> .select2-container .select2-selection__rendered {
                 padding-top: 3px;
             }
+
             #group_<?= $name ?> label {
-                z-index: 1051; /* Asegurar visibilidad sobre select2 */
+                z-index: 1051;
+                /* Asegurar visibilidad sobre select2 */
             }
         </style>
     </div>
