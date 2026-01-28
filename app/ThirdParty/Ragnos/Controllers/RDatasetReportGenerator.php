@@ -10,7 +10,7 @@ class RDatasetReportGenerator
     private RDatasetController $controller;
     private $model;
     private array $filters = [];
-    private ?array $grouping = null;
+    private array $groupings = [];
     private array $dateFilters = [];
     private array $numericFilters = [];
     private array $filterDisplayTexts = [];
@@ -131,6 +131,10 @@ class RDatasetReportGenerator
                     if (!empty($c)) {
                         $filterData['search_controller'] = $c;
                     }
+                } elseif (isset($rawConfig[$field]) && is_array($rawConfig[$field]) && isset($rawConfig[$field]['search_controller'])) {
+                    $filterData['search_controller'] = $rawConfig[$field]['search_controller'];
+                } elseif (is_array($config) && isset($config['search_controller'])) {
+                    $filterData['search_controller'] = $config['search_controller'];
                 }
 
                 $this->availableFilters[$field] = $filterData;
@@ -151,9 +155,7 @@ class RDatasetReportGenerator
             // Agrupar por Relaciones o Enums
             else if (
                 $hasOptions ||
-                strpos($field, 'Id') !== false ||
-                strpos($field, 'Number') !== false ||
-                strpos($field, 'Code') !== false ||
+                (isset($this->availableFilters[$field]) && isset($this->availableFilters[$field]['search_controller'])) ||
                 $type === 'enum'
             ) {
                 $this->availableGroupings[] = [
@@ -204,21 +206,24 @@ class RDatasetReportGenerator
         }
 
         // 2. Procesar Agrupamiento
-        // Formato esperado: "mode::field" (ej: "date_month::paymentDate")
-        $groupSelection = $request->getPost('grouping');
-        if ($groupSelection && strpos($groupSelection, '::') !== false) {
-            list($mode, $field) = explode('::', $groupSelection, 2);
+        // Iterar posibles niveles de agrupamiento (1, 2, 3...)
+        for ($i = 1; $i <= 3; $i++) {
+            $groupSelection = $request->getPost("grouping_$i");
 
-            // Buscar label bonito
-            $label = 'Grupo';
-            foreach ($this->availableGroupings as $g) {
-                if ($g['value'] === $groupSelection) {
-                    $label = $g['label'];
-                    // Quitamos "(Por Mes)" del titulo del grupo si queremos ser puristas, o lo dejamos
+            if ($groupSelection && strpos($groupSelection, '::') !== false) {
+                list($mode, $field) = explode('::', $groupSelection, 2);
+
+                // Buscar label bonito
+                $label = 'Grupo ' . $i;
+                foreach ($this->availableGroupings as $g) {
+                    if ($g['value'] === $groupSelection) {
+                        $label = $g['label'];
+                        break;
+                    }
                 }
-            }
 
-            $this->setGrouping($field, $mode, $label);
+                $this->setGrouping($field, $mode, $label);
+            }
         }
     }
 
@@ -299,7 +304,7 @@ class RDatasetReportGenerator
     public function setGrouping(string $field, string $mode = 'raw', string $label = 'Grupo'): void
     {
         if ($field) {
-            $this->grouping = [
+            $this->groupings[] = [
                 'field' => $field,
                 'mode'  => $mode,
                 'label' => $label
@@ -403,50 +408,59 @@ class RDatasetReportGenerator
         $data = $builder->get()->getResultArray();
 
         // 3. Procesar Datos y Agrupamiento
-        if ($this->grouping) {
-            $groupByField = $this->grouping['field'];
-            $mode         = $this->grouping['mode'];
+        $groupsConfig = [];
 
-            // A. Enriquecer datos con la clave de grupo formateada
+        if (!empty($this->groupings)) {
+            // A. Enriquecer datos con las claves de grupo formateadas
             foreach ($data as &$row) {
-                $rawValue = $row[$groupByField] ?? '';
+                foreach ($this->groupings as $idx => $grp) {
+                    $keyName      = "_grp_key_{$idx}";
+                    $groupByField = $grp['field'];
+                    $mode         = $grp['mode'];
+                    $rawValue     = $row[$groupByField] ?? '';
 
-                if ($mode === 'date_month') {
-                    // Convertir "2023-01-15" a "2023-01" o texto legible
-                    $time = strtotime($rawValue);
-                    // Formato ordenable y legible: "2023-01 (Enero)"
-                    $row['_group_key'] = $time ? date('Y-m', $time) . ' (' . $this->getMonthName(date('n', $time)) . ')' : 'Sin Fecha';
-                } elseif ($mode === 'date_year') {
-                    $time              = strtotime($rawValue);
-                    $row['_group_key'] = $time ? date('Y', $time) : 'Sin Fecha';
-                } else {
-                    // Modo raw/exacto: Intentar usar el valor formateado (ej: Nombre en vez de ID)
-                    if (method_exists($this->model, 'textForTable')) {
-                        // Clonamos el row para que textForTable no modifique el original accidentalmente en esta fase
-                        // aunque textForTable debería ser seguro, mejor prevenir.
-                        // Usamos textForTable para obtener lo que se vería en pantalla (ej: "Administrador")
-                        $formatted = $this->model->textForTable($row, $groupByField);
-                        // Limpiamos tags HTML por si acaso devuelve links, badges, etc. Queremos agrupar por el texto.
-                        $v                 = strip_tags($formatted);
-                        $row['_group_key'] = ($v !== '' && $v !== null) ? $v : $rawValue;
+                    if ($mode === 'date_month') {
+                        // Convertir "2023-01-15" a "2023-01" o texto legible
+                        $time = strtotime($rawValue);
+                        // Formato ordenable y legible: "2023-01 (Enero)"
+                        $row[$keyName] = $time ? date('Y-m', $time) . ' (' . $this->getMonthName(date('n', $time)) . ')' : 'Sin Fecha';
+                    } elseif ($mode === 'date_year') {
+                        $time          = strtotime($rawValue);
+                        $row[$keyName] = $time ? date('Y', $time) : 'Sin Fecha';
                     } else {
-                        $row['_group_key'] = $rawValue;
+                        // Modo raw/exacto
+                        if (method_exists($this->model, 'textForTable')) {
+                            // Usamos textForTable para obtener lo que se vería en pantalla (ej: "Administrador")
+                            $formatted = $this->model->textForTable($row, $groupByField);
+                            // Limpiamos tags HTML, queremos agrupar por el texto visible
+                            $v             = strip_tags($formatted);
+                            $row[$keyName] = ($v !== '' && $v !== null) ? $v : $rawValue;
+                        } else {
+                            $row[$keyName] = $rawValue;
+                        }
+                    }
+
+                    // Registrar configuración para el reporte final si no existe
+                    if (!isset($groupsConfig[$keyName])) {
+                        $groupsConfig[$keyName] = ['label' => $grp['label'] ?? ucfirst($groupByField)];
                     }
                 }
             }
             unset($row);
 
-            // B. Ordenar por la clave de grupo
+            // B. Ordenar por las claves de grupo en orden de jerarquía
             usort($data, function ($a, $b) {
-                return strcmp($a['_group_key'], $b['_group_key']);
+                foreach ($this->groupings as $idx => $grp) {
+                    $keyName = "_grp_key_{$idx}";
+                    $valA    = $a[$keyName] ?? '';
+                    $valB    = $b[$keyName] ?? '';
+                    $cmp     = strcmp($valA, $valB);
+                    if ($cmp !== 0) {
+                        return $cmp;
+                    }
+                }
+                return 0;
             });
-
-            // C. Configurar array de grupos para RSimpleLevelReport
-            $groupsConfig = [
-                '_group_key' => ['label' => $this->grouping['label']]
-            ];
-        } else {
-            $groupsConfig = [];
         }
 
         // 4. Formateo de Valores (Moneda, Fechas comunes, Relaciones)

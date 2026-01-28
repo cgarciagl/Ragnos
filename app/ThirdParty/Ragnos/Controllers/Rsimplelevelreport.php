@@ -136,26 +136,19 @@ class RSimpleLevelReport
         $this->grouprecords = 0;
         $this->groupTotals  = array_fill_keys($this->summableFields, 0);
 
-        $html  = '<div class="table-responsive mt-3 mb-4 shadow-sm rounded border">';
-        $html .= '<table class="table table-sm table-striped table-hover mb-0 align-middle">';
-        $html .= '<thead class="bg-light text-uppercase small text-secondary"><tr>';
+        // Estilo profesional: Card blanco, sombra suave, borde sutil.
+        // La tabla dentro es 'hover' y 'borderless' para evitar exceso de líneas.
+        $html  = '<div class="card border border-light shadow-sm mb-4">';
+        $html .= '<div class="card-body p-0">';
+        $html .= '<div class="table-responsive">';
+        $html .= '<table class="table table-hover align-middle mb-0" style="font-size: 0.9rem;">';
+        $html .= '<thead class="bg-light text-uppercase text-secondary border-bottom"><tr>';
 
         foreach ($this->listfields as $key => $label) {
-            // Si la clave es string, asumimos que es el nombre del campo y el valor la etiqueta
-            // Si la clave es numérica, asumimos que el valor es directamente (campo/etiqueta) o solo etiqueta
-            // Para mantener compatibilidad si alguien mandó ['Mes', 'Total'] -> label=Mes, label=Total
-
-            // Lógica ajustada: 
-            // - $key es el nombre del campo, $label es el texto visible
-            // - o $key es indice num, $label es ambas cosas?
-            // RSimpleLevelReport parece haber sido diseñada para recibir un array de labels simplemente.
-            // Pero para soportar que $key sea el field name (para detectar summable fields correctamente), 
-            // ajustamos aqui para usar $key si es string en la deteccion de summable
-
             $fieldNameToCheck = is_string($key) ? $key : $label;
-
-            $align  = in_array($fieldNameToCheck, $this->summableFields) ? 'text-end' : 'text-start';
-            $html  .= "<th scope=\"col\" class=\"py-2 px-3 {$align}\">" . htmlspecialchars($label) . "</th>";
+            $align            = in_array($fieldNameToCheck, $this->summableFields) ? 'text-end' : 'text-start';
+            // Letter-spacing para un look más técnico
+            $html .= "<th scope=\"col\" class=\"py-3 px-3 {$align} fw-bold\" style=\"letter-spacing: 0.5px; font-size: 0.75rem;\">" . htmlspecialchars($label) . "</th>";
         }
 
         $html .= '</tr></thead><tbody>';
@@ -166,12 +159,12 @@ class RSimpleLevelReport
     {
         // Si no mostramos totales, cerramos simple
         if (!$this->showTotals) {
-            return '</tbody></table></div>';
+            return '</tbody></table></div></div></div>'; // Cierre de table-responsive, card-body, card
         }
 
         $html = $isGrandTotal
-            ? '<tfoot><tr class="bg-secondary text-white fw-bold">'
-            : '</tbody><tfoot class="fw-bold fs-6 text-dark border-top bg-white"><tr>';
+            ? '<tfoot><tr class="bg-primary bg-opacity-10 text-dark fw-bold border-top border-primary">' // Totales generales destacados
+            : '</tbody><tfoot class="fw-bold text-dark bg-white border-top"><tr>'; // Subtotales limpios
 
         $totalsSource = $isGrandTotal ? $this->grandTotals : $this->groupTotals;
         $label        = $isGrandTotal ? 'RESUMEN GENERAL' : 'SUBTOTAL';
@@ -186,7 +179,11 @@ class RSimpleLevelReport
             $content    = '';
 
             if ($isFirstColumn) {
-                $content       = $isGrandTotal ? $label : $label . " <span class='badge bg-light text-dark border ms-1'>{$this->grouprecords}</span>";
+                $countBadge = $isGrandTotal
+                    ? ''
+                    : "<span class='badge bg-light text-secondary border fw-normal ms-2'>{$this->grouprecords} regs</span>";
+
+                $content       = "<span class='text-uppercase small'>{$label}</span> $countBadge";
                 $isFirstColumn = false;
             }
 
@@ -200,14 +197,14 @@ class RSimpleLevelReport
                 }
             }
 
-            $padding  = $isGrandTotal ? 'py-3 px-3' : 'py-2 px-3';
+            $padding  = $isGrandTotal ? 'py-3 px-3 fs-6' : 'py-3 px-3 small';
             $html    .= "<td class=\"{$align} {$padding}\">" . $content . "</td>";
         }
 
         $html .= '</tr></tfoot>';
 
         if (!$isGrandTotal) {
-            $html .= '</table></div>';
+            $html .= '</table></div></div></div>'; // Cierre de los contenedores
         }
 
         return $html;
@@ -271,10 +268,11 @@ class RSimpleLevelReport
 
         // Si hay grupos definidos, verificamos si cambiaron
         if (!empty($this->groups)) {
-            $level = 2; // Niveles de título h3, h4...
+            $depth  = 0;
+            $colors = ['primary', 'success', 'info', 'warning']; // Paleta para acentos
 
             foreach ($this->groups as $fieldKey => &$groupConfig) {
-                $level++;
+                $depth++;
                 $currentVal = $row[$fieldKey] ?? null;
                 $lastVal    = $groupConfig['current'] ?? null;
 
@@ -290,12 +288,31 @@ class RSimpleLevelReport
                     $groupConfig['current']       = $currentVal;
                     $this->shouldWriteGroupHeader = true;
 
-                    // Construimos el título del nuevo grupo
-                    $label       = $groupConfig['label'] ?? $fieldKey;
-                    $headerHtml .= "<div class='mt-4 mb-2 bg-light p-2 ps-3 border-start border-4 border-primary rounded-end shadow-sm d-flex align-items-center'>" .
-                        "<span class='text-uppercase text-muted small fw-bold me-2'>" . htmlspecialchars($label) . ":</span>" .
-                        "<span class='fs-5 fw-bold text-dark'>" . htmlspecialchars((string) $currentVal) . "</span>" .
-                        "</div>";
+                    // Styles based on depth
+                    // Nivel 1: Título de sección grande
+                    // Nivel 2+: Subtítulos más compactos
+                    $isTopLevel = ($depth === 1);
+                    $color      = $colors[($depth - 1) % count($colors)];
+
+                    if ($isTopLevel) {
+                        $label       = $groupConfig['label'] ?? $fieldKey;
+                        $headerHtml .= "<div class='mt-5 mb-3 d-flex align-items-center border-bottom pb-2'>";
+                        $headerHtml .= "<span class='badge bg-{$color} me-2 p-2 rounded-1'><i class='bi bi-layers-fill'></i></span>";
+                        $headerHtml .= "<div>";
+                        $headerHtml .= "<div class='text-uppercase text-muted' style='font-size: 0.65rem; letter-spacing: 1px;'>" . htmlspecialchars($label) . "</div>";
+                        $headerHtml .= "<div class='fs-4 fw-bold text-dark lh-1'>" . htmlspecialchars((string) $currentVal) . "</div>";
+                        $headerHtml .= "</div></div>";
+                    } else {
+                        // Indentación para subniveles
+                        $indent      = ($depth - 1) * 20;
+                        $label       = $groupConfig['label'] ?? $fieldKey;
+                        $headerHtml .= "<div class='mt-3 mb-2 d-flex align-items-center' style='margin-left: {$indent}px;'>";
+                        $headerHtml .= "<i class='bi bi-arrow-return-right text-muted me-2'></i>";
+                        $headerHtml .= "<div class='bg-light border rounded px-3 py-1 d-inline-flex align-items-center gap-2 shadow-sm'>";
+                        $headerHtml .= "<span class='text-secondary small fw-bold text-uppercase'>" . htmlspecialchars($label) . ":</span>";
+                        $headerHtml .= "<span class='fw-bold text-dark'>" . htmlspecialchars((string) $currentVal) . "</span>";
+                        $headerHtml .= "</div></div>";
+                    }
                 }
             }
         }
