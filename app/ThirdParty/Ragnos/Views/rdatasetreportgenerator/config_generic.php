@@ -261,14 +261,19 @@
                                         Sin opciones disponibles.
                                     </div>
                                 <?php else: ?>
+                                    <?php
+                                    // Determinar cuántos selectores mostrar (máximo 3, o la cantidad de opciones disponibles)
+                                    $maxLevels = min(3, count($groupingOpts));
+                                    ?>
                                     <div class="bg-light p-3 rounded border shadow-sm">
-                                        <?php for ($i = 1; $i <= 3; $i++): ?>
+                                        <?php for ($i = 1; $i <= $maxLevels; $i++): ?>
                                             <div class="mb-2">
                                                 <label class="form-label small fw-bold text-secondary mb-1">
                                                     <span class="badge bg-white text-dark border me-1"><?= $i ?></span> Nivel de
                                                     Agrupación
                                                 </label>
-                                                <select name="grouping_<?= $i ?>" class="form-select form-select-sm">
+                                                <select name="grouping_<?= $i ?>"
+                                                    class="form-select form-select-sm grouping-select">
                                                     <option value="">- (Ninguno) -</option>
                                                     <?php foreach ($groupingOpts as $opt): ?>
                                                         <option value="<?= esc($opt['value']) ?>"><?= esc($opt['label']) ?></option>
@@ -278,9 +283,54 @@
                                         <?php endfor; ?>
                                     </div>
                                     <small class="text-muted fst-italic mt-2 d-block" style="font-size: 0.75rem;">
-                                        <i class="bi bi-info-circle me-1"></i> Seleccione el orden de jerarquía para los
-                                        grupos.
+                                        <i class="bi bi-info-circle me-1"></i> Seleccione el orden de jerarquía. Las
+                                        opciones ya seleccionadas no estarán disponibles en niveles inferiores.
                                     </small>
+
+                                    <script>
+                                        $(function () {
+                                            const $selects = $('.grouping-select');
+
+                                            function updateGroupingOptions() {
+                                                // Obtener todos los valores actualmente seleccionados
+                                                let selectedValues = [];
+                                                $selects.each(function () {
+                                                    const val = $(this).val();
+                                                    if (val) {
+                                                        selectedValues.push(val);
+                                                    }
+                                                });
+
+                                                // Actualizar cada select
+                                                $selects.each(function () {
+                                                    const $currentSelect = $(this);
+                                                    const currentVal = $currentSelect.val();
+
+                                                    $currentSelect.find('option').each(function () {
+                                                        const $opt = $(this);
+                                                        const optVal = $opt.val();
+
+                                                        // Si la opción no tiene valor (placeholder), saltar
+                                                        if (!optVal) return;
+
+                                                        // Si el valor está seleccionado en OTRO select, deshabilitar/ocultar
+                                                        // (Permitimos si es el valor seleccionado por ESTE mismo select)
+                                                        if (selectedValues.includes(optVal) && optVal !== currentVal) {
+                                                            $opt.prop('disabled', true).hide();
+                                                        } else {
+                                                            $opt.prop('disabled', false).show();
+                                                        }
+                                                    });
+                                                });
+                                            }
+
+                                            // Ejecutar al cambiar cualquiera
+                                            $selects.on('change', updateGroupingOptions);
+
+                                            // Ejecutar al inicio por si hay valores preseleccionados (navegador back/forward)
+                                            updateGroupingOptions();
+                                        });
+                                    </script>
                                 <?php endif; ?>
                             </div>
                         </div>

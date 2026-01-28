@@ -141,14 +141,14 @@ class RSimpleLevelReport
         $html  = '<div class="card border border-light shadow-sm mb-4">';
         $html .= '<div class="card-body p-0">';
         $html .= '<div class="table-responsive">';
-        $html .= '<table class="table table-hover align-middle mb-0" style="font-size: 0.9rem;">';
+        $html .= '<table class="table table-sm table-hover align-middle mb-0" style="font-size: 0.85rem;">';
         $html .= '<thead class="bg-light text-uppercase text-secondary border-bottom"><tr>';
 
         foreach ($this->listfields as $key => $label) {
             $fieldNameToCheck = is_string($key) ? $key : $label;
             $align            = in_array($fieldNameToCheck, $this->summableFields) ? 'text-end' : 'text-start';
             // Letter-spacing para un look más técnico
-            $html .= "<th scope=\"col\" class=\"py-3 px-3 {$align} fw-bold\" style=\"letter-spacing: 0.5px; font-size: 0.75rem;\">" . htmlspecialchars($label) . "</th>";
+            $html .= "<th scope=\"col\" class=\"py-2 px-2 {$align} fw-bold\" style=\"letter-spacing: 0.5px; font-size: 0.7rem;\">" . htmlspecialchars($label) . "</th>";
         }
 
         $html .= '</tr></thead><tbody>';
@@ -197,7 +197,7 @@ class RSimpleLevelReport
                 }
             }
 
-            $padding  = $isGrandTotal ? 'py-3 px-3 fs-6' : 'py-3 px-3 small';
+            $padding  = $isGrandTotal ? 'py-2 px-2 fs-6' : 'py-1 px-2 small';
             $html    .= "<td class=\"{$align} {$padding}\">" . $content . "</td>";
         }
 
@@ -247,9 +247,9 @@ class RSimpleLevelReport
                     $this->grandTotals[$fieldName] = 0;
                 $this->grandTotals[$fieldName] += $numericVal;
 
-                $html .= "<td class=\"text-end px-3\">" . htmlspecialchars((string) $value) . "</td>";
+                $html .= "<td class=\"text-end px-2 py-1\">" . htmlspecialchars((string) $value) . "</td>";
             } else {
-                $html .= "<td class=\"px-3\">" . htmlspecialchars((string) $value) . "</td>";
+                $html .= "<td class=\"px-2 py-1\">" . htmlspecialchars((string) $value) . "</td>";
             }
         }
         $html .= "</tr>";
