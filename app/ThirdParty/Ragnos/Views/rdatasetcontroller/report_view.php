@@ -23,11 +23,11 @@ $clase              = mapClassToURL($controller_class);
     <div class="btn-toolbar" style="margin-left:15px;">
         <div class="btn-toolbar">
             <button id="btn_xls_<?= $controllerUniqueID ?>_View_Report" class="toolbtn btn btn-primary">
-                <i class="bi bi-file-earmark-excel"></i> EXCEL
+                <i class="bi bi-file-earmark-excel"></i> <?= lang('Ragnos.Ragnos_excel_button') ?>
             </button>
 
             <button id="btn_htm_<?= $controllerUniqueID ?>_View_Report" class="toolbtn btn btn-primary">
-                <i class="bi bi-filetype-html"></i> HTML
+                <i class="bi bi-filetype-html"></i> <?= lang('Ragnos.Ragnos_html_button') ?>
             </button>
             <!-- <button id="btn_chart_<?= $controllerUniqueID ?>_View_Report" class="toolbtn btn">
                 <i class="bi bi-bar-chart"></i>

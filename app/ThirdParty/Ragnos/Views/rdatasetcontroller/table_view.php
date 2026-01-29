@@ -83,20 +83,20 @@ $clase              = mapClassToURL($controller_class);
                     <div class="d-flex align-items-center gap-2">
                         <?php if ($modelo->canInsert): ?>
                             <button id="btn_<?= $controllerUniqueID ?>_New" class="toolbtn btn btn-primary btn-lg shadow-sm"
-                                title="Nuevo Registro">
+                                title="<?= lang('Ragnos.Ragnos_new_record_tooltip') ?>">
                                 <i class="bi bi-plus-lg me-1"></i>
                             </button>
                         <?php endif; ?>
 
                         <button id="btn_<?= $controllerUniqueID ?>_Refresh"
                             class="toolbtn btn btn-outline-secondary btn-lg bg-white shadow-sm"
-                            title="Actualizar Datos">
+                            title="<?= lang('Ragnos.Ragnos_refresh_data_tooltip') ?>">
                             <i class="bi bi-arrow-clockwise"></i>
                         </button>
 
                         <a href="<?= site_url($clase . '/genericAdvancedReport') ?>"
                             class="toolbtn btn btn-outline-secondary btn-lg bg-white shadow-sm"
-                            title="Generar Reporte Avanzado">
+                            title="<?= lang('Ragnos.Ragnos_advanced_report_tooltip') ?>">
                             <i class="bi bi-printer"></i>
                         </a>
 

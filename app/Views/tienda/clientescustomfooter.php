@@ -41,7 +41,7 @@
                                                 default      => 'bg-secondary'
                                             };
                                             ?>
-                                            <span class="badge rounded-pill <?= $badgeClass ?> bg-opacity-75" style="font-weight: 500; font-size: 0.75em;">
+                                            <span class="badge rounded-pill <?= $badgeClass ?> bg-opacity-75">
                                                 <?= $orderStatuses[$orden['status']] ?? $orden['status'] ?>
                                             </span>
                                         </td>

@@ -53,4 +53,32 @@ $lang['Ragnos_record_deleted']  = 'Record deleted successfully';
 $lang['Ragnos_record_updated']  = 'Record updated successfully';
 $lang['Ragnos_record_inserted'] = 'Record inserted successfully';
 
+$lang['Ragnos_report_parameters']       = 'Report parameters';
+$lang['Ragnos_grouping']                = 'Grouping';
+$lang['Ragnos_no_options_available']    = 'No options available.';
+$lang['Ragnos_grouping_level']          = 'Grouping Level';
+$lang['Ragnos_none_option']             = '- (None) -';
+$lang['Ragnos_grouping_hierarchy_help'] = 'Select the hierarchy order. Options already selected will not be available in lower levels.';
+$lang['Ragnos_filters']                 = 'Filters';
+$lang['Ragnos_no_filters_detected']     = 'No applicable filters detected for this dataset.';
+$lang['Ragnos_clear']                   = 'Clear';
+$lang['Ragnos_clear_date_range']        = 'Clear date range';
+$lang['Ragnos_from']                    = 'From';
+$lang['Ragnos_to']                      = 'To';
+$lang['Ragnos_clear_range']             = 'Clear range';
+$lang['Ragnos_minimum']                 = 'Minimum';
+$lang['Ragnos_maximum']                 = 'Maximum';
+$lang['Ragnos_search_placeholder_fmt']  = 'Search {0}...';
+$lang['Ragnos_filter_by_fmt']           = 'Filter by {0}...';
+$lang['Ragnos_all_option']              = '- All -';
+$lang['Ragnos_yes_active']              = 'Yes / Active';
+$lang['Ragnos_no_inactive']             = 'No / Inactive';
+$lang['Ragnos_generate_report']         = 'Generate Report';
+
+$lang['Ragnos_new_record_tooltip']      = 'New Record';
+$lang['Ragnos_refresh_data_tooltip']    = 'Refresh Data';
+$lang['Ragnos_advanced_report_tooltip'] = 'Generate Advanced Report';
+$lang['Ragnos_excel_button']            = 'EXCEL';
+$lang['Ragnos_html_button']             = 'HTML';
+
 return $lang;

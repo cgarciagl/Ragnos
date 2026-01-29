@@ -10,7 +10,7 @@
                     <div class="d-flex align-items-center">
                         <h5 class="mb-0 fw-bold text-dark fs-6"><i
                                 class="bi bi-sliders me-2 text-primary"></i><?= esc($title) ?></h5>
-                        <span class="text-muted ms-2 small">| Parámetros del reporte</span>
+                        <span class="text-muted ms-2 small">| <?= lang('Ragnos.Ragnos_report_parameters') ?></span>
                     </div>
                 </div>
                 <div class="card-body p-3">
@@ -18,16 +18,102 @@
                         <?= csrf_field() ?>
 
                         <div class="row g-3">
+
+
+                            <!-- Columna de Agrupamiento -->
+                            <div class="col-md-5 ps-md-4">
+                                <h6 class="text-secondary fw-bold mb-2 small">
+                                    <i class="bi bi-layers me-1"></i> <?= lang('Ragnos.Ragnos_grouping') ?>
+                                </h6>
+
+                                <?php if (empty($groupingOpts)): ?>
+                                    <div class="list-group-item bg-white text-muted small fst-italic py-2 border rounded">
+                                        <?= lang('Ragnos.Ragnos_no_options_available') ?>
+                                    </div>
+                                <?php else: ?>
+                                    <?php
+                                    // Determinar cuántos selectores mostrar (máximo 3, o la cantidad de opciones disponibles)
+                                    $maxLevels = min(3, count($groupingOpts));
+                                    ?>
+                                    <div class="bg-light p-3 rounded border shadow-sm">
+                                        <?php for ($i = 1; $i <= $maxLevels; $i++): ?>
+                                            <div class="mb-2">
+                                                <label class="form-label small fw-bold text-secondary mb-1">
+                                                    <span class="badge bg-white text-dark border me-1"><?= $i ?></span>
+                                                    <?= lang('Ragnos.Ragnos_grouping_level') ?>
+                                                </label>
+                                                <select name="grouping_<?= $i ?>"
+                                                    class="form-select form-select-sm grouping-select">
+                                                    <option value=""><?= lang('Ragnos.Ragnos_none_option') ?></option>
+                                                    <?php foreach ($groupingOpts as $opt): ?>
+                                                        <option value="<?= esc($opt['value']) ?>"><?= esc($opt['label']) ?></option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                            </div>
+                                        <?php endfor; ?>
+                                    </div>
+                                    <small class="text-muted fst-italic mt-2 d-block" style="font-size: 0.75rem;">
+                                        <i class="bi bi-info-circle me-1"></i>
+                                        <?= lang('Ragnos.Ragnos_grouping_hierarchy_help') ?>
+                                    </small>
+
+                                    <script>
+                                        $(function () {
+                                            const $selects = $('.grouping-select');
+
+                                            function updateGroupingOptions() {
+                                                // Obtener todos los valores actualmente seleccionados
+                                                let selectedValues = [];
+                                                $selects.each(function () {
+                                                    const val = $(this).val();
+                                                    if (val) {
+                                                        selectedValues.push(val);
+                                                    }
+                                                });
+
+                                                // Actualizar cada select
+                                                $selects.each(function () {
+                                                    const $currentSelect = $(this);
+                                                    const currentVal = $currentSelect.val();
+
+                                                    $currentSelect.find('option').each(function () {
+                                                        const $opt = $(this);
+                                                        const optVal = $opt.val();
+
+                                                        // Si la opción no tiene valor (placeholder), saltar
+                                                        if (!optVal) return;
+
+                                                        // Si el valor está seleccionado en OTRO select, deshabilitar/ocultar
+                                                        // (Permitimos si es el valor seleccionado por ESTE mismo select)
+                                                        if (selectedValues.includes(optVal) && optVal !== currentVal) {
+                                                            $opt.prop('disabled', true).hide();
+                                                        } else {
+                                                            $opt.prop('disabled', false).show();
+                                                        }
+                                                    });
+                                                });
+                                            }
+
+                                            // Ejecutar al cambiar cualquiera
+                                            $selects.on('change', updateGroupingOptions);
+
+                                            // Ejecutar al inicio por si hay valores preseleccionados (navegador back/forward)
+                                            updateGroupingOptions();
+                                        });
+                                    </script>
+                                <?php endif; ?>
+                            </div>
+
                             <!-- Columna de Filtros -->
                             <div class="col-md-7 border-end">
                                 <h6 class="text-secondary fw-bold mb-2 small">
-                                    <i class="bi bi-funnel me-1"></i> Filtros
+                                    <i class="bi bi-funnel me-1"></i> <?= lang('Ragnos.Ragnos_filters') ?>
                                 </h6>
 
                                 <?php if (empty($filters)): ?>
                                     <div class="alert alert-light border text-center text-muted small">
-                                        <i class="bi bi-info-circle me-1"></i> No se detectaron filtros aplicables para este
-                                        dataset.
+                                        <i class="bi bi-info-circle me-1"></i>
+                                        <?= lang('Ragnos.Ragnos_no_filters_detected') ?>
                                     </div>
                                 <?php else: ?>
                                     <div class="vstack gap-3">
@@ -43,8 +129,8 @@
                                                         <a href="javascript:void(0)" id="btn_clear_<?= $field ?>"
                                                             onclick="$('input[name=filter_<?= $field ?>_start]').val(''); $('input[name=filter_<?= $field ?>_end]').val('').trigger('change');"
                                                             class="badge bg-danger text-decoration-none" style="display:none;"
-                                                            title="Limpiar rango de fechas">
-                                                            <i class="bi bi-x"></i> Borrar
+                                                            title="<?= lang('Ragnos.Ragnos_clear_date_range') ?>">
+                                                            <i class="bi bi-x"></i> <?= lang('Ragnos.Ragnos_clear') ?>
                                                         </a>
                                                         <script>
                                                             $(function () {
@@ -74,16 +160,20 @@
                                                                 <div class="form-floating">
                                                                     <input type="date" name="filter_<?= $field ?>_start"
                                                                         class="form-control form-control-sm"
-                                                                        id="floatStart_<?= $field ?>" placeholder="Desde">
-                                                                    <label for="floatStart_<?= $field ?>">Desde</label>
+                                                                        id="floatStart_<?= $field ?>"
+                                                                        placeholder="<?= lang('Ragnos.Ragnos_from') ?>">
+                                                                    <label
+                                                                        for="floatStart_<?= $field ?>"><?= lang('Ragnos.Ragnos_from') ?></label>
                                                                 </div>
                                                             </div>
                                                             <div class="col-6">
                                                                 <div class="form-floating">
                                                                     <input type="date" name="filter_<?= $field ?>_end"
                                                                         class="form-control form-control-sm"
-                                                                        id="floatEnd_<?= $field ?>" placeholder="Hasta">
-                                                                    <label for="floatEnd_<?= $field ?>">Hasta</label>
+                                                                        id="floatEnd_<?= $field ?>"
+                                                                        placeholder="<?= lang('Ragnos.Ragnos_to') ?>">
+                                                                    <label
+                                                                        for="floatEnd_<?= $field ?>"><?= lang('Ragnos.Ragnos_to') ?></label>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -101,8 +191,8 @@
                                                         <a href="javascript:void(0)" id="btn_clear_<?= $field ?>"
                                                             onclick="$('input[name=filter_<?= $field ?>_min]').val(''); $('input[name=filter_<?= $field ?>_max]').val('').trigger('change');"
                                                             class="badge bg-danger text-decoration-none" style="display:none;"
-                                                            title="Limpiar rango">
-                                                            <i class="bi bi-x"></i> Borrar
+                                                            title="<?= lang('Ragnos.Ragnos_clear_range') ?>">
+                                                            <i class="bi bi-x"></i> <?= lang('Ragnos.Ragnos_clear') ?>
                                                         </a>
                                                         <script>
                                                             $(function () {
@@ -131,16 +221,20 @@
                                                                 <div class="form-floating">
                                                                     <input type="number" step="any" name="filter_<?= $field ?>_min"
                                                                         class="form-control form-control-sm"
-                                                                        id="floatMin_<?= $field ?>" placeholder="Min">
-                                                                    <label for="floatMin_<?= $field ?>">Mínimo</label>
+                                                                        id="floatMin_<?= $field ?>"
+                                                                        placeholder="<?= lang('Ragnos.Ragnos_minimum') ?>">
+                                                                    <label
+                                                                        for="floatMin_<?= $field ?>"><?= lang('Ragnos.Ragnos_minimum') ?></label>
                                                                 </div>
                                                             </div>
                                                             <div class="col-6">
                                                                 <div class="form-floating">
                                                                     <input type="number" step="any" name="filter_<?= $field ?>_max"
                                                                         class="form-control form-control-sm"
-                                                                        id="floatMax_<?= $field ?>" placeholder="Max">
-                                                                    <label for="floatMax_<?= $field ?>">Máximo</label>
+                                                                        id="floatMax_<?= $field ?>"
+                                                                        placeholder="<?= lang('Ragnos.Ragnos_maximum') ?>">
+                                                                    <label
+                                                                        for="floatMax_<?= $field ?>"><?= lang('Ragnos.Ragnos_maximum') ?></label>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -155,7 +249,7 @@
                                                     <div class="input-group">
                                                         <input type="text" id="filter_<?= $field ?>_display"
                                                             name="filter_<?= $field ?>_display_text" class="form-control"
-                                                            placeholder="Buscar <?= strtolower($config['label']) ?>...">
+                                                            placeholder="<?= lang('Ragnos.Ragnos_search_placeholder_fmt', [strtolower($config['label'])]) ?>">
                                                     </div>
                                                     <input type="hidden" name="filter_<?= $field ?>" id="filter_<?= $field ?>">
                                                     <script>
@@ -209,7 +303,7 @@
                                             <?php elseif ($config['type'] === 'select'): ?>
                                                 <div class="form-floating mb-1">
                                                     <select name="filter_<?= $field ?>" class="form-select" id="sel_<?= $field ?>">
-                                                        <option value="">- Todos -</option>
+                                                        <option value=""><?= lang('Ragnos.Ragnos_all_option') ?></option>
                                                         <?php foreach ($config['options'] as $val => $lbl): ?>
                                                             <option value="<?= esc($val) ?>">
                                                                 <?= esc($lbl) ?>
@@ -226,9 +320,9 @@
                                                 <div class="form-floating mb-1">
                                                     <select name="filter_<?= $field ?>" class="form-select"
                                                         id="sel_bool_<?= $field ?>">
-                                                        <option value="">- Todos -</option>
-                                                        <option value="1">Sí / Activo</option>
-                                                        <option value="0">No / Inactivo</option>
+                                                        <option value=""><?= lang('Ragnos.Ragnos_all_option') ?></option>
+                                                        <option value="1"><?= lang('Ragnos.Ragnos_yes_active') ?></option>
+                                                        <option value="0"><?= lang('Ragnos.Ragnos_no_inactive') ?></option>
                                                     </select>
                                                     <label for="sel_bool_<?= $field ?>">
                                                         <?= esc($config['label']) ?>
@@ -240,7 +334,7 @@
                                                 <div class="form-floating mb-1">
                                                     <input type="text" name="filter_<?= $field ?>" class="form-control"
                                                         id="floatStd_<?= $field ?>"
-                                                        placeholder="Filtrar por <?= strtolower($config['label']) ?>...">
+                                                        placeholder="<?= lang('Ragnos.Ragnos_filter_by_fmt', [strtolower($config['label'])]) ?>">
                                                     <label for="floatStd_<?= $field ?>"><?= esc($config['label']) ?></label>
                                                 </div>
                                             <?php endif; ?>
@@ -249,100 +343,18 @@
                                     </div>
                                 <?php endif; ?>
                             </div>
-
-                            <!-- Columna de Agrupamiento -->
-                            <div class="col-md-5 ps-md-4">
-                                <h6 class="text-secondary fw-bold mb-2 small">
-                                    <i class="bi bi-layers me-1"></i> Agrupamiento
-                                </h6>
-
-                                <?php if (empty($groupingOpts)): ?>
-                                    <div class="list-group-item bg-white text-muted small fst-italic py-2 border rounded">
-                                        Sin opciones disponibles.
-                                    </div>
-                                <?php else: ?>
-                                    <?php
-                                    // Determinar cuántos selectores mostrar (máximo 3, o la cantidad de opciones disponibles)
-                                    $maxLevels = min(3, count($groupingOpts));
-                                    ?>
-                                    <div class="bg-light p-3 rounded border shadow-sm">
-                                        <?php for ($i = 1; $i <= $maxLevels; $i++): ?>
-                                            <div class="mb-2">
-                                                <label class="form-label small fw-bold text-secondary mb-1">
-                                                    <span class="badge bg-white text-dark border me-1"><?= $i ?></span> Nivel de
-                                                    Agrupación
-                                                </label>
-                                                <select name="grouping_<?= $i ?>"
-                                                    class="form-select form-select-sm grouping-select">
-                                                    <option value="">- (Ninguno) -</option>
-                                                    <?php foreach ($groupingOpts as $opt): ?>
-                                                        <option value="<?= esc($opt['value']) ?>"><?= esc($opt['label']) ?></option>
-                                                    <?php endforeach; ?>
-                                                </select>
-                                            </div>
-                                        <?php endfor; ?>
-                                    </div>
-                                    <small class="text-muted fst-italic mt-2 d-block" style="font-size: 0.75rem;">
-                                        <i class="bi bi-info-circle me-1"></i> Seleccione el orden de jerarquía. Las
-                                        opciones ya seleccionadas no estarán disponibles en niveles inferiores.
-                                    </small>
-
-                                    <script>
-                                        $(function () {
-                                            const $selects = $('.grouping-select');
-
-                                            function updateGroupingOptions() {
-                                                // Obtener todos los valores actualmente seleccionados
-                                                let selectedValues = [];
-                                                $selects.each(function () {
-                                                    const val = $(this).val();
-                                                    if (val) {
-                                                        selectedValues.push(val);
-                                                    }
-                                                });
-
-                                                // Actualizar cada select
-                                                $selects.each(function () {
-                                                    const $currentSelect = $(this);
-                                                    const currentVal = $currentSelect.val();
-
-                                                    $currentSelect.find('option').each(function () {
-                                                        const $opt = $(this);
-                                                        const optVal = $opt.val();
-
-                                                        // Si la opción no tiene valor (placeholder), saltar
-                                                        if (!optVal) return;
-
-                                                        // Si el valor está seleccionado en OTRO select, deshabilitar/ocultar
-                                                        // (Permitimos si es el valor seleccionado por ESTE mismo select)
-                                                        if (selectedValues.includes(optVal) && optVal !== currentVal) {
-                                                            $opt.prop('disabled', true).hide();
-                                                        } else {
-                                                            $opt.prop('disabled', false).show();
-                                                        }
-                                                    });
-                                                });
-                                            }
-
-                                            // Ejecutar al cambiar cualquiera
-                                            $selects.on('change', updateGroupingOptions);
-
-                                            // Ejecutar al inicio por si hay valores preseleccionados (navegador back/forward)
-                                            updateGroupingOptions();
-                                        });
-                                    </script>
-                                <?php endif; ?>
-                            </div>
                         </div>
 
                         <hr class="my-3">
 
                         <div class="d-flex justify-content-start gap-2">
-                            <button type="submit" class="btn btn-primary btn-sm shadow-sm fw-bold">
-                                <i class="bi bi-file-earmark-text me-1"></i> Generar Reporte
+                            <button type="button" onclick="this.form.submit()"
+                                class="btn btn-primary btn-sm shadow-sm fw-bold">
+                                <i class="bi bi-file-earmark-text me-1"></i>
+                                <?= lang('Ragnos.Ragnos_generate_report') ?>
                             </button>
                             <a href="javascript:history.back()"
-                                class="btn btn-light btn-sm border text-secondary">Cancelar</a>
+                                class="btn btn-light btn-sm border text-secondary"><?= lang('Ragnos.Ragnos_cancel') ?></a>
                         </div>
                     </form>
                 </div>

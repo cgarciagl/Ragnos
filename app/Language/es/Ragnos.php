@@ -52,4 +52,33 @@ $lang['form_validation_readonly_Ragnos']  = 'El campo no puede modificarse.';
 $lang['Ragnos_record_deleted']  = 'Registro eliminado correctamente';
 $lang['Ragnos_record_updated']  = 'Registro actualizado correctamente';
 $lang['Ragnos_record_inserted'] = 'Registro insertado correctamente';
+
+$lang['Ragnos_report_parameters']       = 'Parámetros del reporte';
+$lang['Ragnos_grouping']                = 'Agrupamiento';
+$lang['Ragnos_no_options_available']    = 'Sin opciones disponibles.';
+$lang['Ragnos_grouping_level']          = 'Nivel de Agrupación';
+$lang['Ragnos_none_option']             = '- (Ninguno) -';
+$lang['Ragnos_grouping_hierarchy_help'] = 'Seleccione el orden de jerarquía. Las opciones ya seleccionadas no estarán disponibles en niveles inferiores.';
+$lang['Ragnos_filters']                 = 'Filtros';
+$lang['Ragnos_no_filters_detected']     = 'No se detectaron filtros aplicables para este dataset.';
+$lang['Ragnos_clear']                   = 'Borrar';
+$lang['Ragnos_clear_date_range']        = 'Limpiar rango de fechas';
+$lang['Ragnos_from']                    = 'Desde';
+$lang['Ragnos_to']                      = 'Hasta';
+$lang['Ragnos_clear_range']             = 'Limpiar rango';
+$lang['Ragnos_minimum']                 = 'Mínimo';
+$lang['Ragnos_maximum']                 = 'Máximo';
+$lang['Ragnos_search_placeholder_fmt']  = 'Buscar {0}...';
+$lang['Ragnos_filter_by_fmt']           = 'Filtrar por {0}...';
+$lang['Ragnos_all_option']              = '- Todos -';
+$lang['Ragnos_yes_active']              = 'Sí / Activo';
+$lang['Ragnos_no_inactive']             = 'No / Inactivo';
+$lang['Ragnos_generate_report']         = 'Generar Reporte';
+
+$lang['Ragnos_new_record_tooltip']      = 'Nuevo Registro';
+$lang['Ragnos_refresh_data_tooltip']    = 'Actualizar Datos';
+$lang['Ragnos_advanced_report_tooltip'] = 'Generar Reporte Avanzado';
+$lang['Ragnos_excel_button']            = 'EXCEL';
+$lang['Ragnos_html_button']             = 'HTML';
+
 return $lang;
