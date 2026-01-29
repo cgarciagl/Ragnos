@@ -6,6 +6,15 @@ use App\ThirdParty\Ragnos\Controllers\RDatasetController;
 
 class Ordenes extends RDatasetController
 {
+    public const STATUSES = [
+        'Shipped'    => 'Enviado',
+        'Resolved'   => 'Resuelto',
+        'Cancelled'  => 'Cancelado',
+        'On Hold'    => 'En espera',
+        'Disputed'   => 'Disputado',
+        'In Process' => 'En proceso'
+    ];
+
     function __construct()
     {
         parent::__construct();
@@ -20,20 +29,12 @@ class Ordenes extends RDatasetController
         $this->addField('requiredDate', ['label' => 'Fecha requerida', 'rules' => '', 'type' => 'date']);
         $this->addField('shippedDate', ['label' => 'Fecha de envío', 'rules' => '', 'type' => 'date']);
 
-        $statuses = [
-            'Shipped'    => 'Enviado',
-            'Resolved'   => 'Resuelto',
-            'Cancelled'  => 'Cancelado',
-            'On Hold'    => 'En espera',
-            'Disputed'   => 'Disputado',
-            'In Process' => 'En proceso'
-        ];
         $this->addField('status', [
             'label'   => 'Estado',
             'rules'   => 'required',
             'type'    => 'dropdown',
             'default' => 'In Process',
-            'options' => $statuses
+            'options' => self::STATUSES
         ]);
 
         $this->addField('customerNumber', ['label' => 'Cliente', 'rules' => 'required']);

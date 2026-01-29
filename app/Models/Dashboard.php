@@ -218,4 +218,20 @@ class Dashboard extends Model
             Limit 50;";
         return $this->db->query($sql, [$customerNumber])->getResultArray();
     }
+
+    function ultimasOrdenesDelCliente($customerNumber)
+    {
+        $sql = "SELECT 
+                o.orderNumber,
+                o.orderDate,
+                o.status,
+                SUM(od.quantityOrdered * od.priceEach) AS TotalVenta
+            FROM orders o
+            JOIN orderdetails od ON o.orderNumber = od.orderNumber
+            WHERE o.customerNumber = ?
+            GROUP BY o.orderNumber, o.orderDate, o.status
+            ORDER BY o.orderDate DESC
+            Limit 5;";
+        return $this->db->query($sql, [$customerNumber])->getResultArray();
+    }
 }

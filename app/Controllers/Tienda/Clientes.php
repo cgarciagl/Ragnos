@@ -58,7 +58,11 @@ class Clientes extends RDatasetController
     {
         //cargamos el modelo Dashboard para usar en la vista
         $dashboardModel = new \App\Models\Dashboard();
-        $data           = ['ventas' => $dashboardModel->ventasDelCliente($idCliente)];
+        $data           = [
+            'ventas'         => $dashboardModel->ventasDelCliente($idCliente),
+            'ultimasOrdenes' => $dashboardModel->ultimasOrdenesDelCliente($idCliente),
+            'orderStatuses'  => \App\Controllers\Tienda\Ordenes::STATUSES
+        ];
         return view('tienda/clientescustomfooter', $data);
     }
 }
