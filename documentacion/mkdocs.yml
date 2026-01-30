@@ -50,6 +50,7 @@ plugins:
                 - Autenticación: avanzado/autenticacion_integrada.md
                 - Audit Log: avanzado/auditlog.md
                 - Server Side Events: avanzado/server_side_events.md
+                - Reportes Automáticos: avanzado/reportes_automaticos.md
                 - Despliegue: avanzado/despliegue.md
             - Frontend y Reportes:
                 - Personalización UI: frontend/personalizacion_ui.md
@@ -79,6 +80,7 @@ plugins:
                 - Authentication: avanzado/autenticacion_integrada.md
                 - Audit Log: avanzado/auditlog.md
                 - Server Side Events: avanzado/server_side_events.md
+                - Automatic Reports: avanzado/reportes_automaticos.md
                 - Deployment: avanzado/despliegue.md
             - Frontend & Reports:
                 - UI Customization: frontend/personalizacion_ui.md
