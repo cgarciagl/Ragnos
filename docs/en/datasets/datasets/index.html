@@ -217,6 +217,10 @@
               <ul class="nav flex-column">
               </ul>
             </li>
+            <li class="nav-item" data-bs-level="2"><a href="#relationships-between-datasets-addsearch" class="nav-link">Relationships between Datasets (addSearch)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
               </ul>
             </li>
         </ul>
@@ -316,6 +320,35 @@ For a complete reference of all options and field types, consult the <a href="..
 <p>Common options:</p>
 <ul>
 <li><code>label</code>: visible text.</li>
+</ul>
+<h2 id="relationships-between-datasets-addsearch">Relationships between Datasets (<code>addSearch</code>)</h2>
+<ul>
+<li>For complex header-lines relationships, see <a href="../maestro-detalle/">Master-Detail</a>.</li>
+</ul>
+<p>The <code>addSearch(localField, 'Namespace\Of\RelatedDataset')</code> function is a powerful tool connecting two datasets.</p>
+<h3 id="intelligent-contextual-search">Intelligent Contextual Search</h3>
+<p>By linking a field to another dataset, Ragnos automatically enables <strong>contextual searches</strong>. This means the search criteria is not limited to just the ID or the main field, but extends to <strong>all visible fields</strong> defined in the <code>setTableFields()</code> of the related dataset.</p>
+<p><strong>Example:</strong>
+Imagine you are in the <strong>Payments</strong> module (<code>Store/Payments</code>) and need to select a <strong>Customer</strong>.
+If in the <strong>Customers</strong> dataset (<code>Store/Customers</code>) you defined:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="x">$this-&gt;setTableFields([</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="x">    &#39;customerName&#39;,</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="x">    &#39;Contact&#39;, // Calculated field: concat(contactLastName, &#39;, &#39;, contactFirstName)</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="x">    &#39;salesRepEmployeeNumber&#39; // Sales Rep</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="x">]);</span>
+</code></pre></div>
+<p>When searching for a customer from the Payments form, you can type:
+- Part of the <strong>Company Name</strong> (<code>customerName</code>).
+- The <strong>Contact Name</strong> (<code>Contact</code>).
+- Or even the <strong>Sales Rep Name</strong>.</p>
+<p>Ragnos will search for matches in any of those fields defined in the target dataset, offering a much more flexible and powerful user experience without writing additional SQL.</p>
+<h3 id="automatic-grouping-in-reports">Automatic Grouping in Reports</h3>
+<p>Another key advantage is that fields associated via <code>addSearch</code> automatically become <strong>grouping criteria</strong> available in the report generator. This allows grouping metrics (like total sales) by any of the search criteria (e.g., Sales by Customer's "Sales Rep") with no extra configuration.</p>
+<h3 id="advantages_1">Advantages</h3>
+<ul>
+<li><strong>Reusability</strong>: Define the logic of "how to search for a customer" once in the Customers dataset, and reuse it in Payments, Orders, etc.</li>
+<li><strong>No Manual Joins</strong>: The framework manages the underlying queries.</li>
+<li><strong>Superior UX</strong>: Intuitive selectors searching by multiple relevant attributes.</li>
 </ul></div>
             </div>
         </div>

@@ -221,6 +221,10 @@
               <ul class="nav flex-column">
               </ul>
             </li>
+            <li class="nav-item" data-bs-level="2"><a href="#relaciones-entre-datasets-addsearch" class="nav-link">Relaciones entre datasets (addSearch)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
             <li class="nav-item" data-bs-level="2"><a href="#configuracion-de-la-grilla" class="nav-link">Configuración de la grilla</a>
               <ul class="nav flex-column">
               </ul>
@@ -355,8 +359,35 @@ Para una referencia completa de todas las opciones y tipos de campo, consulta la
 <h2 id="relaciones-entre-datasets">Relaciones entre datasets</h2>
 <ul>
 <li>Para relaciones más complejas tipo cabecera-lineas, consulta la guía de <a href="../maestro-detalle/">Maestro-Detalle</a>.</li>
-<li><code>addSearch(localField, 'Namespace\\Dataset')</code> crea selectores y búsqueda asistida reutilizando otro dataset.</li>
-<li>No requiere joins manuales; facilita selectores dinámicos y reutilización de lógica.</li>
+</ul>
+<h2 id="relaciones-entre-datasets-addsearch">Relaciones entre datasets (<code>addSearch</code>)</h2>
+<ul>
+<li>Para relaciones más complejas tipo cabecera-lineas, consulta la guía de <a href="../maestro-detalle/">Maestro-Detalle</a>.</li>
+</ul>
+<p>La función <code>addSearch(campoLocal, 'Namespace\Del\DatasetRelacionado')</code> es una herramienta poderosa que conecta dos datasets.</p>
+<h3 id="busqueda-contextual-inteligente">Búsqueda Contextual Inteligente</h3>
+<p>Al vincular un campo con otro dataset, Ragnos habilita automáticamente <strong>búsquedas contextuales</strong>. Esto significa que el criterio de búsqueda no se limita solo al ID o al campo principal, sino que se extiende a <strong>todos los campos visibles</strong> definidos en el <code>setTableFields()</code> del dataset relacionado.</p>
+<p><strong>Ejemplo:</strong>
+Imagina que estás en el módulo de <strong>Pagos</strong> (<code>Tienda/Pagos</code>) y necesitas seleccionar un <strong>Cliente</strong>.
+Si en el dataset de <strong>Clientes</strong> (<code>Tienda/Clientes</code>) definiste:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="x">$this-&gt;setTableFields([</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="x">    &#39;customerName&#39;,</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="x">    &#39;Contacto&#39;, // Campo calculado: concat(contactLastName, &#39;, &#39;, contactFirstName)</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="x">    &#39;salesRepEmployeeNumber&#39; // Empleado a cargo</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="x">]);</span>
+</code></pre></div>
+<p>Cuando busques un cliente desde el formulario de Pagos, podrás escribir:
+- Una parte del <strong>Nombre de la empresa</strong> (<code>customerName</code>).
+- El <strong>Nombre del contacto</strong> (<code>Contacto</code>).
+- O incluso el <strong>Nombre del empleado</strong> a cargo.</p>
+<p>Ragnos buscará coincidencias en cualquiera de esos campos definidos en el dataset destino, ofreciendo una experiencia de usuario mucho más flexible y potente sin escribir SQL adicional.</p>
+<h3 id="agrupacion-automatica-en-reportes">Agrupación Automática en Reportes</h3>
+<p>Otra ventaja clave es que los campos asociados mediante <code>addSearch</code> se convierten automáticamente en <strong>criterios de agrupación</strong> disponibles en el generador de reportes. Esto permite agrupar métricas (como ventas totales) por cualquiera de los criterios de búsqueda (ej. Ventas por "Empleado a cargo" del cliente) sin configuración extra.</p>
+<h3 id="ventajas_1">Ventajas</h3>
+<ul>
+<li><strong>Reutilización</strong>: Define la lógica de "cómo buscar un cliente" una sola vez en el dataset de Clientes, y úsalo en Pagos, Órdenes, etc.</li>
+<li><strong>Sin Joins Manuales</strong>: El framework gestiona las consultas subyacentes.</li>
+<li><strong>UX Superior</strong>: Selectores intuitivos que buscan por múltiples atributos relevantes.</li>
 </ul>
 <h2 id="configuracion-de-la-grilla">Configuración de la grilla</h2>
 <ul>
