@@ -50,6 +50,13 @@
         <xhtml:link rel="alternate" hreflang="en" href="https://cgarciagl.github.io/Ragnos/docs/en/avanzado/hooks/"/>
     </url>
     <url>
+        <loc>https://cgarciagl.github.io/Ragnos/docs/avanzado/reportes_automaticos/</loc>
+        <lastmod>2026-01-30</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="es" href="https://cgarciagl.github.io/Ragnos/docs/avanzado/reportes_automaticos/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://cgarciagl.github.io/Ragnos/docs/en/avanzado/reportes_automaticos/"/>
+    </url>
+    <url>
         <loc>https://cgarciagl.github.io/Ragnos/docs/avanzado/server_side_events/</loc>
         <lastmod>2026-01-30</lastmod>
         <changefreq>daily</changefreq>
@@ -278,6 +285,13 @@
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://cgarciagl.github.io/Ragnos/docs/en/fundamentos/primeros_pasos/"/>
         <xhtml:link rel="alternate" hreflang="es" href="https://cgarciagl.github.io/Ragnos/docs/fundamentos/primeros_pasos/"/>
+    </url>
+    <url>
+        <loc>https://cgarciagl.github.io/Ragnos/docs/en/avanzado/reportes_automaticos/</loc>
+        <lastmod>2026-01-30</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://cgarciagl.github.io/Ragnos/docs/en/avanzado/reportes_automaticos/"/>
+        <xhtml:link rel="alternate" hreflang="es" href="https://cgarciagl.github.io/Ragnos/docs/avanzado/reportes_automaticos/"/>
     </url>
     <url>
         <loc>https://cgarciagl.github.io/Ragnos/docs/en/fundamentos/base_de_datos_demo/</loc>

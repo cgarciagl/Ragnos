@@ -1,0 +1,391 @@
+# 📊 Automatic Report Generator
+
+## Introduction
+
+The **Automatic Report Generator** (`RDatasetReportGenerator`) is a powerful Ragnos feature that allows creating complex, customized reports **without writing additional code**. 
+
+This functionality is **automatically integrated** into all datasets based on `RDatasetController`, meaning any catalog you've created already has advanced reporting capabilities available from the start.
+
+## Access from the Graphical Interface
+
+Each dataset based on `RDatasetController` automatically includes an **"Advanced Report"** button (printer icon 🖨️) in the table view toolbar:
+
+```php
+// Located in: app/ThirdParty/Ragnos/Views/rdatasetcontroller/table_view.php
+<a href="<?= site_url($clase . '/genericAdvancedReport') ?>"
+    class="toolbtn btn btn-outline-secondary btn-lg bg-white shadow-sm"
+    title="<?= lang('Ragnos.Ragnos_advanced_report_tooltip') ?>">
+    <i class="bi bi-printer"></i>
+</a>
+```
+
+By clicking this button, users access a report configuration interface where they can:
+
+1. **Apply filters** on different fields
+2. **Define multi-level groupings**
+3. **Generate reports** with automatic totals and subtotals
+
+## Main Features
+
+### 1. Automatic Filter Generation
+
+The generator **automatically** analyzes all fields defined in your dataset via `addField()` and creates appropriate filters based on field type:
+
+#### Automatically Detected Filter Types
+
+| Field Type | Generated Filter Type | Description |
+|------------|----------------------|-------------|
+| `date` / `datetime` | **Date Range** | Filter from/to specific dates |
+| `money` / `numeric` / `decimal` | **Numeric Range** | Min/max filter for numeric values |
+| `dropdown` / `enum` | **Option Selector** | Dropdown list with defined options |
+| `switch` / `boolean` | **Boolean Selector** | Yes/No or Active/Inactive filter |
+| **Fields with `addSearch()`** | **Contextual Search** | Search in related dataset |
+| Text (others) | **Text Filter** | Text match search |
+
+#### Automatic Detection Example
+
+```php
+// In your Customers dataset
+$this->addField('customerName', [
+    'label' => 'Customer Name',
+    'rules' => 'required'
+]);
+// → Will generate a TEXT filter
+
+$this->addField('creditLimit', [
+    'label' => 'Credit Limit',
+    'rules' => 'required|money'
+]);
+// → Will generate a NUMERIC RANGE filter (min/max)
+
+$this->addField('status', [
+    'label' => 'Status',
+    'type' => 'dropdown',
+    'options' => [
+        'active' => 'Active',
+        'inactive' => 'Inactive',
+        'suspended' => 'Suspended'
+    ]
+]);
+// → Will generate a SELECTION filter with defined options
+
+$this->addSearch('salesRepEmployeeNumber', 'Store\\Employees');
+// → Will generate a SEARCH filter reusing the Employees dataset
+```
+
+### 2. Automatic Grouping Generation
+
+Grouping criteria are also automatically generated based on field configuration:
+
+#### Detected Grouping Types
+
+| Field Type | Generated Groupings |
+|------------|---------------------|
+| `date` / `datetime` | • **By Month** (Year-Month)<br>• **By Year** |
+| **Fields with `addSearch()`** | • **By Exact Value** of related field |
+| `dropdown` / `enum` | • **By Exact Value** of selected option |
+
+#### Automatic Grouping Example
+
+```php
+// Date field in Orders dataset
+$this->addField('orderDate', [
+    'label' => 'Order Date',
+    'type' => 'date',
+    'rules' => 'required'
+]);
+// → Generates two grouping options:
+//   1. "Order Date (By Month)"
+//   2. "Order Date (By Year)"
+
+// Related field in Payments dataset
+$this->addSearch('customerNumber', 'Store\\Customers');
+// → Generates grouping:
+//   "customerNumber (Exact value)" - groups by customer
+```
+
+### 3. Multi-Level Grouping
+
+The generator supports **up to 3 levels of hierarchical grouping**, enabling complex reports such as:
+
+- **Sales by Year → Month → Employee**
+- **Payments by Customer → Year → Payment Method**
+- **Products by Line → Year → Month**
+
+Each grouping level automatically generates **subtotals**, and the report includes a **grand total**.
+
+### 4. Contextual Search in Filters
+
+When a field is linked to another dataset via `addSearch()`, the report filter inherits all contextual search functionality:
+
+**Practical Example:**
+
+In the **Payments** dataset, you have:
+```php
+$this->addSearch('customerNumber', 'Store\\Customers');
+```
+
+And in the **Customers** dataset, you defined:
+```php
+$this->setTableFields([
+    'customerName',
+    'Contact', // Calculated field
+    'salesRepEmployeeNumber' // Sales rep
+]);
+```
+
+**Result in Report Generator:**
+
+When filtering payments by customer, users can search by typing:
+- The company name
+- The contact name
+- The sales rep name
+
+The system will automatically search across all visible fields in the Customers dataset!
+
+## Architecture and Operation
+
+### `RDatasetReportGenerator` Class
+
+This class is the engine behind automatic report generation. Its responsibilities include:
+
+1. **Field Introspection** (`detectCapabilities()`)
+   - Analyzes all dataset fields
+   - Identifies applicable filter types
+   - Detects viable grouping criteria
+   - Ignores unsuitable fields (primary keys, unique fields, files)
+
+2. **Request Processing** (`processRequest()`)
+   - Reads filters and groupings sent from the form
+   - Validates and normalizes values
+   - Builds query conditions
+
+3. **SQL Query Generation**
+   - Applies simple filters (`WHERE field = value`)
+   - Applies date ranges (`WHERE date >= start AND date <= end`)
+   - Applies numeric ranges (`WHERE field >= min AND field <= max`)
+   - Properly handles JOINs for related fields
+
+4. **Formatting and Grouping** (`generateHTML()`)
+   - Executes query with all applied filters
+   - Enriches data with formatted grouping keys
+   - Hierarchically sorts by grouping levels
+   - Delegates value formatting to the model (currency, dates, relations)
+
+5. **HTML Report Generation**
+   - Uses `RSimpleLevelReport` to generate structured HTML
+   - Includes automatic totals and subtotals
+   - Shows description of applied filters
+
+### Execution Flow
+
+```mermaid
+graph TD
+    A[User clicks Report button] --> B[genericAdvancedReport method]
+    B --> C{Is POST?}
+    C -->|No| D[Show configuration form]
+    C -->|Yes| E[Process filters and groupings]
+    E --> F[Execute SQL query with filters]
+    F --> G[Format data and group]
+    G --> H[Generate HTML with totals]
+    H --> I[Show report to user]
+    
+    D --> J[User configures filters/groups]
+    J --> K[User submits form]
+    K --> C
+```
+
+## Practical Use: Complete Example
+
+### Orders Dataset
+
+```php
+namespace App\Controllers\Store;
+
+use App\ThirdParty\Ragnos\Controllers\RDatasetController;
+
+class Orders extends RDatasetController
+{
+    public function __construct()
+    {
+        parent::__construct();
+        
+        $this->checkLogin();
+        $this->setTitle('Purchase Orders');
+        
+        $this->setTableName('orders');
+        $this->setIdField('orderNumber');
+        
+        // Date field → will generate range filter + grouping by month/year
+        $this->addField('orderDate', [
+            'label' => 'Order Date',
+            'type'  => 'date',
+            'rules' => 'required'
+        ]);
+        
+        // Related field → will generate search filter + grouping by customer
+        $this->addSearch('customerNumber', 'Store\\Customers');
+        
+        // Enum field → will generate selection filter + grouping by status
+        $this->addField('status', [
+            'label'   => 'Status',
+            'type'    => 'dropdown',
+            'options' => [
+                'Shipped'   => 'Shipped',
+                'Pending'   => 'Pending',
+                'Cancelled' => 'Cancelled'
+            ],
+            'rules' => 'required'
+        ]);
+        
+        // Calculated field (total amount)
+        $this->addField('Total', [
+            'label' => 'Total',
+            'query' => '(SELECT SUM(quantityOrdered * priceEach) 
+                         FROM orderdetails 
+                         WHERE orderdetails.orderNumber = orders.orderNumber)',
+            'rules' => 'readonly|money'
+        ]);
+        
+        $this->setTableFields([
+            'orderNumber',
+            'orderDate',
+            'customerNumber',
+            'status',
+            'Total'
+        ]);
+    }
+}
+```
+
+### Automatically Generated Reports
+
+With this configuration, users can generate reports such as:
+
+**Example 1: Sales by Customer in a Date Range**
+- **Filter:** Date from 2024-01-01 to 2024-12-31
+- **Grouping:** By Customer
+- **Result:** List of customers with total sales to each one in 2024
+
+**Example 2: Cancelled Orders by Month**
+- **Filter:** Status = "Cancelled"
+- **Grouping Level 1:** By Month
+- **Result:** Total cancelled orders grouped by month with subtotals
+
+**Example 3: Annual Hierarchical Analysis**
+- **Grouping Level 1:** By Year
+- **Grouping Level 2:** By Month  
+- **Grouping Level 3:** By Status
+- **Result:** Hierarchical report: Year → Month → Status with all subtotals
+
+## System Advantages
+
+### 1. **Zero Additional Configuration**
+You don't need to write special controllers, views, or queries for reports. Everything is automatically generated from the dataset definition.
+
+### 2. **Logic Reuse**
+Filters and groupings reuse:
+- Validations defined in `addField()`
+- Relationships defined with `addSearch()`
+- Formatting defined in the model
+
+### 3. **Interface Consistency**
+All datasets have exactly the same reporting interface, reducing the learning curve for users.
+
+### 4. **Total Flexibility**
+End users can combine any filter with any grouping, generating ad-hoc reports according to their needs without requiring development.
+
+### 5. **Scalability**
+As you add more fields to your dataset, filter and grouping options automatically expand.
+
+## Limitations and Considerations
+
+### Automatically Excluded Fields
+
+The system **automatically ignores** certain field types for filters and groupings:
+
+- **Primary keys**: Not usually useful for general filters
+- **Fields with `is_unique`**: Intended for unique identifiers
+- **Files and images** (`fileupload`, `imageupload`)
+- **Passwords** (`password`)
+
+### Calculated Fields and Groupings
+
+Fields with `query` (calculated) may appear in the report but **cannot be used as grouping criteria** since they are derived SQL expressions.
+
+### Performance on Large Volumes
+
+For datasets with millions of records, consider:
+- Adding indexes on frequently filtered fields
+- Limiting grouping options if they are very costly
+- Implementing pagination or query limits if necessary
+
+## Advanced Customization
+
+Although the generator is automatic, you can influence its behavior:
+
+### Control Which Fields are Filterable
+
+By defining fields as `hidden` or with specific rules, you can control their appearance in filters:
+
+```php
+// This field will NOT appear in filters (hidden and calculated)
+$this->addField('internalCode', [
+    'label' => 'Internal Code',
+    'type'  => 'hidden',
+    'query' => 'MD5(customerNumber)'
+]);
+```
+
+### Programmatic Methods
+
+You can also use the generator programmatically from code:
+
+```php
+public function customReport()
+{
+    $generator = new RDatasetReportGenerator($this);
+    
+    // Add filters manually
+    $generator->addDateRangeFilter('orderDate', '2024-01-01', '2024-12-31');
+    $generator->addFilter('status', 'Shipped');
+    
+    // Configure grouping
+    $generator->setGrouping('customerNumber', 'raw', 'Customer');
+    $generator->setGrouping('orderDate', 'date_month', 'Month');
+    
+    // Generate HTML
+    $html = $generator->generateHTML();
+    
+    return view('my_report_template', ['content' => $html]);
+}
+```
+
+## Integration with Ragnos Ecosystem
+
+### Relationship with `addSearch()`
+
+As mentioned in the [Datasets guide](../datasets/datasets.md#relationships-between-datasets-addsearch), fields defined with `addSearch()` not only create form selectors but also:
+
+1. **In Report Filters:** Enable advanced contextual search
+2. **In Groupings:** Automatically become grouping criteria
+
+This synergy makes defining relationships doubly powerful.
+
+### Relationship with `setTableFields()`
+
+Fields included in `setTableFields()` are those that will appear in the generated report. This gives you control over which columns are displayed without affecting filter and grouping availability.
+
+## Conclusion
+
+The **Automatic Report Generator** is one of Ragnos' most powerful features, transforming each simple dataset into an advanced analysis tool with no additional development effort.
+
+By leveraging all the declarative metadata you define in your dataset (`addField`, `addSearch`, `setTableFields`), the system automatically builds a complete reporting interface with:
+
+- ✅ Intelligent filters based on field type
+- ✅ Multi-level hierarchical groupings
+- ✅ Contextual search in relationships
+- ✅ Automatic totals and subtotals
+- ✅ Consistent interface across all modules
+
+**Result:** Professional-quality business reports, available in minutes, not weeks.

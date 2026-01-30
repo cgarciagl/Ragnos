@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+
+<html data-bs-theme="light" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://cgarciagl.github.io/Ragnos/docs/en/avanzado/reportes_automaticos/" rel="canonical"/>
+<link href="../../../img/favicon.ico" rel="shortcut icon"/>
+<title>Automatic Reports - Ragnos Docs</title>
+<link href="../../../css/bootstrap.min.css" rel="stylesheet"/>
+<link href="../../../css/fontawesome.min.css" rel="stylesheet"/>
+<link href="../../../css/brands.min.css" rel="stylesheet"/>
+<link href="../../../css/solid.min.css" rel="stylesheet"/>
+<link href="../../../css/v4-font-face.min.css" rel="stylesheet"/>
+<link href="../../../css/base.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/panda-syntax-dark.min.css" id="hljs-light" rel="stylesheet"/>
+<link disabled="" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" id="hljs-dark" rel="stylesheet"/>
+<link href="../../../css/ragnos_style.css" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<!-- Google tag (gtag.js) -->
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-JGEDJD0GZP"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+  gtag("js", new Date());
+
+  gtag("config", "G-JGEDJD0GZP");
+</script>
+</head>
+<body>
+<div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+<div class="container">
+<a class="navbar-brand" href="../../">Ragnos Docs</a>
+<!-- Expander button -->
+<button aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-bs-target="#navbar-collapse" data-bs-toggle="collapse" type="button">
+<span class="navbar-toggler-icon"></span>
+</button>
+<!-- Expanded navigation -->
+<div class="navbar-collapse collapse" id="navbar-collapse">
+<!-- Main navigation -->
+<ul class="nav navbar-nav">
+<li class="nav-item">
+<a class="nav-link" href="../../">Home</a>
+</li>
+<li class="nav-item dropdown">
+<a aria-expanded="false" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">Fundamentals</a>
+<ul class="dropdown-menu">
+<li>
+<a class="dropdown-item" href="../../fundamentos/instalacion/">Installation</a>
+</li>
+<li>
+<a class="dropdown-item" href="../../fundamentos/primeros_pasos/">Getting Started</a>
+</li>
+<li>
+<a class="dropdown-item" href="../../fundamentos/demo_database/">Demo Database</a>
+</li>
+<li>
+<a class="dropdown-item" href="../../fundamentos/configuracion/">Configuration</a>
+</li>
+<li>
+<a class="dropdown-item" href="../../fundamentos/plantilla/">CLI Generator</a>
+</li>
+</ul>
+</li>
+<li class="nav-item dropdown">
+<a aria-expanded="false" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">Datasets &amp; Models</a>
+<ul class="dropdown-menu">
+<li>
+<a class="dropdown-item" href="../../datasets/datasets/">Creating Datasets</a>
+</li>
+<li>
+<a class="dropdown-item" href="../../datasets/campos/">Field Reference</a>
+</li>
+<li>
+<a class="dropdown-item" href="../../datasets/guia_RQueryController/">Advanced Queries (RQuery)</a>
+</li>
+<li>
+<a class="dropdown-item" href="../../datasets/maestro-detalle/">Master-Detail</a>
+</li>
+</ul>
+</li>
+<li class="nav-item dropdown">
+<a aria-current="page" aria-expanded="false" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown" href="#" role="button">Advanced Backend</a>
+<ul class="dropdown-menu">
+<li>
+<a class="dropdown-item" href="../guia_modo_api/">API Mode</a>
+</li>
+<li>
+<a class="dropdown-item" href="../helpers/">Helpers &amp; Utilities</a>
+</li>
+<li>
+<a class="dropdown-item" href="../hooks/">Hooks &amp; Events</a>
+</li>
+<li>
+<a class="dropdown-item" href="../autenticacion_integrada/">Authentication</a>
+</li>
+<li>
+<a class="dropdown-item" href="../auditlog/">Audit Log</a>
+</li>
+<li>
+<a class="dropdown-item" href="../server_side_events/">Server Side Events</a>
+</li>
+<li>
+<a aria-current="page" class="dropdown-item active" href="./">Automatic Reports</a>
+</li>
+<li>
+<a class="dropdown-item" href="../despliegue/">Deployment</a>
+</li>
+</ul>
+</li>
+<li class="nav-item dropdown">
+<a aria-expanded="false" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">Frontend &amp; Reports</a>
+<ul class="dropdown-menu">
+<li>
+<a class="dropdown-item" href="../../frontend/personalizacion_ui/">UI Customization</a>
+</li>
+<li>
+<a class="dropdown-item" href="../../frontend/reportes_simples/">Simple Reports</a>
+</li>
+<li>
+<a class="dropdown-item" href="../../frontend/funciones_javascript/">JavaScript Functions</a>
+</li>
+</ul>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="https://ragnos.build">🏠 Website</a>
+</li>
+</ul>
+<ul class="nav navbar-nav ms-md-auto">
+<li class="nav-item">
+<a class="nav-link" data-bs-target="#mkdocs_search_modal" data-bs-toggle="modal" href="#">
+<i class="fa fa-search"></i> Search
+                            </a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="../server_side_events/" rel="prev">
+<i class="fa fa-arrow-left"></i> Previous
+                                </a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="../despliegue/" rel="next">
+                                    Next <i class="fa fa-arrow-right"></i>
+</a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="https://github.com/cgarciagl/ragnos"><i class="fa-brands fa-github"></i> GitHub</a>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="container">
+<div class="row">
+<div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+<div class="navbar-header">
+<button class="navbar-toggler collapsed" data-bs-target="#toc-collapse" data-bs-toggle="collapse" title="Table of Contents" type="button">
+<span class="fa fa-angle-down"></span>
+</button>
+</div>
+<div class="navbar-collapse collapse card bg-body-tertiary" id="toc-collapse">
+<ul class="nav flex-column">
+<li class="nav-item" data-bs-level="1"><a class="nav-link" href="#generador-automatico-de-reportes">📊 Generador Automático de Reportes</a>
+<ul class="nav flex-column">
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#introduccion">Introducción</a>
+<ul class="nav flex-column">
+</ul>
+</li>
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#acceso-desde-la-interfaz-grafica">Acceso desde la Interfaz Gráfica</a>
+<ul class="nav flex-column">
+</ul>
+</li>
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#caracteristicas-principales">Características Principales</a>
+<ul class="nav flex-column">
+</ul>
+</li>
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#arquitectura-y-funcionamiento">Arquitectura y Funcionamiento</a>
+<ul class="nav flex-column">
+</ul>
+</li>
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#uso-practico-ejemplo-completo">Uso Práctico: Ejemplo Completo</a>
+<ul class="nav flex-column">
+</ul>
+</li>
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#ventajas-del-sistema">Ventajas del Sistema</a>
+<ul class="nav flex-column">
+</ul>
+</li>
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#limitaciones-y-consideraciones">Limitaciones y Consideraciones</a>
+<ul class="nav flex-column">
+</ul>
+</li>
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#personalizacion-avanzada">Personalización Avanzada</a>
+<ul class="nav flex-column">
+</ul>
+</li>
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#integracion-con-el-ecosistema-ragnos">Integración con el Ecosistema Ragnos</a>
+<ul class="nav flex-column">
+</ul>
+</li>
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#conclusion">Conclusión</a>
+<ul class="nav flex-column">
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div></div>
+<div class="col-md-9" role="main">
+<h1 id="generador-automatico-de-reportes">📊 Generador Automático de Reportes</h1>
+<h2 id="introduccion">Introducción</h2>
+<p>El <strong>Generador Automático de Reportes</strong> (<code>RDatasetReportGenerator</code>) es una característica poderosa de Ragnos que permite crear reportes complejos y personalizados <strong>sin escribir código adicional</strong>. </p>
+<p>Esta funcionalidad está <strong>integrada automáticamente</strong> en todos los datasets basados en <code>RDatasetController</code>, lo que significa que cualquier catálogo que hayas creado ya tiene capacidades de reportería avanzada disponibles desde el primer momento.</p>
+<h2 id="acceso-desde-la-interfaz-grafica">Acceso desde la Interfaz Gráfica</h2>
+<p>Cada dataset basado en <code>RDatasetController</code> incluye automáticamente un botón de <strong>"Reporte Avanzado"</strong> (icono de impresora 🖨️) en la barra de herramientas de la vista de tabla:</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-0-1" id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="x">// Ubicado en: app/ThirdParty/Ragnos/Views/rdatasetcontroller/table_view.php</span>
+<a href="#__codelineno-0-2" id="__codelineno-0-2" name="__codelineno-0-2"></a><span class="x">&lt;a href="</span><span class="cp">&lt;?</span><span class="o">=</span> <span class="nx">site_url</span><span class="p">(</span><span class="nv">$clase</span> <span class="o">.</span> <span class="s1">'/genericAdvancedReport'</span><span class="p">)</span> <span class="cp">?&gt;</span><span class="x">"</span>
+<a href="#__codelineno-0-3" id="__codelineno-0-3" name="__codelineno-0-3"></a><span class="x">    class="toolbtn btn btn-outline-secondary btn-lg bg-white shadow-sm"</span>
+<a href="#__codelineno-0-4" id="__codelineno-0-4" name="__codelineno-0-4"></a><span class="x">    title="</span><span class="cp">&lt;?</span><span class="o">=</span> <span class="nx">lang</span><span class="p">(</span><span class="s1">'Ragnos.Ragnos_advanced_report_tooltip'</span><span class="p">)</span> <span class="cp">?&gt;</span><span class="x">"&gt;</span>
+<a href="#__codelineno-0-5" id="__codelineno-0-5" name="__codelineno-0-5"></a><span class="x">    &lt;i class="bi bi-printer"&gt;&lt;/i&gt;</span>
+<a href="#__codelineno-0-6" id="__codelineno-0-6" name="__codelineno-0-6"></a><span class="x">&lt;/a&gt;</span>
+</code></pre></div>
+<p>Al hacer clic en este botón, el usuario accede a una interfaz de configuración de reportes donde puede:</p>
+<ol>
+<li><strong>Aplicar filtros</strong> sobre diferentes campos</li>
+<li><strong>Definir agrupaciones</strong> multinivel</li>
+<li><strong>Generar reportes</strong> con totales y subtotales automáticos</li>
+</ol>
+<h2 id="caracteristicas-principales">Características Principales</h2>
+<h3 id="1-generacion-automatica-de-filtros">1. Generación Automática de Filtros</h3>
+<p>El generador analiza <strong>automáticamente</strong> todos los campos definidos en tu dataset mediante <code>addField()</code> y crea los filtros apropiados según el tipo de campo:</p>
+<h4 id="tipos-de-filtros-detectados-automaticamente">Tipos de Filtros Detectados Automáticamente</h4>
+<table>
+<thead>
+<tr>
+<th>Tipo de Campo</th>
+<th>Tipo de Filtro Generado</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>date</code> / <code>datetime</code></td>
+<td><strong>Rango de Fechas</strong></td>
+<td>Permite filtrar desde/hasta una fecha específica</td>
+</tr>
+<tr>
+<td><code>money</code> / <code>numeric</code> / <code>decimal</code></td>
+<td><strong>Rango Numérico</strong></td>
+<td>Filtro min/max para valores numéricos</td>
+</tr>
+<tr>
+<td><code>dropdown</code> / <code>enum</code></td>
+<td><strong>Selector de Opciones</strong></td>
+<td>Lista desplegable con las opciones definidas</td>
+</tr>
+<tr>
+<td><code>switch</code> / <code>boolean</code></td>
+<td><strong>Selector Booleano</strong></td>
+<td>Filtro Sí/No o Activo/Inactivo</td>
+</tr>
+<tr>
+<td><strong>Campos con <code>addSearch()</code></strong></td>
+<td><strong>Búsqueda Contextual</strong></td>
+<td>Permite buscar en el dataset relacionado</td>
+</tr>
+<tr>
+<td>Texto (otros)</td>
+<td><strong>Filtro de Texto</strong></td>
+<td>Búsqueda por coincidencia de texto</td>
+</tr>
+</tbody>
+</table>
+<h4 id="ejemplo-de-deteccion-automatica">Ejemplo de Detección Automática</h4>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-1-1" id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="x">// En tu dataset de Clientes</span>
+<a href="#__codelineno-1-2" id="__codelineno-1-2" name="__codelineno-1-2"></a><span class="x">$this-&gt;addField('customerName', [</span>
+<a href="#__codelineno-1-3" id="__codelineno-1-3" name="__codelineno-1-3"></a><span class="x">    'label' =&gt; 'Nombre del Cliente',</span>
+<a href="#__codelineno-1-4" id="__codelineno-1-4" name="__codelineno-1-4"></a><span class="x">    'rules' =&gt; 'required'</span>
+<a href="#__codelineno-1-5" id="__codelineno-1-5" name="__codelineno-1-5"></a><span class="x">]);</span>
+<a href="#__codelineno-1-6" id="__codelineno-1-6" name="__codelineno-1-6"></a><span class="x">// → Se generará un filtro de TEXTO</span>
+<a href="#__codelineno-1-7" id="__codelineno-1-7" name="__codelineno-1-7"></a>
+<a href="#__codelineno-1-8" id="__codelineno-1-8" name="__codelineno-1-8"></a><span class="x">$this-&gt;addField('creditLimit', [</span>
+<a href="#__codelineno-1-9" id="__codelineno-1-9" name="__codelineno-1-9"></a><span class="x">    'label' =&gt; 'Límite de Crédito',</span>
+<a href="#__codelineno-1-10" id="__codelineno-1-10" name="__codelineno-1-10"></a><span class="x">    'rules' =&gt; 'required|money'</span>
+<a href="#__codelineno-1-11" id="__codelineno-1-11" name="__codelineno-1-11"></a><span class="x">]);</span>
+<a href="#__codelineno-1-12" id="__codelineno-1-12" name="__codelineno-1-12"></a><span class="x">// → Se generará un filtro de RANGO NUMÉRICO (min/max)</span>
+<a href="#__codelineno-1-13" id="__codelineno-1-13" name="__codelineno-1-13"></a>
+<a href="#__codelineno-1-14" id="__codelineno-1-14" name="__codelineno-1-14"></a><span class="x">$this-&gt;addField('status', [</span>
+<a href="#__codelineno-1-15" id="__codelineno-1-15" name="__codelineno-1-15"></a><span class="x">    'label' =&gt; 'Estado',</span>
+<a href="#__codelineno-1-16" id="__codelineno-1-16" name="__codelineno-1-16"></a><span class="x">    'type' =&gt; 'dropdown',</span>
+<a href="#__codelineno-1-17" id="__codelineno-1-17" name="__codelineno-1-17"></a><span class="x">    'options' =&gt; [</span>
+<a href="#__codelineno-1-18" id="__codelineno-1-18" name="__codelineno-1-18"></a><span class="x">        'active' =&gt; 'Activo',</span>
+<a href="#__codelineno-1-19" id="__codelineno-1-19" name="__codelineno-1-19"></a><span class="x">        'inactive' =&gt; 'Inactivo',</span>
+<a href="#__codelineno-1-20" id="__codelineno-1-20" name="__codelineno-1-20"></a><span class="x">        'suspended' =&gt; 'Suspendido'</span>
+<a href="#__codelineno-1-21" id="__codelineno-1-21" name="__codelineno-1-21"></a><span class="x">    ]</span>
+<a href="#__codelineno-1-22" id="__codelineno-1-22" name="__codelineno-1-22"></a><span class="x">]);</span>
+<a href="#__codelineno-1-23" id="__codelineno-1-23" name="__codelineno-1-23"></a><span class="x">// → Se generará un filtro de SELECCIÓN con las opciones definidas</span>
+<a href="#__codelineno-1-24" id="__codelineno-1-24" name="__codelineno-1-24"></a>
+<a href="#__codelineno-1-25" id="__codelineno-1-25" name="__codelineno-1-25"></a><span class="x">$this-&gt;addSearch('salesRepEmployeeNumber', 'Tienda\\Empleados');</span>
+<a href="#__codelineno-1-26" id="__codelineno-1-26" name="__codelineno-1-26"></a><span class="x">// → Se generará un filtro de BÚSQUEDA que reutiliza el dataset de Empleados</span>
+</code></pre></div>
+<h3 id="2-generacion-automatica-de-agrupaciones">2. Generación Automática de Agrupaciones</h3>
+<p>Los criterios de agrupación también se generan automáticamente basándose en la configuración de campos:</p>
+<h4 id="tipos-de-agrupacion-detectados">Tipos de Agrupación Detectados</h4>
+<table>
+<thead>
+<tr>
+<th>Tipo de Campo</th>
+<th>Agrupaciones Generadas</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>date</code> / <code>datetime</code></td>
+<td>• <strong>Por Mes</strong> (Año-Mes)<br/>• <strong>Por Año</strong></td>
+</tr>
+<tr>
+<td><strong>Campos con <code>addSearch()</code></strong></td>
+<td>• <strong>Por Valor Exacto</strong> del campo relacionado</td>
+</tr>
+<tr>
+<td><code>dropdown</code> / <code>enum</code></td>
+<td>• <strong>Por Valor Exacto</strong> de la opción seleccionada</td>
+</tr>
+</tbody>
+</table>
+<h4 id="ejemplo-de-agrupaciones-automaticas">Ejemplo de Agrupaciones Automáticas</h4>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-2-1" id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="x">// Campo de fecha en el dataset de Órdenes</span>
+<a href="#__codelineno-2-2" id="__codelineno-2-2" name="__codelineno-2-2"></a><span class="x">$this-&gt;addField('orderDate', [</span>
+<a href="#__codelineno-2-3" id="__codelineno-2-3" name="__codelineno-2-3"></a><span class="x">    'label' =&gt; 'Fecha de Orden',</span>
+<a href="#__codelineno-2-4" id="__codelineno-2-4" name="__codelineno-2-4"></a><span class="x">    'type' =&gt; 'date',</span>
+<a href="#__codelineno-2-5" id="__codelineno-2-5" name="__codelineno-2-5"></a><span class="x">    'rules' =&gt; 'required'</span>
+<a href="#__codelineno-2-6" id="__codelineno-2-6" name="__codelineno-2-6"></a><span class="x">]);</span>
+<a href="#__codelineno-2-7" id="__codelineno-2-7" name="__codelineno-2-7"></a><span class="x">// → Genera dos opciones de agrupación:</span>
+<a href="#__codelineno-2-8" id="__codelineno-2-8" name="__codelineno-2-8"></a><span class="x">//   1. "Fecha de Orden (Por Mes)"</span>
+<a href="#__codelineno-2-9" id="__codelineno-2-9" name="__codelineno-2-9"></a><span class="x">//   2. "Fecha de Orden (Por Año)"</span>
+<a href="#__codelineno-2-10" id="__codelineno-2-10" name="__codelineno-2-10"></a>
+<a href="#__codelineno-2-11" id="__codelineno-2-11" name="__codelineno-2-11"></a><span class="x">// Campo relacionado en el dataset de Pagos</span>
+<a href="#__codelineno-2-12" id="__codelineno-2-12" name="__codelineno-2-12"></a><span class="x">$this-&gt;addSearch('customerNumber', 'Tienda\\Clientes');</span>
+<a href="#__codelineno-2-13" id="__codelineno-2-13" name="__codelineno-2-13"></a><span class="x">// → Genera agrupación:</span>
+<a href="#__codelineno-2-14" id="__codelineno-2-14" name="__codelineno-2-14"></a><span class="x">//   "customerNumber (Valor exacto)" - agrupa por cliente</span>
+</code></pre></div>
+<h3 id="3-agrupacion-multinivel">3. Agrupación Multinivel</h3>
+<p>El generador soporta <strong>hasta 3 niveles de agrupación jerárquica</strong>, permitiendo reportes complejos como:</p>
+<ul>
+<li><strong>Ventas por Año → Mes → Empleado</strong></li>
+<li><strong>Pagos por Cliente → Año → Método de Pago</strong></li>
+<li><strong>Productos por Línea → Año → Mes</strong></li>
+</ul>
+<p>Cada nivel de agrupación genera automáticamente <strong>subtotales</strong> y el reporte incluye un <strong>total general</strong>.</p>
+<h3 id="4-busqueda-contextual-en-filtros">4. Búsqueda Contextual en Filtros</h3>
+<p>Cuando un campo está vinculado a otro dataset mediante <code>addSearch()</code>, el filtro del reporte hereda toda la funcionalidad de búsqueda contextual:</p>
+<p><strong>Ejemplo Práctico:</strong></p>
+<p>En el dataset de <strong>Pagos</strong>, tienes:
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-3-1" id="__codelineno-3-1" name="__codelineno-3-1"></a><span class="x">$this-&gt;addSearch('customerNumber', 'Tienda\\Clientes');</span>
+</code></pre></div></p>
+<p>Y en el dataset de <strong>Clientes</strong>, definiste:
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-4-1" id="__codelineno-4-1" name="__codelineno-4-1"></a><span class="x">$this-&gt;setTableFields([</span>
+<a href="#__codelineno-4-2" id="__codelineno-4-2" name="__codelineno-4-2"></a><span class="x">    'customerName',</span>
+<a href="#__codelineno-4-3" id="__codelineno-4-3" name="__codelineno-4-3"></a><span class="x">    'Contacto', // Campo calculado</span>
+<a href="#__codelineno-4-4" id="__codelineno-4-4" name="__codelineno-4-4"></a><span class="x">    'salesRepEmployeeNumber' // Empleado a cargo</span>
+<a href="#__codelineno-4-5" id="__codelineno-4-5" name="__codelineno-4-5"></a><span class="x">]);</span>
+</code></pre></div></p>
+<p><strong>Resultado en el Generador de Reportes:</strong></p>
+<p>Al filtrar pagos por cliente, el usuario puede buscar escribiendo:
+- El nombre de la empresa
+- El nombre del contacto
+- El nombre del empleado a cargo</p>
+<p>¡El sistema buscará automáticamente en todos los campos visibles del dataset de Clientes!</p>
+<h2 id="arquitectura-y-funcionamiento">Arquitectura y Funcionamiento</h2>
+<h3 id="clase-rdatasetreportgenerator">Clase <code>RDatasetReportGenerator</code></h3>
+<p>Esta clase es el motor detrás de la generación automática de reportes. Sus responsabilidades incluyen:</p>
+<ol>
+<li><strong>Introspección de Campos</strong> (<code>detectCapabilities()</code>)</li>
+<li>Analiza todos los campos del dataset</li>
+<li>Identifica tipos de filtros aplicables</li>
+<li>Detecta criterios de agrupación viables</li>
+<li>
+<p>Ignora campos no aptos (claves primarias, campos únicos, archivos)</p>
+</li>
+<li>
+<p><strong>Procesamiento de Solicitudes</strong> (<code>processRequest()</code>)</p>
+</li>
+<li>Lee los filtros y agrupaciones enviados desde el formulario</li>
+<li>Valida y normaliza los valores</li>
+<li>
+<p>Construye las condiciones de consulta</p>
+</li>
+<li>
+<p><strong>Generación de Consultas SQL</strong></p>
+</li>
+<li>Aplica filtros simples (<code>WHERE campo = valor</code>)</li>
+<li>Aplica rangos de fechas (<code>WHERE fecha &gt;= inicio AND fecha &lt;= fin</code>)</li>
+<li>Aplica rangos numéricos (<code>WHERE campo &gt;= min AND campo &lt;= max</code>)</li>
+<li>
+<p>Maneja correctamente JOINs para campos relacionados</p>
+</li>
+<li>
+<p><strong>Formateo y Agrupación</strong> (<code>generateHTML()</code>)</p>
+</li>
+<li>Ejecuta la consulta con todos los filtros aplicados</li>
+<li>Enriquece los datos con claves de agrupación formateadas</li>
+<li>Ordena jerárquicamente por los niveles de agrupación</li>
+<li>
+<p>Delega el formateo de valores al modelo (moneda, fechas, relaciones)</p>
+</li>
+<li>
+<p><strong>Generación de Reporte HTML</strong></p>
+</li>
+<li>Utiliza <code>RSimpleLevelReport</code> para generar HTML estructurado</li>
+<li>Incluye totales y subtotales automáticos</li>
+<li>Muestra descripción de filtros aplicados</li>
+</ol>
+<h3 id="flujo-de-ejecucion">Flujo de Ejecución</h3>
+<div class="mermaid">graph TD
+    A[Usuario hace clic en botón Reporte] --&gt; B[genericAdvancedReport método]
+    B --&gt; C{¿Es POST?}
+    C --&gt;|No| D[Mostrar formulario de configuración]
+    C --&gt;|Sí| E[Procesar filtros y agrupaciones]
+    E --&gt; F[Ejecutar consulta SQL con filtros]
+    F --&gt; G[Formatear datos y agrupar]
+    G --&gt; H[Generar HTML con totales]
+    H --&gt; I[Mostrar reporte al usuario]
+
+    D --&gt; J[Usuario configura filtros/grupos]
+    J --&gt; K[Usuario envía formulario]
+    K --&gt; C
+</div>
+<h2 id="uso-practico-ejemplo-completo">Uso Práctico: Ejemplo Completo</h2>
+<h3 id="dataset-de-ordenes">Dataset de Órdenes</h3>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-5-1" id="__codelineno-5-1" name="__codelineno-5-1"></a><span class="x">namespace App\Controllers\Tienda;</span>
+<a href="#__codelineno-5-2" id="__codelineno-5-2" name="__codelineno-5-2"></a>
+<a href="#__codelineno-5-3" id="__codelineno-5-3" name="__codelineno-5-3"></a><span class="x">use App\ThirdParty\Ragnos\Controllers\RDatasetController;</span>
+<a href="#__codelineno-5-4" id="__codelineno-5-4" name="__codelineno-5-4"></a>
+<a href="#__codelineno-5-5" id="__codelineno-5-5" name="__codelineno-5-5"></a><span class="x">class Ordenes extends RDatasetController</span>
+<a href="#__codelineno-5-6" id="__codelineno-5-6" name="__codelineno-5-6"></a><span class="x">{</span>
+<a href="#__codelineno-5-7" id="__codelineno-5-7" name="__codelineno-5-7"></a><span class="x">    public function __construct()</span>
+<a href="#__codelineno-5-8" id="__codelineno-5-8" name="__codelineno-5-8"></a><span class="x">    {</span>
+<a href="#__codelineno-5-9" id="__codelineno-5-9" name="__codelineno-5-9"></a><span class="x">        parent::__construct();</span>
+<a href="#__codelineno-5-10" id="__codelineno-5-10" name="__codelineno-5-10"></a>
+<a href="#__codelineno-5-11" id="__codelineno-5-11" name="__codelineno-5-11"></a><span class="x">        $this-&gt;checkLogin();</span>
+<a href="#__codelineno-5-12" id="__codelineno-5-12" name="__codelineno-5-12"></a><span class="x">        $this-&gt;setTitle('Órdenes de Compra');</span>
+<a href="#__codelineno-5-13" id="__codelineno-5-13" name="__codelineno-5-13"></a>
+<a href="#__codelineno-5-14" id="__codelineno-5-14" name="__codelineno-5-14"></a><span class="x">        $this-&gt;setTableName('orders');</span>
+<a href="#__codelineno-5-15" id="__codelineno-5-15" name="__codelineno-5-15"></a><span class="x">        $this-&gt;setIdField('orderNumber');</span>
+<a href="#__codelineno-5-16" id="__codelineno-5-16" name="__codelineno-5-16"></a>
+<a href="#__codelineno-5-17" id="__codelineno-5-17" name="__codelineno-5-17"></a><span class="x">        // Campo de fecha → generará filtro de rango + agrupación por mes/año</span>
+<a href="#__codelineno-5-18" id="__codelineno-5-18" name="__codelineno-5-18"></a><span class="x">        $this-&gt;addField('orderDate', [</span>
+<a href="#__codelineno-5-19" id="__codelineno-5-19" name="__codelineno-5-19"></a><span class="x">            'label' =&gt; 'Fecha de Orden',</span>
+<a href="#__codelineno-5-20" id="__codelineno-5-20" name="__codelineno-5-20"></a><span class="x">            'type'  =&gt; 'date',</span>
+<a href="#__codelineno-5-21" id="__codelineno-5-21" name="__codelineno-5-21"></a><span class="x">            'rules' =&gt; 'required'</span>
+<a href="#__codelineno-5-22" id="__codelineno-5-22" name="__codelineno-5-22"></a><span class="x">        ]);</span>
+<a href="#__codelineno-5-23" id="__codelineno-5-23" name="__codelineno-5-23"></a>
+<a href="#__codelineno-5-24" id="__codelineno-5-24" name="__codelineno-5-24"></a><span class="x">        // Campo relacionado → generará filtro de búsqueda + agrupación por cliente</span>
+<a href="#__codelineno-5-25" id="__codelineno-5-25" name="__codelineno-5-25"></a><span class="x">        $this-&gt;addSearch('customerNumber', 'Tienda\\Clientes');</span>
+<a href="#__codelineno-5-26" id="__codelineno-5-26" name="__codelineno-5-26"></a>
+<a href="#__codelineno-5-27" id="__codelineno-5-27" name="__codelineno-5-27"></a><span class="x">        // Campo enum → generará filtro de selección + agrupación por estado</span>
+<a href="#__codelineno-5-28" id="__codelineno-5-28" name="__codelineno-5-28"></a><span class="x">        $this-&gt;addField('status', [</span>
+<a href="#__codelineno-5-29" id="__codelineno-5-29" name="__codelineno-5-29"></a><span class="x">            'label'   =&gt; 'Estado',</span>
+<a href="#__codelineno-5-30" id="__codelineno-5-30" name="__codelineno-5-30"></a><span class="x">            'type'    =&gt; 'dropdown',</span>
+<a href="#__codelineno-5-31" id="__codelineno-5-31" name="__codelineno-5-31"></a><span class="x">            'options' =&gt; [</span>
+<a href="#__codelineno-5-32" id="__codelineno-5-32" name="__codelineno-5-32"></a><span class="x">                'Shipped'   =&gt; 'Enviado',</span>
+<a href="#__codelineno-5-33" id="__codelineno-5-33" name="__codelineno-5-33"></a><span class="x">                'Pending'   =&gt; 'Pendiente',</span>
+<a href="#__codelineno-5-34" id="__codelineno-5-34" name="__codelineno-5-34"></a><span class="x">                'Cancelled' =&gt; 'Cancelado'</span>
+<a href="#__codelineno-5-35" id="__codelineno-5-35" name="__codelineno-5-35"></a><span class="x">            ],</span>
+<a href="#__codelineno-5-36" id="__codelineno-5-36" name="__codelineno-5-36"></a><span class="x">            'rules' =&gt; 'required'</span>
+<a href="#__codelineno-5-37" id="__codelineno-5-37" name="__codelineno-5-37"></a><span class="x">        ]);</span>
+<a href="#__codelineno-5-38" id="__codelineno-5-38" name="__codelineno-5-38"></a>
+<a href="#__codelineno-5-39" id="__codelineno-5-39" name="__codelineno-5-39"></a><span class="x">        // Campo calculado (monto total)</span>
+<a href="#__codelineno-5-40" id="__codelineno-5-40" name="__codelineno-5-40"></a><span class="x">        $this-&gt;addField('Total', [</span>
+<a href="#__codelineno-5-41" id="__codelineno-5-41" name="__codelineno-5-41"></a><span class="x">            'label' =&gt; 'Total',</span>
+<a href="#__codelineno-5-42" id="__codelineno-5-42" name="__codelineno-5-42"></a><span class="x">            'query' =&gt; '(SELECT SUM(quantityOrdered * priceEach) </span>
+<a href="#__codelineno-5-43" id="__codelineno-5-43" name="__codelineno-5-43"></a><span class="x">                         FROM orderdetails </span>
+<a href="#__codelineno-5-44" id="__codelineno-5-44" name="__codelineno-5-44"></a><span class="x">                         WHERE orderdetails.orderNumber = orders.orderNumber)',</span>
+<a href="#__codelineno-5-45" id="__codelineno-5-45" name="__codelineno-5-45"></a><span class="x">            'rules' =&gt; 'readonly|money'</span>
+<a href="#__codelineno-5-46" id="__codelineno-5-46" name="__codelineno-5-46"></a><span class="x">        ]);</span>
+<a href="#__codelineno-5-47" id="__codelineno-5-47" name="__codelineno-5-47"></a>
+<a href="#__codelineno-5-48" id="__codelineno-5-48" name="__codelineno-5-48"></a><span class="x">        $this-&gt;setTableFields([</span>
+<a href="#__codelineno-5-49" id="__codelineno-5-49" name="__codelineno-5-49"></a><span class="x">            'orderNumber',</span>
+<a href="#__codelineno-5-50" id="__codelineno-5-50" name="__codelineno-5-50"></a><span class="x">            'orderDate',</span>
+<a href="#__codelineno-5-51" id="__codelineno-5-51" name="__codelineno-5-51"></a><span class="x">            'customerNumber',</span>
+<a href="#__codelineno-5-52" id="__codelineno-5-52" name="__codelineno-5-52"></a><span class="x">            'status',</span>
+<a href="#__codelineno-5-53" id="__codelineno-5-53" name="__codelineno-5-53"></a><span class="x">            'Total'</span>
+<a href="#__codelineno-5-54" id="__codelineno-5-54" name="__codelineno-5-54"></a><span class="x">        ]);</span>
+<a href="#__codelineno-5-55" id="__codelineno-5-55" name="__codelineno-5-55"></a><span class="x">    }</span>
+<a href="#__codelineno-5-56" id="__codelineno-5-56" name="__codelineno-5-56"></a><span class="x">}</span>
+</code></pre></div>
+<h3 id="reportes-generados-automaticamente">Reportes Generados Automáticamente</h3>
+<p>Con esta configuración, el usuario puede generar reportes como:</p>
+<p><strong>Ejemplo 1: Ventas por Cliente en un Rango de Fechas</strong>
+- <strong>Filtro:</strong> Fecha desde 2024-01-01 hasta 2024-12-31
+- <strong>Agrupación:</strong> Por Cliente
+- <strong>Resultado:</strong> Lista de clientes con el total vendido a cada uno en 2024</p>
+<p><strong>Ejemplo 2: Órdenes Canceladas por Mes</strong>
+- <strong>Filtro:</strong> Estado = "Cancelado"
+- <strong>Agrupación Nivel 1:</strong> Por Mes
+- <strong>Resultado:</strong> Total de órdenes canceladas agrupadas por mes con subtotales</p>
+<p><strong>Ejemplo 3: Análisis Jerárquico Anual</strong>
+- <strong>Agrupación Nivel 1:</strong> Por Año
+- <strong>Agrupación Nivel 2:</strong> Por Mes<br>
+- <strong>Agrupación Nivel 3:</strong> Por Estado
+- <strong>Resultado:</strong> Reporte jerárquico: Año → Mes → Estado con todos sus subtotales</br></p>
+<h2 id="ventajas-del-sistema">Ventajas del Sistema</h2>
+<h3 id="1-cero-configuracion-adicional">1. <strong>Cero Configuración Adicional</strong></h3>
+<p>No necesitas escribir controladores especiales, vistas o queries para reportes. Todo se genera automáticamente desde la definición del dataset.</p>
+<h3 id="2-reutilizacion-de-logica">2. <strong>Reutilización de Lógica</strong></h3>
+<p>Los filtros y agrupaciones reutilizan:
+- Las validaciones definidas en <code>addField()</code>
+- Las relaciones definidas con <code>addSearch()</code>
+- El formateo definido en el modelo</p>
+<h3 id="3-consistencia-de-interfaz">3. <strong>Consistencia de Interfaz</strong></h3>
+<p>Todos los datasets tienen exactamente la misma interfaz de reportes, reduciendo la curva de aprendizaje para los usuarios.</p>
+<h3 id="4-flexibilidad-total">4. <strong>Flexibilidad Total</strong></h3>
+<p>Los usuarios finales pueden combinar cualquier filtro con cualquier agrupación, generando reportes ad-hoc según sus necesidades sin requerir desarrollo.</p>
+<h3 id="5-escalabilidad">5. <strong>Escalabilidad</strong></h3>
+<p>A medida que agregas más campos a tu dataset, automáticamente se amplían las opciones de filtros y agrupaciones disponibles.</p>
+<h2 id="limitaciones-y-consideraciones">Limitaciones y Consideraciones</h2>
+<h3 id="campos-excluidos-automaticamente">Campos Excluidos Automáticamente</h3>
+<p>El sistema <strong>ignora</strong> automáticamente ciertos tipos de campos para filtros y agrupaciones:</p>
+<ul>
+<li><strong>Claves primarias</strong>: No suelen ser útiles para filtros generales</li>
+<li><strong>Campos con <code>is_unique</code></strong>: Pensados para identificadores únicos</li>
+<li><strong>Archivos e imágenes</strong> (<code>fileupload</code>, <code>imageupload</code>)</li>
+<li><strong>Contraseñas</strong> (<code>password</code>)</li>
+</ul>
+<h3 id="campos-calculados-y-agrupaciones">Campos Calculados y Agrupaciones</h3>
+<p>Los campos con <code>query</code> (calculados) pueden aparecer en el reporte, pero <strong>no se pueden usar como criterio de agrupación</strong> ya que son expresiones SQL derivadas.</p>
+<h3 id="performance-en-grandes-volumenes">Performance en Grandes Volúmenes</h3>
+<p>Para datasets con millones de registros, considera:
+- Añadir índices en campos frecuentemente filtrados
+- Limitar las opciones de agrupación si son muy costosas
+- Implementar paginación o límites en la consulta si es necesario</p>
+<h2 id="personalizacion-avanzada">Personalización Avanzada</h2>
+<p>Aunque el generador es automático, puedes influir en su comportamiento:</p>
+<h3 id="controlar-que-campos-son-filtrables">Controlar qué Campos son Filtrables</h3>
+<p>Al definir campos como <code>hidden</code> o con reglas específicas, puedes controlar su aparición en filtros:</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-6-1" id="__codelineno-6-1" name="__codelineno-6-1"></a><span class="x">// Este campo NO aparecerá en filtros (es hidden y calculado)</span>
+<a href="#__codelineno-6-2" id="__codelineno-6-2" name="__codelineno-6-2"></a><span class="x">$this-&gt;addField('internalCode', [</span>
+<a href="#__codelineno-6-3" id="__codelineno-6-3" name="__codelineno-6-3"></a><span class="x">    'label' =&gt; 'Código Interno',</span>
+<a href="#__codelineno-6-4" id="__codelineno-6-4" name="__codelineno-6-4"></a><span class="x">    'type'  =&gt; 'hidden',</span>
+<a href="#__codelineno-6-5" id="__codelineno-6-5" name="__codelineno-6-5"></a><span class="x">    'query' =&gt; 'MD5(customerNumber)'</span>
+<a href="#__codelineno-6-6" id="__codelineno-6-6" name="__codelineno-6-6"></a><span class="x">]);</span>
+</code></pre></div>
+<h3 id="metodos-programaticos">Métodos Programáticos</h3>
+<p>También puedes usar el generador programáticamente desde código:</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-7-1" id="__codelineno-7-1" name="__codelineno-7-1"></a><span class="x">public function reportePersonalizado()</span>
+<a href="#__codelineno-7-2" id="__codelineno-7-2" name="__codelineno-7-2"></a><span class="x">{</span>
+<a href="#__codelineno-7-3" id="__codelineno-7-3" name="__codelineno-7-3"></a><span class="x">    $generator = new RDatasetReportGenerator($this);</span>
+<a href="#__codelineno-7-4" id="__codelineno-7-4" name="__codelineno-7-4"></a>
+<a href="#__codelineno-7-5" id="__codelineno-7-5" name="__codelineno-7-5"></a><span class="x">    // Agregar filtros manualmente</span>
+<a href="#__codelineno-7-6" id="__codelineno-7-6" name="__codelineno-7-6"></a><span class="x">    $generator-&gt;addDateRangeFilter('orderDate', '2024-01-01', '2024-12-31');</span>
+<a href="#__codelineno-7-7" id="__codelineno-7-7" name="__codelineno-7-7"></a><span class="x">    $generator-&gt;addFilter('status', 'Shipped');</span>
+<a href="#__codelineno-7-8" id="__codelineno-7-8" name="__codelineno-7-8"></a>
+<a href="#__codelineno-7-9" id="__codelineno-7-9" name="__codelineno-7-9"></a><span class="x">    // Configurar agrupación</span>
+<a href="#__codelineno-7-10" id="__codelineno-7-10" name="__codelineno-7-10"></a><span class="x">    $generator-&gt;setGrouping('customerNumber', 'raw', 'Cliente');</span>
+<a href="#__codelineno-7-11" id="__codelineno-7-11" name="__codelineno-7-11"></a><span class="x">    $generator-&gt;setGrouping('orderDate', 'date_month', 'Mes');</span>
+<a href="#__codelineno-7-12" id="__codelineno-7-12" name="__codelineno-7-12"></a>
+<a href="#__codelineno-7-13" id="__codelineno-7-13" name="__codelineno-7-13"></a><span class="x">    // Generar HTML</span>
+<a href="#__codelineno-7-14" id="__codelineno-7-14" name="__codelineno-7-14"></a><span class="x">    $html = $generator-&gt;generateHTML();</span>
+<a href="#__codelineno-7-15" id="__codelineno-7-15" name="__codelineno-7-15"></a>
+<a href="#__codelineno-7-16" id="__codelineno-7-16" name="__codelineno-7-16"></a><span class="x">    return view('mi_plantilla_reporte', ['contenido' =&gt; $html]);</span>
+<a href="#__codelineno-7-17" id="__codelineno-7-17" name="__codelineno-7-17"></a><span class="x">}</span>
+</code></pre></div>
+<h2 id="integracion-con-el-ecosistema-ragnos">Integración con el Ecosistema Ragnos</h2>
+<h3 id="relacion-con-addsearch">Relación con <code>addSearch()</code></h3>
+<p>Como se mencionó en la <a href="../../datasets/datasets/#relaciones-entre-datasets-addsearch">guía de Datasets</a>, los campos definidos con <code>addSearch()</code> no solo crean selectores en formularios, sino que también:</p>
+<ol>
+<li><strong>En Filtros de Reportes:</strong> Permiten búsqueda contextual avanzada</li>
+<li><strong>En Agrupaciones:</strong> Se convierten automáticamente en criterios de agrupación</li>
+</ol>
+<p>Esta sinergia hace que definir relaciones sea doblemente poderoso.</p>
+<h3 id="relacion-con-settablefields">Relación con <code>setTableFields()</code></h3>
+<p>Los campos incluidos en <code>setTableFields()</code> son los que aparecerán en el reporte generado. Esto te da control sobre qué columnas se muestran sin afectar la disponibilidad de filtros y agrupaciones.</p>
+<h2 id="conclusion">Conclusión</h2>
+<p>El <strong>Generador Automático de Reportes</strong> es una de las características más potentes de Ragnos, transformando cada dataset simple en una herramienta de análisis avanzado sin esfuerzo adicional de desarrollo.</p>
+<p>Al aprovechar toda la metadata declarativa que defines en tu dataset (<code>addField</code>, <code>addSearch</code>, <code>setTableFields</code>), el sistema construye automáticamente una interfaz completa de reportería con:</p>
+<ul>
+<li>✅ Filtros inteligentes según tipo de campo</li>
+<li>✅ Agrupaciones jerárquicas multinivel</li>
+<li>✅ Búsqueda contextual en relaciones</li>
+<li>✅ Totales y subtotales automáticos</li>
+<li>✅ Interfaz consistente en todos los módulos</li>
+</ul>
+<p><strong>Resultado:</strong> Reportes empresariales de calidad profesional, disponibles en minutos, no en semanas.</p></div>
+</div>
+</div>
+<footer class="col-md-12">
+<hr/>
+<p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+</footer>
+<script src="../../../js/bootstrap.bundle.min.js"></script>
+<script>
+            var base_url = "../../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+<script src="../../../js/base.js"></script>
+<script src="../../../back_particles.js"></script>
+<script src="../../../search/main.js"></script>
+<div aria-hidden="true" aria-labelledby="searchModalLabel" class="modal" id="mkdocs_search_modal" role="dialog" tabindex="-1">
+<div class="modal-dialog modal-lg">
+<div class="modal-content">
+<div class="modal-header">
+<h4 class="modal-title" id="searchModalLabel">Search</h4>
+<button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+</div>
+<div class="modal-body">
+<p>From here you can search these documents. Enter your search terms below.</p>
+<form>
+<div class="form-group">
+<input class="form-control" id="mkdocs-search-query" placeholder="Search..." title="Type search term here" type="search"/>
+</div>
+</form>
+<div data-no-results-text="No results found" id="mkdocs-search-results"></div>
+</div>
+<div class="modal-footer">
+</div>
+</div>
+</div>
+</div><div aria-hidden="true" aria-labelledby="keyboardModalLabel" class="modal" id="mkdocs_keyboard_modal" role="dialog" tabindex="-1">
+<div class="modal-dialog">
+<div class="modal-content">
+<div class="modal-header">
+<h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+<button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+</div>
+<div class="modal-body">
+<table class="table">
+<thead>
+<tr>
+<th style="width: 20%;">Keys</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="help shortcut"><kbd>?</kbd></td>
+<td>Open this help</td>
+</tr>
+<tr>
+<td class="next shortcut"><kbd>n</kbd></td>
+<td>Next page</td>
+</tr>
+<tr>
+<td class="prev shortcut"><kbd>p</kbd></td>
+<td>Previous page</td>
+</tr>
+<tr>
+<td class="search shortcut"><kbd>s</kbd></td>
+<td>Search</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="modal-footer">
+</div>
+</div>
+</div>
+</div>
+<script type="module">import mermaid from "https://unpkg.com/mermaid@10.6.1/dist/mermaid.esm.min.mjs";
+mermaid.initialize({});</script></body>
+</html>
