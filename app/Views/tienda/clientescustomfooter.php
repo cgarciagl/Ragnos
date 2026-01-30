@@ -1,6 +1,6 @@
 <!-- Custom View: Client Sales Dashboard Footer -->
 <div class="mt-5">
-    <?php if (empty($ventas)): ?>
+    <?php if (empty($historial)): ?>
         <div class="row justify-content-center">
             <div class="col-md-8 col-lg-6">
                 <div class="card border-0 shadow-sm rounded-4 bg-light py-5">
@@ -15,6 +15,10 @@
             </div>
         </div>
     <?php else: ?>
+            <?php
+            $ultimasOrdenes = array_slice($historial, 0, 5);
+            $ventas         = array_reverse($historial);
+            ?>
         <div class="row g-4 match-height">
             <!-- Left Column: Recent Orders -->
             <div class="col-lg-6">
