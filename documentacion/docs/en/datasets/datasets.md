@@ -98,3 +98,41 @@ For a complete reference of all options and field types, consult the [Field Guid
 Common options:
 
 - `label`: visible text.
+
+## Relationships between Datasets (`addSearch`)
+
+- For complex header-lines relationships, see [Master-Detail](maestro-detalle.md).
+
+The `addSearch(localField, 'Namespace\Of\RelatedDataset')` function is a powerful tool connecting two datasets.
+
+### Intelligent Contextual Search
+
+By linking a field to another dataset, Ragnos automatically enables **contextual searches**. This means the search criteria is not limited to just the ID or the main field, but extends to **all visible fields** defined in the `setTableFields()` of the related dataset.
+
+**Example:**
+Imagine you are in the **Payments** module (`Store/Payments`) and need to select a **Customer**.
+If in the **Customers** dataset (`Store/Customers`) you defined:
+
+```php
+$this->setTableFields([
+    'customerName',
+    'Contact', // Calculated field: concat(contactLastName, ', ', contactFirstName)
+    'salesRepEmployeeNumber' // Sales Rep
+]);
+```
+
+When searching for a customer from the Payments form, you can type:
+- Part of the **Company Name** (`customerName`).
+- The **Contact Name** (`Contact`).
+- Or even the **Sales Rep Name**.
+
+Ragnos will search for matches in any of those fields defined in the target dataset, offering a much more flexible and powerful user experience without writing additional SQL.
+
+### Automatic Grouping in Reports
+
+Another key advantage is that fields associated via `addSearch` automatically become **grouping criteria** available in the report generator. This allows grouping metrics (like total sales) by any of the search criteria (e.g., Sales by Customer's "Sales Rep") with no extra configuration.
+
+### Advantages
+- **Reusability**: Define the logic of "how to search for a customer" once in the Customers dataset, and reuse it in Payments, Orders, etc.
+- **No Manual Joins**: The framework manages the underlying queries.
+- **Superior UX**: Intuitive selectors searching by multiple relevant attributes.

@@ -205,6 +205,8 @@ $this->addSearch('salesRepEmployeeNumber', 'Shop\\Employees');
 - Dynamic selector (modal or autocomplete)
 - Automatic JOIN handling
 
+> **[See detailed explanation on Contextual Search and Reports in the Datasets Guide](datasets.md#relationships-between-datasets-addsearch)**
+
 ---
 
 ## 11. Primary Key Field

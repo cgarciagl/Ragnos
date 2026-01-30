@@ -113,8 +113,43 @@ Ejemplos:
 ## Relaciones entre datasets
 
 - Para relaciones más complejas tipo cabecera-lineas, consulta la guía de [Maestro-Detalle](maestro-detalle.md).
-- `addSearch(localField, 'Namespace\\Dataset')` crea selectores y búsqueda asistida reutilizando otro dataset.
-- No requiere joins manuales; facilita selectores dinámicos y reutilización de lógica.
+## Relaciones entre datasets (`addSearch`)
+
+- Para relaciones más complejas tipo cabecera-lineas, consulta la guía de [Maestro-Detalle](maestro-detalle.md).
+
+La función `addSearch(campoLocal, 'Namespace\Del\DatasetRelacionado')` es una herramienta poderosa que conecta dos datasets.
+
+### Búsqueda Contextual Inteligente
+
+Al vincular un campo con otro dataset, Ragnos habilita automáticamente **búsquedas contextuales**. Esto significa que el criterio de búsqueda no se limita solo al ID o al campo principal, sino que se extiende a **todos los campos visibles** definidos en el `setTableFields()` del dataset relacionado.
+
+**Ejemplo:**
+Imagina que estás en el módulo de **Pagos** (`Tienda/Pagos`) y necesitas seleccionar un **Cliente**.
+Si en el dataset de **Clientes** (`Tienda/Clientes`) definiste:
+
+```php
+$this->setTableFields([
+    'customerName',
+    'Contacto', // Campo calculado: concat(contactLastName, ', ', contactFirstName)
+    'salesRepEmployeeNumber' // Empleado a cargo
+]);
+```
+
+Cuando busques un cliente desde el formulario de Pagos, podrás escribir:
+- Una parte del **Nombre de la empresa** (`customerName`).
+- El **Nombre del contacto** (`Contacto`).
+- O incluso el **Nombre del empleado** a cargo.
+
+Ragnos buscará coincidencias en cualquiera de esos campos definidos en el dataset destino, ofreciendo una experiencia de usuario mucho más flexible y potente sin escribir SQL adicional.
+
+### Agrupación Automática en Reportes
+
+Otra ventaja clave es que los campos asociados mediante `addSearch` se convierten automáticamente en **criterios de agrupación** disponibles en el generador de reportes. Esto permite agrupar métricas (como ventas totales) por cualquiera de los criterios de búsqueda (ej. Ventas por "Empleado a cargo" del cliente) sin configuración extra.
+
+### Ventajas
+- **Reutilización**: Define la lógica de "cómo buscar un cliente" una sola vez en el dataset de Clientes, y úsalo en Pagos, Órdenes, etc.
+- **Sin Joins Manuales**: El framework gestiona las consultas subyacentes.
+- **UX Superior**: Selectores intuitivos que buscan por múltiples atributos relevantes.
 
 ## Configuración de la grilla
 

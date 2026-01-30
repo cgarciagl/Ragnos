@@ -203,6 +203,8 @@ $this->addSearch('salesRepEmployeeNumber', 'Tienda\\Empleados');
 - Selector dinámico
 - Sin JOIN manual
 
+> **[Ver explicación detallada sobre Búsqueda Contextual y Reportes en la guía de Datasets](datasets.md#relaciones-entre-datasets-addsearch)**
+
 ---
 
 ## 11. Campo clave primaria
