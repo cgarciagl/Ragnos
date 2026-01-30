@@ -143,10 +143,13 @@
             <div class="row">
                 <div class="col">
                     <div class="card card-primary card-outline mb-4">
-                        <div class="card-header">
+                        <div class="card-header d-flex justify-content-between align-items-center">
                             <h3 class="card-title"> <i class="bi bi-globe-americas"></i> Distribución Global de Ventas
                             </h3>
-                            <div class="card-tools">
+                            <div>
+                                <a href="<?= site_url('tienda/reportes/ventasporpais') ?>"
+                                    class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover me-2">Ver
+                                    Reporte</a>
                                 <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                     <i class="bi bi-dash"></i>
                                 </button>
@@ -300,6 +303,9 @@
                         <div class="card-header border-0">
                             <div class="d-flex justify-content-between">
                                 <h3 class="card-title">Ventas por línea</h3>
+                                <a href="<?= site_url('tienda/reportes/ventasporlinea') ?>"
+                                    class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Ver
+                                    Reporte</a>
                             </div>
                         </div>
                         <div class="card-body">
@@ -313,6 +319,9 @@
                         <div class="card-header border-0">
                             <div class="d-flex justify-content-between">
                                 <h3 class="card-title">Empleados con más ventas en los últimos 3 meses</h3>
+                                <a href="<?= site_url('tienda/reportes/mejoresempleados') ?>"
+                                    class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Ver
+                                    Reporte</a>
                             </div>
                         </div>
                         <div class="card-body">
@@ -365,6 +374,9 @@
                         <div class="card-header border-0">
                             <div class="d-flex justify-content-between">
                                 <h3 class="card-title">Margen de ganancia por línea en los últimos 6 meses</h3>
+                                <a href="<?= site_url('tienda/reportes/margenporlinea') ?>"
+                                    class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Ver
+                                    Reporte</a>
                             </div>
                         </div>
                         <div class="card-body">
@@ -409,9 +421,14 @@
                 <div class="col-lg-7">
                     <div class="card card-warning card-outline mb-4">
                         <div class="card-header border-0">
-                            <div class="d-flex justify-content-between">
+                            <div class="d-flex justify-content-between align-items-center">
                                 <h3 class="card-title">Estados de cuenta</h3>
-                                <span class="badge rounded-pill text-bg-info">Clientes con deuda*</span>
+                                <div>
+                                    <a href="<?= site_url('tienda/reportes/estadosdecuenta') ?>"
+                                        class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover me-2">Ver
+                                        Reporte</a>
+                                    <span class="badge rounded-pill text-bg-info">Clientes con deuda*</span>
+                                </div>
                             </div>
                         </div>
                         <div class="card-body">
@@ -468,6 +485,9 @@
                         <div class="card-header border-0">
                             <div class="d-flex justify-content-between">
                                 <h3 class="card-title">Productos de menor rotación en los últimos 6 meses</h3>
+                                <a href="<?= site_url('tienda/reportes/menorrotacion') ?>"
+                                    class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Ver
+                                    Reporte</a>
                             </div>
                         </div>
                         <div class="card-body">

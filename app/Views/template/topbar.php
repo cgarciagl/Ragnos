@@ -73,6 +73,65 @@
             </ul>
         </li>
 
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-graph-up"></i> <span class="d-none d-md-inline">Reportes</span>
+            </a>
+            <ul class="dropdown-menu">
+                <li>
+                    <a href="<?= site_url('tienda/reportes/ventaspormes') ?>" class="nav-link text-nowrap">
+                        <i class="bi bi-calendar2-week"></i>
+                        Ventas por Mes
+                    </a>
+                </li>
+                <li>
+                    <a href="<?= site_url('tienda/reportes/ventasporpais') ?>" class="nav-link text-nowrap">
+                        <i class="bi bi-globe-americas"></i>
+                        Ventas por País
+                    </a>
+                </li>
+                <li>
+                    <a href="<?= site_url('tienda/reportes/ventasporlinea') ?>" class="nav-link text-nowrap">
+                        <i class="bi bi-box-seam"></i>
+                        Ventas por Línea
+                    </a>
+                </li>
+                <li>
+                    <a href="<?= site_url('tienda/reportes/margenporlinea') ?>" class="nav-link text-nowrap">
+                        <i class="bi bi-graph-up-arrow"></i>
+                        Margen de Ganancia
+                    </a>
+                </li>
+                <li>
+                    <a href="<?= site_url('tienda/reportes/estadosdecuenta') ?>" class="nav-link text-nowrap">
+                        <i class="bi bi-cash-coin"></i>
+                        Estados de Cuenta
+                    </a>
+                </li>
+                <li>
+                    <a href="<?= site_url('tienda/reportes/mejoresempleados') ?>" class="nav-link text-nowrap">
+                        <i class="bi bi-person-check"></i>
+                        Mejores Empleados
+                    </a>
+                </li>
+                <li>
+                    <a href="<?= site_url('tienda/reportes/menorrotacion') ?>" class="nav-link text-nowrap">
+                        <i class="bi bi-hourglass-bottom"></i>
+                        Prod. Menor Rotación
+                    </a>
+                </li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+                <li>
+                    <a href="<?= site_url('Tienda/Reportes/reporte_avanzado') ?>" class="nav-link text-nowrap">
+                        <i class="bi bi-sliders"></i>
+                        Reporte de Pagos Avanzado
+                    </a>
+                </li>
+            </ul>
+        </li>
+
     </ul>
 
 
@@ -86,35 +145,35 @@
         <?php $auth = service('Admin_aut'); ?>
         <?php if ($auth->isLoggedIn()): ?>
 
-                <li class="nav-item dropdown user-menu"> <a href="#" class="nav-link dropdown-toggle text-primary"
-                        data-bs-toggle="dropdown" aria-expanded="false"> <img class="user-image rounded-circle shadow"
+            <li class="nav-item dropdown user-menu"> <a href="#" class="nav-link dropdown-toggle text-primary"
+                    data-bs-toggle="dropdown" aria-expanded="false"> <img class="user-image rounded-circle shadow"
+                        src="./img/avatar.jpg" alt="User Image">
+                    <span class="d-none d-md-inline"><?= $auth->name(); ?></span> </a>
+                <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end"> <!--begin::User Image-->
+                    <li class="user-header text-bg-primary"> <img class="user-image rounded-circle shadow"
                             src="./img/avatar.jpg" alt="User Image">
-                        <span class="d-none d-md-inline"><?= $auth->name(); ?></span> </a>
-                    <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end"> <!--begin::User Image-->
-                        <li class="user-header text-bg-primary"> <img class="user-image rounded-circle shadow"
-                                src="./img/avatar.jpg" alt="User Image">
-                            <p>
-                                <?= $auth->name(); ?> - Web Developer
-                                <small>Miembro desde Nov. 2024</small>
-                            </p>
-                        </li> <!--end::User Image--> <!--begin::Menu Body-->
-                        <li class="user-body"> <!--begin::Row-->
-                            <div class="row">
-                                <!-- <div class="col-4 text-center"> <a href="#">Followers</a> </div>
+                        <p>
+                            <?= $auth->name(); ?> - Web Developer
+                            <small>Miembro desde Nov. 2024</small>
+                        </p>
+                    </li> <!--end::User Image--> <!--begin::Menu Body-->
+                    <li class="user-body"> <!--begin::Row-->
+                        <div class="row">
+                            <!-- <div class="col-4 text-center"> <a href="#">Followers</a> </div>
                             <div class="col-4 text-center"> <a href="#">Sales</a> </div>
                             <div class="col-4 text-center"> <a href="#">Friends</a> </div> -->
-                            </div> <!--end::Row-->
-                        </li> <!--end::Menu Body--> <!--begin::Menu Footer-->
-                        <li class="user-footer">
-                            <a href="<?= site_url('/admin/perfil'); ?>" class="dropdown-item">
-                                <i class="bi bi-person-circle nav-icon"></i> Perfil del usuario
-                            </a>
-                            <a href="<?= site_url('admin/logout'); ?>" class="dropdown-item">
-                                <i class="bi bi-door-closed"></i> Cerrar sesión
-                            </a>
-                        </li> <!--end::Menu Footer-->
-                    </ul>
-                </li>
+                        </div> <!--end::Row-->
+                    </li> <!--end::Menu Body--> <!--begin::Menu Footer-->
+                    <li class="user-footer">
+                        <a href="<?= site_url('/admin/perfil'); ?>" class="dropdown-item">
+                            <i class="bi bi-person-circle nav-icon"></i> Perfil del usuario
+                        </a>
+                        <a href="<?= site_url('admin/logout'); ?>" class="dropdown-item">
+                            <i class="bi bi-door-closed"></i> Cerrar sesión
+                        </a>
+                    </li> <!--end::Menu Footer-->
+                </ul>
+            </li>
         <?php endif; ?>
 
     </ul>
