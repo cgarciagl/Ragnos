@@ -9,11 +9,11 @@ class RDatasetReportGenerator
 {
     private RDatasetController $controller;
     private $model;
-    private array $filters = []; // Estructura: [$field => [ ['value'=>v, 'type'=>t], ... ]]
+    private array $filters = []; // Estructura: [$field => [ ['value'=>v, 'type'=>t, 'display_text'=>txt], ... ]]
     private array $groupings = [];
     private array $dateFilters = []; // Estructura: [$field => [ ['start'=>s, 'end'=>e], ... ]]
     private array $numericFilters = []; // Estructura: [$field => [ ['min'=>m, 'max'=>max], ... ]]
-    private array $filterDisplayTexts = []; // Estructura: [$field => [texto, texto...]]
+    private bool $filters_loaded_from_session = false;
     private array $filterTypes = []; // Para saber si el filtro es exacto o parcial (LIKE)
 
     // Introspection cache
@@ -243,18 +243,52 @@ class RDatasetReportGenerator
                 $this->setGrouping($field, $mode, $label);
             }
         }
+
+        // 3. Guardar en Sesión para persistencia
+        $session    = service('session');
+        $sessionKey = 'ragnos_report_' . md5(get_class($this->controller));
+        $session->set($sessionKey, [
+            'filters'        => $this->filters,
+            'dateFilters'    => $this->dateFilters,
+            'numericFilters' => $this->numericFilters,
+            'groupings'      => $this->groupings
+        ]);
     }
 
     /**
      * Renderiza la vista de configuración genérica
      */
-    public function renderConfigView(string $actionUrl): string
+    public function renderConfigView(string $actionUrl)
     {
+        $session    = service('session');
+        $sessionKey = 'ragnos_report_' . md5(get_class($this->controller));
+
+        // Acción de limpiar
+        if (request()->getGet('clear')) {
+            $session->remove($sessionKey);
+            return redirect()->to(current_url());
+        }
+
+        // Intentar cargar desde Sesión si están vacíos
+        $saved = $session->get($sessionKey);
+
+        if ($saved && empty($this->filters) && empty($this->dateFilters) && empty($this->numericFilters) && empty($this->groupings)) {
+            $this->filters        = $saved['filters'] ?? [];
+            $this->dateFilters    = $saved['dateFilters'] ?? [];
+            $this->numericFilters = $saved['numericFilters'] ?? [];
+            $this->groupings      = $saved['groupings'] ?? [];
+        }
+
         $data = [
-            'title'        => 'Generador de Reportes: ' . ($this->controller->getTitle() ?? 'Dataset'),
-            'action'       => $actionUrl,
-            'filters'      => $this->availableFilters,
-            'groupingOpts' => $this->availableGroupings
+            'title'            => 'Generador de Reportes: ' . ($this->controller->getTitle() ?? 'Dataset'),
+            'action'           => $actionUrl,
+            'filters'          => $this->availableFilters,
+            'groupingOpts'     => $this->availableGroupings,
+            // Valores actuales para repoblar la vista
+            'currentFilters'   => $this->filters,
+            'currentDateFil'   => $this->dateFilters,
+            'currentNumFil'    => $this->numericFilters,
+            'currentGroupings' => $this->groupings
         ];
 
         return view('App\ThirdParty\Ragnos\Views\rdatasetreportgenerator\config_generic', $data);
@@ -285,9 +319,9 @@ class RDatasetReportGenerator
     {
         if ($value !== null && $value !== '') {
             $this->filters[$field][] = [
-                'value'       => $value,
-                'type'        => $usePartialMatch ? 'partial' : 'exact',
-                'displayText' => $displayText
+                'value'        => $value,
+                'type'         => $usePartialMatch ? 'partial' : 'exact',
+                'display_text' => $displayText
             ];
         }
     }
@@ -623,12 +657,9 @@ class RDatasetReportGenerator
                     } elseif ($type === 'select' && !empty($fConfig['options'])) {
                         $disp = $fConfig['options'][$v] ?? $v;
                     } elseif (isset($fConfig['search_controller'])) {
-                        // Usar el displayText almacenado si existe
-                        if (!empty($entry['displayText'])) {
-                            $disp = $entry['displayText'];
-                        } elseif (isset($this->filterDisplayTexts[$k][$idx])) {
-                            // Fallback (legacy)
-                            $disp = $this->filterDisplayTexts[$k][$idx];
+                        // Usar el display_text almacenado si existe
+                        if (!empty($entry['display_text'])) {
+                            $disp = $entry['display_text'];
                         }
                     }
                 }

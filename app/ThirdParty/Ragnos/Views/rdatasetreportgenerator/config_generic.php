@@ -18,6 +18,12 @@
                         </h5>
                         <div class="text-muted small"><?= lang('Ragnos.Ragnos_report_config_help') ?></div>
                     </div>
+                    <div>
+                        <a href="javascript:history.back()" class="btn btn-outline-secondary btn-sm rounded-pill px-3">
+                            <i class="bi bi-arrow-left me-1"></i>
+                            <?= lang('Ragnos.Ragnos_back') ?>
+                        </a>
+                    </div>
                 </div>
             </div>
 
@@ -100,7 +106,13 @@
                                 </div>
 
                                 <div class="vstack gap-4">
-                                    <?php for ($i = 1; $i <= 3; $i++): ?>
+                                    <?php for ($i = 1; $i <= 3; $i++):
+                                        $currentVal = "";
+                                        if (isset($currentGroupings[$i - 1])) {
+                                            $g          = $currentGroupings[$i - 1];
+                                            $currentVal = "{$g['mode']}::{$g['field']}";
+                                        }
+                                        ?>
                                         <div class="position-relative">
                                             <label class="form-label small fw-bold text-muted text-uppercase mb-1">
                                                 <?= lang('Ragnos.Ragnos_level') ?>     <?= $i ?>
@@ -114,7 +126,8 @@
                                                     data-level="<?= $i ?>" style="font-size: 0.95rem;">
                                                     <option value=""><?= lang('Ragnos.Ragnos_none_option') ?></option>
                                                     <?php foreach ($groupingOpts as $opt): ?>
-                                                        <option value="<?= esc($opt['value']) ?>"><?= esc($opt['label']) ?>
+                                                        <option value="<?= esc($opt['value']) ?>" <?= $currentVal === $opt['value'] ? 'selected' : '' ?>>
+                                                            <?= esc($opt['label']) ?>
                                                         </option>
                                                     <?php endforeach; ?>
                                                 </select>
@@ -132,10 +145,9 @@
 
                     <!-- Footer de acciones -->
                     <div class="card-footer bg-white p-4 border-top text-end">
-                        <button type="button" class="btn btn-outline-secondary me-2 rounded-pill px-4"
-                            onclick="window.location.reload();">
+                        <a href="<?= current_url() ?>?clear=1" class="btn btn-outline-secondary me-2 rounded-pill px-4">
                             <i class="bi bi-arrow-counterclockwise me-1"></i> <?= lang('Ragnos.Ragnos_clear') ?>
-                        </button>
+                        </a>
                         <button type="submit"
                             class="btn btn-primary rounded-pill px-5 shadow fw-bold animate__animated animate__pulse animate__infinite infinite-hover">
                             Generar Reporte <i class="bi bi-arrow-right ms-2"></i>
@@ -384,8 +396,7 @@
             }
         }
 
-        $('#btnAddFilter').on('click', function () {
-            const field = $('#filterSelector').val();
+        function addFilterUI(field, initialData = null) {
             if (!field) return;
 
             const config = filtersConfig[field];
@@ -419,9 +430,24 @@
             const $filter = $(html);
             $('#activeFiltersContainer').append($filter);
 
-            // Animación suave de scroll al agregar
-            var container = $('#activeFiltersContainer');
-            // $('html, body').animate({ scrollTop: $filter.offset().top - 200 }, 500);
+            // Repoblar valores si hay data inicial
+            if (initialData) {
+                $.each(initialData, function (key, val) {
+                    const $input = $filter.find(`[name*="[${key}]"]`);
+                    if ($input.length) {
+                        if ($input.is(':radio')) {
+                            $filter.find(`[name*="[${key}]"][value="${val}"]`).prop('checked', true);
+                        } else {
+                            $input.val(val);
+                        }
+                    }
+
+                    // Caso especial para el input visible de búsqueda
+                    if (config.search_controller && key === 'display_text') {
+                        $filter.find('.ragnos-search-field').val(val);
+                    }
+                });
+            }
 
             updNoMatchMsg();
 
@@ -429,30 +455,20 @@
             if (config.search_controller) {
                 const $searchel = $filter.find('.ragnos-search-field');
 
-                // Verificar si el plugin existe antes de llamar
                 if ($.fn.RagnosSearch) {
                     $searchel.RagnosSearch({
                         controller: config.search_controller,
-                        // El callback maneja la selección
                         callback: function (e) {
-                            // CORRECCIÓN: Usar 'e' directamente como jQuery object del elemento
                             let datos = e.data('searchdata');
-
                             if (datos) {
-                                console.log('RagnosSearch Selected:', datos);
-
-                                // Asignar valores explícitamente a los inputs ocultos usando selectores más específicos
                                 if (datos.y_id) {
                                     $filter.find('input[name*="[value]"]').val(datos.y_id);
                                 }
-
-                                // Intentar obtener el texto de los datos, o fallback al valor visible del input
                                 let visibleText = datos.y_text || $searchel.val();
                                 if (visibleText) {
                                     $filter.find('input[name*="[display_text]"]').val(visibleText);
                                 }
                             } else {
-                                // Si el campo está vacío, limpiar los hidden
                                 if ($searchel.val() === '') {
                                     $filter.find('input[name*="[value]"]').val('');
                                     $filter.find('input[name*="[display_text]"]').val('');
@@ -461,11 +477,41 @@
                         }
                     });
                 } else {
-                    console.error('Plugin RagnosSearch no detectado. Usando fallback.');
                     initSearch($searchel);
                 }
             }
+        }
+
+        $('#btnAddFilter').on('click', function () {
+            const field = $('#filterSelector').val();
+            addFilterUI(field);
         });
+
+        // Repoblar filtros existentes (Estado del Reporte)
+        <?php if (!empty($currentFilters)): ?>
+            <?php foreach ($currentFilters as $field => $entries): ?>
+                <?php foreach ($entries as $entry): ?>
+                    addFilterUI('<?= esc($field) ?>', <?= json_encode($entry) ?>);
+                <?php endforeach; ?>
+            <?php endforeach; ?>
+        <?php endif; ?>
+
+        <?php if (!empty($currentDateFil)): ?>
+            <?php foreach ($currentDateFil as $field => $entries): ?>
+                <?php foreach ($entries as $entry): ?>
+                    addFilterUI('<?= esc($field) ?>', <?= json_encode($entry) ?>);
+                <?php endforeach; ?>
+            <?php endforeach; ?>
+        <?php endif; ?>
+
+        <?php if (!empty($currentNumFil)): ?>
+            <?php foreach ($currentNumFil as $field => $entries): ?>
+                <?php foreach ($entries as $entry): ?>
+                    addFilterUI('<?= esc($field) ?>', <?= json_encode($entry) ?>);
+                <?php endforeach; ?>
+            <?php endforeach; ?>
+        <?php endif; ?>
+
 
         $(document).on('click', '.btn-remove-filter', function () {
             // Animacion de salida
