@@ -174,7 +174,7 @@
                 <div class="col-md-5">
                     <div class="btn-group w-100" role="group">
                         <input type="radio" class="btn-check" name="filters_data[{field}][{idx}][match_type]" id="m_p_{field}_{idx}" value="partial" checked>
-                        <label class="btn btn-outline-light text-dark border btn-sm small" for="m_p_{field}_{idx}"><?= lang('Ragnos.Ragnos_searching') ?></label>
+                        <label class="btn btn-outline-light text-dark border btn-sm small" for="m_p_{field}_{idx}"><?= lang('Ragnos.Ragnos_partial_match') ?></label>
                         <input type="radio" class="btn-check" name="filters_data[{field}][{idx}][match_type]" id="m_e_{field}_{idx}" value="exact">
                         <label class="btn btn-outline-light text-dark border btn-sm small" for="m_e_{field}_{idx}"><?= lang('Ragnos.Ragnos_exact_match') ?></label>
                     </div>
