@@ -111,31 +111,31 @@
                                             $currentVal = "{$g['mode']}::{$g['field']}";
                                         }
                                         ?>
-                                            <div class="position-relative">
-                                                <label class="form-label small fw-bold text-muted text-uppercase mb-0"
-                                                    style="font-size: 0.65rem;">
-                                                    <?= lang('Ragnos.Ragnos_level') ?>         <?= $i ?>
-                                                </label>
-                                                <div class="input-group shadow-sm rounded-3 overflow-hidden">
-                                                    <span class="input-group-text bg-white border-end-0 ps-3 text-primary">
-                                                        <i class="bi bi-layers<?= $i > 1 ? '-half' : '-fill' ?>"></i>
-                                                    </span>
-                                                    <select name="grouping_<?= $i ?>"
-                                                        class="form-select border-start-0 border-light-subtle py-2 grouping-select"
-                                                        data-level="<?= $i ?>" style="font-size: 0.95rem;">
-                                                        <option value=""><?= lang('Ragnos.Ragnos_none_option') ?></option>
-                                                        <?php foreach ($groupingOpts as $opt): ?>
-                                                                <option value="<?= esc($opt['value']) ?>" <?= $currentVal === $opt['value'] ? 'selected' : '' ?>>
-                                                                    <?= esc($opt['label']) ?>
-                                                                </option>
-                                                        <?php endforeach; ?>
-                                                    </select>
-                                                </div>
-                                                <?php if ($i < 3): ?>
-                                                        <div class="position-absolute start-0 ms-4 h-100 top-100 border-start border-dashed border-secondary opacity-25"
-                                                            style="height: 10px !important;"></div>
-                                                <?php endif; ?>
+                                        <div class="position-relative">
+                                            <label class="form-label small fw-bold text-muted text-uppercase mb-0"
+                                                style="font-size: 0.65rem;">
+                                                <?= lang('Ragnos.Ragnos_level') ?>     <?= $i ?>
+                                            </label>
+                                            <div class="input-group shadow-sm rounded-3 overflow-hidden">
+                                                <span class="input-group-text bg-white border-end-0 ps-3 text-primary">
+                                                    <i class="bi bi-layers<?= $i > 1 ? '-half' : '-fill' ?>"></i>
+                                                </span>
+                                                <select name="grouping_<?= $i ?>"
+                                                    class="form-select border-start-0 border-light-subtle py-2 grouping-select"
+                                                    data-level="<?= $i ?>" style="font-size: 0.95rem;">
+                                                    <option value=""><?= lang('Ragnos.Ragnos_none_option') ?></option>
+                                                    <?php foreach ($groupingOpts as $opt): ?>
+                                                        <option value="<?= esc($opt['value']) ?>" <?= $currentVal === $opt['value'] ? 'selected' : '' ?>>
+                                                            <?= esc($opt['label']) ?>
+                                                        </option>
+                                                    <?php endforeach; ?>
+                                                </select>
                                             </div>
+                                            <?php if ($i < 3): ?>
+                                                <div class="position-absolute start-0 ms-4 h-100 top-100 border-start border-dashed border-secondary opacity-25"
+                                                    style="height: 10px !important;"></div>
+                                            <?php endif; ?>
+                                        </div>
                                     <?php endfor; ?>
                                 </div>
                             </div>
@@ -145,10 +145,10 @@
                     <!-- Footer de acciones Pegajoso -->
                     <div class="card-footer bg-white p-3 border-top text-end sticky-bottom shadow-lg">
                         <div class="container-fluid p-0">
-                            <a href="<?= current_url() ?>?clear=1"
+                            <button type="button" id="btnClearReport"
                                 class="btn btn-outline-secondary me-2 rounded-pill px-4">
                                 <i class="bi bi-arrow-counterclockwise me-1"></i> <?= lang('Ragnos.Ragnos_clear') ?>
-                            </a>
+                            </button>
                             <button type="submit" id="btnSubmitReport"
                                 class="btn btn-primary rounded-pill px-5 shadow fw-bold animate__animated animate__pulse animate__infinite infinite-hover">
                                 <span class="btn-text">Generar Reporte <i class="bi bi-arrow-right ms-2"></i></span>
@@ -518,27 +518,27 @@
 
         // Repoblar filtros existentes (Estado del Reporte)
         <?php if (!empty($currentFilters)): ?>
-                <?php foreach ($currentFilters as $field => $entries): ?>
-                        <?php foreach ($entries as $entry): ?>
-                                addFilterUI('<?= esc($field) ?>', <?= json_encode($entry) ?>);
-                        <?php endforeach; ?>
+            <?php foreach ($currentFilters as $field => $entries): ?>
+                <?php foreach ($entries as $entry): ?>
+                    addFilterUI('<?= esc($field) ?>', <?= json_encode($entry) ?>);
                 <?php endforeach; ?>
+            <?php endforeach; ?>
         <?php endif; ?>
 
         <?php if (!empty($currentDateFil)): ?>
-                <?php foreach ($currentDateFil as $field => $entries): ?>
-                        <?php foreach ($entries as $entry): ?>
-                                addFilterUI('<?= esc($field) ?>', <?= json_encode($entry) ?>);
-                        <?php endforeach; ?>
+            <?php foreach ($currentDateFil as $field => $entries): ?>
+                <?php foreach ($entries as $entry): ?>
+                    addFilterUI('<?= esc($field) ?>', <?= json_encode($entry) ?>);
                 <?php endforeach; ?>
+            <?php endforeach; ?>
         <?php endif; ?>
 
         <?php if (!empty($currentNumFil)): ?>
-                <?php foreach ($currentNumFil as $field => $entries): ?>
-                        <?php foreach ($entries as $entry): ?>
-                                addFilterUI('<?= esc($field) ?>', <?= json_encode($entry) ?>);
-                        <?php endforeach; ?>
+            <?php foreach ($currentNumFil as $field => $entries): ?>
+                <?php foreach ($entries as $entry): ?>
+                    addFilterUI('<?= esc($field) ?>', <?= json_encode($entry) ?>);
                 <?php endforeach; ?>
+            <?php endforeach; ?>
         <?php endif; ?>
 
 
@@ -591,13 +591,59 @@
             });
         });
 
-        // Estado de carga en el envío del formulario
-        $('#reportConfigForm').on('submit', function () {
-            const $btn = $('#btnSubmitReport');
-            const $btnText = $btn.find('.btn-text');
+        // Botón de limpiar dinámico (AJAX con SweetAlert2)
+        $('#btnClearReport').on('click', function () {
+            Swal.fire({
+                title: '<?= lang('Ragnos.Ragnos_wait') ?>',
+                text: '<?= lang('Ragnos.Ragnos_clear_confirm') ?>',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: '<?= lang('Ragnos.Ragnos_yes') ?>',
+                cancelButtonText: '<?= lang('Ragnos.Ragnos_cancel') ?>'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const $btn = $(this);
+                    const originalHtml = $btn.html();
 
-            $btn.prop('disabled', true).removeClass('animate__pulse animate__infinite');
-            $btnText.html('<span class="spinner-border spinner-border-sm me-2"></span> Generando Reporte...');
+                    $btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-1"></span> Limpiando...');
+
+                    $.ajax({
+                        url: window.location.href,
+                        method: 'POST',
+                        data: {
+                            clear_ragnos_session: 1,
+                            <?= csrf_token() ?>: '<?= csrf_hash() ?>'
+                        },
+                        success: function (response) {
+                            // Limpiar UI sin recargar
+                            $('#activeFiltersContainer .filter-card').remove();
+                            $('.grouping-select').val('').trigger('change');
+                            updNoMatchMsg();
+                            
+                            // Restaurar botón
+                            $btn.prop('disabled', false).html(originalHtml);
+                            
+                            Swal.fire({
+                                icon: 'success',
+                                title: '<?= lang('Ragnos.Ragnos_accept') ?>',
+                                text: 'Filtros eliminados correctamente',
+                                timer: 1500,
+                                showConfirmButton: false
+                            });
+                        },
+                        error: function () {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: '<?= lang('Ragnos.Ragnos_server_error') ?>'
+                            });
+                            $btn.prop('disabled', false).html(originalHtml);
+                        }
+                    });
+                }
+            });
         });
     });
 </script>

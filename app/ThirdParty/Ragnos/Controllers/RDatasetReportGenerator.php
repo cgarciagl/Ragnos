@@ -263,9 +263,12 @@ class RDatasetReportGenerator
         $session    = service('session');
         $sessionKey = 'ragnos_report_' . md5(get_class($this->controller));
 
-        // Acción de limpiar
-        if (request()->getGet('clear')) {
+        // Acción de limpiar (Soporta AJAX para evitar recargas y problemas de historial)
+        if (request()->getPost('clear_ragnos_session') || request()->getGet('clear')) {
             $session->remove($sessionKey);
+            if (request()->isAJAX()) {
+                return service('response')->setJSON(['success' => true]);
+            }
             return redirect()->to(current_url());
         }
 
