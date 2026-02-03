@@ -4,8 +4,6 @@
 
 <?= $this->section('content') ?>
 
-
-
 <script src="<?= base_url(); ?>/assets/js/echarts/echarts.min.js" type="text/javascript"></script>
 <script src="<?= base_url(); ?>/assets/js/echarts/world.js" type="text/javascript"></script>
 
@@ -14,7 +12,7 @@
         <div class="container-fluid"> <!--begin::Row-->
             <div class="row">
                 <div class="col-sm-6">
-                    <h3 class="mb-0">Administración</h3>
+                    <h3 class="mb-0 animate__animated animate__fadeInDown">Administración</h3>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-end">
@@ -87,7 +85,7 @@
 
 
                 <div class="row">
-                    <div class="col-lg-3 col-6 mb-4">
+                    <div class="col-lg-3 col-6 mb-4 animate__animated animate__fadeInUp" style="animation-delay: 0.1s;">
                         <div class="custom-info-card">
                             <div class="icon-container" style="background-color: #007bff;">
                                 <i class="bi bi-currency-dollar"></i>
@@ -99,7 +97,7 @@
                         </div>
                     </div>
 
-                    <div class="col-lg-3 col-6 mb-4">
+                    <div class="col-lg-3 col-6 mb-4 animate__animated animate__fadeInUp" style="animation-delay: 0.2s;">
                         <div class="custom-info-card">
                             <div class="icon-container" style="background-color: #28a745;">
                                 <i class="bi bi-graph-up"></i>
@@ -112,7 +110,7 @@
                         </div>
                     </div>
 
-                    <div class="col-lg-3 col-6 mb-4">
+                    <div class="col-lg-3 col-6 mb-4 animate__animated animate__fadeInUp" style="animation-delay: 0.3s;">
                         <div class="custom-info-card">
                             <div class="icon-container" style="background-color: #3f51b5;">
                                 <i class="bi bi-bag-check"></i>
@@ -124,7 +122,7 @@
                         </div>
                     </div>
 
-                    <div class="col-lg-3 col-6 mb-4">
+                    <div class="col-lg-3 col-6 mb-4 animate__animated animate__fadeInUp" style="animation-delay: 0.4s;">
                         <div class="custom-info-card">
                             <div class="icon-container" style="background-color: #6c757d;">
                                 <i class="bi bi-truck"></i>
@@ -141,7 +139,7 @@
 
 
             <div class="row">
-                <div class="col">
+                <div class="col animate__animated animate__zoomIn" style="animation-delay: 0.5s;">
                     <div class="card card-primary card-outline mb-4">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <h3 class="card-title"> <i class="bi bi-globe-americas"></i> Distribución Global de Ventas
@@ -283,7 +281,7 @@
             </div>
 
             <div class="row">
-                <div class="col-lg-5">
+                <div class="col-lg-5 animate__animated animate__fadeInLeft" style="animation-delay: 0.6s;">
                     <div class="card card-success card-outline mb-4">
                         <div class="card-header border-0 d-flex justify-content-between align-items-center">
                             <h3 class="card-title">Ventas</h3>
@@ -303,7 +301,8 @@
                         </div>
                     </div> <!-- /.card -->
 
-                    <div class="card card-info card-outline mb-4">
+                    <div class="card card-info card-outline mb-4 animate__animated animate__fadeInLeft"
+                        style="animation-delay: 0.7s;">
                         <div class="card-header border-0 d-flex justify-content-between align-items-center">
                             <h3 class="card-title">Ventas por línea</h3>
                             <div class="card-tools ms-auto">
@@ -322,7 +321,8 @@
                         </div>
                     </div> <!-- /.card -->
 
-                    <div class="card card-success card-outline mb-4">
+                    <div class="card card-success card-outline mb-4 animate__animated animate__fadeInLeft"
+                        style="animation-delay: 0.8s;">
                         <div class="card-header border-0 d-flex justify-content-between align-items-center">
                             <h3 class="card-title">Empleados con más ventas en los últimos 3 meses</h3>
                             <div class="card-tools ms-auto">
@@ -380,7 +380,8 @@
                         </div>
                     </div>
 
-                    <div class="card card-primary card-outline mb-4">
+                    <div class="card card-primary card-outline mb-4 animate__animated animate__fadeInLeft"
+                        style="animation-delay: 0.9s;">
                         <div class="card-header border-0 d-flex justify-content-between align-items-center">
                             <h3 class="card-title">Margen de ganancia por línea en los últimos 6 meses</h3>
                             <div class="card-tools ms-auto">
@@ -431,7 +432,7 @@
                 </div> <!-- /.col-md-5 -->
 
 
-                <div class="col-lg-7">
+                <div class="col-lg-7 animate__animated animate__fadeInRight" style="animation-delay: 0.6s;">
                     <div class="card card-warning card-outline mb-4">
                         <div class="card-header border-0 d-flex justify-content-between align-items-center">
                             <h3 class="card-title">Estados de cuenta</h3>
@@ -495,7 +496,8 @@
                         </div>
                     </div> <!-- /.card -->
 
-                    <div class="card card-warning card-outline mb-4">
+                    <div class="card card-warning card-outline mb-4 animate__animated animate__fadeInRight"
+                        style="animation-delay: 0.7s;">
                         <div class="card-header border-0 d-flex justify-content-between align-items-center">
                             <h3 class="card-title">Productos de menor rotación en los últimos 6 meses</h3>
                             <div class="card-tools ms-auto">
@@ -1135,6 +1137,12 @@
         cursor: pointer;
         color: blue;
         text-decoration: underline;
+        transition: all 0.3s ease;
+    }
+
+    .btn-link:hover {
+        color: #0056b3;
+        transform: translateX(3px);
     }
 
     .card-title {
@@ -1146,6 +1154,150 @@
     #chartventasporlinea {
         min-height: 350px;
         width: 100%;
+    }
+
+    /* Animaciones personalizadas para las tarjetas */
+    .custom-info-card {
+        transition: all 0.3s ease;
+    }
+
+    .custom-info-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.5rem 2rem 0 rgba(58, 59, 69, 0.15) !important;
+    }
+
+    /* Animación pulse para los iconos */
+    .icon-container {
+        animation: iconPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes iconPulse {
+
+        0%,
+        100% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.05);
+        }
+    }
+
+    .custom-info-card:hover .icon-container {
+        animation: iconBounce 0.6s ease;
+    }
+
+    @keyframes iconBounce {
+
+        0%,
+        100% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.2);
+        }
+    }
+
+    /* Animaciones para filas de tabla */
+    .table tbody tr {
+        transition: all 0.3s ease;
+    }
+
+    .table tbody tr:hover {
+        transform: scale(1.02);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        background-color: rgba(0, 123, 255, 0.05) !important;
+    }
+
+    /* Animación para las cards */
+    .card {
+        transition: all 0.3s ease;
+        overflow: hidden;
+    }
+
+    .card:hover {
+        box-shadow: 0 0.5rem 2.5rem 0 rgba(58, 59, 69, 0.2) !important;
+    }
+
+    /* Mejora visual para los badges */
+    .badge {
+        transition: all 0.3s ease;
+    }
+
+    .badge:hover {
+        transform: scale(1.1);
+    }
+
+    /* Animación de entrada para gráficas */
+    #chartventas,
+    #chartventasporlinea,
+    #echarts-map,
+    #chartMargenDona,
+    #chartEmpleadosRanking,
+    #chartInventarioMuerto,
+    #chartParetoDeuda {
+        opacity: 0;
+        animation: fadeInChart 1s ease forwards;
+    }
+
+    @keyframes fadeInChart {
+        from {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    /* Delay para cada gráfica */
+    #chartventas {
+        animation-delay: 0.3s;
+    }
+
+    #chartventasporlinea {
+        animation-delay: 0.4s;
+    }
+
+    #echarts-map {
+        animation-delay: 0.5s;
+    }
+
+    #chartMargenDona {
+        animation-delay: 0.6s;
+    }
+
+    #chartEmpleadosRanking {
+        animation-delay: 0.7s;
+    }
+
+    #chartInventarioMuerto {
+        animation-delay: 0.8s;
+    }
+
+    #chartParetoDeuda {
+        animation-delay: 0.9s;
+    }
+
+    /* Animación para los enlaces del card-tools */
+    .card-tools a {
+        transition: all 0.3s ease;
+    }
+
+    .card-tools a:hover {
+        transform: translateX(-3px);
+    }
+
+    /* Estados hover para botones de herramientas */
+    .btn-tool {
+        transition: all 0.3s ease;
+    }
+
+    .btn-tool:hover {
+        transform: rotate(90deg);
     }
 </style>
 

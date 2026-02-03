@@ -25,3 +25,5 @@
 
 <link rel="stylesheet" href="<?= base_url(); ?>/assets/css/ragnos.css?v=3.2" type="text/css" />
 <link rel="stylesheet" href="<?= base_url(); ?>/assets/css/custom.css" type="text/css" />
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />

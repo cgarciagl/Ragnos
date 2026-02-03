@@ -9,11 +9,12 @@ class RDatasetReportGenerator
 {
     private RDatasetController $controller;
     private $model;
-    private array $filters = [];
+    private array $filters = []; // Estructura: [$field => [ ['value'=>v, 'type'=>t], ... ]]
     private array $groupings = [];
-    private array $dateFilters = [];
-    private array $numericFilters = [];
-    private array $filterDisplayTexts = [];
+    private array $dateFilters = []; // Estructura: [$field => [ ['start'=>s, 'end'=>e], ... ]]
+    private array $numericFilters = []; // Estructura: [$field => [ ['min'=>m, 'max'=>max], ... ]]
+    private array $filterDisplayTexts = []; // Estructura: [$field => [texto, texto...]]
+    private array $filterTypes = []; // Para saber si el filtro es exacto o parcial (LIKE)
 
     // Introspection cache
     private array $availableFilters = [];
@@ -176,31 +177,48 @@ class RDatasetReportGenerator
     public function processRequest(\CodeIgniter\HTTP\IncomingRequest $request): void
     {
         // 1. Procesar Filtros
-        foreach ($this->availableFilters as $field => $conf) {
+        // Los filtros ahora vienen en un array principal de POST: 'filters_data'
+        $allFilters = $request->getPost('filters_data') ?? [];
 
-            if ($conf['type'] === 'date_range') {
-                $start = $request->getPost("filter_{$field}_start");
-                $end   = $request->getPost("filter_{$field}_end");
-                if ($start || $end) {
-                    $this->addDateRangeFilter($field, $start, $end);
-                }
-            } elseif ($conf['type'] === 'numeric_range') {
-                $min = $request->getPost("filter_{$field}_min");
-                $max = $request->getPost("filter_{$field}_max");
-                // Verificar que no sean cadenas vacías
-                if (($min !== null && $min !== '') || ($max !== null && $max !== '')) {
-                    $this->addNumericRangeFilter($field, $min, $max);
-                }
-            } else {
-                $val = $request->getPost("filter_{$field}");
-                if ($val !== null && $val !== '') {
-                    $this->addFilter($field, $val);
+        foreach ($allFilters as $field => $entries) {
+            $conf = $this->availableFilters[$field] ?? null;
+            if (!$conf)
+                continue;
 
-                    // Capturar texto de display si viene del form (para búsquedas)
-                    $dispText = $request->getPost("filter_{$field}_display_text");
-                    if (!empty($dispText)) {
-                        $this->filterDisplayTexts[$field] = $dispText;
+            foreach ($entries as $entry) {
+                // Verificar que la entrada tenga contenido antes de procesar
+                $hasContent = false;
+                if ($conf['type'] === 'date_range') {
+                    if (!empty($entry['start']) || !empty($entry['end']))
+                        $hasContent = true;
+                } elseif ($conf['type'] === 'numeric_range') {
+                    if ((isset($entry['min']) && $entry['min'] !== '') || (isset($entry['max']) && $entry['max'] !== ''))
+                        $hasContent = true;
+                } else {
+                    if (isset($entry['value']) && $entry['value'] !== '')
+                        $hasContent = true;
+                }
+
+                if (!$hasContent)
+                    continue;
+
+                if ($conf['type'] === 'date_range') {
+                    $this->addDateRangeFilter($field, $entry['start'] ?? null, $entry['end'] ?? null);
+                } elseif ($conf['type'] === 'numeric_range') {
+                    $this->addNumericRangeFilter($field, $entry['min'] ?? null, $entry['max'] ?? null);
+                } else {
+                    $val       = $entry['value'];
+                    $matchType = $entry['match_type'] ?? null;
+
+                    if ($matchType === null) {
+                        $usePartial = ($conf['type'] === 'text' && !isset($conf['search_controller']));
+                    } else {
+                        $usePartial = ($matchType === 'partial');
                     }
+
+                    $dispText = !empty($entry['display_text']) ? $entry['display_text'] : null;
+                    $this->addFilter($field, $val, $usePartial, $dispText);
+
                 }
             }
         }
@@ -259,11 +277,18 @@ class RDatasetReportGenerator
 
     /**
      * Agrega un filtro de igualdad simple WHERE campo = valor
+     * @param string $field Campo a filtrar
+     * @param mixed $value Valor del filtro
+     * @param bool $usePartialMatch Si es true, usa LIKE para búsqueda parcial
      */
-    public function addFilter(string $field, $value): void
+    public function addFilter(string $field, $value, bool $usePartialMatch = false, ?string $displayText = null): void
     {
         if ($value !== null && $value !== '') {
-            $this->filters[$field] = $value;
+            $this->filters[$field][] = [
+                'value'       => $value,
+                'type'        => $usePartialMatch ? 'partial' : 'exact',
+                'displayText' => $displayText
+            ];
         }
     }
 
@@ -273,8 +298,7 @@ class RDatasetReportGenerator
     public function addDateRangeFilter(string $field, ?string $startDate, ?string $endDate): void
     {
         if ($startDate || $endDate) {
-            $this->dateFilters[] = [
-                'field' => $field,
+            $this->dateFilters[$field][] = [
                 'start' => $startDate,
                 'end'   => $endDate
             ];
@@ -287,10 +311,9 @@ class RDatasetReportGenerator
     public function addNumericRangeFilter(string $field, $min, $max): void
     {
         if (($min !== null && $min !== '') || ($max !== null && $max !== '')) {
-            $this->numericFilters[] = [
-                'field' => $field,
-                'min'   => $min,
-                'max'   => $max
+            $this->numericFilters[$field][] = [
+                'min' => $min,
+                'max' => $max
             ];
         }
     }
@@ -320,47 +343,76 @@ class RDatasetReportGenerator
         // 1. Preparar Query
         $builder = $this->model->builder();
 
-        // Aplicar Filtros Simples
-        foreach ($this->filters as $field => $value) {
-            // Verificar configuración para tratamiento especial
+        // Aplicar Filtros Simples con lógica OR si hay múltiples para el mismo campo
+        foreach ($this->filters as $field => $entries) {
             $fConfig = $this->availableFilters[$field] ?? null;
             $type    = $fConfig['type'] ?? 'text';
 
-            if ($type === 'boolean') {
-                $targetOn  = $fConfig['onValue'] ?? 1;
-                $targetOff = $fConfig['offValue'] ?? 0;
+            $builder->groupStart();
+            foreach ($entries as $idx => $entry) {
+                $value      = $entry['value'];
+                $filterType = $entry['type'] ?? 'exact';
 
-                if ($value == 0) {
-                    $builder->groupStart()
-                        ->where($this->model->table . '.' . $field, $targetOff)
-                        ->orWhere($this->model->table . '.' . $field, null)
-                        ->groupEnd();
+                $method     = ($idx === 0) ? 'where' : 'orWhere';
+                $likeMethod = ($idx === 0) ? 'like' : 'orLike';
+
+                if ($type === 'boolean') {
+                    $targetOn  = $fConfig['onValue'] ?? 1;
+                    $targetOff = $fConfig['offValue'] ?? 0;
+
+                    if ($value == 0) {
+                        $builder->$method($this->model->table . '.' . $field, $targetOff)
+                            ->orWhere($this->model->table . '.' . $field, null);
+                    } else {
+                        $builder->$method($this->model->table . '.' . $field, $targetOn);
+                    }
+                } elseif ($filterType === 'partial') {
+                    $builder->$likeMethod($this->model->table . '.' . $field, $value);
                 } else {
-                    $builder->where($this->model->table . '.' . $field, $targetOn);
+                    $builder->$method($this->model->table . '.' . $field, $value);
                 }
-            } else {
-                $builder->where($this->model->table . '.' . $field, $value);
             }
+            $builder->groupEnd();
         }
 
-        // Aplicar Filtros de Fecha
-        foreach ($this->dateFilters as $f) {
-            if (!empty($f['start'])) {
-                $builder->where($this->model->table . '.' . $f['field'] . ' >=', $f['start']);
+        // Aplicar Filtros de Fecha con lógica OR si hay múltiples para el mismo campo
+        foreach ($this->dateFilters as $field => $entries) {
+            $builder->groupStart();
+            foreach ($entries as $idx => $f) {
+                if ($idx > 0)
+                    $builder->orGroupStart();
+                else
+                    $builder->groupStart();
+
+                if (!empty($f['start'])) {
+                    $builder->where($this->model->table . '.' . $field . ' >=', $f['start']);
+                }
+                if (!empty($f['end'])) {
+                    $builder->where($this->model->table . '.' . $field . ' <=', $f['end']);
+                }
+                $builder->groupEnd();
             }
-            if (!empty($f['end'])) {
-                $builder->where($this->model->table . '.' . $f['field'] . ' <=', $f['end']); // O usar <= $end . ' 23:59:59' dependiendo del tipo
-            }
+            $builder->groupEnd();
         }
 
-        // Aplicar Filtros Numéricos
-        foreach ($this->numericFilters as $f) {
-            if (isset($f['min']) && $f['min'] !== '') {
-                $builder->where($this->model->table . '.' . $f['field'] . ' >=', $f['min']);
+        // Aplicar Filtros Numéricos con lógica OR si hay múltiples para el mismo campo
+        foreach ($this->numericFilters as $field => $entries) {
+            $builder->groupStart();
+            foreach ($entries as $idx => $f) {
+                if ($idx > 0)
+                    $builder->orGroupStart();
+                else
+                    $builder->groupStart();
+
+                if (isset($f['min']) && $f['min'] !== '') {
+                    $builder->where($this->model->table . '.' . $field . ' >=', $f['min']);
+                }
+                if (isset($f['max']) && $f['max'] !== '') {
+                    $builder->where($this->model->table . '.' . $field . ' <=', $f['max']);
+                }
+                $builder->groupEnd();
             }
-            if (isset($f['max']) && $f['max'] !== '') {
-                $builder->where($this->model->table . '.' . $f['field'] . ' <=', $f['max']);
-            }
+            $builder->groupEnd();
         }
 
         // 2. Obtener Datos
@@ -423,10 +475,10 @@ class RDatasetReportGenerator
                         // Convertir "2023-01-15" a "2023-01" o texto legible
                         $time = strtotime($rawValue);
                         // Formato ordenable y legible: "2023-01 (Enero)"
-                        $row[$keyName] = $time ? date('Y-m', $time) . ' (' . $this->getMonthName(date('n', $time)) . ')' : 'Sin Fecha';
+                        $row[$keyName] = $time ? date('Y-m', $time) . ' (' . $this->getMonthName(date('n', $time)) . ')' : lang('Ragnos.Ragnos_no_date');
                     } elseif ($mode === 'date_year') {
                         $time          = strtotime($rawValue);
-                        $row[$keyName] = $time ? date('Y', $time) : 'Sin Fecha';
+                        $row[$keyName] = $time ? date('Y', $time) : lang('Ragnos.Ragnos_no_date');
                     } else {
                         // Modo raw/exacto
                         if (method_exists($this->model, 'textForTable')) {
@@ -518,58 +570,76 @@ class RDatasetReportGenerator
 
     private function getMonthName($num)
     {
-        $months = [1 => 'Enero', 2 => 'Febrero', 3 => 'Marzo', 4 => 'Abril', 5 => 'Mayo', 6 => 'Junio', 7 => 'Julio', 8 => 'Agosto', 9 => 'Septiembre', 10 => 'Octubre', 11 => 'Noviembre', 12 => 'Diciembre'];
-        return $months[$num] ?? '';
+        return lang("Ragnos.Ragnos_month_$num");
     }
 
     private function buildFilterDescription(): string
     {
         $parts = [];
-        foreach ($this->dateFilters as $f) {
-            $label = $this->getFieldLabel($f['field']);
-            if (!empty($f['start']) && !empty($f['end']))
-                $parts[] = "{$label} (Rango: {$f['start']} al {$f['end']})";
-            elseif (!empty($f['start']))
-                $parts[] = "{$label} (Desde: {$f['start']})";
-            elseif (!empty($f['end']))
-                $parts[] = "{$label} (Hasta: {$f['end']})";
+        foreach ($this->dateFilters as $field => $entries) {
+            $label    = $this->getFieldLabel($field);
+            $subParts = [];
+            foreach ($entries as $f) {
+                if (!empty($f['start']) && !empty($f['end']))
+                    $subParts[] = "{$f['start']} " . lang('Ragnos.Ragnos_date_range_to') . " {$f['end']}";
+                elseif (!empty($f['start']))
+                    $subParts[] = lang('Ragnos.Ragnos_from_lowercase') . " {$f['start']}";
+                elseif (!empty($f['end']))
+                    $subParts[] = lang('Ragnos.Ragnos_to_lowercase') . " {$f['end']}";
+            }
+            if (!empty($subParts))
+                $parts[] = "$label: (" . implode(' ' . lang('Ragnos.Ragnos_or_conjunction') . ' ', $subParts) . ")";
         }
-        foreach ($this->numericFilters as $f) {
-            $label = $this->getFieldLabel($f['field']);
-            if (isset($f['min']) && $f['min'] !== '' && isset($f['max']) && $f['max'] !== '')
-                $parts[] = "{$label} (Rango: {$f['min']} - {$f['max']})";
-            elseif (isset($f['min']) && $f['min'] !== '')
-                $parts[] = "{$label} (Min: {$f['min']})";
-            elseif (isset($f['max']) && $f['max'] !== '')
-                $parts[] = "{$label} (Max: {$f['max']})";
+        foreach ($this->numericFilters as $field => $entries) {
+            $label    = $this->getFieldLabel($field);
+            $subParts = [];
+            foreach ($entries as $f) {
+                if (isset($f['min']) && $f['min'] !== '' && isset($f['max']) && $f['max'] !== '')
+                    $subParts[] = "{$f['min']} - {$f['max']}";
+                elseif (isset($f['min']) && $f['min'] !== '')
+                    $subParts[] = lang('Ragnos.Ragnos_min_lowercase') . ": {$f['min']}";
+                elseif (isset($f['max']) && $f['max'] !== '')
+                    $subParts[] = lang('Ragnos.Ragnos_max_lowercase') . ": {$f['max']}";
+            }
+            if (!empty($subParts))
+                $parts[] = "$label: (" . implode(' ' . lang('Ragnos.Ragnos_or_conjunction') . ' ', $subParts) . ")";
         }
-        foreach ($this->filters as $k => $v) {
-            $label = $this->getFieldLabel($k);
+        foreach ($this->filters as $k => $entries) {
+            $label    = $this->getFieldLabel($k);
+            $subParts = [];
 
-            // Verificar si es un filtro especial (Boolean o Select) para mostrar etiqueta en lugar de valor
-            if (isset($this->availableFilters[$k])) {
-                $fConfig = $this->availableFilters[$k];
-                $type    = $fConfig['type'] ?? 'text';
+            foreach ($entries as $idx => $entry) {
+                $v          = $entry['value'];
+                $filterType = $entry['type'] ?? 'exact';
+                $disp       = $v;
 
-                if ($type === 'boolean') {
-                    // Valor booleano legible
-                    $disp    = ($v == 1 || $v === '1' || $v === true) ? 'Sí / Activo' : 'No / Inactivo';
-                    $parts[] = "{$label}: $disp";
-                    continue;
-                } elseif ($type === 'select' && !empty($fConfig['options'])) {
-                    // Valor de opción seleccionada
-                    $disp    = $fConfig['options'][$v] ?? $v;
-                    $parts[] = "{$label}: $disp";
-                    continue;
-                } elseif (isset($fConfig['search_controller']) && isset($this->filterDisplayTexts[$k])) {
-                    // Valor de texto capturado del input de búsqueda
-                    $parts[] = "{$label}: " . $this->filterDisplayTexts[$k];
-                    continue;
+                // Verificar si es un filtro especial (Boolean o Select)
+                if (isset($this->availableFilters[$k])) {
+                    $fConfig = $this->availableFilters[$k];
+                    $type    = $fConfig['type'] ?? 'text';
+
+                    if ($type === 'boolean') {
+                        $disp = ($v == 1 || $v === '1' || $v === true) ? lang('Ragnos.Ragnos_yes') : lang('Ragnos.Ragnos_no');
+                    } elseif ($type === 'select' && !empty($fConfig['options'])) {
+                        $disp = $fConfig['options'][$v] ?? $v;
+                    } elseif (isset($fConfig['search_controller'])) {
+                        // Usar el displayText almacenado si existe
+                        if (!empty($entry['displayText'])) {
+                            $disp = $entry['displayText'];
+                        } elseif (isset($this->filterDisplayTexts[$k][$idx])) {
+                            // Fallback (legacy)
+                            $disp = $this->filterDisplayTexts[$k][$idx];
+                        }
+                    }
                 }
+
+                $indicator  = ($filterType === 'partial') ? ' [' . lang('Ragnos.Ragnos_partial_match') . ']' : ' [=]';
+                $subParts[] = "{$disp}{$indicator}";
             }
 
-            $parts[] = "{$label}: $v";
+            if (!empty($subParts))
+                $parts[] = "$label: (" . implode(' ' . lang('Ragnos.Ragnos_or_conjunction') . ' ', $subParts) . ")";
         }
-        return empty($parts) ? 'Todos los registros' : implode('  •  ', $parts);
+        return empty($parts) ? lang('Ragnos.Ragnos_all_records') : implode('  •  ', $parts);
     }
 }
