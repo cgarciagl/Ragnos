@@ -21,9 +21,33 @@ Cada dataset basado en `RDatasetController` incluye automáticamente un botón d
 
 Al hacer clic en este botón, el usuario accede a una interfaz de configuración de reportes donde puede:
 
-1. **Aplicar filtros** sobre diferentes campos
-2. **Definir agrupaciones** multinivel
 3. **Generar reportes** con totales y subtotales automáticos
+
+## Mejoras de Experiencia de Usuario (UX) Premium
+
+El generador ha sido actualizado con una interfaz moderna y eficiente que optimiza el flujo de trabajo:
+
+### 1. Diseño Compacto y Eficiente
+- **Layout Optimizado:** Se han reducido los espacios innecesarios (paddings y márgenes) para mostrar más información en menos pantalla, ideal para configuraciones con muchos filtros.
+- **Cabeceras y Pie de Página Pegajosos:** El botón de "Generar Reporte" y la barra de herramientas de filtros están siempre visibles (sticky), eliminando la necesidad de hacer scroll infinito.
+- **Barra Lateral de Agrupamiento:** En pantallas grandes, la configuración de grupos se mantiene fija a la derecha para un acceso rápido.
+
+### 2. Navegación Inteligente y AJAX
+- **Limpieza de Sesión sin Recarga:** El botón "Borrar/Limpiar" ahora funciona mediante AJAX. Esto limpia los filtros instantáneamente sin recargar la página, lo que evita "ensuciar" el historial del navegador. Ahora, al presionar el botón **"Volver atrás"** del navegador, regresarás a la página anterior con un solo clic.
+- **Confirmaciones Profesionales:** Se utiliza **SweetAlert2** para confirmaciones críticas, ofreciendo una estética mucho más integrada y profesional que los mensajes nativos del navegador.
+
+### 3. Feedback Visual Dinámico
+- **Animaciones de Resaltado:** Al agregar un nuevo filtro, este aparece con una suave animación de pulso para indicar dónde se ha añadido.
+- **Scroll Automático:** La pantalla se desplaza suavemente hacia el nuevo filtro seleccionado.
+- **Estados de Carga:** El botón de generación muestra un spinner y se deshabilita durante el procesamiento para evitar envíos duplicados.
+
+## Funcionalidades Avanzadas de Configuración
+
+### 1. Auto-Agrupamiento Inteligente
+Cuando se añade un filtro de tipo **Búsqueda Contextual** (campos con `addSearch()`), el sistema intenta automáticamente asignar ese campo al primer nivel de agrupamiento disponible. Esto agiliza la creación de reportes, ya que normalmente se desea ver los datos agrupados por la entidad que se está filtrando.
+
+### 2. Niveles de Agrupación Excluyentes
+Para evitar errores en la lógica del reporte, los niveles de agrupación (Nivel 1, 2 y 3) son inteligentes: si seleccionas un campo en el Nivel 1, esa opción se deshabilitará automáticamente en los niveles 2 y 3, asegurando una jerarquía lógica y sin duplicados.
 
 ## Características Principales
 
