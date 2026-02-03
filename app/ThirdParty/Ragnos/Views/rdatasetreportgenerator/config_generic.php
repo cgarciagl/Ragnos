@@ -138,6 +138,16 @@
                                         </div>
                                     <?php endfor; ?>
                                 </div>
+
+                                <!-- Resumen dinámico de filtros (Punto 4) -->
+                                <div id="filterSummarySidebar" class="mt-4 pt-3 border-top" style="display:none;">
+                                    <h6 class="fw-bold text-dark mb-2 small text-uppercase tracking-wider">
+                                        <i class="bi bi-funnel-fill me-2 text-primary"></i>Resumen de Filtros
+                                    </h6>
+                                    <div id="summaryContent" class="vstack gap-2">
+                                        <!-- Se llena dinámicamente -->
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -173,6 +183,9 @@
             <div class="position-absolute top-0 start-0 bottom-0 ms-0 rounded-start-3" style="width: 4px; background-color: var(--bs-primary);"></div>
             
             <div class="d-flex align-items-center mb-2 ps-2">
+                <div class="drag-handle me-2 text-muted cursor-move" style="cursor: move;">
+                    <i class="bi bi-grip-vertical fs-5"></i>
+                </div>
                 <span class="badge bg-primary bg-opacity-10 text-primary fw-bold f-label px-2 py-1">
                     <i class="bi bi-fonts me-1"></i> {label}
                 </span>
@@ -204,6 +217,9 @@
             <div class="position-absolute top-0 start-0 bottom-0 ms-0 rounded-start-3" style="width: 4px; background-color: var(--bs-success);"></div>
 
             <div class="d-flex align-items-center mb-2 ps-2">
+                <div class="drag-handle me-2 text-muted cursor-move" style="cursor: move;">
+                    <i class="bi bi-grip-vertical fs-5"></i>
+                </div>
                 <span class="badge bg-success bg-opacity-10 text-success fw-bold f-label px-2 py-1">
                     <i class="bi bi-list-nested me-1"></i> {label}
                 </span>
@@ -228,6 +244,9 @@
             <div class="position-absolute top-0 start-0 bottom-0 ms-0 rounded-start-3" style="width: 4px; background-color: var(--bs-info);"></div>
 
             <div class="d-flex align-items-center mb-2 ps-2">
+                <div class="drag-handle me-2 text-muted cursor-move" style="cursor: move;">
+                    <i class="bi bi-grip-vertical fs-5"></i>
+                </div>
                 <span class="badge bg-info bg-opacity-10 text-info fw-bold f-label px-2 py-1">
                     <i class="bi bi-toggle-on me-1"></i> {label}
                 </span>
@@ -252,6 +271,9 @@
             <div class="position-absolute top-0 start-0 bottom-0 ms-0 rounded-start-3" style="width: 4px; background-color: var(--bs-warning);"></div>
 
             <div class="d-flex align-items-center mb-2 ps-2">
+                <div class="drag-handle me-2 text-muted cursor-move" style="cursor: move;">
+                    <i class="bi bi-grip-vertical fs-5"></i>
+                </div>
                 <span class="badge bg-warning bg-opacity-10 text-warning-emphasis fw-bold f-label px-2 py-1">
                     <i class="bi bi-calendar-range me-1"></i> {label}
                 </span>
@@ -284,6 +306,9 @@
             <div class="position-absolute top-0 start-0 bottom-0 ms-0 rounded-start-3" style="width: 4px; background-color: var(--bs-secondary);"></div>
 
             <div class="d-flex align-items-center mb-2 ps-2">
+                <div class="drag-handle me-2 text-muted cursor-move" style="cursor: move;">
+                    <i class="bi bi-grip-vertical fs-5"></i>
+                </div>
                 <span class="badge bg-secondary bg-opacity-10 text-secondary fw-bold f-label px-2 py-1">
                     <i class="bi bi-123 me-1"></i> {label}
                 </span>
@@ -316,6 +341,9 @@
             <div class="position-absolute top-0 start-0 bottom-0 ms-0 rounded-start-3" style="width: 4px; background-color: var(--bs-dark);"></div>
 
             <div class="d-flex align-items-center mb-2 ps-2">
+                <div class="drag-handle me-2 text-muted cursor-move" style="cursor: move;">
+                    <i class="bi bi-grip-vertical fs-5"></i>
+                </div>
                 <span class="badge bg-dark bg-opacity-10 text-dark fw-bold f-label px-2 py-1">
                     <i class="bi bi-search me-1"></i> {label}
                 </span>
@@ -374,7 +402,19 @@
         backdrop-filter: blur(8px);
         background-color: rgba(255, 255, 255, 0.9) !important;
     }
+
+    .filter-card.sortable-ghost {
+        opacity: 0.4;
+        background-color: var(--bs-light) !important;
+    }
+
+    .filter-error {
+        border: 2px solid var(--bs-danger) !important;
+        animation: headShake 0.5s;
+    }
 </style>
+
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 
 <script>
     $(document).ready(function () {
@@ -385,14 +425,44 @@
         $('[data-bs-toggle="tooltip"]').tooltip();
 
         function updNoMatchMsg() {
-            var count = $('#activeFiltersContainer .filter-card').length;
+            var $container = $('#activeFiltersContainer');
+            var count = $container.find('.filter-card').length;
+
             if (count > 0) {
                 $('#noFiltersMessage').hide();
                 $('#filterCountBadge').text(count).show();
+                $('#filterSummarySidebar').fadeIn();
+
+                // Actualizar resumen (Punto 4)
+                let summaryHtml = '';
+                $container.find('.filter-card').each(function () {
+                    let label = $(this).find('.f-label').text().trim();
+                    let colorClass = $(this).find('.badge').attr('class').match(/text-\w+/)[0];
+                    summaryHtml += `
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-check2-circle me-2 ${colorClass}"></i>
+                            <span class="text-truncate text-muted" style="max-width: 180px;">${label}</span>
+                        </div>`;
+                });
+                $('#summaryContent').html(summaryHtml);
             } else {
                 $('#noFiltersMessage').show();
                 $('#filterCountBadge').hide();
+                $('#filterSummarySidebar').fadeOut();
             }
+        }
+
+        // Inicializar Drag & Drop (Punto 3)
+        const filterList = document.getElementById('activeFiltersContainer');
+        if (filterList) {
+            new Sortable(filterList, {
+                animation: 150,
+                handle: '.drag-handle',
+                ghostClass: 'sortable-ghost',
+                onEnd: function () {
+                    updNoMatchMsg(); // Refrescar el resumen al mover
+                }
+            });
         }
 
         function addFilterUI(field, initialData = null) {
@@ -621,10 +691,10 @@
                             $('#activeFiltersContainer .filter-card').remove();
                             $('.grouping-select').val('').trigger('change');
                             updNoMatchMsg();
-                            
+
                             // Restaurar botón
                             $btn.prop('disabled', false).html(originalHtml);
-                            
+
                             Swal.fire({
                                 icon: 'success',
                                 title: '<?= lang('Ragnos.Ragnos_accept') ?>',
@@ -644,6 +714,54 @@
                     });
                 }
             });
+        });
+
+        // Validación y Estado de carga en el envío del formulario (Punto 1)
+        $('#reportConfigForm').on('submit', function (e) {
+            let hasError = false;
+            let firstError = null;
+
+            $('.filter-card').removeClass('filter-error');
+
+            $('.filter-card').each(function () {
+                let $card = $(this);
+                let isEmpty = true;
+
+                // Revisar todos los inputs relevantes en la tarjeta
+                $card.find('input[type="text"], input[type="number"], input[type="date"], select').each(function () {
+                    // Ignorar match_type radios
+                    if ($(this).attr('name') && $(this).attr('name').indexOf('[match_type]') !== -1) return;
+                    if ($(this).val() !== '') isEmpty = false;
+                });
+
+                if (isEmpty) {
+                    $card.addClass('filter-error');
+                    hasError = true;
+                    if (!firstError) firstError = $card;
+                }
+            });
+
+            if (hasError) {
+                e.preventDefault();
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Filtros incompletos',
+                    text: 'Por favor, complete los valores de los filtros añadidos o elimine los que no necesite.',
+                    confirmButtonText: 'Entendido'
+                });
+                if (firstError) {
+                    $('html, body').animate({
+                        scrollTop: firstError.offset().top - 150
+                    }, 500);
+                }
+                return false;
+            }
+
+            const $btn = $('#btnSubmitReport');
+            const $btnText = $btn.find('.btn-text');
+
+            $btn.prop('disabled', true).removeClass('animate__pulse animate__infinite');
+            $btnText.html('<span class="spinner-border spinner-border-sm me-2"></span> Generando Reporte...');
         });
     });
 </script>
