@@ -21,9 +21,33 @@ Each dataset based on `RDatasetController` automatically includes an **"Advanced
 
 By clicking this button, users access a report configuration interface where they can:
 
-1. **Apply filters** on different fields
-2. **Define multi-level groupings**
 3. **Generate reports** with automatic totals and subtotals
+
+## Premium User Experience (UX) Enhancements
+
+The generator has been updated with a modern and efficient interface that optimizes the workflow:
+
+### 1. Compact and Efficient Design
+- **Optimized Layout:** Unnecessary spaces (padding and margins) have been reduced to display more information in less screen space, ideal for configurations with many filters.
+- **Sticky Headers and Footers:** The "Generate Report" button and filter toolbar are always visible (sticky), eliminating the need for infinite scrolling.
+- **Grouping Sidebar:** On large screens, the grouping configuration remains fixed on the right for quick access.
+
+### 2. Intelligent Navigation and AJAX
+- **No-Reload Session Clearing:** The "Clear" button now works via AJAX. This clears filters instantly without reloading the page, avoiding "pollution" of the browser history. Now, pressing the browser's **"Back"** button will return you to the previous page with a single click.
+- **Professional Confirmations:** **SweetAlert2** is used for critical confirmations, offering a much more integrated and professional aesthetic than native browser messages.
+
+### 3. Dynamic Visual Feedback
+- **Highlight Animations:** When a new filter is added, it appears with a subtle pulse animation to indicate where it was added.
+- **Automatic Scroll:** The screen smoothly scrolls to the newly selected filter.
+- **Loading States:** The generation button shows a spinner and is disabled during processing to prevent duplicate submissions.
+
+## Advanced Configuration Features
+
+### 1. Smart Auto-Grouping
+When a **Contextual Search** filter (fields with `addSearch()`) is added, the system automatically attempts to assign that field to the first available grouping level. This speeds up report creation, as users typically want to see data grouped by the entity they are filtering.
+
+### 2. Mutually Exclusive Grouping Levels
+To prevent errors in report logic, the grouping levels (Level 1, 2, and 3) are intelligent: if you select a field in Level 1, that option will be automatically disabled in levels 2 and 3, ensuring a logical hierarchy without duplicates.
 
 ## Main Features
 

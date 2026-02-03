@@ -173,6 +173,14 @@
 <ul class="nav flex-column">
 </ul>
 </li>
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#mejoras-de-experiencia-de-usuario-ux-premium">Mejoras de Experiencia de Usuario (UX) Premium</a>
+<ul class="nav flex-column">
+</ul>
+</li>
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#funcionalidades-avanzadas-de-configuracion">Funcionalidades Avanzadas de Configuración</a>
+<ul class="nav flex-column">
+</ul>
+</li>
 <li class="nav-item" data-bs-level="2"><a class="nav-link" href="#caracteristicas-principales">Características Principales</a>
 <ul class="nav flex-column">
 </ul>
@@ -226,10 +234,32 @@
 </code></pre></div>
 <p>Al hacer clic en este botón, el usuario accede a una interfaz de configuración de reportes donde puede:</p>
 <ol>
-<li><strong>Aplicar filtros</strong> sobre diferentes campos</li>
-<li><strong>Definir agrupaciones</strong> multinivel</li>
 <li><strong>Generar reportes</strong> con totales y subtotales automáticos</li>
 </ol>
+<h2 id="mejoras-de-experiencia-de-usuario-ux-premium">Mejoras de Experiencia de Usuario (UX) Premium</h2>
+<p>El generador ha sido actualizado con una interfaz moderna y eficiente que optimiza el flujo de trabajo:</p>
+<h3 id="1-diseno-compacto-y-eficiente">1. Diseño Compacto y Eficiente</h3>
+<ul>
+<li><strong>Layout Optimizado:</strong> Se han reducido los espacios innecesarios (paddings y márgenes) para mostrar más información en menos pantalla, ideal para configuraciones con muchos filtros.</li>
+<li><strong>Cabeceras y Pie de Página Pegajosos:</strong> El botón de "Generar Reporte" y la barra de herramientas de filtros están siempre visibles (sticky), eliminando la necesidad de hacer scroll infinito.</li>
+<li><strong>Barra Lateral de Agrupamiento:</strong> En pantallas grandes, la configuración de grupos se mantiene fija a la derecha para un acceso rápido.</li>
+</ul>
+<h3 id="2-navegacion-inteligente-y-ajax">2. Navegación Inteligente y AJAX</h3>
+<ul>
+<li><strong>Limpieza de Sesión sin Recarga:</strong> El botón "Borrar/Limpiar" ahora funciona mediante AJAX. Esto limpia los filtros instantáneamente sin recargar la página, lo que evita "ensuciar" el historial del navegador. Ahora, al presionar el botón <strong>"Volver atrás"</strong> del navegador, regresarás a la página anterior con un solo clic.</li>
+<li><strong>Confirmaciones Profesionales:</strong> Se utiliza <strong>SweetAlert2</strong> para confirmaciones críticas, ofreciendo una estética mucho más integrada y profesional que los mensajes nativos del navegador.</li>
+</ul>
+<h3 id="3-feedback-visual-dinamico">3. Feedback Visual Dinámico</h3>
+<ul>
+<li><strong>Animaciones de Resaltado:</strong> Al agregar un nuevo filtro, este aparece con una suave animación de pulso para indicar dónde se ha añadido.</li>
+<li><strong>Scroll Automático:</strong> La pantalla se desplaza suavemente hacia el nuevo filtro seleccionado.</li>
+<li><strong>Estados de Carga:</strong> El botón de generación muestra un spinner y se deshabilita durante el procesamiento para evitar envíos duplicados.</li>
+</ul>
+<h2 id="funcionalidades-avanzadas-de-configuracion">Funcionalidades Avanzadas de Configuración</h2>
+<h3 id="1-auto-agrupamiento-inteligente">1. Auto-Agrupamiento Inteligente</h3>
+<p>Cuando se añade un filtro de tipo <strong>Búsqueda Contextual</strong> (campos con <code>addSearch()</code>), el sistema intenta automáticamente asignar ese campo al primer nivel de agrupamiento disponible. Esto agiliza la creación de reportes, ya que normalmente se desea ver los datos agrupados por la entidad que se está filtrando.</p>
+<h3 id="2-niveles-de-agrupacion-excluyentes">2. Niveles de Agrupación Excluyentes</h3>
+<p>Para evitar errores en la lógica del reporte, los niveles de agrupación (Nivel 1, 2 y 3) son inteligentes: si seleccionas un campo en el Nivel 1, esa opción se deshabilitará automáticamente en los niveles 2 y 3, asegurando una jerarquía lógica y sin duplicados.</p>
 <h2 id="caracteristicas-principales">Características Principales</h2>
 <h3 id="1-generacion-automatica-de-filtros">1. Generación Automática de Filtros</h3>
 <p>El generador analiza <strong>automáticamente</strong> todos los campos definidos en tu dataset mediante <code>addField()</code> y crea los filtros apropiados según el tipo de campo:</p>
