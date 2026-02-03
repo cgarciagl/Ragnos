@@ -7,10 +7,10 @@
 
         <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
             <!-- Header Premium -->
-            <div class="card-header bg-white py-3 px-4 border-bottom">
+            <div class="card-header bg-white py-2 px-4 border-bottom">
                 <div class="d-flex align-items-center w-100">
                     <div class="bg-primary bg-opacity-10 p-2 rounded-3 me-3 d-none d-sm-block">
-                        <i class="bi bi-file-earmark-bar-graph-fill text-primary fs-4"></i>
+                        <i class="bi bi-file-earmark-bar-graph-fill text-primary fs-5"></i>
                     </div>
                     <div class="flex-grow-1">
                         <h5 class="fw-bold mb-0 text-dark" style="font-size: 1.15rem; line-height: 1.2;">
@@ -34,10 +34,10 @@
                     <div class="row g-0">
                         <!-- COLUMNA IZQUIERDA: Área de Filtros (Con fondo sutil) -->
                         <div class="col-lg-8 border-end bg-light bg-opacity-10">
-                            <div class="p-4 p-lg-5">
+                            <div class="p-3 p-lg-4">
 
                                 <!-- Barra de herramientas de filtros -->
-                                <div class="bg-white p-3 rounded-3 shadow-sm border mb-4">
+                                <div class="bg-white p-3 rounded-3 shadow-sm border mb-3">
                                     <label
                                         class="form-label small fw-bold text-uppercase text-muted mb-2 tracking-wide">
                                         <i class="bi bi-plus-circle me-1"></i> <?= lang('Ragnos.Ragnos_add_filter') ?>
@@ -82,7 +82,8 @@
                                         </div>
                                         <h6 class="text-muted fw-bold"><?= lang('Ragnos.Ragnos_no_filters_active') ?>
                                         </h6>
-                                        <p class="text-muted small"><?= lang('Ragnos.Ragnos_no_filters_active_help') ?>
+                                        <p class="text-muted small mb-4">
+                                            <?= lang('Ragnos.Ragnos_no_filters_active_help') ?>
                                         </p>
                                     </div>
                                 </div>
@@ -91,21 +92,18 @@
                         </div>
 
                         <!-- COLUMNA DERECHA: Configuración Lateral -->
-                        <div class="col-lg-4 bg-light bg-opacity-25">
-                            <div class="p-4 p-lg-5 h-100">
-                                <h6 class="fw-bold text-dark mb-4 pb-2 border-bottom border-2 w-100">
-                                    <i class="bi bi-sliders me-2"></i><?= lang('Ragnos.Ragnos_grouping') ?>
+                        <div class="col-lg-4 bg-light bg-opacity-25 border-start">
+                            <div class="p-3 p-lg-4 h-100 sticky-sidebar">
+                                <h6
+                                    class="fw-bold text-dark mb-3 pb-2 border-bottom border-2 w-100 d-flex align-items-center">
+                                    <i class="bi bi-sliders me-2"></i>
+                                    <?= lang('Ragnos.Ragnos_grouping') ?>
+                                    <i class="bi bi-info-circle text-muted ms-auto fs-6" data-bs-toggle="tooltip"
+                                        data-bs-placement="top"
+                                        title="<?= lang('Ragnos.Ragnos_grouping_hierarchy_help') ?>"></i>
                                 </h6>
 
-                                <div class="alert alert-light border shadow-sm p-2 mb-4 rounded-3 d-flex align-items-start"
-                                    style="font-size: 0.75rem;">
-                                    <i class="bi bi-info-circle-fill text-info me-2 flex-shrink-0"></i>
-                                    <div class="lh-sm">
-                                        <?= lang('Ragnos.Ragnos_grouping_hierarchy_help') ?>
-                                    </div>
-                                </div>
-
-                                <div class="vstack gap-4">
+                                <div class="vstack gap-2">
                                     <?php for ($i = 1; $i <= 3; $i++):
                                         $currentVal = "";
                                         if (isset($currentGroupings[$i - 1])) {
@@ -113,45 +111,49 @@
                                             $currentVal = "{$g['mode']}::{$g['field']}";
                                         }
                                         ?>
-                                        <div class="position-relative">
-                                            <label class="form-label small fw-bold text-muted text-uppercase mb-1">
-                                                <?= lang('Ragnos.Ragnos_level') ?>     <?= $i ?>
-                                            </label>
-                                            <div class="input-group shadow-sm rounded-3 overflow-hidden">
-                                                <span class="input-group-text bg-white border-end-0 ps-3 text-primary">
-                                                    <i class="bi bi-layers<?= $i > 1 ? '-half' : '-fill' ?>"></i>
-                                                </span>
-                                                <select name="grouping_<?= $i ?>"
-                                                    class="form-select border-start-0 border-light-subtle py-2 grouping-select"
-                                                    data-level="<?= $i ?>" style="font-size: 0.95rem;">
-                                                    <option value=""><?= lang('Ragnos.Ragnos_none_option') ?></option>
-                                                    <?php foreach ($groupingOpts as $opt): ?>
-                                                        <option value="<?= esc($opt['value']) ?>" <?= $currentVal === $opt['value'] ? 'selected' : '' ?>>
-                                                            <?= esc($opt['label']) ?>
-                                                        </option>
-                                                    <?php endforeach; ?>
-                                                </select>
+                                            <div class="position-relative">
+                                                <label class="form-label small fw-bold text-muted text-uppercase mb-0"
+                                                    style="font-size: 0.65rem;">
+                                                    <?= lang('Ragnos.Ragnos_level') ?>         <?= $i ?>
+                                                </label>
+                                                <div class="input-group shadow-sm rounded-3 overflow-hidden">
+                                                    <span class="input-group-text bg-white border-end-0 ps-3 text-primary">
+                                                        <i class="bi bi-layers<?= $i > 1 ? '-half' : '-fill' ?>"></i>
+                                                    </span>
+                                                    <select name="grouping_<?= $i ?>"
+                                                        class="form-select border-start-0 border-light-subtle py-2 grouping-select"
+                                                        data-level="<?= $i ?>" style="font-size: 0.95rem;">
+                                                        <option value=""><?= lang('Ragnos.Ragnos_none_option') ?></option>
+                                                        <?php foreach ($groupingOpts as $opt): ?>
+                                                                <option value="<?= esc($opt['value']) ?>" <?= $currentVal === $opt['value'] ? 'selected' : '' ?>>
+                                                                    <?= esc($opt['label']) ?>
+                                                                </option>
+                                                        <?php endforeach; ?>
+                                                    </select>
+                                                </div>
+                                                <?php if ($i < 3): ?>
+                                                        <div class="position-absolute start-0 ms-4 h-100 top-100 border-start border-dashed border-secondary opacity-25"
+                                                            style="height: 10px !important;"></div>
+                                                <?php endif; ?>
                                             </div>
-                                            <?php if ($i < 3): ?>
-                                                <div class="position-absolute start-0 ms-4 h-100 top-100 border-start border-dashed border-secondary opacity-25"
-                                                    style="height: 20px !important;"></div>
-                                            <?php endif; ?>
-                                        </div>
                                     <?php endfor; ?>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Footer de acciones -->
-                    <div class="card-footer bg-white p-4 border-top text-end">
-                        <a href="<?= current_url() ?>?clear=1" class="btn btn-outline-secondary me-2 rounded-pill px-4">
-                            <i class="bi bi-arrow-counterclockwise me-1"></i> <?= lang('Ragnos.Ragnos_clear') ?>
-                        </a>
-                        <button type="submit"
-                            class="btn btn-primary rounded-pill px-5 shadow fw-bold animate__animated animate__pulse animate__infinite infinite-hover">
-                            Generar Reporte <i class="bi bi-arrow-right ms-2"></i>
-                        </button>
+                    <!-- Footer de acciones Pegajoso -->
+                    <div class="card-footer bg-white p-3 border-top text-end sticky-bottom shadow-lg">
+                        <div class="container-fluid p-0">
+                            <a href="<?= current_url() ?>?clear=1"
+                                class="btn btn-outline-secondary me-2 rounded-pill px-4">
+                                <i class="bi bi-arrow-counterclockwise me-1"></i> <?= lang('Ragnos.Ragnos_clear') ?>
+                            </a>
+                            <button type="submit" id="btnSubmitReport"
+                                class="btn btn-primary rounded-pill px-5 shadow fw-bold animate__animated animate__pulse animate__infinite infinite-hover">
+                                <span class="btn-text">Generar Reporte <i class="bi bi-arrow-right ms-2"></i></span>
+                            </button>
+                        </div>
                     </div>
 
                 </form>
@@ -174,7 +176,7 @@
                 <span class="badge bg-primary bg-opacity-10 text-primary fw-bold f-label px-2 py-1">
                     <i class="bi bi-fonts me-1"></i> {label}
                 </span>
-                <button type="button" class="btn btn-icon btn-sm text-muted ms-auto p-0 btn-remove-filter hover-danger" title="Eliminar filtro">
+                <button type="button" class="btn btn-icon btn-sm text-muted ms-auto p-0 btn-remove-filter hover-danger" title="Eliminar filtro" aria-label="Eliminar filtro">
                     <i class="bi bi-x-lg"></i>
                 </button>
             </div>
@@ -205,7 +207,7 @@
                 <span class="badge bg-success bg-opacity-10 text-success fw-bold f-label px-2 py-1">
                     <i class="bi bi-list-nested me-1"></i> {label}
                 </span>
-                <button type="button" class="btn btn-icon btn-sm text-muted ms-auto p-0 btn-remove-filter hover-danger">
+                <button type="button" class="btn btn-icon btn-sm text-muted ms-auto p-0 btn-remove-filter hover-danger" aria-label="Eliminar filtro">
                     <i class="bi bi-x-lg"></i>
                 </button>
             </div>
@@ -229,7 +231,7 @@
                 <span class="badge bg-info bg-opacity-10 text-info fw-bold f-label px-2 py-1">
                     <i class="bi bi-toggle-on me-1"></i> {label}
                 </span>
-                <button type="button" class="btn btn-icon btn-sm text-muted ms-auto p-0 btn-remove-filter hover-danger">
+                <button type="button" class="btn btn-icon btn-sm text-muted ms-auto p-0 btn-remove-filter hover-danger" aria-label="Eliminar filtro">
                     <i class="bi bi-x-lg"></i>
                 </button>
             </div>
@@ -253,7 +255,7 @@
                 <span class="badge bg-warning bg-opacity-10 text-warning-emphasis fw-bold f-label px-2 py-1">
                     <i class="bi bi-calendar-range me-1"></i> {label}
                 </span>
-                <button type="button" class="btn btn-icon btn-sm text-muted ms-auto p-0 btn-remove-filter hover-danger">
+                <button type="button" class="btn btn-icon btn-sm text-muted ms-auto p-0 btn-remove-filter hover-danger" aria-label="Eliminar filtro">
                     <i class="bi bi-x-lg"></i>
                 </button>
             </div>
@@ -285,7 +287,7 @@
                 <span class="badge bg-secondary bg-opacity-10 text-secondary fw-bold f-label px-2 py-1">
                     <i class="bi bi-123 me-1"></i> {label}
                 </span>
-                <button type="button" class="btn btn-icon btn-sm text-muted ms-auto p-0 btn-remove-filter hover-danger">
+                <button type="button" class="btn btn-icon btn-sm text-muted ms-auto p-0 btn-remove-filter hover-danger" aria-label="Eliminar filtro">
                     <i class="bi bi-x-lg"></i>
                 </button>
             </div>
@@ -317,7 +319,7 @@
                 <span class="badge bg-dark bg-opacity-10 text-dark fw-bold f-label px-2 py-1">
                     <i class="bi bi-search me-1"></i> {label}
                 </span>
-                <button type="button" class="btn btn-icon btn-sm text-muted ms-auto p-0 btn-remove-filter hover-danger">
+                <button type="button" class="btn btn-icon btn-sm text-muted ms-auto p-0 btn-remove-filter hover-danger" aria-label="Eliminar filtro">
                     <i class="bi bi-x-lg"></i>
                 </button>
             </div>
@@ -342,41 +344,35 @@
 </script>
 
 <style>
-    .filter-card {
-        transition: transform 0.2s, box-shadow 0.2s;
+    /* Animación de resaltado para nuevos filtros */
+    @keyframes filterHighlight {
+        0% {
+            border-color: var(--bs-primary);
+            box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25);
+        }
+
+        100% {
+            border-color: rgba(0, 0, 0, 0.125);
+            box-shadow: none;
+        }
     }
 
-    .filter-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
-        z-index: 10;
+    .filter-card-new {
+        animation: filterHighlight 2s ease-out;
     }
 
-    .hover-danger:hover {
-        color: var(--bs-danger) !important;
-        background-color: rgba(var(--bs-danger-rgb), 0.1);
-        border-radius: 50%;
+    /* Sticky Sidebar en escritorio */
+    @media (min-width: 992px) {
+        .sticky-sidebar {
+            position: sticky;
+            top: 1rem;
+        }
     }
 
-    .btn-icon {
-        width: 28px;
-        height: 28px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.2s;
-    }
-
-    .infinite-hover:hover {
-        animation: pulse 1.5s infinite;
-    }
-
-    /* Estilos para Radio Buttons como Botones más limpios */
-    .btn-check:checked+.btn-outline-light {
-        color: var(--bs-primary) !important;
-        background-color: var(--bs-primary-bg-subtle) !important;
-        border-color: var(--bs-primary) !important;
-        font-weight: bold;
+    .card-footer.sticky-bottom {
+        z-index: 1020;
+        backdrop-filter: blur(8px);
+        background-color: rgba(255, 255, 255, 0.9) !important;
     }
 </style>
 
@@ -384,6 +380,9 @@
     $(document).ready(function () {
         const filtersConfig = <?= json_encode($filters) ?>;
         let filterIndex = 0;
+
+        // Inicializar Tooltips
+        $('[data-bs-toggle="tooltip"]').tooltip();
 
         function updNoMatchMsg() {
             var count = $('#activeFiltersContainer .filter-card').length;
@@ -428,7 +427,15 @@
             }
 
             const $filter = $(html);
+            $filter.addClass('filter-card-new'); // Añadir animación de resaltado
             $('#activeFiltersContainer').append($filter);
+
+            // Auto-scroll al nuevo filtro si es necesario
+            if (!initialData) {
+                $('html, body').animate({
+                    scrollTop: $filter.offset().top - 200
+                }, 400);
+            }
 
             // Repoblar valores si hay data inicial
             if (initialData) {
@@ -480,6 +487,28 @@
                     initSearch($searchel);
                 }
             }
+
+            // Auto-agrupamiento para campos de búsqueda (solo cuando el usuario añade el filtro manualmente)
+            if (config.search_controller && !initialData) {
+                const $groupSelects = $('.grouping-select');
+                let alreadyGrouped = false;
+
+                $groupSelects.each(function () {
+                    const val = $(this).val();
+                    if (val && val.indexOf('::' + field) !== -1) alreadyGrouped = true;
+                });
+
+                if (!alreadyGrouped) {
+                    const $emptySelect = $groupSelects.filter(function () { return $(this).val() === ""; }).first();
+                    if ($emptySelect.length) {
+                        // Buscar el valor exacto de la opción que termina en ::field
+                        const targetVal = $emptySelect.find(`option[value$="::${field}"]`).first().val();
+                        if (targetVal) {
+                            $emptySelect.val(targetVal).trigger('change');
+                        }
+                    }
+                }
+            }
         }
 
         $('#btnAddFilter').on('click', function () {
@@ -489,27 +518,27 @@
 
         // Repoblar filtros existentes (Estado del Reporte)
         <?php if (!empty($currentFilters)): ?>
-            <?php foreach ($currentFilters as $field => $entries): ?>
-                <?php foreach ($entries as $entry): ?>
-                    addFilterUI('<?= esc($field) ?>', <?= json_encode($entry) ?>);
+                <?php foreach ($currentFilters as $field => $entries): ?>
+                        <?php foreach ($entries as $entry): ?>
+                                addFilterUI('<?= esc($field) ?>', <?= json_encode($entry) ?>);
+                        <?php endforeach; ?>
                 <?php endforeach; ?>
-            <?php endforeach; ?>
         <?php endif; ?>
 
         <?php if (!empty($currentDateFil)): ?>
-            <?php foreach ($currentDateFil as $field => $entries): ?>
-                <?php foreach ($entries as $entry): ?>
-                    addFilterUI('<?= esc($field) ?>', <?= json_encode($entry) ?>);
+                <?php foreach ($currentDateFil as $field => $entries): ?>
+                        <?php foreach ($entries as $entry): ?>
+                                addFilterUI('<?= esc($field) ?>', <?= json_encode($entry) ?>);
+                        <?php endforeach; ?>
                 <?php endforeach; ?>
-            <?php endforeach; ?>
         <?php endif; ?>
 
         <?php if (!empty($currentNumFil)): ?>
-            <?php foreach ($currentNumFil as $field => $entries): ?>
-                <?php foreach ($entries as $entry): ?>
-                    addFilterUI('<?= esc($field) ?>', <?= json_encode($entry) ?>);
+                <?php foreach ($currentNumFil as $field => $entries): ?>
+                        <?php foreach ($entries as $entry): ?>
+                                addFilterUI('<?= esc($field) ?>', <?= json_encode($entry) ?>);
+                        <?php endforeach; ?>
                 <?php endforeach; ?>
-            <?php endforeach; ?>
         <?php endif; ?>
 
 
@@ -550,15 +579,25 @@
         $('.grouping-select').on('change', function () {
             const selectedValues = $('.grouping-select').map(function () { return $(this).val(); }).get();
             $('.grouping-select').each(function () {
-                const currentVal = $(this).val();
-                $(this).find('option').each(function () {
+                const $select = $(this);
+                const currentVal = $select.val();
+                $select.find('option').each(function () {
                     if ($(this).val() !== "" && selectedValues.includes($(this).val()) && $(this).val() !== currentVal) {
-                        $(this).hide();
+                        $(this).prop('disabled', true);
                     } else {
-                        $(this).show();
+                        $(this).prop('disabled', false);
                     }
                 });
             });
+        });
+
+        // Estado de carga en el envío del formulario
+        $('#reportConfigForm').on('submit', function () {
+            const $btn = $('#btnSubmitReport');
+            const $btnText = $btn.find('.btn-text');
+
+            $btn.prop('disabled', true).removeClass('animate__pulse animate__infinite');
+            $btnText.html('<span class="spinner-border spinner-border-sm me-2"></span> Generando Reporte...');
         });
     });
 </script>
