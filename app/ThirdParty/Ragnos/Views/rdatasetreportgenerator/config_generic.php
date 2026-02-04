@@ -46,10 +46,29 @@
                                         <span class="input-group-text bg-light border-end-0 text-muted ps-3">
                                             <i class="bi bi-funnel"></i>
                                         </span>
+                                        <?php
+                                        // Reordenar filtros: prioridad a los campos en grupos
+                                        $priorityFields = [];
+                                        foreach ($groupingOpts as $opt) {
+                                            $parts = explode('::', $opt['value']);
+                                            if (isset($parts[1]))
+                                                $priorityFields[$parts[1]] = true;
+                                        }
+
+                                        $orderedFilters = [];
+                                        foreach ($filters as $f => $c) {
+                                            if (isset($priorityFields[$f]))
+                                                $orderedFilters[$f] = $c;
+                                        }
+                                        foreach ($filters as $f => $c) {
+                                            if (!isset($orderedFilters[$f]))
+                                                $orderedFilters[$f] = $c;
+                                        }
+                                        $filters = $orderedFilters;
+                                        ?>
                                         <select id="filterSelector"
                                             class="form-select border-start-0 border-end-0 bg-light fw-medium py-2"
                                             style="box-shadow: none;">
-                                            <option value=""><?= lang('Ragnos.Ragnos_select_filter_option') ?></option>
                                             <?php foreach ($filters as $field => $config): ?>
                                                 <option value="<?= esc($field) ?>" data-type="<?= esc($config['type']) ?>">
                                                     <?= esc($config['label']) ?>
@@ -553,8 +572,6 @@
                             }
                         }
                     });
-                } else {
-                    initSearch($searchel);
                 }
             }
 
@@ -622,28 +639,6 @@
             }, 300);
         });
 
-        function initSearch($el) {
-            // Fallback básico (legacy)
-            const controller = $el.data('controller');
-            const $hiddenVal = $el.closest('.filter-card').find('input[type="hidden"]').first();
-            const $hiddenTxt = $el.closest('.filter-card').find('input[type="hidden"]').last();
-
-            $el.autocomplete({
-                source: function (request, response) {
-                    $.ajax({
-                        url: "<?= base_url() ?>" + controller + "/search",
-                        dataType: "json",
-                        data: { term: request.term },
-                        success: function (data) { response(data); }
-                    });
-                },
-                minLength: 2,
-                select: function (event, ui) {
-                    $hiddenVal.val(ui.item.id);
-                    $hiddenTxt.val(ui.item.value);
-                }
-            });
-        }
 
         // Lógica para deshabilitar opciones ya seleccionadas en agrupamiento
         $('.grouping-select').on('change', function () {
@@ -679,14 +674,11 @@
 
                     $btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-1"></span> Limpiando...');
 
-                    $.ajax({
-                        url: window.location.href,
-                        method: 'POST',
-                        data: {
-                            clear_ragnos_session: 1,
-                            <?= csrf_token() ?>: '<?= csrf_hash() ?>'
-                        },
-                        success: function (response) {
+                    getObject(window.location.href, {
+                        clear_ragnos_session: 1,
+                        <?= csrf_token() ?>: '<?= csrf_hash() ?>'
+                    }, function (response, error) {
+                        if (response) {
                             // Limpiar UI sin recargar
                             $('#activeFiltersContainer .filter-card').remove();
                             $('.grouping-select').val('').trigger('change');
@@ -702,8 +694,7 @@
                                 timer: 1500,
                                 showConfirmButton: false
                             });
-                        },
-                        error: function () {
+                        } else {
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Error',

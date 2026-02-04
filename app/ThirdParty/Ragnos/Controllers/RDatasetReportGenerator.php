@@ -176,6 +176,14 @@ class RDatasetReportGenerator
      */
     public function processRequest(\CodeIgniter\HTTP\IncomingRequest $request): void
     {
+        // Acción de limpiar vía POST (AJAX)
+        if ($request->getPost('clear_ragnos_session')) {
+            $session    = service('session');
+            $sessionKey = 'ragnos_report_' . md5(get_class($this->controller));
+            $session->remove($sessionKey);
+            returnAsJSON(['success' => true]);
+        }
+
         // 1. Procesar Filtros
         // Los filtros ahora vienen en un array principal de POST: 'filters_data'
         $allFilters = $request->getPost('filters_data') ?? [];
@@ -263,12 +271,9 @@ class RDatasetReportGenerator
         $session    = service('session');
         $sessionKey = 'ragnos_report_' . md5(get_class($this->controller));
 
-        // Acción de limpiar (Soporta AJAX para evitar recargas y problemas de historial)
-        if (request()->getPost('clear_ragnos_session') || request()->getGet('clear')) {
+        // Acción de limpiar vía GET
+        if (request()->getGet('clear')) {
             $session->remove($sessionKey);
-            if (request()->isAJAX()) {
-                return service('response')->setJSON(['success' => true]);
-            }
             return redirect()->to(current_url());
         }
 
