@@ -1205,7 +1205,7 @@
     }
 
     .table tbody tr:hover {
-        transform: scale(1.02);
+        transform: scale(1.01);
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         background-color: rgba(0, 123, 255, 0.05) !important;
     }
