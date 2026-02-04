@@ -168,6 +168,11 @@
                         <a href="<?= site_url('/admin/perfil'); ?>" class="dropdown-item">
                             <i class="bi bi-person-circle nav-icon"></i> Perfil del usuario
                         </a>
+                        <?php if ($auth->id() != 1): ?>
+                            <a href="javascript:void(0);" class="dropdown-item" id="btn-cambiar-password-propio">
+                                <i class="bi bi-key"></i> Cambiar contraseña
+                            </a>
+                        <?php endif; ?>
                         <a href="<?= site_url('admin/logout'); ?>" class="dropdown-item">
                             <i class="bi bi-door-closed"></i> Cerrar sesión
                         </a>
@@ -179,3 +184,53 @@
     </ul>
 
 </div>
+
+<script>
+    document.getElementById('btn-cambiar-password-propio')?.addEventListener('click', function () {
+        Swal.fire({
+            title: 'Cambiar Contraseña',
+            input: 'password',
+            inputLabel: 'Nueva contraseña',
+            inputPlaceholder: 'Ingresa tu nueva contraseña',
+            inputAttributes: {
+                autocapitalize: 'off',
+                autocorrect: 'off'
+            },
+            showCancelButton: true,
+            confirmButtonText: 'Cambiar',
+            cancelButtonText: 'Cancelar',
+            showLoaderOnConfirm: true,
+            preConfirm: (password) => {
+                if (!password) {
+                    Swal.showValidationMessage('La contraseña no puede estar vacía');
+                    return false;
+                }
+                return getObject('admin/cambiar_password', { password: password })
+                    .then(data => {
+                        if (data.result === 'error') {
+                            let errorMsg = 'Error al cambiar la contraseña';
+                            if (data.errors && data.errors.password) {
+                                errorMsg = data.errors.password;
+                            }
+                            throw new Error(errorMsg);
+                        }
+                        return data;
+                    })
+                    .catch(error => {
+                        Swal.showValidationMessage(`${error.message || error}`);
+                    });
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Éxito!',
+                    text: 'Tu contraseña ha sido cambiada correctamente.',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            }
+        });
+    });
+</script>

@@ -192,4 +192,30 @@ class Admin extends BaseController
         //devolvemos el arreglo de la sesion como un objeto json
         return $this->response->setStatusCode(200)->setJSON(session()->get());
     }
+    public function cambiar_password()
+    {
+        checkAjaxRequest();
+        $this->checkLogin();
+
+        $auth = service('Admin_aut');
+        $id   = $auth->id();
+
+        if ($id == 1) {
+            returnAsJSON(['result' => 'error', 'errors' => ['password' => 'El superusuario no puede cambiar su contraseña por este medio']]);
+        }
+
+        $password = getInputValue('password');
+
+        if (empty($password)) {
+            returnAsJSON(['result' => 'error', 'errors' => ['password' => 'La contraseña no puede estar vacía']]);
+        }
+
+        $db = db_connect();
+        $db->table('gen_usuarios')
+            ->where('usu_id', $id)
+            ->update(['usu_pword' => md5(strtoupper($password))]);
+
+        returnAsJSON(['result' => 'ok']);
+    }
+
 }
