@@ -45,6 +45,7 @@ $lang['Ragnos_wait'] = 'Espere';
 
 $lang['Ragnos_server_error']  = 'Ocurrió un error en el servidor. Intente de nuevo mas tarde';
 $lang['Ragnos_timeout_error'] = 'El servidor ha tardado mucho tiempo en responder';
+$lang['Ragnos_error']         = 'Error';
 
 $lang['form_validation_is_unique_Ragnos'] = 'El campo debe contener un valor único.';
 $lang['form_validation_readonly_Ragnos']  = 'El campo no puede modificarse.';
@@ -112,5 +113,14 @@ $lang['Ragnos_month_10']      = 'Octubre';
 $lang['Ragnos_month_11']      = 'Noviembre';
 $lang['Ragnos_month_12']      = 'Diciembre';
 $lang['Ragnos_clear_confirm'] = '¿Estás seguro de que deseas limpiar todos los filtros y el agrupamiento?';
+
+$lang['Ragnos_filters_summary']         = 'Resumen de Filtros';
+$lang['Ragnos_select_option']           = '- Seleccione una opción -';
+$lang['Ragnos_clearing']                = 'Limpiando...';
+$lang['Ragnos_filters_cleared']         = 'Filtros eliminados correctamente';
+$lang['Ragnos_filters_incomplete']      = 'Filtros incompletos';
+$lang['Ragnos_filters_incomplete_help'] = 'Por favor, complete los valores de los filtros añadidos o elimine los que no necesite.';
+$lang['Ragnos_understood']              = 'Entendido';
+$lang['Ragnos_generating_report']       = 'Generando Reporte...';
 
 return $lang;

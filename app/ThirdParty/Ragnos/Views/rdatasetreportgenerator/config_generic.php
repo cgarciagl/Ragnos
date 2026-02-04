@@ -161,7 +161,8 @@
                                 <!-- Resumen dinámico de filtros (Punto 4) -->
                                 <div id="filterSummarySidebar" class="mt-4 pt-3 border-top" style="display:none;">
                                     <h6 class="fw-bold text-dark mb-2 small text-uppercase tracking-wider">
-                                        <i class="bi bi-funnel-fill me-2 text-primary"></i>Resumen de Filtros
+                                        <i
+                                            class="bi bi-funnel-fill me-2 text-primary"></i><?= lang('Ragnos.Ragnos_filters_summary') ?>
                                     </h6>
                                     <div id="summaryContent" class="vstack gap-2">
                                         <!-- Se llena dinámicamente -->
@@ -180,7 +181,8 @@
                             </button>
                             <button type="submit" id="btnSubmitReport"
                                 class="btn btn-primary rounded-pill px-5 shadow fw-bold animate__animated animate__pulse animate__infinite infinite-hover">
-                                <span class="btn-text">Generar Reporte <i class="bi bi-arrow-right ms-2"></i></span>
+                                <span class="btn-text"><?= lang('Ragnos.Ragnos_generate_report') ?> <i
+                                        class="bi bi-arrow-right ms-2"></i></span>
                             </button>
                         </div>
                     </div>
@@ -249,7 +251,7 @@
             
             <div class="ps-2">
                 <select name="filters_data[{field}][{idx}][value]" class="form-select">
-                    <option value="">- Seleccione una opción -</option>
+                    <option value=""><?= lang('Ragnos.Ragnos_select_option') ?></option>
                     {options}
                 </select>
             </div>
@@ -672,7 +674,7 @@
                     const $btn = $(this);
                     const originalHtml = $btn.html();
 
-                    $btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-1"></span> Limpiando...');
+                    $btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-1"></span> <?= lang('Ragnos.Ragnos_clearing') ?>');
 
                     getObject(window.location.href, {
                         clear_ragnos_session: 1,
@@ -690,14 +692,14 @@
                             Swal.fire({
                                 icon: 'success',
                                 title: '<?= lang('Ragnos.Ragnos_accept') ?>',
-                                text: 'Filtros eliminados correctamente',
+                                text: '<?= lang('Ragnos.Ragnos_filters_cleared') ?>',
                                 timer: 1500,
                                 showConfirmButton: false
                             });
                         } else {
                             Swal.fire({
                                 icon: 'error',
-                                title: 'Error',
+                                title: '<?= lang('Ragnos.Ragnos_error') ?>',
                                 text: '<?= lang('Ragnos.Ragnos_server_error') ?>'
                             });
                             $btn.prop('disabled', false).html(originalHtml);
@@ -736,9 +738,9 @@
                 e.preventDefault();
                 Swal.fire({
                     icon: 'warning',
-                    title: 'Filtros incompletos',
-                    text: 'Por favor, complete los valores de los filtros añadidos o elimine los que no necesite.',
-                    confirmButtonText: 'Entendido'
+                    title: '<?= lang('Ragnos.Ragnos_filters_incomplete') ?>',
+                    text: '<?= lang('Ragnos.Ragnos_filters_incomplete_help') ?>',
+                    confirmButtonText: '<?= lang('Ragnos.Ragnos_understood') ?>'
                 });
                 if (firstError) {
                     $('html, body').animate({
@@ -752,7 +754,7 @@
             const $btnText = $btn.find('.btn-text');
 
             $btn.prop('disabled', true).removeClass('animate__pulse animate__infinite');
-            $btnText.html('<span class="spinner-border spinner-border-sm me-2"></span> Generando Reporte...');
+            $btnText.html('<span class="spinner-border spinner-border-sm me-2"></span> <?= lang('Ragnos.Ragnos_generating_report') ?>');
         });
     });
 </script>

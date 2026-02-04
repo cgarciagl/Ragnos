@@ -45,6 +45,7 @@ $lang['Ragnos_wait'] = 'Wait';
 
 $lang['Ragnos_server_error']  = 'An error occurred on the server. Please try again in a minute';
 $lang['Ragnos_timeout_error'] = 'The server took too long to send the data';
+$lang['Ragnos_error']         = 'Error';
 
 $lang['form_validation_is_unique_Ragnos'] = 'The field must contain a unique value.';
 $lang['form_validation_readonly_Ragnos']  = 'The field can not be modified.';
@@ -112,5 +113,14 @@ $lang['Ragnos_month_10']      = 'October';
 $lang['Ragnos_month_11']      = 'November';
 $lang['Ragnos_month_12']      = 'December';
 $lang['Ragnos_clear_confirm'] = 'Are you sure you want to clear all filters and groupings?';
+
+$lang['Ragnos_filters_summary']         = 'Filters Summary';
+$lang['Ragnos_select_option']           = '- Select an option -';
+$lang['Ragnos_clearing']                = 'Clearing...';
+$lang['Ragnos_filters_cleared']         = 'Filters cleared successfully';
+$lang['Ragnos_filters_incomplete']      = 'Incomplete filters';
+$lang['Ragnos_filters_incomplete_help'] = 'Please complete the values of the added filters or remove the ones you do not need.';
+$lang['Ragnos_understood']              = 'Understood';
+$lang['Ragnos_generating_report']       = 'Generating Report...';
 
 return $lang;
