@@ -62,6 +62,10 @@ class RDatasetReportGenerator
             $rules = is_array($config) ? ($config['rules'] ?? '') :
                 (method_exists($config, 'getRules') ? ($config->getRules() ?? '') : ($config->rules ?? ''));
 
+            // Extract custom query if available
+            $customQuery = is_array($config) ? ($config['query'] ?? null) :
+                (method_exists($config, 'getQuery') ? $config->getQuery() : ($config->query ?? null));
+
             // Ignorar Llave primaria o Campos únicos (No suelen ser buenos para agrupar ni filtrar rangos generales)
             // También ignorar explícitamente archivos, imágenes y contraseñas
             if ($field === $pk || strpos($rules, 'is_unique') !== false || in_array($type, ['fileupload', 'imageupload', 'password'])) {
@@ -139,6 +143,11 @@ class RDatasetReportGenerator
                 }
 
                 $this->availableFilters[$field] = $filterData;
+            }
+
+            // Inject custom_query if available
+            if (!empty($customQuery) && isset($this->availableFilters[$field])) {
+                $this->availableFilters[$field]['custom_query'] = $customQuery;
             }
 
             // 2. Detectar Agrupamiento
@@ -390,6 +399,14 @@ class RDatasetReportGenerator
             $fConfig = $this->availableFilters[$field] ?? null;
             $type    = $fConfig['type'] ?? 'text';
 
+            // Determinar columna y escape (Soporte para campos calculados/queries)
+            $colName = $this->model->table . '.' . $field;
+            $escape  = null;
+            if (!empty($fConfig['custom_query'])) {
+                $colName = $fConfig['custom_query'];
+                $escape  = false;
+            }
+
             $builder->groupStart();
             foreach ($entries as $idx => $entry) {
                 $value      = $entry['value'];
@@ -403,15 +420,22 @@ class RDatasetReportGenerator
                     $targetOff = $fConfig['offValue'] ?? 0;
 
                     if ($value == 0) {
-                        $builder->$method($this->model->table . '.' . $field, $targetOff)
-                            ->orWhere($this->model->table . '.' . $field, null);
+                        $builder->$method($colName, $targetOff, $escape)
+                            ->orWhere($colName, null, $escape);
                     } else {
-                        $builder->$method($this->model->table . '.' . $field, $targetOn);
+                        $builder->$method($colName, $targetOn, $escape);
                     }
                 } elseif ($filterType === 'partial') {
-                    $builder->$likeMethod($this->model->table . '.' . $field, $value);
+                    if ($escape === false) {
+                        // Construcción manual para campos calculados (evita error de sintaxis en LIKE con escape=false)
+                        $safeVal = $this->model->db->escapeLikeString($value);
+                        $str     = "$colName LIKE '%$safeVal%'";
+                        $builder->$method($str, null, false);
+                    } else {
+                        $builder->$likeMethod($colName, $value, 'both', $escape);
+                    }
                 } else {
-                    $builder->$method($this->model->table . '.' . $field, $value);
+                    $builder->$method($colName, $value, $escape);
                 }
             }
             $builder->groupEnd();
@@ -419,6 +443,10 @@ class RDatasetReportGenerator
 
         // Aplicar Filtros de Fecha con lógica OR si hay múltiples para el mismo campo
         foreach ($this->dateFilters as $field => $entries) {
+            $fConfig = $this->availableFilters[$field] ?? null;
+            $colName = (!empty($fConfig['custom_query'])) ? $fConfig['custom_query'] : $this->model->table . '.' . $field;
+            $escape  = (!empty($fConfig['custom_query'])) ? false : null;
+
             $builder->groupStart();
             foreach ($entries as $idx => $f) {
                 if ($idx > 0)
@@ -427,10 +455,10 @@ class RDatasetReportGenerator
                     $builder->groupStart();
 
                 if (!empty($f['start'])) {
-                    $builder->where($this->model->table . '.' . $field . ' >=', $f['start']);
+                    $builder->where($colName . ' >=', $f['start'], $escape);
                 }
                 if (!empty($f['end'])) {
-                    $builder->where($this->model->table . '.' . $field . ' <=', $f['end']);
+                    $builder->where($colName . ' <=', $f['end'], $escape);
                 }
                 $builder->groupEnd();
             }
@@ -439,6 +467,10 @@ class RDatasetReportGenerator
 
         // Aplicar Filtros Numéricos con lógica OR si hay múltiples para el mismo campo
         foreach ($this->numericFilters as $field => $entries) {
+            $fConfig = $this->availableFilters[$field] ?? null;
+            $colName = (!empty($fConfig['custom_query'])) ? $fConfig['custom_query'] : $this->model->table . '.' . $field;
+            $escape  = (!empty($fConfig['custom_query'])) ? false : null;
+
             $builder->groupStart();
             foreach ($entries as $idx => $f) {
                 if ($idx > 0)
@@ -447,10 +479,10 @@ class RDatasetReportGenerator
                     $builder->groupStart();
 
                 if (isset($f['min']) && $f['min'] !== '') {
-                    $builder->where($this->model->table . '.' . $field . ' >=', $f['min']);
+                    $builder->where($colName . ' >=', $f['min'], $escape);
                 }
                 if (isset($f['max']) && $f['max'] !== '') {
-                    $builder->where($this->model->table . '.' . $field . ' <=', $f['max']);
+                    $builder->where($colName . ' <=', $f['max'], $escape);
                 }
                 $builder->groupEnd();
             }
@@ -481,18 +513,22 @@ class RDatasetReportGenerator
                 continue;
             }
 
-            if (method_exists($field, 'getQuery') && $field->getQuery() != '') {
-                $sql   = $field->getQuery();
-                $campo = $field->getFieldToShow();
-                $builder->select("( $sql ) as $campo ", FALSE);
+            // Detectar query manual (Array u Objeto)
+            $customQ = is_array($field) ? ($field['query'] ?? null) :
+                (method_exists($field, 'getQuery') ? $field->getQuery() : ($field->query ?? null));
 
-            } else if ($field instanceof \App\ThirdParty\Ragnos\Models\Fields\RSearchField) {
+            if ($customQ) {
+                // Si es un campo con query, usamos la expresión
+                // $fieldName es el alias deseado (la clave del array ofieldlist)
+                $builder->select("( $customQ ) as $fieldName ", FALSE);
+
+            } else if (is_object($field) && $field instanceof \App\ThirdParty\Ragnos\Models\Fields\RSearchField) {
                 // checkRelation añade el join necesario y el select correspondiente
                 // Nota: esto asume que RSearchField maneja correctamente si el join ya existe o usa alias únicos si es necesario
                 $field->checkRelation($this->model, $this->model->table);
             } else {
                 // Campo normal (usar tabla base para evitar ambigüedad)
-                $fieldToShow = method_exists($field, 'getFieldToShow') ? $field->getFieldToShow() : $fieldName;
+                $fieldToShow = (is_object($field) && method_exists($field, 'getFieldToShow')) ? $field->getFieldToShow() : $fieldName;
                 $builder->select($this->model->table . '.' . $fieldToShow);
             }
         }

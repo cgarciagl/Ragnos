@@ -9,6 +9,12 @@
             <!-- Header Premium -->
             <div class="card-header bg-white py-2 px-4 border-bottom">
                 <div class="d-flex align-items-center w-100">
+                    <div class="me-3">
+                        <a href="javascript:history.back()" class="btn btn-outline-secondary btn-sm rounded-pill px-3">
+                            <i class="bi bi-arrow-left me-1"></i>
+                            <?= lang('Ragnos.Ragnos_back') ?>
+                        </a>
+                    </div>
                     <div class="bg-primary bg-opacity-10 p-2 rounded-3 me-3 d-none d-sm-block">
                         <i class="bi bi-file-earmark-bar-graph-fill text-primary fs-5"></i>
                     </div>
@@ -17,12 +23,6 @@
                             <?= esc($title) ?>
                         </h5>
                         <div class="text-muted small"><?= lang('Ragnos.Ragnos_report_config_help') ?></div>
-                    </div>
-                    <div>
-                        <a href="javascript:history.back()" class="btn btn-outline-secondary btn-sm rounded-pill px-3">
-                            <i class="bi bi-arrow-left me-1"></i>
-                            <?= lang('Ragnos.Ragnos_back') ?>
-                        </a>
                     </div>
                 </div>
             </div>
@@ -113,50 +113,54 @@
                         <!-- COLUMNA DERECHA: Configuración Lateral -->
                         <div class="col-lg-4 bg-light bg-opacity-25 border-start">
                             <div class="p-3 p-lg-4 h-100 sticky-sidebar">
-                                <h6
-                                    class="fw-bold text-dark mb-3 pb-2 border-bottom border-2 w-100 d-flex align-items-center">
-                                    <i class="bi bi-sliders me-2"></i>
-                                    <?= lang('Ragnos.Ragnos_grouping') ?>
-                                    <i class="bi bi-info-circle text-muted ms-auto fs-6" data-bs-toggle="tooltip"
-                                        data-bs-placement="top"
-                                        title="<?= lang('Ragnos.Ragnos_grouping_hierarchy_help') ?>"></i>
-                                </h6>
+                                <?php if (!empty($groupingOpts)): ?>
+                                    <h6
+                                        class="fw-bold text-dark mb-3 pb-2 border-bottom border-2 w-100 d-flex align-items-center">
+                                        <i class="bi bi-sliders me-2"></i>
+                                        <?= lang('Ragnos.Ragnos_grouping') ?>
+                                        <i class="bi bi-info-circle text-muted ms-auto fs-6" data-bs-toggle="tooltip"
+                                            data-bs-placement="top"
+                                            title="<?= lang('Ragnos.Ragnos_grouping_hierarchy_help') ?>"></i>
+                                    </h6>
 
-                                <div class="vstack gap-2">
-                                    <?php for ($i = 1; $i <= 3; $i++):
-                                        $currentVal = "";
-                                        if (isset($currentGroupings[$i - 1])) {
-                                            $g          = $currentGroupings[$i - 1];
-                                            $currentVal = "{$g['mode']}::{$g['field']}";
-                                        }
-                                        ?>
-                                        <div class="position-relative">
-                                            <label class="form-label small fw-bold text-muted text-uppercase mb-0"
-                                                style="font-size: 0.65rem;">
-                                                <?= lang('Ragnos.Ragnos_level') ?>     <?= $i ?>
-                                            </label>
-                                            <div class="input-group shadow-sm rounded-3 overflow-hidden">
-                                                <span class="input-group-text bg-white border-end-0 ps-3 text-primary">
-                                                    <i class="bi bi-layers<?= $i > 1 ? '-half' : '-fill' ?>"></i>
-                                                </span>
-                                                <select name="grouping_<?= $i ?>"
-                                                    class="form-select border-start-0 border-light-subtle py-2 grouping-select"
-                                                    data-level="<?= $i ?>" style="font-size: 0.95rem;">
-                                                    <option value=""><?= lang('Ragnos.Ragnos_none_option') ?></option>
-                                                    <?php foreach ($groupingOpts as $opt): ?>
-                                                        <option value="<?= esc($opt['value']) ?>" <?= $currentVal === $opt['value'] ? 'selected' : '' ?>>
-                                                            <?= esc($opt['label']) ?>
-                                                        </option>
-                                                    <?php endforeach; ?>
-                                                </select>
+                                    <div class="vstack gap-2">
+                                        <?php
+                                        $maxLevels = min(3, count($groupingOpts));
+                                        for ($i = 1; $i <= $maxLevels; $i++):
+                                            $currentVal = "";
+                                            if (isset($currentGroupings[$i - 1])) {
+                                                $g          = $currentGroupings[$i - 1];
+                                                $currentVal = "{$g['mode']}::{$g['field']}";
+                                            }
+                                            ?>
+                                            <div class="position-relative">
+                                                <label class="form-label small fw-bold text-muted text-uppercase mb-0"
+                                                    style="font-size: 0.65rem;">
+                                                    <?= lang('Ragnos.Ragnos_level') ?>         <?= $i ?>
+                                                </label>
+                                                <div class="input-group shadow-sm rounded-3 overflow-hidden">
+                                                    <span class="input-group-text bg-white border-end-0 ps-3 text-primary">
+                                                        <i class="bi bi-layers<?= $i > 1 ? '-half' : '-fill' ?>"></i>
+                                                    </span>
+                                                    <select name="grouping_<?= $i ?>"
+                                                        class="form-select border-start-0 border-light-subtle py-2 grouping-select"
+                                                        data-level="<?= $i ?>" style="font-size: 0.95rem;">
+                                                        <option value=""><?= lang('Ragnos.Ragnos_none_option') ?></option>
+                                                        <?php foreach ($groupingOpts as $opt): ?>
+                                                            <option value="<?= esc($opt['value']) ?>" <?= $currentVal === $opt['value'] ? 'selected' : '' ?>>
+                                                                <?= esc($opt['label']) ?>
+                                                            </option>
+                                                        <?php endforeach; ?>
+                                                    </select>
+                                                </div>
+                                                <?php if ($i < $maxLevels): ?>
+                                                    <div class="position-absolute start-0 ms-4 h-100 top-100 border-start border-dashed border-secondary opacity-25"
+                                                        style="height: 10px !important;"></div>
+                                                <?php endif; ?>
                                             </div>
-                                            <?php if ($i < 3): ?>
-                                                <div class="position-absolute start-0 ms-4 h-100 top-100 border-start border-dashed border-secondary opacity-25"
-                                                    style="height: 10px !important;"></div>
-                                            <?php endif; ?>
-                                        </div>
-                                    <?php endfor; ?>
-                                </div>
+                                        <?php endfor; ?>
+                                    </div>
+                                <?php endif; ?>
 
                                 <!-- Resumen dinámico de filtros (Punto 4) -->
                                 <div id="filterSummarySidebar" class="mt-4 pt-3 border-top" style="display:none;">
