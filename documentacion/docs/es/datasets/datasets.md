@@ -113,6 +113,7 @@ Ejemplos:
 ## Relaciones entre datasets
 
 - Para relaciones más complejas tipo cabecera-lineas, consulta la guía de [Maestro-Detalle](maestro-detalle.md).
+
 ## Relaciones entre datasets (`addSearch`)
 
 - Para relaciones más complejas tipo cabecera-lineas, consulta la guía de [Maestro-Detalle](maestro-detalle.md).
@@ -136,6 +137,7 @@ $this->setTableFields([
 ```
 
 Cuando busques un cliente desde el formulario de Pagos, podrás escribir:
+
 - Una parte del **Nombre de la empresa** (`customerName`).
 - El **Nombre del contacto** (`Contacto`).
 - O incluso el **Nombre del empleado** a cargo.
@@ -147,6 +149,7 @@ Ragnos buscará coincidencias en cualquiera de esos campos definidos en el datas
 Otra ventaja clave es que los campos asociados mediante `addSearch` se convierten automáticamente en **criterios de agrupación** disponibles en el generador de reportes. Esto permite agrupar métricas (como ventas totales) por cualquiera de los criterios de búsqueda (ej. Ventas por "Empleado a cargo" del cliente) sin configuración extra.
 
 ### Ventajas
+
 - **Reutilización**: Define la lógica de "cómo buscar un cliente" una sola vez en el dataset de Clientes, y úsalo en Pagos, Órdenes, etc.
 - **Sin Joins Manuales**: El framework gestiona las consultas subyacentes.
 - **UX Superior**: Selectores intuitivos que buscan por múltiples atributos relevantes.
@@ -154,6 +157,11 @@ Otra ventaja clave es que los campos asociados mediante `addSearch` se convierte
 ## Configuración de la grilla
 
 - `setTableFields([...])` define columnas visibles en el listado (DataTable).
+
+!!! info "Importancia del primer campo"
+
+    El **primer campo** que se agrega en `setTableFields()` es muy relevante, pues es el campo que se usará como **"descripción" del registro**. Este es el texto que aparece al seleccionar el registro en los controles de búsqueda, o en los dropdowns asociados con este catálogo. Por ello es importante seleccionarlo muy bien, y de hecho puede ser un campo calculado que combine dos o más campos, como en el caso del catálogo de "empleados" donde se ha usado el `nombreCompleto` como primer campo.
+
 - Puede incluir campos virtuales y etiquetas.
 - `setSortingFields([...])` para ordenar por defecto.
 

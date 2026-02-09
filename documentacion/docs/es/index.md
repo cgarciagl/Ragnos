@@ -4,6 +4,10 @@
 
 Ragnos es un framework moderno y ligero para el desarrollo de aplicaciones web. Su objetivo es proporcionar una base sólida y flexible para construir aplicaciones escalables y de alto rendimiento. Está basado en **CodeIgniter 4**, lo que garantiza un núcleo robusto y probado en el tiempo. Además, utiliza tecnologías como **jQuery**, **DataTables** y **AdminLTE** para ofrecer una experiencia de desarrollo completa y eficiente.
 
+!!! tip "Prerrequisitos Recomendados"
+
+    Aunque Ragnos facilita mucho el desarrollo, **es muy recomendable** familiarizarse con **[CodeIgniter 4](https://codeigniter.com/user_guide/index.html)** y tener conocimientos básicos de **SQL** antes de iniciar. Esto te permitirá aprovechar al máximo la flexibilidad del framework y entender mejor lo que ocurre "bajo el capó".
+
 ## Características
 
 - **Ligero y rápido**: Diseñado para ser eficiente y minimizar el uso de recursos.
@@ -14,6 +18,10 @@ Ragnos es un framework moderno y ligero para el desarrollo de aplicaciones web. 
 - **Integración con jQuery**: Simplifica la manipulación del DOM, las solicitudes AJAX y la interacción con el usuario.
 - **Uso de DataTables**: Permite la creación de tablas dinámicas con funcionalidades como búsqueda, paginación y ordenamiento.
 - **Diseño con AdminLTE**: Proporciona una interfaz de usuario moderna y responsiva, ideal para paneles de administración y aplicaciones web.
+
+!!! check "Flexibilidad Frontend"
+
+    Aunque Ragnos utiliza **jQuery** por defecto para facilitar el desarrollo rápido, **no estás obligado a usarlo**. Si te sientes más cómodo con bibliotecas reactivas modernas como **Alpine.js**, **Vue.js** o **React**, puedes integrarlas sin problemas. Incluso puedes optar por construir tus propias interfaces de usuario totalmente personalizadas consumiendo los datos a través del **Modo API** de Ragnos.
 
 ## Funcionalidades y beneficios
 

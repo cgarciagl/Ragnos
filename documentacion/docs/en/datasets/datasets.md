@@ -122,6 +122,7 @@ $this->setTableFields([
 ```
 
 When searching for a customer from the Payments form, you can type:
+
 - Part of the **Company Name** (`customerName`).
 - The **Contact Name** (`Contact`).
 - Or even the **Sales Rep Name**.
@@ -133,6 +134,18 @@ Ragnos will search for matches in any of those fields defined in the target data
 Another key advantage is that fields associated via `addSearch` automatically become **grouping criteria** available in the report generator. This allows grouping metrics (like total sales) by any of the search criteria (e.g., Sales by Customer's "Sales Rep") with no extra configuration.
 
 ### Advantages
+
 - **Reusability**: Define the logic of "how to search for a customer" once in the Customers dataset, and reuse it in Payments, Orders, etc.
 - **No Manual Joins**: The framework manages the underlying queries.
 - **Superior UX**: Intuitive selectors searching by multiple relevant attributes.
+
+## Grid Configuration
+
+- `setTableFields([...])` defines visible columns in the list (DataTable).
+
+!!! info "Importance of the first field"
+
+    The **first field** added in `setTableFields()` is very relevant, as it is the field that will be used as the **"description" of the record**. This is the text that appears when selecting the record in search controls, or in dropdowns associated with this catalog. Therefore, it is important to select it very well. It can be a calculated field that combines two or more fields, as in the case of the "employees" catalog where `fullName` (or `nombreCompleto`) is used as the first field.
+
+- Can include virtual fields and labels.
+- `setSortingFields([...])` for default sorting.

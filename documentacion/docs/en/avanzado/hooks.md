@@ -101,6 +101,10 @@ if (oldValue('locked') === true) {
 
     `raise()` preferable to `throw new Exception` for logic validation errors ("Soft errors") that user must correct.
 
+!!! note "Refactoring and Organization"
+
+    Although Ragnos **does not force** you to create external classes for hook functions (you can write logic directly in the controller), if **business rules are sufficiently complex**, it is convenient and recommended to refactor them into dedicated **Models**, **Libraries**, or **Services**. This helps keep code organized, reusable, and easier to maintain.
+
 ---
 
 ## Insertion Hooks

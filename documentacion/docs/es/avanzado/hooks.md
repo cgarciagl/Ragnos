@@ -101,6 +101,10 @@ if (oldValue('locked') === true) {
 
     `raise()` es preferible a `throw new Exception` para errores de validación lógica ("Soft errors") que el usuario debe corregir.
 
+!!! note "Refactorización y Organización"
+
+    Aunque Ragnos **no te obliga** a crear clases externas para las funciones de los hooks (puedes escribir la lógica directamente en el controlador), si las **reglas de negocio son suficientemente complejas**, es conveniente y recomendable refactorizarlas en **Modelos**, **Librerías** o **Servicios** dedicados. Esto ayuda a mantener el código organizado, reutilizable y más fácil de mantener.
+
 ---
 
 ## Hooks de Inserción
