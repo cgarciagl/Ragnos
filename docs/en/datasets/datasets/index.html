@@ -225,6 +225,10 @@
               <ul class="nav flex-column">
               </ul>
             </li>
+            <li class="nav-item" data-bs-level="2"><a href="#grid-configuration" class="nav-link">Grid Configuration</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
               </ul>
             </li>
         </ul>
@@ -341,10 +345,12 @@ If in the <strong>Customers</strong> dataset (<code>Store/Customers</code>) you 
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="x">    &#39;salesRepEmployeeNumber&#39; // Sales Rep</span>
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="x">]);</span>
 </code></pre></div>
-<p>When searching for a customer from the Payments form, you can type:
-- Part of the <strong>Company Name</strong> (<code>customerName</code>).
-- The <strong>Contact Name</strong> (<code>Contact</code>).
-- Or even the <strong>Sales Rep Name</strong>.</p>
+<p>When searching for a customer from the Payments form, you can type:</p>
+<ul>
+<li>Part of the <strong>Company Name</strong> (<code>customerName</code>).</li>
+<li>The <strong>Contact Name</strong> (<code>Contact</code>).</li>
+<li>Or even the <strong>Sales Rep Name</strong>.</li>
+</ul>
 <p>Ragnos will search for matches in any of those fields defined in the target dataset, offering a much more flexible and powerful user experience without writing additional SQL.</p>
 <h3 id="automatic-grouping-in-reports">Automatic Grouping in Reports</h3>
 <p>Another key advantage is that fields associated via <code>addSearch</code> automatically become <strong>grouping criteria</strong> available in the report generator. This allows grouping metrics (like total sales) by any of the search criteria (e.g., Sales by Customer's "Sales Rep") with no extra configuration.</p>
@@ -353,6 +359,18 @@ If in the <strong>Customers</strong> dataset (<code>Store/Customers</code>) you 
 <li><strong>Reusability</strong>: Define the logic of "how to search for a customer" once in the Customers dataset, and reuse it in Payments, Orders, etc.</li>
 <li><strong>No Manual Joins</strong>: The framework manages the underlying queries.</li>
 <li><strong>Superior UX</strong>: Intuitive selectors searching by multiple relevant attributes.</li>
+</ul>
+<h2 id="grid-configuration">Grid Configuration</h2>
+<ul>
+<li><code>setTableFields([...])</code> defines visible columns in the list (DataTable).</li>
+</ul>
+<div class="admonition info">
+<p class="admonition-title">Importance of the first field</p>
+<p>The <strong>first field</strong> added in <code>setTableFields()</code> is very relevant, as it is the field that will be used as the <strong>"description" of the record</strong>. This is the text that appears when selecting the record in search controls, or in dropdowns associated with this catalog. Therefore, it is important to select it very well. It can be a calculated field that combines two or more fields, as in the case of the "employees" catalog where <code>fullName</code> (or <code>nombreCompleto</code>) is used as the first field.</p>
+</div>
+<ul>
+<li>Can include virtual fields and labels.</li>
+<li><code>setSortingFields([...])</code> for default sorting.</li>
 </ul></div>
             </div>
         </div>

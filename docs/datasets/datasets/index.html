@@ -380,10 +380,12 @@ Si en el dataset de <strong>Clientes</strong> (<code>Tienda/Clientes</code>) def
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="x">    &#39;salesRepEmployeeNumber&#39; // Empleado a cargo</span>
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="x">]);</span>
 </code></pre></div>
-<p>Cuando busques un cliente desde el formulario de Pagos, podrás escribir:
-- Una parte del <strong>Nombre de la empresa</strong> (<code>customerName</code>).
-- El <strong>Nombre del contacto</strong> (<code>Contacto</code>).
-- O incluso el <strong>Nombre del empleado</strong> a cargo.</p>
+<p>Cuando busques un cliente desde el formulario de Pagos, podrás escribir:</p>
+<ul>
+<li>Una parte del <strong>Nombre de la empresa</strong> (<code>customerName</code>).</li>
+<li>El <strong>Nombre del contacto</strong> (<code>Contacto</code>).</li>
+<li>O incluso el <strong>Nombre del empleado</strong> a cargo.</li>
+</ul>
 <p>Ragnos buscará coincidencias en cualquiera de esos campos definidos en el dataset destino, ofreciendo una experiencia de usuario mucho más flexible y potente sin escribir SQL adicional.</p>
 <h3 id="agrupacion-automatica-en-reportes">Agrupación Automática en Reportes</h3>
 <p>Otra ventaja clave es que los campos asociados mediante <code>addSearch</code> se convierten automáticamente en <strong>criterios de agrupación</strong> disponibles en el generador de reportes. Esto permite agrupar métricas (como ventas totales) por cualquiera de los criterios de búsqueda (ej. Ventas por "Empleado a cargo" del cliente) sin configuración extra.</p>
@@ -396,6 +398,12 @@ Si en el dataset de <strong>Clientes</strong> (<code>Tienda/Clientes</code>) def
 <h2 id="configuracion-de-la-grilla">Configuración de la grilla</h2>
 <ul>
 <li><code>setTableFields([...])</code> define columnas visibles en el listado (DataTable).</li>
+</ul>
+<div class="admonition info">
+<p class="admonition-title">Importancia del primer campo</p>
+<p>El <strong>primer campo</strong> que se agrega en <code>setTableFields()</code> es muy relevante, pues es el campo que se usará como <strong>"descripción" del registro</strong>. Este es el texto que aparece al seleccionar el registro en los controles de búsqueda, o en los dropdowns asociados con este catálogo. Por ello es importante seleccionarlo muy bien, y de hecho puede ser un campo calculado que combine dos o más campos, como en el caso del catálogo de "empleados" donde se ha usado el <code>nombreCompleto</code> como primer campo.</p>
+</div>
+<ul>
 <li>Puede incluir campos virtuales y etiquetas.</li>
 <li><code>setSortingFields([...])</code> para ordenar por defecto.</li>
 </ul>

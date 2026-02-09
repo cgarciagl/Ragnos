@@ -331,6 +331,10 @@ Son el mecanismo principal para <strong>extender comportamiento</strong> sin rom
 <p class="admonition-title">Nota de Diseño</p>
 <p><code>raise()</code> es preferible a <code>throw new Exception</code> para errores de validación lógica ("Soft errors") que el usuario debe corregir.</p>
 </div>
+<div class="admonition note">
+<p class="admonition-title">Refactorización y Organización</p>
+<p>Aunque Ragnos <strong>no te obliga</strong> a crear clases externas para las funciones de los hooks (puedes escribir la lógica directamente en el controlador), si las <strong>reglas de negocio son suficientemente complejas</strong>, es conveniente y recomendable refactorizarlas en <strong>Modelos</strong>, <strong>Librerías</strong> o <strong>Servicios</strong> dedicados. Esto ayuda a mantener el código organizado, reutilizable y más fácil de mantener.</p>
+</div>
 <hr/>
 <h2 id="hooks-de-insercion">Hooks de Inserción</h2>
 <p>Estos hooks se ejecutan durante la creación de nuevos registros.</p>

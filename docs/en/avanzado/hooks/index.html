@@ -331,6 +331,10 @@ Are main mechanism to <strong>extend behavior</strong> without breaking declarat
 <p class="admonition-title">Design Note</p>
 <p><code>raise()</code> preferable to <code>throw new Exception</code> for logic validation errors ("Soft errors") that user must correct.</p>
 </div>
+<div class="admonition note">
+<p class="admonition-title">Refactoring and Organization</p>
+<p>Although Ragnos <strong>does not force</strong> you to create external classes for hook functions (you can write logic directly in the controller), if <strong>business rules are sufficiently complex</strong>, it is convenient and recommended to refactor them into dedicated <strong>Models</strong>, <strong>Libraries</strong>, or <strong>Services</strong>. This helps keep code organized, reusable, and easier to maintain.</p>
+</div>
 <hr/>
 <h2 id="insertion-hooks">Insertion Hooks</h2>
 <p>Executed during creation of new records.</p>
