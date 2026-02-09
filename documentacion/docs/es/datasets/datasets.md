@@ -11,7 +11,7 @@ El framework utiliza esta definición para generar automáticamente:
 - Consultas SQL y persistencia en base de datos.
 - Respuestas para APIs.
 
-## Ventajas
+## Ventajas de los Datasets
 
 - **Centralización**: Todo (validación, display, persistencia) se define en un solo lugar.
 - **Productividad**: Elimina la necesidad de escribir HTML repetitivo o consultas CRUD básicas.
@@ -148,7 +148,7 @@ Ragnos buscará coincidencias en cualquiera de esos campos definidos en el datas
 
 Otra ventaja clave es que los campos asociados mediante `addSearch` se convierten automáticamente en **criterios de agrupación** disponibles en el generador de reportes. Esto permite agrupar métricas (como ventas totales) por cualquiera de los criterios de búsqueda (ej. Ventas por "Empleado a cargo" del cliente) sin configuración extra.
 
-### Ventajas
+### Ventajas de `addSearch`
 
 - **Reutilización**: Define la lógica de "cómo buscar un cliente" una sola vez en el dataset de Clientes, y úsalo en Pagos, Órdenes, etc.
 - **Sin Joins Manuales**: El framework gestiona las consultas subyacentes.

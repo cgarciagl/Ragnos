@@ -11,7 +11,7 @@ The framework uses this definition to automatically generate:
 - SQL Queries and Database Persistence.
 - API Responses.
 
-## Advantages
+## Advantages of Datasets
 
 - **Centralization**: Everything (validation, display, persistence) is defined in one place.
 - **Productivity**: Eliminates the need to write repetitive HTML or basic CRUD queries.
@@ -133,7 +133,7 @@ Ragnos will search for matches in any of those fields defined in the target data
 
 Another key advantage is that fields associated via `addSearch` automatically become **grouping criteria** available in the report generator. This allows grouping metrics (like total sales) by any of the search criteria (e.g., Sales by Customer's "Sales Rep") with no extra configuration.
 
-### Advantages
+### Advantages of `addSearch`
 
 - **Reusability**: Define the logic of "how to search for a customer" once in the Customers dataset, and reuse it in Payments, Orders, etc.
 - **No Manual Joins**: The framework manages the underlying queries.
