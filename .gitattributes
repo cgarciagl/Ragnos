@@ -1,0 +1,4 @@
+documentacion/* export-ignore
+web/* export-ignore
+.github/* export-ignore
+.gitignore export-ignore
