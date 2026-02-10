@@ -261,7 +261,11 @@
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#17-resumen" class="nav-link">17. Resumen</a>
+            <li class="nav-item" data-bs-level="2"><a href="#17-reglas-de-validacion-personalizadas" class="nav-link">17. Reglas de Validación Personalizadas</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#18-resumen" class="nav-link">18. Resumen</a>
               <ul class="nav flex-column">
               </ul>
             </li>
@@ -638,9 +642,42 @@ Simplemente agrega la clave <code>tab</code> al array de configuracion del campo
 </code></pre></div>
 </div>
 <hr />
+<h2 id="17-reglas-de-validacion-personalizadas">17. Reglas de Validación Personalizadas</h2>
+<p>Ragnos hereda la capacidad de CodeIgniter 4 para definir reglas de validación personalizadas. Si necesitas una validación que no existe por defecto (por ejemplo, validar un formato específico de ID o verificar contra un servicio externo), sigue estos pasos:</p>
+<h3 id="1-crear-la-clase-de-reglas">1. Crear la clase de reglas</h3>
+<p>Crea un archivo en el directorio <code>app/Validation/MyCustomRules.php</code> (deberás crear la carpeta si no existe):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="x">namespace App\Validation;</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="x">class MyCustomRules</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="x">{</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="x">    public function even_number(string $str, string &amp;$error = null): bool</span>
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="x">    {</span>
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="x">        if ((int)$str % 2 !== 0) {</span>
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a><span class="x">            $error = &quot;El campo {field} debe ser un número par.&quot;;</span>
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a><span class="x">            return false;</span>
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a><span class="x">        }</span>
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a><span class="x">        return true;</span>
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a><span class="x">    }</span>
+<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a><span class="x">}</span>
+</code></pre></div>
+<h3 id="2-registrar-la-regla">2. Registrar la regla</h3>
+<p>Edita <code>app/Config/Validation.php</code> para incluir tu nueva clase en el array <code>$ruleSets</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="x">public array $ruleSets = [</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="x">    // ... otras reglas existentes</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="x">    \App\Validation\MyCustomRules::class,</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="x">];</span>
+</code></pre></div>
+<h3 id="3-usar-la-regla-en-el-dataset">3. Usar la regla en el Dataset</h3>
+<p>Ahora puedes usar tu regla personalizada en el método <code>addField()</code> de tu controlador:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="x">$this-&gt;addField(&#39;cantidad&#39;, [</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="x">    &#39;label&#39; =&gt; &#39;Cantidad Par&#39;,</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="x">    &#39;rules&#39; =&gt; &#39;required|even_number&#39;</span>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="x">]);</span>
+</code></pre></div>
+<hr />
 <p><strong>En Ragnos, los campos son declaraciones del dominio, no simples inputs.</strong></p>
 <hr />
-<h2 id="17-resumen">17. Resumen</h2>
+<h2 id="18-resumen">18. Resumen</h2>
 <table>
 <thead>
 <tr>

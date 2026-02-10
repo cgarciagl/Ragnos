@@ -221,7 +221,7 @@
 <div class="col-md-9" role="main">
 <h1 id="generador-automatico-de-reportes">📊 Generador Automático de Reportes</h1>
 <h2 id="introduccion">Introducción</h2>
-<p>El <strong>Generador Automático de Reportes</strong> (<code>RDatasetReportGenerator</code>) es una característica poderosa de Ragnos que permite crear reportes complejos y personalizados <strong>sin escribir código adicional</strong>. </p>
+<p>El <strong>Generador Automático de Reportes</strong> (<code>RDatasetReportGenerator</code>) es una característica poderosa de Ragnos que permite crear reportes complejos y personalizados <strong>sin escribir código adicional</strong>.</p>
 <p>Esta funcionalidad está <strong>integrada automáticamente</strong> en todos los datasets basados en <code>RDatasetController</code>, lo que significa que cualquier catálogo que hayas creado ya tiene capacidades de reportería avanzada disponibles desde el primer momento.</p>
 <h2 id="acceso-desde-la-interfaz-grafica">Acceso desde la Interfaz Gráfica</h2>
 <p>Cada dataset basado en <code>RDatasetController</code> incluye automáticamente un botón de <strong>"Reporte Avanzado"</strong> (icono de impresora 🖨️) en la barra de herramientas de la vista de tabla:</p>
@@ -233,9 +233,7 @@
 <a href="#__codelineno-0-6" id="__codelineno-0-6" name="__codelineno-0-6"></a><span class="x">&lt;/a&gt;</span>
 </code></pre></div>
 <p>Al hacer clic en este botón, el usuario accede a una interfaz de configuración de reportes donde puede:</p>
-<ol>
-<li><strong>Generar reportes</strong> con totales y subtotales automáticos</li>
-</ol>
+<p><strong>Generar reportes</strong> con totales y subtotales automáticos</p>
 <h2 id="mejoras-de-experiencia-de-usuario-ux-premium">Mejoras de Experiencia de Usuario (UX) Premium</h2>
 <p>El generador ha sido actualizado con una interfaz moderna y eficiente que optimiza el flujo de trabajo:</p>
 <h3 id="1-diseno-compacto-y-eficiente">1. Diseño Compacto y Eficiente</h3>
@@ -385,21 +383,23 @@
 <h3 id="4-busqueda-contextual-en-filtros">4. Búsqueda Contextual en Filtros</h3>
 <p>Cuando un campo está vinculado a otro dataset mediante <code>addSearch()</code>, el filtro del reporte hereda toda la funcionalidad de búsqueda contextual:</p>
 <p><strong>Ejemplo Práctico:</strong></p>
-<p>En el dataset de <strong>Pagos</strong>, tienes:
+<p>En el dataset de <strong>Pagos</strong>, tienes:</p>
 <div class="highlight"><pre><span></span><code><a href="#__codelineno-3-1" id="__codelineno-3-1" name="__codelineno-3-1"></a><span class="x">$this-&gt;addSearch('customerNumber', 'Tienda\\Clientes');</span>
-</code></pre></div></p>
-<p>Y en el dataset de <strong>Clientes</strong>, definiste:
+</code></pre></div>
+<p>Y en el dataset de <strong>Clientes</strong>, definiste:</p>
 <div class="highlight"><pre><span></span><code><a href="#__codelineno-4-1" id="__codelineno-4-1" name="__codelineno-4-1"></a><span class="x">$this-&gt;setTableFields([</span>
 <a href="#__codelineno-4-2" id="__codelineno-4-2" name="__codelineno-4-2"></a><span class="x">    'customerName',</span>
 <a href="#__codelineno-4-3" id="__codelineno-4-3" name="__codelineno-4-3"></a><span class="x">    'Contacto', // Campo calculado</span>
 <a href="#__codelineno-4-4" id="__codelineno-4-4" name="__codelineno-4-4"></a><span class="x">    'salesRepEmployeeNumber' // Empleado a cargo</span>
 <a href="#__codelineno-4-5" id="__codelineno-4-5" name="__codelineno-4-5"></a><span class="x">]);</span>
-</code></pre></div></p>
+</code></pre></div>
 <p><strong>Resultado en el Generador de Reportes:</strong></p>
-<p>Al filtrar pagos por cliente, el usuario puede buscar escribiendo:
-- El nombre de la empresa
-- El nombre del contacto
-- El nombre del empleado a cargo</p>
+<p>Al filtrar pagos por cliente, el usuario puede buscar escribiendo:</p>
+<ul>
+<li>El nombre de la empresa</li>
+<li>El nombre del contacto</li>
+<li>El nombre del empleado a cargo</li>
+</ul>
 <p>¡El sistema buscará automáticamente en todos los campos visibles del dataset de Clientes!</p>
 <h2 id="arquitectura-y-funcionamiento">Arquitectura y Funcionamiento</h2>
 <h3 id="clase-rdatasetreportgenerator">Clase <code>RDatasetReportGenerator</code></h3>
@@ -503,8 +503,8 @@
 <a href="#__codelineno-5-39" id="__codelineno-5-39" name="__codelineno-5-39"></a><span class="x">        // Campo calculado (monto total)</span>
 <a href="#__codelineno-5-40" id="__codelineno-5-40" name="__codelineno-5-40"></a><span class="x">        $this-&gt;addField('Total', [</span>
 <a href="#__codelineno-5-41" id="__codelineno-5-41" name="__codelineno-5-41"></a><span class="x">            'label' =&gt; 'Total',</span>
-<a href="#__codelineno-5-42" id="__codelineno-5-42" name="__codelineno-5-42"></a><span class="x">            'query' =&gt; '(SELECT SUM(quantityOrdered * priceEach) </span>
-<a href="#__codelineno-5-43" id="__codelineno-5-43" name="__codelineno-5-43"></a><span class="x">                         FROM orderdetails </span>
+<a href="#__codelineno-5-42" id="__codelineno-5-42" name="__codelineno-5-42"></a><span class="x">            'query' =&gt; '(SELECT SUM(quantityOrdered * priceEach)</span>
+<a href="#__codelineno-5-43" id="__codelineno-5-43" name="__codelineno-5-43"></a><span class="x">                         FROM orderdetails</span>
 <a href="#__codelineno-5-44" id="__codelineno-5-44" name="__codelineno-5-44"></a><span class="x">                         WHERE orderdetails.orderNumber = orders.orderNumber)',</span>
 <a href="#__codelineno-5-45" id="__codelineno-5-45" name="__codelineno-5-45"></a><span class="x">            'rules' =&gt; 'readonly|money'</span>
 <a href="#__codelineno-5-46" id="__codelineno-5-46" name="__codelineno-5-46"></a><span class="x">        ]);</span>
@@ -521,27 +521,35 @@
 </code></pre></div>
 <h3 id="reportes-generados-automaticamente">Reportes Generados Automáticamente</h3>
 <p>Con esta configuración, el usuario puede generar reportes como:</p>
-<p><strong>Ejemplo 1: Ventas por Cliente en un Rango de Fechas</strong>
-- <strong>Filtro:</strong> Fecha desde 2024-01-01 hasta 2024-12-31
-- <strong>Agrupación:</strong> Por Cliente
-- <strong>Resultado:</strong> Lista de clientes con el total vendido a cada uno en 2024</p>
-<p><strong>Ejemplo 2: Órdenes Canceladas por Mes</strong>
-- <strong>Filtro:</strong> Estado = "Cancelado"
-- <strong>Agrupación Nivel 1:</strong> Por Mes
-- <strong>Resultado:</strong> Total de órdenes canceladas agrupadas por mes con subtotales</p>
-<p><strong>Ejemplo 3: Análisis Jerárquico Anual</strong>
-- <strong>Agrupación Nivel 1:</strong> Por Año
-- <strong>Agrupación Nivel 2:</strong> Por Mes<br>
-- <strong>Agrupación Nivel 3:</strong> Por Estado
-- <strong>Resultado:</strong> Reporte jerárquico: Año → Mes → Estado con todos sus subtotales</br></p>
+<p><strong>Ejemplo 1: Ventas por Cliente en un Rango de Fechas</strong></p>
+<ul>
+<li><strong>Filtro:</strong> Fecha desde 2024-01-01 hasta 2024-12-31</li>
+<li><strong>Agrupación:</strong> Por Cliente</li>
+<li><strong>Resultado:</strong> Lista de clientes con el total vendido a cada uno en 2024</li>
+</ul>
+<p><strong>Ejemplo 2: Órdenes Canceladas por Mes</strong></p>
+<ul>
+<li><strong>Filtro:</strong> Estado = "Cancelado"</li>
+<li><strong>Agrupación Nivel 1:</strong> Por Mes</li>
+<li><strong>Resultado:</strong> Total de órdenes canceladas agrupadas por mes con subtotales</li>
+</ul>
+<p><strong>Ejemplo 3: Análisis Jerárquico Anual</strong></p>
+<ul>
+<li><strong>Agrupación Nivel 1:</strong> Por Año</li>
+<li><strong>Agrupación Nivel 2:</strong> Por Mes</li>
+<li><strong>Agrupación Nivel 3:</strong> Por Estado</li>
+<li><strong>Resultado:</strong> Reporte jerárquico: Año → Mes → Estado con todos sus subtotales</li>
+</ul>
 <h2 id="ventajas-del-sistema">Ventajas del Sistema</h2>
 <h3 id="1-cero-configuracion-adicional">1. <strong>Cero Configuración Adicional</strong></h3>
 <p>No necesitas escribir controladores especiales, vistas o queries para reportes. Todo se genera automáticamente desde la definición del dataset.</p>
 <h3 id="2-reutilizacion-de-logica">2. <strong>Reutilización de Lógica</strong></h3>
-<p>Los filtros y agrupaciones reutilizan:
-- Las validaciones definidas en <code>addField()</code>
-- Las relaciones definidas con <code>addSearch()</code>
-- El formateo definido en el modelo</p>
+<p>Los filtros y agrupaciones reutilizan:</p>
+<ul>
+<li>Las validaciones definidas en <code>addField()</code></li>
+<li>Las relaciones definidas con <code>addSearch()</code></li>
+<li>El formateo definido en el modelo</li>
+</ul>
 <h3 id="3-consistencia-de-interfaz">3. <strong>Consistencia de Interfaz</strong></h3>
 <p>Todos los datasets tienen exactamente la misma interfaz de reportes, reduciendo la curva de aprendizaje para los usuarios.</p>
 <h3 id="4-flexibilidad-total">4. <strong>Flexibilidad Total</strong></h3>
@@ -560,10 +568,12 @@
 <h3 id="campos-calculados-y-agrupaciones">Campos Calculados y Agrupaciones</h3>
 <p>Los campos con <code>query</code> (calculados) pueden aparecer en el reporte, pero <strong>no se pueden usar como criterio de agrupación</strong> ya que son expresiones SQL derivadas.</p>
 <h3 id="performance-en-grandes-volumenes">Performance en Grandes Volúmenes</h3>
-<p>Para datasets con millones de registros, considera:
-- Añadir índices en campos frecuentemente filtrados
-- Limitar las opciones de agrupación si son muy costosas
-- Implementar paginación o límites en la consulta si es necesario</p>
+<p>Para datasets con millones de registros, considera:</p>
+<ul>
+<li>Añadir índices en campos frecuentemente filtrados</li>
+<li>Limitar las opciones de agrupación si son muy costosas</li>
+<li>Implementar paginación o límites en la consulta si es necesario</li>
+</ul>
 <h2 id="personalizacion-avanzada">Personalización Avanzada</h2>
 <p>Aunque el generador es automático, puedes influir en su comportamiento:</p>
 <h3 id="controlar-que-campos-son-filtrables">Controlar qué Campos son Filtrables</h3>
