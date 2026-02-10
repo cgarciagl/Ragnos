@@ -378,11 +378,59 @@ $this->addField('profile_photo', [
 
 ---
 
+## 17. Custom Validation Rules
+
+Ragnos inherits CodeIgniter 4's ability to define custom validation rules. If you need a validation that doesn't exist by default (for example, validating a specific ID format or checking against an external service), follow these steps:
+
+### 1. Create the rule class
+
+Create a file in the `app/Validation/MyCustomRules.php` directory (you will need to create the folder if it doesn't exist):
+
+```php
+namespace App\Validation;
+
+class MyCustomRules
+{
+    public function even_number(string $str, string &$error = null): bool
+    {
+        if ((int)$str % 2 !== 0) {
+            $error = "The {field} field must be an even number.";
+            return false;
+        }
+        return true;
+    }
+}
+```
+
+### 2. Register the rule
+
+Edit `app/Config/Validation.php` to include your new class in the `$ruleSets` array:
+
+```php
+public array $ruleSets = [
+    // ... other existing rules
+    \App\Validation\MyCustomRules::class,
+];
+```
+
+### 3. Use the rule in the Dataset
+
+Now you can use your custom rule in the `addField()` method of your controller:
+
+```php
+$this->addField('quantity', [
+    'label' => 'Even Quantity',
+    'rules' => 'required|even_number'
+]);
+```
+
+---
+
 **In Ragnos, fields are domain declarations, not simple inputs.**
 
 ---
 
-## 17. Summary
+## 18. Summary
 
 | Type             | Persistent | Editable |
 | ---------------- | ---------- | -------- |

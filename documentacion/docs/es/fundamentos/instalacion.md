@@ -20,7 +20,7 @@ Ragnos está basado en **CodeIgniter 4**, por lo que comparte sus requisitos mí
 
 ### 1. Descarga y Extracción
 
-1. Descarga el archivo `.zip` con la última versión de Ragnos.
+1. Descarga el archivo [.zip](https://github.com/cgarciagl/Ragnos/archive/refs/heads/main.zip) con la última versión de Ragnos.
 2. Extrae el contenido en el directorio de tu servidor web (por ejemplo, `c:\laragon\www\mi-proyecto` o `/var/www/html/mi-proyecto`).
 3. Verifique que la carpeta `vendor` existe y contiene las dependencias. Ragnos ya incluye todas las librerías necesarias.
 

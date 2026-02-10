@@ -20,7 +20,7 @@ Ragnos is based on **CodeIgniter 4**, so it shares its minimum requirements:
 
 ### 1. Download and Extraction
 
-1. Download the `.zip` file with the latest version of Ragnos.
+1. Download the [.zip](https://github.com/cgarciagl/Ragnos/archive/refs/heads/main.zip) file with the latest version of Ragnos.
 2. Extract the content into your web server directory (e.g., `c:\laragon\www\my-project` or `/var/www/html/my-project`).
 3. Verify that the `vendor` folder exists and contains dependencies. Ragnos already includes all necessary libraries.
 

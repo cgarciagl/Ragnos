@@ -2,7 +2,7 @@
 
 ## Introducción
 
-El **Generador Automático de Reportes** (`RDatasetReportGenerator`) es una característica poderosa de Ragnos que permite crear reportes complejos y personalizados **sin escribir código adicional**. 
+El **Generador Automático de Reportes** (`RDatasetReportGenerator`) es una característica poderosa de Ragnos que permite crear reportes complejos y personalizados **sin escribir código adicional**.
 
 Esta funcionalidad está **integrada automáticamente** en todos los datasets basados en `RDatasetController`, lo que significa que cualquier catálogo que hayas creado ya tiene capacidades de reportería avanzada disponibles desde el primer momento.
 
@@ -21,22 +21,25 @@ Cada dataset basado en `RDatasetController` incluye automáticamente un botón d
 
 Al hacer clic en este botón, el usuario accede a una interfaz de configuración de reportes donde puede:
 
-3. **Generar reportes** con totales y subtotales automáticos
+**Generar reportes** con totales y subtotales automáticos
 
 ## Mejoras de Experiencia de Usuario (UX) Premium
 
 El generador ha sido actualizado con una interfaz moderna y eficiente que optimiza el flujo de trabajo:
 
 ### 1. Diseño Compacto y Eficiente
+
 - **Layout Optimizado:** Se han reducido los espacios innecesarios (paddings y márgenes) para mostrar más información en menos pantalla, ideal para configuraciones con muchos filtros.
 - **Cabeceras y Pie de Página Pegajosos:** El botón de "Generar Reporte" y la barra de herramientas de filtros están siempre visibles (sticky), eliminando la necesidad de hacer scroll infinito.
 - **Barra Lateral de Agrupamiento:** En pantallas grandes, la configuración de grupos se mantiene fija a la derecha para un acceso rápido.
 
 ### 2. Navegación Inteligente y AJAX
+
 - **Limpieza de Sesión sin Recarga:** El botón "Borrar/Limpiar" ahora funciona mediante AJAX. Esto limpia los filtros instantáneamente sin recargar la página, lo que evita "ensuciar" el historial del navegador. Ahora, al presionar el botón **"Volver atrás"** del navegador, regresarás a la página anterior con un solo clic.
 - **Confirmaciones Profesionales:** Se utiliza **SweetAlert2** para confirmaciones críticas, ofreciendo una estética mucho más integrada y profesional que los mensajes nativos del navegador.
 
 ### 3. Feedback Visual Dinámico
+
 - **Animaciones de Resaltado:** Al agregar un nuevo filtro, este aparece con una suave animación de pulso para indicar dónde se ha añadido.
 - **Scroll Automático:** La pantalla se desplaza suavemente hacia el nuevo filtro seleccionado.
 - **Estados de Carga:** El botón de generación muestra un spinner y se deshabilita durante el procesamiento para evitar envíos duplicados.
@@ -44,9 +47,11 @@ El generador ha sido actualizado con una interfaz moderna y eficiente que optimi
 ## Funcionalidades Avanzadas de Configuración
 
 ### 1. Auto-Agrupamiento Inteligente
+
 Cuando se añade un filtro de tipo **Búsqueda Contextual** (campos con `addSearch()`), el sistema intenta automáticamente asignar ese campo al primer nivel de agrupamiento disponible. Esto agiliza la creación de reportes, ya que normalmente se desea ver los datos agrupados por la entidad que se está filtrando.
 
 ### 2. Niveles de Agrupación Excluyentes
+
 Para evitar errores en la lógica del reporte, los niveles de agrupación (Nivel 1, 2 y 3) son inteligentes: si seleccionas un campo en el Nivel 1, esa opción se deshabilitará automáticamente en los niveles 2 y 3, asegurando una jerarquía lógica y sin duplicados.
 
 ## Características Principales
@@ -57,14 +62,14 @@ El generador analiza **automáticamente** todos los campos definidos en tu datas
 
 #### Tipos de Filtros Detectados Automáticamente
 
-| Tipo de Campo | Tipo de Filtro Generado | Descripción |
-|---------------|------------------------|-------------|
-| `date` / `datetime` | **Rango de Fechas** | Permite filtrar desde/hasta una fecha específica |
-| `money` / `numeric` / `decimal` | **Rango Numérico** | Filtro min/max para valores numéricos |
-| `dropdown` / `enum` | **Selector de Opciones** | Lista desplegable con las opciones definidas |
-| `switch` / `boolean` | **Selector Booleano** | Filtro Sí/No o Activo/Inactivo |
-| **Campos con `addSearch()`** | **Búsqueda Contextual** | Permite buscar en el dataset relacionado |
-| Texto (otros) | **Filtro de Texto** | Búsqueda por coincidencia de texto |
+| Tipo de Campo                   | Tipo de Filtro Generado  | Descripción                                      |
+| ------------------------------- | ------------------------ | ------------------------------------------------ |
+| `date` / `datetime`             | **Rango de Fechas**      | Permite filtrar desde/hasta una fecha específica |
+| `money` / `numeric` / `decimal` | **Rango Numérico**       | Filtro min/max para valores numéricos            |
+| `dropdown` / `enum`             | **Selector de Opciones** | Lista desplegable con las opciones definidas     |
+| `switch` / `boolean`            | **Selector Booleano**    | Filtro Sí/No o Activo/Inactivo                   |
+| **Campos con `addSearch()`**    | **Búsqueda Contextual**  | Permite buscar en el dataset relacionado         |
+| Texto (otros)                   | **Filtro de Texto**      | Búsqueda por coincidencia de texto               |
 
 #### Ejemplo de Detección Automática
 
@@ -103,11 +108,11 @@ Los criterios de agrupación también se generan automáticamente basándose en 
 
 #### Tipos de Agrupación Detectados
 
-| Tipo de Campo | Agrupaciones Generadas |
-|---------------|------------------------|
-| `date` / `datetime` | • **Por Mes** (Año-Mes)<br>• **Por Año** |
-| **Campos con `addSearch()`** | • **Por Valor Exacto** del campo relacionado |
-| `dropdown` / `enum` | • **Por Valor Exacto** de la opción seleccionada |
+| Tipo de Campo                | Agrupaciones Generadas                           |
+| ---------------------------- | ------------------------------------------------ |
+| `date` / `datetime`          | • **Por Mes** (Año-Mes)<br>• **Por Año**         |
+| **Campos con `addSearch()`** | • **Por Valor Exacto** del campo relacionado     |
+| `dropdown` / `enum`          | • **Por Valor Exacto** de la opción seleccionada |
 
 #### Ejemplo de Agrupaciones Automáticas
 
@@ -145,11 +150,13 @@ Cuando un campo está vinculado a otro dataset mediante `addSearch()`, el filtro
 **Ejemplo Práctico:**
 
 En el dataset de **Pagos**, tienes:
+
 ```php
 $this->addSearch('customerNumber', 'Tienda\\Clientes');
 ```
 
 Y en el dataset de **Clientes**, definiste:
+
 ```php
 $this->setTableFields([
     'customerName',
@@ -161,6 +168,7 @@ $this->setTableFields([
 **Resultado en el Generador de Reportes:**
 
 Al filtrar pagos por cliente, el usuario puede buscar escribiendo:
+
 - El nombre de la empresa
 - El nombre del contacto
 - El nombre del empleado a cargo
@@ -213,7 +221,7 @@ graph TD
     F --> G[Formatear datos y agrupar]
     G --> H[Generar HTML con totales]
     H --> I[Mostrar reporte al usuario]
-    
+
     D --> J[Usuario configura filtros/grupos]
     J --> K[Usuario envía formulario]
     K --> C
@@ -233,23 +241,23 @@ class Ordenes extends RDatasetController
     public function __construct()
     {
         parent::__construct();
-        
+
         $this->checkLogin();
         $this->setTitle('Órdenes de Compra');
-        
+
         $this->setTableName('orders');
         $this->setIdField('orderNumber');
-        
+
         // Campo de fecha → generará filtro de rango + agrupación por mes/año
         $this->addField('orderDate', [
             'label' => 'Fecha de Orden',
             'type'  => 'date',
             'rules' => 'required'
         ]);
-        
+
         // Campo relacionado → generará filtro de búsqueda + agrupación por cliente
         $this->addSearch('customerNumber', 'Tienda\\Clientes');
-        
+
         // Campo enum → generará filtro de selección + agrupación por estado
         $this->addField('status', [
             'label'   => 'Estado',
@@ -261,16 +269,16 @@ class Ordenes extends RDatasetController
             ],
             'rules' => 'required'
         ]);
-        
+
         // Campo calculado (monto total)
         $this->addField('Total', [
             'label' => 'Total',
-            'query' => '(SELECT SUM(quantityOrdered * priceEach) 
-                         FROM orderdetails 
+            'query' => '(SELECT SUM(quantityOrdered * priceEach)
+                         FROM orderdetails
                          WHERE orderdetails.orderNumber = orders.orderNumber)',
             'rules' => 'readonly|money'
         ]);
-        
+
         $this->setTableFields([
             'orderNumber',
             'orderDate',
@@ -287,39 +295,48 @@ class Ordenes extends RDatasetController
 Con esta configuración, el usuario puede generar reportes como:
 
 **Ejemplo 1: Ventas por Cliente en un Rango de Fechas**
+
 - **Filtro:** Fecha desde 2024-01-01 hasta 2024-12-31
 - **Agrupación:** Por Cliente
 - **Resultado:** Lista de clientes con el total vendido a cada uno en 2024
 
 **Ejemplo 2: Órdenes Canceladas por Mes**
+
 - **Filtro:** Estado = "Cancelado"
 - **Agrupación Nivel 1:** Por Mes
 - **Resultado:** Total de órdenes canceladas agrupadas por mes con subtotales
 
 **Ejemplo 3: Análisis Jerárquico Anual**
+
 - **Agrupación Nivel 1:** Por Año
-- **Agrupación Nivel 2:** Por Mes  
+- **Agrupación Nivel 2:** Por Mes
 - **Agrupación Nivel 3:** Por Estado
 - **Resultado:** Reporte jerárquico: Año → Mes → Estado con todos sus subtotales
 
 ## Ventajas del Sistema
 
 ### 1. **Cero Configuración Adicional**
+
 No necesitas escribir controladores especiales, vistas o queries para reportes. Todo se genera automáticamente desde la definición del dataset.
 
 ### 2. **Reutilización de Lógica**
+
 Los filtros y agrupaciones reutilizan:
+
 - Las validaciones definidas en `addField()`
 - Las relaciones definidas con `addSearch()`
 - El formateo definido en el modelo
 
 ### 3. **Consistencia de Interfaz**
+
 Todos los datasets tienen exactamente la misma interfaz de reportes, reduciendo la curva de aprendizaje para los usuarios.
 
 ### 4. **Flexibilidad Total**
+
 Los usuarios finales pueden combinar cualquier filtro con cualquier agrupación, generando reportes ad-hoc según sus necesidades sin requerir desarrollo.
 
 ### 5. **Escalabilidad**
+
 A medida que agregas más campos a tu dataset, automáticamente se amplían las opciones de filtros y agrupaciones disponibles.
 
 ## Limitaciones y Consideraciones
@@ -340,6 +357,7 @@ Los campos con `query` (calculados) pueden aparecer en el reporte, pero **no se 
 ### Performance en Grandes Volúmenes
 
 Para datasets con millones de registros, considera:
+
 - Añadir índices en campos frecuentemente filtrados
 - Limitar las opciones de agrupación si son muy costosas
 - Implementar paginación o límites en la consulta si es necesario
@@ -369,18 +387,18 @@ También puedes usar el generador programáticamente desde código:
 public function reportePersonalizado()
 {
     $generator = new RDatasetReportGenerator($this);
-    
+
     // Agregar filtros manualmente
     $generator->addDateRangeFilter('orderDate', '2024-01-01', '2024-12-31');
     $generator->addFilter('status', 'Shipped');
-    
+
     // Configurar agrupación
     $generator->setGrouping('customerNumber', 'raw', 'Cliente');
     $generator->setGrouping('orderDate', 'date_month', 'Mes');
-    
+
     // Generar HTML
     $html = $generator->generateHTML();
-    
+
     return view('mi_plantilla_reporte', ['contenido' => $html]);
 }
 ```

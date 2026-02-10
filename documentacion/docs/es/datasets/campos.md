@@ -376,11 +376,59 @@ $this->addField('foto_perfil', [
 
 ---
 
+## 17. Reglas de Validación Personalizadas
+
+Ragnos hereda la capacidad de CodeIgniter 4 para definir reglas de validación personalizadas. Si necesitas una validación que no existe por defecto (por ejemplo, validar un formato específico de ID o verificar contra un servicio externo), sigue estos pasos:
+
+### 1. Crear la clase de reglas
+
+Crea un archivo en el directorio `app/Validation/MyCustomRules.php` (deberás crear la carpeta si no existe):
+
+```php
+namespace App\Validation;
+
+class MyCustomRules
+{
+    public function even_number(string $str, string &$error = null): bool
+    {
+        if ((int)$str % 2 !== 0) {
+            $error = "El campo {field} debe ser un número par.";
+            return false;
+        }
+        return true;
+    }
+}
+```
+
+### 2. Registrar la regla
+
+Edita `app/Config/Validation.php` para incluir tu nueva clase en el array `$ruleSets`:
+
+```php
+public array $ruleSets = [
+    // ... otras reglas existentes
+    \App\Validation\MyCustomRules::class,
+];
+```
+
+### 3. Usar la regla en el Dataset
+
+Ahora puedes usar tu regla personalizada en el método `addField()` de tu controlador:
+
+```php
+$this->addField('cantidad', [
+    'label' => 'Cantidad Par',
+    'rules' => 'required|even_number'
+]);
+```
+
+---
+
 **En Ragnos, los campos son declaraciones del dominio, no simples inputs.**
 
 ---
 
-## 17. Resumen
+## 18. Resumen
 
 | Tipo              | Persistente | Editable |
 | ----------------- | ----------- | -------- |
