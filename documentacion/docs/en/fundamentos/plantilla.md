@@ -26,29 +26,49 @@ The Ragnos CLI Generator comes pre-installed with the Ragnos package. Just make 
 php spark list
 ```
 
-You should see the `Ragnos` group and the `ragnos:make` command.
+You should see the `Ragnos` group and the commands `ragnos:make` and `ragnos:make:query`.
 
 ---
 
 ## 💻 Command Syntax
 
-From the root of your project:
+### 1. Generate from Table (RDatasetController)
 
 ```bash
 php spark ragnos:make [ControllerName] [Options]
 ```
 
-### Arguments
+#### Arguments
 
 | Argument         | Description                                                  |
 | :--------------- | :----------------------------------------------------------- |
 | `ControllerName` | The path and name of the class (e.g., `Inventory/Products`). |
 
-### Options
+#### Options
 
 | Option   | Description                    |
 | :------- | :----------------------------- |
 | `-table` | Exact name of the table in DB. |
+
+---
+
+### 2. Generate from Query (RQueryController)
+
+```bash
+php spark ragnos:make:query [ControllerName] [Options]
+```
+
+#### Arguments
+
+| Argument         | Description                                               |
+| :--------------- | :-------------------------------------------------------- |
+| `ControllerName` | The path and name of the class (e.g., `Dashboard/Sales`). |
+
+#### Options
+
+| Option   | Description              |
+| :------- | :----------------------- |
+| `-query` | The SQL query in quotes. |
 
 ---
 

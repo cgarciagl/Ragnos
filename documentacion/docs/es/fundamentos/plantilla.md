@@ -26,25 +26,25 @@ El Generador CLI de Ragnos viene preinstalado con el paquete Ragnos. Solo asegú
 php spark list
 ```
 
-Deberías ver el grupo `Ragnos` y el comando `ragnos:make`.
+Deberías ver el grupo `Ragnos` y los comandos `ragnos:make` y `ragnos:make:query`.
 
 ---
 
 ## 💻 Sintaxis del Comando
 
-Desde la raíz de tu proyecto:
+### 1. Generar desde Tabla (RDatasetController)
 
 ```bash
 php spark ragnos:make [NombreControlador] [Opciones]
 ```
 
-### Argumentos
+#### Argumentos
 
 | Argumento           | Descripción                                                |
 | :------------------ | :--------------------------------------------------------- |
 | `NombreControlador` | La ruta y nombre de la clase (ej. `Inventario/Productos`). |
 
-### Opciones
+#### Opciones
 
 | Opción   | Descripción                      |
 | :------- | :------------------------------- |
@@ -52,9 +52,29 @@ php spark ragnos:make [NombreControlador] [Opciones]
 
 ---
 
+### 2. Generar desde Consulta (RQueryController)
+
+```bash
+php spark ragnos:make:query [NombreControlador] [Opciones]
+```
+
+#### Argumentos
+
+| Argumento           | Descripción                                            |
+| :------------------ | :----------------------------------------------------- |
+| `NombreControlador` | La ruta y nombre de la clase (ej. `Dashboard/Ventas`). |
+
+#### Opciones
+
+| Opción   | Descripción                     |
+| :------- | :------------------------------ |
+| `-query` | La consulta SQL entre comillas. |
+
+---
+
 ## 🚀 Ejemplos de Uso
 
-### 1. Uso Básico (Autodetección)
+### 1. Uso Básico (Tabla)
 
 Si tu controlador es `Productos` y tabla `productos`:
 
