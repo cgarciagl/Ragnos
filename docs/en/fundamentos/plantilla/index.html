@@ -201,31 +201,30 @@
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#installation" class="nav-link">🛠 Installation</a>
+            <li class="nav-item" data-bs-level="2"><a href="#installation" class="nav-link">Installation</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#command-syntax" class="nav-link">💻 Command Syntax</a>
+            <li class="nav-item" data-bs-level="2"><a href="#command-syntax" class="nav-link">Command Syntax</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#usage-examples" class="nav-link">🚀 Usage Examples</a>
+            <li class="nav-item" data-bs-level="2"><a href="#usage-examples" class="nav-link">Usage Examples</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#intelligent-type-mapping" class="nav-link">🧠 Intelligent Type Mapping</a>
+            <li class="nav-item" data-bs-level="2"><a href="#intelligent-type-mapping" class="nav-link">Intelligent Type Mapping</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#benefits" class="nav-link">⭐ Benefits</a>
+            <li class="nav-item" data-bs-level="2"><a href="#benefits" class="nav-link">Benefits</a>
               <ul class="nav flex-column">
               </ul>
             </li>
+            <li class="nav-item" data-bs-level="2"><a href="#official-new-dataset-template" class="nav-link">Official New Dataset Template</a>
+              <ul class="nav flex-column">
               </ul>
             </li>
-            
-            <li class="nav-item" data-bs-level="1"><a href="#official-new-dataset-template" class="nav-link">Official New Dataset Template</a>
-              <ul class="nav flex-column">
             <li class="nav-item" data-bs-level="2"><a href="#dataset-template-documentation" class="nav-link">📄 Dataset Template Documentation</a>
               <ul class="nav flex-column">
               </ul>
@@ -250,7 +249,7 @@
 <li><a href="#benefits">Benefits</a></li>
 </ol>
 <hr />
-<h2 id="installation">🛠 Installation</h2>
+<h2 id="installation">Installation</h2>
 <p>The Ragnos CLI Generator comes pre-installed with the Ragnos package. Just make sure you have Ragnos correctly installed in your CodeIgniter 4 project.</p>
 <ol>
 <li>Verify command availability by running:</li>
@@ -259,7 +258,7 @@
 </code></pre></div>
 <p>You should see the <code>Ragnos</code> group and the commands <code>ragnos:make</code> and <code>ragnos:make:query</code>.</p>
 <hr />
-<h2 id="command-syntax">💻 Command Syntax</h2>
+<h2 id="command-syntax">Command Syntax</h2>
 <h3 id="1-generate-from-table-rdatasetcontroller">1. Generate from Table (RDatasetController)</h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>php<span class="w"> </span>spark<span class="w"> </span>ragnos:make<span class="w"> </span><span class="o">[</span>ControllerName<span class="o">]</span><span class="w"> </span><span class="o">[</span>Options<span class="o">]</span>
 </code></pre></div>
@@ -328,7 +327,7 @@
 </tbody>
 </table>
 <hr />
-<h2 id="usage-examples">🚀 Usage Examples</h2>
+<h2 id="usage-examples">Usage Examples</h2>
 <h3 id="1-basic-usage-auto-detection">1. Basic Usage (Auto-detection)</h3>
 <p>If your controller is <code>Products</code> and table <code>products</code>:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>php<span class="w"> </span>spark<span class="w"> </span>ragnos:make<span class="w"> </span>Store/Products
@@ -337,7 +336,7 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>php<span class="w"> </span>spark<span class="w"> </span>ragnos:make<span class="w"> </span>Admin/Users<span class="w"> </span>-table<span class="w"> </span>app_users_tbl
 </code></pre></div>
 <hr />
-<h2 id="intelligent-type-mapping">🧠 Intelligent Type Mapping</h2>
+<h2 id="intelligent-type-mapping">Intelligent Type Mapping</h2>
 <p>Ragnos chooses the component according to your DB:</p>
 <table>
 <thead>
@@ -381,13 +380,13 @@
 </tbody>
 </table>
 <hr />
-<h2 id="benefits">⭐ Benefits</h2>
+<h2 id="benefits">Benefits</h2>
 <ol>
 <li><strong>Speed:</strong> Create a CRUD in 10 seconds.</li>
 <li><strong>Standardization:</strong> Avoids copy-paste errors and namespace issues.</li>
 <li><strong>Cleanliness:</strong> Generates readable labels ("Start Date" instead of "start_date").</li>
 </ol>
-<h1 id="official-new-dataset-template">Official New Dataset Template</h1>
+<h2 id="official-new-dataset-template">Official New Dataset Template</h2>
 <p>If you want to create a new Dataset from scratch, without using the command line, use this template as a guide to define the recommended structure and conventions.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="cp">&lt;?php</span>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
