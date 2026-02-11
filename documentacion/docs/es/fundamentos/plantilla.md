@@ -30,7 +30,7 @@ Deberías ver el grupo `Ragnos` y los comandos `ragnos:make` y `ragnos:make:quer
 
 ---
 
-## 💻 Sintaxis del Comando
+## 💻 Sintaxis del Comando {: #sintaxis-del-comando }
 
 ### 1. Generar desde Tabla (RDatasetController)
 
@@ -38,13 +38,13 @@ Deberías ver el grupo `Ragnos` y los comandos `ragnos:make` y `ragnos:make:quer
 php spark ragnos:make [NombreControlador] [Opciones]
 ```
 
-#### Argumentos
+#### Argumentos (ragnos:make)
 
 | Argumento           | Descripción                                                |
 | :------------------ | :--------------------------------------------------------- |
 | `NombreControlador` | La ruta y nombre de la clase (ej. `Inventario/Productos`). |
 
-#### Opciones
+#### Opciones (ragnos:make)
 
 | Opción   | Descripción                      |
 | :------- | :------------------------------- |
@@ -58,13 +58,13 @@ php spark ragnos:make [NombreControlador] [Opciones]
 php spark ragnos:make:query [NombreControlador] [Opciones]
 ```
 
-#### Argumentos
+#### Argumentos (ragnos:make:query)
 
 | Argumento           | Descripción                                            |
 | :------------------ | :----------------------------------------------------- |
 | `NombreControlador` | La ruta y nombre de la clase (ej. `Dashboard/Ventas`). |
 
-#### Opciones
+#### Opciones (ragnos:make:query)
 
 | Opción   | Descripción                     |
 | :------- | :------------------------------ |
@@ -72,7 +72,9 @@ php spark ragnos:make:query [NombreControlador] [Opciones]
 
 ---
 
-## 🚀 Ejemplos de Uso
+## 🚀 Ejemplos de Uso {: #ejemplos-de-uso }
+
+### 1. Uso Básico (Tabla)
 
 ### 1. Uso Básico (Tabla)
 
@@ -90,7 +92,7 @@ php spark ragnos:make Admin/Usuarios -table app_users_tbl
 
 ---
 
-## 🧠 Mapeo Inteligente de Tipos
+## 🧠 Mapeo Inteligente de Tipos {: #mapeo-inteligente-de-tipos }
 
 Ragnos elige el componente según tu BD:
 
@@ -105,7 +107,7 @@ Ragnos elige el componente según tu BD:
 
 ---
 
-## ⭐ Beneficios
+## ⭐ Beneficios {: #beneficios }
 
 1. **Velocidad:** Crea un CRUD en 10 segundos.
 2. **Estandarización:** Evita errores de copy-paste y namespaces.

@@ -49,7 +49,7 @@ class MakeQuery extends BaseCommand
         $namespace       = 'App\\Controllers' . ($namespaceSuffix ? '\\' . $namespaceSuffix : '');
 
         // 2. Obtener Query
-        $sql = $this->getOption('query');
+        $sql = CLI::getOption('query');
         if (empty($sql)) {
             $sql = CLI::prompt('Escribe la Consulta SQL (ej. SELECT id, nombre FROM mi_tabla)');
         }

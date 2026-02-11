@@ -30,7 +30,7 @@ You should see the `Ragnos` group and the commands `ragnos:make` and `ragnos:mak
 
 ---
 
-## 💻 Command Syntax
+## 💻 Command Syntax {: #command-syntax }
 
 ### 1. Generate from Table (RDatasetController)
 
@@ -38,13 +38,13 @@ You should see the `Ragnos` group and the commands `ragnos:make` and `ragnos:mak
 php spark ragnos:make [ControllerName] [Options]
 ```
 
-#### Arguments
+#### Arguments (ragnos:make)
 
 | Argument         | Description                                                  |
 | :--------------- | :----------------------------------------------------------- |
 | `ControllerName` | The path and name of the class (e.g., `Inventory/Products`). |
 
-#### Options
+#### Options (ragnos:make)
 
 | Option   | Description                    |
 | :------- | :----------------------------- |
@@ -58,13 +58,13 @@ php spark ragnos:make [ControllerName] [Options]
 php spark ragnos:make:query [ControllerName] [Options]
 ```
 
-#### Arguments
+#### Arguments (ragnos:make:query)
 
 | Argument         | Description                                               |
 | :--------------- | :-------------------------------------------------------- |
 | `ControllerName` | The path and name of the class (e.g., `Dashboard/Sales`). |
 
-#### Options
+#### Options (ragnos:make:query)
 
 | Option   | Description              |
 | :------- | :----------------------- |
@@ -72,7 +72,7 @@ php spark ragnos:make:query [ControllerName] [Options]
 
 ---
 
-## 🚀 Usage Examples
+## 🚀 Usage Examples {: #usage-examples }
 
 ### 1. Basic Usage (Auto-detection)
 
@@ -90,7 +90,7 @@ php spark ragnos:make Admin/Users -table app_users_tbl
 
 ---
 
-## 🧠 Intelligent Type Mapping
+## 🧠 Intelligent Type Mapping {: #intelligent-type-mapping }
 
 Ragnos chooses the component according to your DB:
 
@@ -105,7 +105,7 @@ Ragnos chooses the component according to your DB:
 
 ---
 
-## ⭐ Benefits
+## ⭐ Benefits {: #benefits }
 
 1. **Speed:** Create a CRUD in 10 seconds.
 2. **Standardization:** Avoids copy-paste errors and namespace issues.

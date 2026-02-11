@@ -49,7 +49,7 @@ class MakeDataset extends BaseCommand
         $namespace       = 'App\\Controllers' . ($namespaceSuffix ? '\\' . $namespaceSuffix : '');
 
         // 2. Obtener tabla de BD
-        $tableName = $this->getOption('table');
+        $tableName = CLI::getOption('table');
         if (empty($tableName)) {
             // Intentar adivinar el nombre de la tabla (plural minúsculas) si no se provee
             $tableName = CLI::prompt('Nombre de la Tabla en BD', strtolower($className));
@@ -114,6 +114,7 @@ class MakeDataset extends BaseCommand
             return;
         }
 
+        helper('file');
         if (write_file($filePath, $template)) {
             CLI::write('¡Éxito! Dataset creado en:', 'green');
             CLI::write($filePath);
