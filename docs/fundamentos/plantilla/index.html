@@ -257,13 +257,13 @@
 </ol>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>php<span class="w"> </span>spark<span class="w"> </span>list
 </code></pre></div>
-<p>Deberías ver el grupo <code>Ragnos</code> y el comando <code>ragnos:make</code>.</p>
+<p>Deberías ver el grupo <code>Ragnos</code> y los comandos <code>ragnos:make</code> y <code>ragnos:make:query</code>.</p>
 <hr />
 <h2 id="sintaxis-del-comando">💻 Sintaxis del Comando</h2>
-<p>Desde la raíz de tu proyecto:</p>
+<h3 id="1-generar-desde-tabla-rdatasetcontroller">1. Generar desde Tabla (RDatasetController)</h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>php<span class="w"> </span>spark<span class="w"> </span>ragnos:make<span class="w"> </span><span class="o">[</span>NombreControlador<span class="o">]</span><span class="w"> </span><span class="o">[</span>Opciones<span class="o">]</span>
 </code></pre></div>
-<h3 id="argumentos">Argumentos</h3>
+<h4 id="argumentos">Argumentos</h4>
 <table>
 <thead>
 <tr>
@@ -278,7 +278,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="opciones">Opciones</h3>
+<h4 id="opciones">Opciones</h4>
 <table>
 <thead>
 <tr>
@@ -294,13 +294,47 @@
 </tbody>
 </table>
 <hr />
+<h3 id="2-generar-desde-consulta-rquerycontroller">2. Generar desde Consulta (RQueryController)</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>php<span class="w"> </span>spark<span class="w"> </span>ragnos:make:query<span class="w"> </span><span class="o">[</span>NombreControlador<span class="o">]</span><span class="w"> </span><span class="o">[</span>Opciones<span class="o">]</span>
+</code></pre></div>
+<h4 id="argumentos_1">Argumentos</h4>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Argumento</th>
+<th style="text-align: left;">Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>NombreControlador</code></td>
+<td style="text-align: left;">La ruta y nombre de la clase (ej. <code>Dashboard/Ventas</code>).</td>
+</tr>
+</tbody>
+</table>
+<h4 id="opciones_1">Opciones</h4>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Opción</th>
+<th style="text-align: left;">Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>-query</code></td>
+<td style="text-align: left;">La consulta SQL entre comillas.</td>
+</tr>
+</tbody>
+</table>
+<hr />
 <h2 id="ejemplos-de-uso">🚀 Ejemplos de Uso</h2>
-<h3 id="1-uso-basico-autodeteccion">1. Uso Básico (Autodetección)</h3>
+<h3 id="1-uso-basico-tabla">1. Uso Básico (Tabla)</h3>
 <p>Si tu controlador es <code>Productos</code> y tabla <code>productos</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>php<span class="w"> </span>spark<span class="w"> </span>ragnos:make<span class="w"> </span>Tienda/Productos
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>php<span class="w"> </span>spark<span class="w"> </span>ragnos:make<span class="w"> </span>Tienda/Productos
 </code></pre></div>
 <h3 id="2-uso-con-tabla-especifica">2. Uso con Tabla Específica</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>php<span class="w"> </span>spark<span class="w"> </span>ragnos:make<span class="w"> </span>Admin/Usuarios<span class="w"> </span>-table<span class="w"> </span>app_users_tbl
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>php<span class="w"> </span>spark<span class="w"> </span>ragnos:make<span class="w"> </span>Admin/Usuarios<span class="w"> </span>-table<span class="w"> </span>app_users_tbl
 </code></pre></div>
 <hr />
 <h2 id="mapeo-inteligente-de-tipos">🧠 Mapeo Inteligente de Tipos</h2>
@@ -355,32 +389,32 @@
 </ol>
 <h1 id="plantilla-oficial-de-nuevo-dataset">Plantilla oficial de nuevo Dataset</h1>
 <p>Si quieres crear un nuevo Dataset desde cero, sin utilizar la línea de comandos, utiliza esta plantilla como guía para definir la estructura y convenciones recomendadas.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="cp">&lt;?php</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="k">namespace</span> <span class="nx">App\Controllers\Tienda</span><span class="p">;</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="k">use</span> <span class="nx">App\ThirdParty\Ragnos\Controllers\RDatasetController</span><span class="p">;</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="k">class</span> <span class="nc">EjemploDataset</span> <span class="k">extends</span> <span class="nx">RDatasetController</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="p">{</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">()</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    <span class="p">{</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">();</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">checkLogin</span><span class="p">();</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">setTitle</span><span class="p">(</span><span class="s1">&#39;Ejemplo&#39;</span><span class="p">);</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">setTableName</span><span class="p">(</span><span class="s1">&#39;example_table&#39;</span><span class="p">);</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">setIdField</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">);</span>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">setAutoIncrement</span><span class="p">(</span><span class="k">true</span><span class="p">);</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">addField</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="p">[</span>
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>            <span class="s1">&#39;label&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Nombre&#39;</span><span class="p">,</span>
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>            <span class="s1">&#39;rules&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;required&#39;</span>
-<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>        <span class="p">]);</span>
-<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>
-<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">setTableFields</span><span class="p">([</span><span class="s1">&#39;name&#39;</span><span class="p">]);</span>
-<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>    <span class="p">}</span>
-<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="cp">&lt;?php</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="k">namespace</span> <span class="nx">App\Controllers\Tienda</span><span class="p">;</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="k">use</span> <span class="nx">App\ThirdParty\Ragnos\Controllers\RDatasetController</span><span class="p">;</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="k">class</span> <span class="nc">EjemploDataset</span> <span class="k">extends</span> <span class="nx">RDatasetController</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="p">{</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">()</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>    <span class="p">{</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">();</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">checkLogin</span><span class="p">();</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">setTitle</span><span class="p">(</span><span class="s1">&#39;Ejemplo&#39;</span><span class="p">);</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">setTableName</span><span class="p">(</span><span class="s1">&#39;example_table&#39;</span><span class="p">);</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">setIdField</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">);</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">setAutoIncrement</span><span class="p">(</span><span class="k">true</span><span class="p">);</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">addField</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="p">[</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>            <span class="s1">&#39;label&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Nombre&#39;</span><span class="p">,</span>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>            <span class="s1">&#39;rules&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;required&#39;</span>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>        <span class="p">]);</span>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">setTableFields</span><span class="p">([</span><span class="s1">&#39;name&#39;</span><span class="p">]);</span>
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>    <span class="p">}</span>
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a><span class="p">}</span>
 </code></pre></div>
 <h2 id="documentacion-de-la-plantilla-de-dataset">📄 Documentación de la plantilla de Dataset</h2>
 <h3 id="proposito">🎯 Propósito</h3>
