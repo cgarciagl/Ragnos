@@ -16,7 +16,7 @@ Puedes ver este generador en acción en la guía de [Primeros Pasos](primeros_pa
 
 ---
 
-## 🛠 Instalación {: #instalacion }
+## Instalación {#instalacion}
 
 El Generador CLI de Ragnos viene preinstalado con el paquete Ragnos. Solo asegúrate de tener Ragnos correctamente instalado en tu proyecto CodeIgniter 4.
 
@@ -30,7 +30,7 @@ Deberías ver el grupo `Ragnos` y los comandos `ragnos:make` y `ragnos:make:quer
 
 ---
 
-## 💻 Sintaxis del Comando {: #sintaxis-del-comando }
+## Sintaxis del Comando {#sintaxis-del-comando}
 
 ### 1. Generar desde Tabla (RDatasetController)
 
@@ -72,9 +72,7 @@ php spark ragnos:make:query [NombreControlador] [Opciones]
 
 ---
 
-## 🚀 Ejemplos de Uso {: #ejemplos-de-uso }
-
-### 1. Uso Básico (Tabla)
+## Ejemplos de Uso {#ejemplos-de-uso}
 
 ### 1. Uso Básico (Tabla)
 
@@ -92,7 +90,7 @@ php spark ragnos:make Admin/Usuarios -table app_users_tbl
 
 ---
 
-## 🧠 Mapeo Inteligente de Tipos {: #mapeo-inteligente-de-tipos }
+## Mapeo Inteligente de Tipos {#mapeo-inteligente-de-tipos}
 
 Ragnos elige el componente según tu BD:
 
@@ -107,13 +105,13 @@ Ragnos elige el componente según tu BD:
 
 ---
 
-## ⭐ Beneficios {: #beneficios }
+## Beneficios {#beneficios}
 
 1. **Velocidad:** Crea un CRUD en 10 segundos.
 2. **Estandarización:** Evita errores de copy-paste y namespaces.
 3. **Limpieza:** Genera etiquetas legibles ("Fecha Alta" en lugar de "fecha_alta").
 
-# Plantilla oficial de nuevo Dataset
+## Plantilla oficial de nuevo Dataset
 
 Si quieres crear un nuevo Dataset desde cero, sin utilizar la línea de comandos, utiliza esta plantilla como guía para definir la estructura y convenciones recomendadas.
 
@@ -203,9 +201,9 @@ Esta plantilla sirve como punto de partida para crear un nuevo Dataset que se in
 
 ### 🧪 Pruebas y verificación
 
-1.  Crear **pruebas unitarias** para validaciones y modelos.
-2.  Probar **migraciones** en una copia de la BD y verificar la integridad referencial.
-3.  Verificar el **registro y visibilidad** en la interfaz de la tienda.
+1. Crear **pruebas unitarias** para validaciones y modelos.
+2. Probar **migraciones** en una copia de la BD y verificar la integridad referencial.
+3. Verificar el **registro y visibilidad** en la interfaz de la tienda.
 
 ### 💡 Buenas prácticas
 

@@ -16,7 +16,7 @@ You can see this generator in action in the [Getting Started](primeros_pasos.md)
 
 ---
 
-## 🛠 Installation {: #installation }
+## Installation {#installation}
 
 The Ragnos CLI Generator comes pre-installed with the Ragnos package. Just make sure you have Ragnos correctly installed in your CodeIgniter 4 project.
 
@@ -30,7 +30,7 @@ You should see the `Ragnos` group and the commands `ragnos:make` and `ragnos:mak
 
 ---
 
-## 💻 Command Syntax {: #command-syntax }
+## Command Syntax {#command-syntax}
 
 ### 1. Generate from Table (RDatasetController)
 
@@ -72,7 +72,7 @@ php spark ragnos:make:query [ControllerName] [Options]
 
 ---
 
-## 🚀 Usage Examples {: #usage-examples }
+## Usage Examples {#usage-examples}
 
 ### 1. Basic Usage (Auto-detection)
 
@@ -90,7 +90,7 @@ php spark ragnos:make Admin/Users -table app_users_tbl
 
 ---
 
-## 🧠 Intelligent Type Mapping {: #intelligent-type-mapping }
+## Intelligent Type Mapping {#intelligent-type-mapping}
 
 Ragnos chooses the component according to your DB:
 
@@ -105,13 +105,13 @@ Ragnos chooses the component according to your DB:
 
 ---
 
-## ⭐ Benefits {: #benefits }
+## Benefits {#benefits}
 
 1. **Speed:** Create a CRUD in 10 seconds.
 2. **Standardization:** Avoids copy-paste errors and namespace issues.
 3. **Cleanliness:** Generates readable labels ("Start Date" instead of "start_date").
 
-# Official New Dataset Template
+## Official New Dataset Template
 
 If you want to create a new Dataset from scratch, without using the command line, use this template as a guide to define the recommended structure and conventions.
 
@@ -201,9 +201,9 @@ This template serves as a starting point for creating a new Dataset to be integr
 
 ### 🧪 Testing and Verification
 
-1.  Create **unit tests** for validations and models.
-2.  Test **migrations** on a DB copy and verify referential integrity.
-3.  Verify **registration and visibility** in the store interface.
+1. Create **unit tests** for validations and models.
+2. Test **migrations** on a DB copy and verify referential integrity.
+3. Verify **registration and visibility** in the store interface.
 
 ### 💡 Best Practices
 
