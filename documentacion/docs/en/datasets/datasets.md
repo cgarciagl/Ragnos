@@ -90,6 +90,28 @@ class Customers extends RDatasetController
 - `setIdField('id')` establishes the primary key.
 - `setAutoIncrement(true|false)` controls if the PK is auto-incrementing.
 
+## Operation Control
+
+It is possible to restrict which CRUD operations are allowed in the dataset using the following methods:
+
+- `setCanInsert(bool)`: Enables or disables the creation of new records.
+- `setCanUpdate(bool)`: Enables or disables the editing of existing records.
+- `setCanDelete(bool)`: Enables or disables the deletion of records.
+
+This is useful for read-only tables, historical catalogs, or sensitive data that should not be modified or deleted.
+
+### Usage Example
+
+```php
+// Disable record deletion
+$this->setCanDelete(false);
+
+// Read-only dataset (view only)
+$this->setCanInsert(false);
+$this->setCanUpdate(false);
+$this->setCanDelete(false);
+```
+
 ## Field Definition
 
 Use `addField(name, options)` to describe validation, presentation, and persistence.
