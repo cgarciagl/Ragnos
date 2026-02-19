@@ -219,79 +219,102 @@
 <h1 id="ui-customization">UI Customization</h1>
 <p>Ragnos uses <strong>AdminLTE 3</strong> as base for its interface, integrated with CodeIgniter 4 view system. Here we explain how to customize common elements like sidebar, logo and topbar.</p>
 <h2 id="sidebar">Sidebar</h2>
-<p>Main application menu resides in a static view. To add, remove or reorganize links, you must edit file:</p>
-<p>📂 <code>app/Views/template/sidebar.php</code></p>
-<h3 id="menu-structure">Menu Structure</h3>
-<p>Menu uses standard HTML list with Bootstrap/AdminLTE classes.</p>
-<div class="admonition info">
-<p class="admonition-title">Available Icons</p>
-<p>Ragnos includes <strong>Bootstrap Icons</strong> library. Browse <a href="https://icons.getbootstrap.com/">official icon gallery</a> to find class codes (e.g. <code>bi-shop</code>, <code>bi-gear</code>).</p>
-</div>
-<p><strong>Example adding simple link:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="x">&lt;li class=&quot;nav-item&quot;&gt;</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="x">    &lt;a href=&quot;</span><span class="cp">&lt;?</span><span class="o">=</span> <span class="nx">site_url</span><span class="p">(</span><span class="s1">&#39;process/tasks&#39;</span><span class="p">)</span> <span class="cp">?&gt;</span><span class="x">&quot; class=&quot;nav-link&quot;&gt;</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="x">        &lt;i class=&quot;bi bi-check-square nav-icon&quot;&gt;&lt;/i&gt;</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="x">        &lt;p&gt;My Tasks&lt;/p&gt;</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="x">    &lt;/a&gt;</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="x">&lt;/li&gt;</span>
+<p>Sidebar is located at:
+📂 <code>app/Views/template/sidebar.php</code></p>
+<p>Just like the topbar, the sidebar menu is centralized in the <code>MenuBuilder</code> class.</p>
+<h3 id="sidebar-menu-configuration">Sidebar Menu Configuration</h3>
+<p>The menu is defined in the class:
+📂 <code>app/Libraries/MenuBuilder.php</code></p>
+<p>This class contains the <code>getSidebarMenu()</code> method which returns an array with the sidebar structure, allowing for permission logic based on the <code>Admin_aut</code> service.</p>
+<p><strong>Example structure in <code>MenuBuilder</code>:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="x">public function getSidebarMenu(): array</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="x">{</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="x">    $auth = service(&#39;Admin_aut&#39;);</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="x">    $menu = [];</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="x">    if ($auth-&gt;isUserInGroup(&#39;administrator&#39;)) {</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="x">        $menu[] = [</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="x">            &#39;title&#39;    =&gt; &#39;Users&#39;,</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="x">            &#39;icon&#39;     =&gt; &#39;bi-people&#39;,</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="x">            &#39;children&#39; =&gt; [</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="x">                [</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="x">                    &#39;title&#39; =&gt; &#39;Users&#39;,</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="x">                    &#39;url&#39;   =&gt; site_url(&#39;users&#39;),</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="x">                    &#39;icon&#39;  =&gt; &#39;bi-person-circle&#39;,</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="x">                ],</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="x">            ],</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="x">        ];</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="x">    }</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="x">    return $menu;</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="x">}</span>
 </code></pre></div>
-<p><strong>Example dropdown submenu:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="x">&lt;li class=&quot;nav-item&quot;&gt;</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="x">    &lt;a class=&quot;nav-link&quot;&gt;</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="x">        &lt;i class=&quot;bi bi-shop&quot;&gt;&lt;/i&gt;</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="x">        &lt;p&gt;</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="x">            Store</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="x">            &lt;i class=&quot;nav-arrow bi bi-chevron-right&quot;&gt;&lt;/i&gt;</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="x">        &lt;/p&gt;</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="x">    &lt;/a&gt;</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="x">    &lt;ul class=&quot;nav nav-treeview&quot;&gt;</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="x">        &lt;li class=&quot;nav-item&quot;&gt;</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="x">            &lt;a href=&quot;</span><span class="cp">&lt;?</span><span class="o">=</span> <span class="nx">site_url</span><span class="p">(</span><span class="s1">&#39;store/products&#39;</span><span class="p">)</span> <span class="cp">?&gt;</span><span class="x">&quot; class=&quot;nav-link&quot;&gt;</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="x">                &lt;i class=&quot;bi bi-box nav-icon&quot;&gt;&lt;/i&gt;</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="x">                &lt;p&gt;Products&lt;/p&gt;</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="x">            &lt;/a&gt;</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="x">        &lt;/li&gt;</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="x">    &lt;/ul&gt;</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="x">&lt;/li&gt;</span>
+<h3 id="usage-in-view">Usage in View</h3>
+<p>The <code>sidebar.php</code> file uses the <code>menu</code> service to iterate over items:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="cp">&lt;?php</span> <span class="k">foreach</span> <span class="p">(</span><span class="nx">service</span><span class="p">(</span><span class="s1">&#39;menu&#39;</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">getSidebarMenu</span><span class="p">()</span> <span class="k">as</span> <span class="nv">$item</span><span class="p">)</span><span class="o">:</span> <span class="cp">?&gt;</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="x">    &lt;!-- Sidebar rendering logic --&gt;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="cp">&lt;?php</span> <span class="k">endforeach</span><span class="p">;</span> <span class="cp">?&gt;</span>
 </code></pre></div>
-<h3 id="menu-access-control">Menu Access Control</h3>
-<p>You can show or hide menu elements based on logged-in user role using <code>Admin_aut</code> service.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="cp">&lt;?php</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1">// Get auth service at start of file</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nv">$auth</span> <span class="o">=</span> <span class="nx">service</span><span class="p">(</span><span class="s1">&#39;Admin_aut&#39;</span><span class="p">);</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="cp">?&gt;</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="x">&lt;!-- ... in menu ... --&gt;</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="cp">&lt;?php</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$auth</span><span class="o">-&gt;</span><span class="na">isUserInGroup</span><span class="p">(</span><span class="s1">&#39;administrator&#39;</span><span class="p">))</span><span class="o">:</span> <span class="cp">?&gt;</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="x">    &lt;li class=&quot;nav-item&quot;&gt;</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="x">        &lt;a href=&quot;</span><span class="cp">&lt;?</span><span class="o">=</span> <span class="nx">site_url</span><span class="p">(</span><span class="s1">&#39;users&#39;</span><span class="p">)</span> <span class="cp">?&gt;</span><span class="x">&quot; class=&quot;nav-link&quot;&gt; ... &lt;/a&gt;</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="x">    &lt;/li&gt;</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="cp">&lt;?php</span> <span class="k">endif</span><span class="p">;</span> <span class="cp">?&gt;</span>
-</code></pre></div>
+<p>This centralizes all application navigation in one place, making access control and code organization easier.</p>
 <h2 id="logo-and-title-customization">Logo and Title Customization</h2>
 <h3 id="application-title">Application Title</h3>
 <p>Name appearing next to logo is configured globally in <code>app/Config/RagnosConfig.php</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="x">public $Ragnos_application_title = &#39;My Company&#39;;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="x">public $Ragnos_application_title = &#39;My Company&#39;;</span>
 </code></pre></div>
 <h3 id="logo">Logo</h3>
 <p>Logo prints at top of <code>sidebar.php</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="x">&lt;div class=&quot;sidebar-brand&quot;&gt;</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="x">    &lt;a href=&quot;</span><span class="cp">&lt;?</span><span class="o">=</span> <span class="nx">site_url</span><span class="p">()</span> <span class="cp">?&gt;</span><span class="x">&quot; class=&quot;brand-link&quot;&gt;</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="x">        &lt;!-- You can change this span for an img tag --&gt;</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="x">        &lt;span class=&quot;brand-text font-weight-light&quot;&gt;</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="x">            </span><span class="cp">&lt;?</span><span class="o">=</span> <span class="nx">Ragnos</span><span class="o">::</span><span class="na">config</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">Ragnos_application_title</span><span class="p">;</span> <span class="cp">?&gt;</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="x">        &lt;/span&gt;</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="x">    &lt;/a&gt;</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="x">&lt;/div&gt;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="x">&lt;div class=&quot;sidebar-brand&quot;&gt;</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="x">    &lt;a href=&quot;</span><span class="cp">&lt;?</span><span class="o">=</span> <span class="nx">site_url</span><span class="p">()</span> <span class="cp">?&gt;</span><span class="x">&quot; class=&quot;brand-link&quot;&gt;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="x">        &lt;!-- You can change this span for an img tag --&gt;</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="x">        &lt;span class=&quot;brand-text font-weight-light&quot;&gt;</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="x">            </span><span class="cp">&lt;?</span><span class="o">=</span> <span class="nx">Ragnos</span><span class="o">::</span><span class="na">config</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">Ragnos_application_title</span><span class="p">;</span> <span class="cp">?&gt;</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="x">        &lt;/span&gt;</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="x">    &lt;/a&gt;</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="x">&lt;/div&gt;</span>
 </code></pre></div>
 <p>To use an image:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="x">&lt;img src=&quot;</span><span class="cp">&lt;?</span><span class="o">=</span> <span class="nx">base_url</span><span class="p">(</span><span class="s1">&#39;content/img/my-logo.png&#39;</span><span class="p">)</span> <span class="cp">?&gt;</span><span class="x">&quot; alt=&quot;Logo&quot; class=&quot;brand-image img-circle elevation-3&quot; style=&quot;opacity: .8&quot;&gt;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="x">&lt;img src=&quot;</span><span class="cp">&lt;?</span><span class="o">=</span> <span class="nx">base_url</span><span class="p">(</span><span class="s1">&#39;content/img/my-logo.png&#39;</span><span class="p">)</span> <span class="cp">?&gt;</span><span class="x">&quot; alt=&quot;Logo&quot; class=&quot;brand-image img-circle elevation-3&quot; style=&quot;opacity: .8&quot;&gt;</span>
 </code></pre></div>
 <h2 id="topbar">Topbar</h2>
 <p>Topbar is located at:
 📂 <code>app/Views/template/topbar.php</code></p>
-<p>Here you can modify right-side links (profile, notifications) or add global search.</p></div>
+<p>Unlike the sidebar, the main menu in the topbar is centralized in a class to simplify maintenance and allow for a more dynamic configuration.</p>
+<h3 id="navigation-menu-configuration">Navigation Menu Configuration</h3>
+<p>The menu is defined in the class:
+📂 <code>app/Libraries/MenuBuilder.php</code></p>
+<p>This class contains the <code>getTopMenu()</code> method which returns an array with the menu structure. Each element can be a simple link or a dropdown with children (<code>children</code>).</p>
+<p><strong>Example structure in <code>MenuBuilder</code>:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="x">public function getTopMenu(): array</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="x">{</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="x">    return [</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="x">        [</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="x">            &#39;title&#39; =&gt; &#39;Home&#39;,</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="x">            &#39;url&#39;   =&gt; site_url(),</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="x">            &#39;icon&#39;  =&gt; &#39;bi-house-door&#39;,</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="x">        ],</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="x">        [</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="x">            &#39;title&#39;    =&gt; &#39;Catalogs&#39;,</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="x">            &#39;icon&#39;     =&gt; &#39;bi-file-spreadsheet-fill&#39;,</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="x">            &#39;children&#39; =&gt; [</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="x">                [</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="x">                    &#39;title&#39; =&gt; &#39;Offices&#39;,</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="x">                    &#39;url&#39;   =&gt; site_url(&#39;store/offices&#39;),</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="x">                    &#39;icon&#39;  =&gt; &#39;bi-building&#39;,</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="x">                ],</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="x">                [&#39;divider&#39; =&gt; true],</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="x">                // ... more children</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="x">            ],</span>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="x">        ],</span>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="x">    ];</span>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="x">}</span>
+</code></pre></div>
+<h3 id="usage-in-top-view">Usage in top View</h3>
+<p>To render the menu, the <code>menu</code> service is used in the view:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="cp">&lt;?php</span> <span class="k">foreach</span> <span class="p">(</span><span class="nx">service</span><span class="p">(</span><span class="s1">&#39;menu&#39;</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">getTopMenu</span><span class="p">()</span> <span class="k">as</span> <span class="nv">$item</span><span class="p">)</span><span class="o">:</span> <span class="cp">?&gt;</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="x">    &lt;!-- Rendering logic --&gt;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="cp">&lt;?php</span> <span class="k">endforeach</span><span class="p">;</span> <span class="cp">?&gt;</span>
+</code></pre></div>
+<p>This allows adding new menu options simply by editing the <code>MenuBuilder</code> class without needing to modify the topbar HTML.</p></div>
             </div>
         </div>
 
