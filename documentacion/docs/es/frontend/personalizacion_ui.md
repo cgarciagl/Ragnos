@@ -4,69 +4,55 @@ Ragnos utiliza **AdminLTE 3** como base para su interfaz, integrado con el siste
 
 ## Menú Lateral (Sidebar)
 
-El menú principal de la aplicación se encuentra en una vista estática. Para agregar, quitar o reorganizar enlaces, debes editar el archivo:
-
+El menú lateral se encuentra en:
 📂 `app/Views/template/sidebar.php`
 
-### Estructura del Menú
+Al igual que la barra superior, el menú lateral está centralizado en la clase `MenuBuilder`.
 
-El menú utiliza una lista HTML estándar con clases de Bootstrap/AdminLTE.
+### Configuración del Menú Lateral
 
-!!! info "Iconos Disponibles"
+El menú se define en la clase:
+📂 `app/Libraries/MenuBuilder.php`
 
-    Ragnos incluye la librería **Bootstrap Icons**. Puedes navegar por la [galería oficial de iconos](https://icons.getbootstrap.com/) para encontrar los códigos de clase (ej. `bi-shop`, `bi-gear`).
+Esta clase contiene el método `getSidebarMenu()` que devuelve un array con la estructura del menú lateral, permitiendo inyectar lógica de permisos basada en el servicio `Admin_aut`.
 
-**Ejemplo de cómo agregar un enlace simple:**
-
-```php
-<li class="nav-item">
-    <a href="<?= site_url('proceso/tareas') ?>" class="nav-link">
-        <i class="bi bi-check-square nav-icon"></i>
-        <p>Mis Tareas</p>
-    </a>
-</li>
-```
-
-**Ejemplo de un submenú desplegable:**
+**Ejemplo de estructura en `MenuBuilder`:**
 
 ```php
-<li class="nav-item">
-    <a class="nav-link">
-        <i class="bi bi-shop"></i>
-        <p>
-            Tienda
-            <i class="nav-arrow bi bi-chevron-right"></i>
-        </p>
-    </a>
-    <ul class="nav nav-treeview">
-        <li class="nav-item">
-            <a href="<?= site_url('tienda/productos') ?>" class="nav-link">
-                <i class="bi bi-box nav-icon"></i>
-                <p>Productos</p>
-            </a>
-        </li>
-    </ul>
-</li>
+public function getSidebarMenu(): array
+{
+    $auth = service('Admin_aut');
+    $menu = [];
+
+    if ($auth->isUserInGroup('administrador')) {
+        $menu[] = [
+            'title'    => 'Usuarios',
+            'icon'     => 'bi-people',
+            'children' => [
+                [
+                    'title' => 'Usuarios',
+                    'url'   => site_url('usuarios'),
+                    'icon'  => 'bi-person-circle',
+                ],
+            ],
+        ];
+    }
+
+    return $menu;
+}
 ```
 
-### Control de Acceso en el Menú
+### Uso en la Vista
 
-Puedes mostrar u ocultar elementos del menú según el rol del usuario logueado utilizando el servicio `Admin_aut`.
+El archivo `sidebar.php` utiliza el servicio `menu` para iterar sobre los elementos:
 
 ```php
-<?php
-// Obtener el servicio de autenticación al inicio del archivo
-$auth = service('Admin_aut');
-?>
-
-<!-- ... en el menú ... -->
-
-<?php if ($auth->isUserInGroup('administrador')): ?>
-    <li class="nav-item">
-        <a href="<?= site_url('usuarios') ?>" class="nav-link"> ... </a>
-    </li>
-<?php endif; ?>
+<?php foreach (service('menu')->getSidebarMenu() as $item): ?>
+    <!-- Lógica de renderizado del sidebar -->
+<?php endforeach; ?>
 ```
+
+Esto centraliza toda la navegación de la aplicación en un solo lugar, facilitando el control de accesos y la organización del código.
 
 ## Personalización del Logotipo y Título
 
@@ -104,4 +90,51 @@ Para usar una imagen:
 La barra superior se encuentra en:
 📂 `app/Views/template/topbar.php`
 
-Aquí puedes modificar los enlaces de la derecha (perfil, notificaciones) o agregar buscadores globales.
+A diferencia del menú lateral, el menú principal de la barra superior está centralizado en una clase para facilitar su mantenimiento y permitir una configuración más dinámica.
+
+### Configuración del Menú de Navegación
+
+El menú se define en la clase:
+📂 `app/Libraries/MenuBuilder.php`
+
+Esta clase contiene el método `getTopMenu()` que devuelve un array con la estructura del menú. Cada elemento puede ser un enlace simple o un desplegable con hijos (`children`).
+
+**Ejemplo de estructura en `MenuBuilder`:**
+
+```php
+public function getTopMenu(): array
+{
+    return [
+        [
+            'title' => 'Inicio',
+            'url'   => site_url(),
+            'icon'  => 'bi-house-door',
+        ],
+        [
+            'title'    => 'Catálogos',
+            'icon'     => 'bi-file-spreadsheet-fill',
+            'children' => [
+                [
+                    'title' => 'Oficinas',
+                    'url'   => site_url('tienda/oficinas'),
+                    'icon'  => 'bi-building',
+                ],
+                ['divider' => true],
+                // ... más hijos
+            ],
+        ],
+    ];
+}
+```
+
+### Uso en la Vista superior
+
+Para renderizar el menú, se utiliza el servicio `menu` inyectado en la vista:
+
+```php
+<?php foreach (service('menu')->getTopMenu() as $item): ?>
+    <!-- Lógica de renderizado -->
+<?php endforeach; ?>
+```
+
+Esto permite agregar nuevas opciones de menú simplemente editando la clase `MenuBuilder` sin necesidad de modificar el HTML de la barra superior.

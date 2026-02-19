@@ -7,131 +7,37 @@
 
 
     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">
-                <i class="bi bi-house-door"></i> <span class="d-none d-md-inline">Inicio</span></a>
-        </li>
-
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="<?= site_url('admin/perfil') ?>">
-                <i class="bi bi-person-bounding-box"></i> <span class="d-none d-md-inline">Mi perfil</span></a>
-        </li>
-
-        <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="bi bi-file-spreadsheet-fill"></i> <span class="d-none d-md-inline">Catálogos</span>
-            </a>
-            <ul class="dropdown-menu">
-                <li>
-                    <a href="<?= site_url('tienda/oficinas') ?>" class="nav-link">
-                        <i class="bi bi-building"></i>
-                        Oficinas
+        <?php foreach (service('menu')->getTopMenu() as $item): ?>
+            <?php if (isset($item['children'])): ?>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi <?= $item['icon'] ?>"></i> <span class="d-none d-md-inline"><?= $item['title'] ?></span>
                     </a>
+                    <ul class="dropdown-menu">
+                        <?php foreach ($item['children'] as $child): ?>
+                            <?php if (isset($child['divider'])): ?>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                            <?php else: ?>
+                                <li>
+                                    <a href="<?= $child['url'] ?>" class="nav-link text-nowrap">
+                                        <i class="bi <?= $child['icon'] ?>"></i>
+                                        <?= $child['title'] ?>
+                                    </a>
+                                </li>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </ul>
                 </li>
-                <li>
-                    <a href="<?= site_url('tienda/empleados') ?>" class="nav-link">
-                        <i class="bi bi-person-badge"></i>
-                        Empleados
-                    </a>
+            <?php else: ?>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="<?= $item['url'] ?>">
+                        <i class="bi <?= $item['icon'] ?>"></i> <span
+                            class="d-none d-md-inline"><?= $item['title'] ?></span></a>
                 </li>
-                <li>
-                    <a href="<?= site_url('tienda/lineas') ?>" class="nav-link">
-                        <i class="bi bi-tags"></i>
-                        Lineas
-                    </a>
-                </li>
-                <li>
-                    <a href="<?= site_url('tienda/productos') ?>" class="nav-link">
-                        <i class="bi bi-car-front"></i>
-                        Productos
-                    </a>
-                </li>
-                <li>
-                    <a href="<?= site_url('tienda/clientes') ?>" class="nav-link">
-                        <i class="bi bi-person"></i>
-                        Clientes
-                    </a>
-                </li>
-
-                <li>
-                    <hr class="dropdown-divider">
-                </li>
-
-                <li>
-                    <a href="<?= site_url('tienda/pagos') ?>" class="nav-link">
-                        <i class="bi bi-cash"></i>
-                        Pagos
-                    </a>
-                </li>
-                <li>
-                    <a href="<?= site_url('tienda/ordenes') ?>" class="nav-link">
-                        <i class="bi bi-send"></i>
-                        Órdenes
-                    </a>
-                </li>
-
-            </ul>
-        </li>
-
-        <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="bi bi-graph-up"></i> <span class="d-none d-md-inline">Reportes</span>
-            </a>
-            <ul class="dropdown-menu">
-                <li>
-                    <a href="<?= site_url('tienda/reportes/ventaspormes') ?>" class="nav-link text-nowrap">
-                        <i class="bi bi-calendar2-week"></i>
-                        Ventas por Mes
-                    </a>
-                </li>
-                <li>
-                    <a href="<?= site_url('tienda/reportes/ventasporpais') ?>" class="nav-link text-nowrap">
-                        <i class="bi bi-globe-americas"></i>
-                        Ventas por País
-                    </a>
-                </li>
-                <li>
-                    <a href="<?= site_url('tienda/reportes/ventasporlinea') ?>" class="nav-link text-nowrap">
-                        <i class="bi bi-box-seam"></i>
-                        Ventas por Línea
-                    </a>
-                </li>
-                <li>
-                    <a href="<?= site_url('tienda/reportes/margenporlinea') ?>" class="nav-link text-nowrap">
-                        <i class="bi bi-graph-up-arrow"></i>
-                        Margen de Ganancia
-                    </a>
-                </li>
-                <li>
-                    <a href="<?= site_url('tienda/reportes/estadosdecuenta') ?>" class="nav-link text-nowrap">
-                        <i class="bi bi-cash-coin"></i>
-                        Estados de Cuenta
-                    </a>
-                </li>
-                <li>
-                    <a href="<?= site_url('tienda/reportes/mejoresempleados') ?>" class="nav-link text-nowrap">
-                        <i class="bi bi-person-check"></i>
-                        Mejores Empleados
-                    </a>
-                </li>
-                <li>
-                    <a href="<?= site_url('tienda/reportes/menorrotacion') ?>" class="nav-link text-nowrap">
-                        <i class="bi bi-hourglass-bottom"></i>
-                        Prod. Menor Rotación
-                    </a>
-                </li>
-                <li>
-                    <hr class="dropdown-divider">
-                </li>
-                <li>
-                    <a href="<?= site_url('Tienda/Reportes/reporte_avanzado') ?>" class="nav-link text-nowrap">
-                        <i class="bi bi-sliders"></i>
-                        Reporte de Pagos Avanzado
-                    </a>
-                </li>
-            </ul>
-        </li>
-
+            <?php endif; ?>
+        <?php endforeach; ?>
     </ul>
 
 

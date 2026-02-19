@@ -4,69 +4,55 @@ Ragnos uses **AdminLTE 3** as base for its interface, integrated with CodeIgnite
 
 ## Sidebar
 
-Main application menu resides in a static view. To add, remove or reorganize links, you must edit file:
-
+Sidebar is located at:
 📂 `app/Views/template/sidebar.php`
 
-### Menu Structure
+Just like the topbar, the sidebar menu is centralized in the `MenuBuilder` class.
 
-Menu uses standard HTML list with Bootstrap/AdminLTE classes.
+### Sidebar Menu Configuration
 
-!!! info "Available Icons"
+The menu is defined in the class:
+📂 `app/Libraries/MenuBuilder.php`
 
-    Ragnos includes **Bootstrap Icons** library. Browse [official icon gallery](https://icons.getbootstrap.com/) to find class codes (e.g. `bi-shop`, `bi-gear`).
+This class contains the `getSidebarMenu()` method which returns an array with the sidebar structure, allowing for permission logic based on the `Admin_aut` service.
 
-**Example adding simple link:**
-
-```php
-<li class="nav-item">
-    <a href="<?= site_url('process/tasks') ?>" class="nav-link">
-        <i class="bi bi-check-square nav-icon"></i>
-        <p>My Tasks</p>
-    </a>
-</li>
-```
-
-**Example dropdown submenu:**
+**Example structure in `MenuBuilder`:**
 
 ```php
-<li class="nav-item">
-    <a class="nav-link">
-        <i class="bi bi-shop"></i>
-        <p>
-            Store
-            <i class="nav-arrow bi bi-chevron-right"></i>
-        </p>
-    </a>
-    <ul class="nav nav-treeview">
-        <li class="nav-item">
-            <a href="<?= site_url('store/products') ?>" class="nav-link">
-                <i class="bi bi-box nav-icon"></i>
-                <p>Products</p>
-            </a>
-        </li>
-    </ul>
-</li>
+public function getSidebarMenu(): array
+{
+    $auth = service('Admin_aut');
+    $menu = [];
+
+    if ($auth->isUserInGroup('administrator')) {
+        $menu[] = [
+            'title'    => 'Users',
+            'icon'     => 'bi-people',
+            'children' => [
+                [
+                    'title' => 'Users',
+                    'url'   => site_url('users'),
+                    'icon'  => 'bi-person-circle',
+                ],
+            ],
+        ];
+    }
+
+    return $menu;
+}
 ```
 
-### Menu Access Control
+### Usage in View
 
-You can show or hide menu elements based on logged-in user role using `Admin_aut` service.
+The `sidebar.php` file uses the `menu` service to iterate over items:
 
 ```php
-<?php
-// Get auth service at start of file
-$auth = service('Admin_aut');
-?>
-
-<!-- ... in menu ... -->
-
-<?php if ($auth->isUserInGroup('administrator')): ?>
-    <li class="nav-item">
-        <a href="<?= site_url('users') ?>" class="nav-link"> ... </a>
-    </li>
-<?php endif; ?>
+<?php foreach (service('menu')->getSidebarMenu() as $item): ?>
+    <!-- Sidebar rendering logic -->
+<?php endforeach; ?>
 ```
+
+This centralizes all application navigation in one place, making access control and code organization easier.
 
 ## Logo and Title Customization
 
@@ -104,4 +90,51 @@ To use an image:
 Topbar is located at:
 📂 `app/Views/template/topbar.php`
 
-Here you can modify right-side links (profile, notifications) or add global search.
+Unlike the sidebar, the main menu in the topbar is centralized in a class to simplify maintenance and allow for a more dynamic configuration.
+
+### Navigation Menu Configuration
+
+The menu is defined in the class:
+📂 `app/Libraries/MenuBuilder.php`
+
+This class contains the `getTopMenu()` method which returns an array with the menu structure. Each element can be a simple link or a dropdown with children (`children`).
+
+**Example structure in `MenuBuilder`:**
+
+```php
+public function getTopMenu(): array
+{
+    return [
+        [
+            'title' => 'Home',
+            'url'   => site_url(),
+            'icon'  => 'bi-house-door',
+        ],
+        [
+            'title'    => 'Catalogs',
+            'icon'     => 'bi-file-spreadsheet-fill',
+            'children' => [
+                [
+                    'title' => 'Offices',
+                    'url'   => site_url('store/offices'),
+                    'icon'  => 'bi-building',
+                ],
+                ['divider' => true],
+                // ... more children
+            ],
+        ],
+    ];
+}
+```
+
+### Usage in top View
+
+To render the menu, the `menu` service is used in the view:
+
+```php
+<?php foreach (service('menu')->getTopMenu() as $item): ?>
+    <!-- Rendering logic -->
+<?php endforeach; ?>
+```
+
+This allows adding new menu options simply by editing the `MenuBuilder` class without needing to modify the topbar HTML.

@@ -34,4 +34,9 @@ class Services extends BaseService
     {
         return \App\Services\Admin_aut::getInstance();
     }
+
+    public static function menu()
+    {
+        return new \App\Libraries\MenuBuilder();
+    }
 }
