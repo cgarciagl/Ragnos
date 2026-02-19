@@ -1,12 +1,15 @@
 <?php
 use App\ThirdParty\Ragnos\Controllers\Ragnos;
-$auth = service('Admin_aut');
+$auth         = service('Admin_aut');
+$ragnosConfig = config('RagnosConfig');
 ?>
 
 <!-- Brand Logo -->
 <div class="sidebar-brand">
     <a href="<?= site_url() ?>" class="brand-link">
-        <span class="brand-text font-weight-light"><?= Ragnos::config()->Ragnos_application_title; ?></span>
+        <span class="brand-text font-weight-light">
+            <?= $ragnosConfig->Ragnos_all_to_uppercase ? strtoupper($ragnosConfig->Ragnos_application_title) : $ragnosConfig->Ragnos_application_title; ?>
+        </span>
     </a>
 </div>
 

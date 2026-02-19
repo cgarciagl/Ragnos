@@ -1,5 +1,9 @@
 <!DOCTYPE html>
-<html lang="ES" translate="no" class="notranslate">
+<?php
+$ragnosConfig = config('RagnosConfig');
+$lang         = explode('_', $ragnosConfig->locale)[0];
+?>
+<html lang="<?= $lang ?>" translate="no" class="notranslate">
 
 <head>
     <?php
@@ -7,12 +11,15 @@
     use App\ThirdParty\Ragnos\Controllers\Ragnos;
 
     ?>
-    <title><?= Ragnos::config()->Ragnos_application_title; ?></title>
+    <title>
+        <?= $ragnosConfig->Ragnos_all_to_uppercase ? strtoupper($ragnosConfig->Ragnos_application_title) : $ragnosConfig->Ragnos_application_title; ?>
+    </title>
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="google" content="notranslate" />
+    <meta name="theme-color" content="<?= $ragnosConfig->Ragnos_theme_color ?>">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="googlebot" content="noindex">
@@ -22,6 +29,13 @@
 
     <?php Ragnos::getHeaderAll(); ?>
 
+    <script>
+        window.RagnosConfig = {
+            currency: '<?= $ragnosConfig->currency ?>',
+            locale: '<?= $ragnosConfig->locale ?>',
+            themeColor: '<?= $ragnosConfig->Ragnos_theme_color ?>'
+        };
+    </script>
     <script src="assets/js/custom.js"></script>
 
 </head>
@@ -86,7 +100,7 @@
 
             </div>
 
-            <strong>Copyright &copy; 2025</strong>
+            <strong><?= $ragnosConfig->Ragnos_footer_text ?></strong>
         </footer>
     </div>
 
