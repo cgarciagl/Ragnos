@@ -2,300 +2,300 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
     <url>
         <loc>https://cgarciagl.github.io/Ragnos/docs/</loc>
-        <lastmod>2026-02-20</lastmod>
+        <lastmod>2026-02-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="es" href="https://cgarciagl.github.io/Ragnos/docs/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://cgarciagl.github.io/Ragnos/docs/en/"/>
     </url>
     <url>
         <loc>https://cgarciagl.github.io/Ragnos/docs/avanzado/auditlog/</loc>
-        <lastmod>2026-02-20</lastmod>
+        <lastmod>2026-02-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="es" href="https://cgarciagl.github.io/Ragnos/docs/avanzado/auditlog/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://cgarciagl.github.io/Ragnos/docs/en/avanzado/auditlog/"/>
     </url>
     <url>
         <loc>https://cgarciagl.github.io/Ragnos/docs/avanzado/autenticacion_integrada/</loc>
-        <lastmod>2026-02-20</lastmod>
+        <lastmod>2026-02-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="es" href="https://cgarciagl.github.io/Ragnos/docs/avanzado/autenticacion_integrada/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://cgarciagl.github.io/Ragnos/docs/en/avanzado/autenticacion_integrada/"/>
     </url>
     <url>
         <loc>https://cgarciagl.github.io/Ragnos/docs/avanzado/despliegue/</loc>
-        <lastmod>2026-02-20</lastmod>
+        <lastmod>2026-02-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="es" href="https://cgarciagl.github.io/Ragnos/docs/avanzado/despliegue/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://cgarciagl.github.io/Ragnos/docs/en/avanzado/despliegue/"/>
     </url>
     <url>
         <loc>https://cgarciagl.github.io/Ragnos/docs/avanzado/guia_modo_api/</loc>
-        <lastmod>2026-02-20</lastmod>
+        <lastmod>2026-02-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="es" href="https://cgarciagl.github.io/Ragnos/docs/avanzado/guia_modo_api/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://cgarciagl.github.io/Ragnos/docs/en/avanzado/guia_modo_api/"/>
     </url>
     <url>
         <loc>https://cgarciagl.github.io/Ragnos/docs/avanzado/helpers/</loc>
-        <lastmod>2026-02-20</lastmod>
+        <lastmod>2026-02-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="es" href="https://cgarciagl.github.io/Ragnos/docs/avanzado/helpers/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://cgarciagl.github.io/Ragnos/docs/en/avanzado/helpers/"/>
     </url>
     <url>
         <loc>https://cgarciagl.github.io/Ragnos/docs/avanzado/hooks/</loc>
-        <lastmod>2026-02-20</lastmod>
+        <lastmod>2026-02-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="es" href="https://cgarciagl.github.io/Ragnos/docs/avanzado/hooks/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://cgarciagl.github.io/Ragnos/docs/en/avanzado/hooks/"/>
     </url>
     <url>
         <loc>https://cgarciagl.github.io/Ragnos/docs/avanzado/reportes_automaticos/</loc>
-        <lastmod>2026-02-20</lastmod>
+        <lastmod>2026-02-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="es" href="https://cgarciagl.github.io/Ragnos/docs/avanzado/reportes_automaticos/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://cgarciagl.github.io/Ragnos/docs/en/avanzado/reportes_automaticos/"/>
     </url>
     <url>
         <loc>https://cgarciagl.github.io/Ragnos/docs/avanzado/server_side_events/</loc>
-        <lastmod>2026-02-20</lastmod>
+        <lastmod>2026-02-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="es" href="https://cgarciagl.github.io/Ragnos/docs/avanzado/server_side_events/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://cgarciagl.github.io/Ragnos/docs/en/avanzado/server_side_events/"/>
     </url>
     <url>
         <loc>https://cgarciagl.github.io/Ragnos/docs/datasets/campos/</loc>
-        <lastmod>2026-02-20</lastmod>
+        <lastmod>2026-02-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="es" href="https://cgarciagl.github.io/Ragnos/docs/datasets/campos/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://cgarciagl.github.io/Ragnos/docs/en/datasets/campos/"/>
     </url>
     <url>
         <loc>https://cgarciagl.github.io/Ragnos/docs/datasets/datasets/</loc>
-        <lastmod>2026-02-20</lastmod>
+        <lastmod>2026-02-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="es" href="https://cgarciagl.github.io/Ragnos/docs/datasets/datasets/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://cgarciagl.github.io/Ragnos/docs/en/datasets/datasets/"/>
     </url>
     <url>
         <loc>https://cgarciagl.github.io/Ragnos/docs/datasets/guia_RQueryController/</loc>
-        <lastmod>2026-02-20</lastmod>
+        <lastmod>2026-02-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="es" href="https://cgarciagl.github.io/Ragnos/docs/datasets/guia_RQueryController/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://cgarciagl.github.io/Ragnos/docs/en/datasets/guia_RQueryController/"/>
     </url>
     <url>
         <loc>https://cgarciagl.github.io/Ragnos/docs/datasets/maestro-detalle/</loc>
-        <lastmod>2026-02-20</lastmod>
+        <lastmod>2026-02-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="es" href="https://cgarciagl.github.io/Ragnos/docs/datasets/maestro-detalle/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://cgarciagl.github.io/Ragnos/docs/en/datasets/maestro-detalle/"/>
     </url>
     <url>
         <loc>https://cgarciagl.github.io/Ragnos/docs/frontend/funciones_javascript/</loc>
-        <lastmod>2026-02-20</lastmod>
+        <lastmod>2026-02-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="es" href="https://cgarciagl.github.io/Ragnos/docs/frontend/funciones_javascript/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://cgarciagl.github.io/Ragnos/docs/en/frontend/funciones_javascript/"/>
     </url>
     <url>
         <loc>https://cgarciagl.github.io/Ragnos/docs/frontend/personalizacion_ui/</loc>
-        <lastmod>2026-02-20</lastmod>
+        <lastmod>2026-02-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="es" href="https://cgarciagl.github.io/Ragnos/docs/frontend/personalizacion_ui/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://cgarciagl.github.io/Ragnos/docs/en/frontend/personalizacion_ui/"/>
     </url>
     <url>
         <loc>https://cgarciagl.github.io/Ragnos/docs/frontend/reportes_simples/</loc>
-        <lastmod>2026-02-20</lastmod>
+        <lastmod>2026-02-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="es" href="https://cgarciagl.github.io/Ragnos/docs/frontend/reportes_simples/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://cgarciagl.github.io/Ragnos/docs/en/frontend/reportes_simples/"/>
     </url>
     <url>
         <loc>https://cgarciagl.github.io/Ragnos/docs/fundamentos/base_de_datos_demo/</loc>
-        <lastmod>2026-02-20</lastmod>
+        <lastmod>2026-02-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="es" href="https://cgarciagl.github.io/Ragnos/docs/fundamentos/base_de_datos_demo/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://cgarciagl.github.io/Ragnos/docs/en/fundamentos/base_de_datos_demo/"/>
     </url>
     <url>
         <loc>https://cgarciagl.github.io/Ragnos/docs/fundamentos/configuracion/</loc>
-        <lastmod>2026-02-20</lastmod>
+        <lastmod>2026-02-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="es" href="https://cgarciagl.github.io/Ragnos/docs/fundamentos/configuracion/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://cgarciagl.github.io/Ragnos/docs/en/fundamentos/configuracion/"/>
     </url>
     <url>
         <loc>https://cgarciagl.github.io/Ragnos/docs/fundamentos/instalacion/</loc>
-        <lastmod>2026-02-20</lastmod>
+        <lastmod>2026-02-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="es" href="https://cgarciagl.github.io/Ragnos/docs/fundamentos/instalacion/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://cgarciagl.github.io/Ragnos/docs/en/fundamentos/instalacion/"/>
     </url>
     <url>
         <loc>https://cgarciagl.github.io/Ragnos/docs/fundamentos/plantilla/</loc>
-        <lastmod>2026-02-20</lastmod>
+        <lastmod>2026-02-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="es" href="https://cgarciagl.github.io/Ragnos/docs/fundamentos/plantilla/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://cgarciagl.github.io/Ragnos/docs/en/fundamentos/plantilla/"/>
     </url>
     <url>
         <loc>https://cgarciagl.github.io/Ragnos/docs/fundamentos/primeros_pasos/</loc>
-        <lastmod>2026-02-20</lastmod>
+        <lastmod>2026-02-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="es" href="https://cgarciagl.github.io/Ragnos/docs/fundamentos/primeros_pasos/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://cgarciagl.github.io/Ragnos/docs/en/fundamentos/primeros_pasos/"/>
     </url>
     <url>
         <loc>https://cgarciagl.github.io/Ragnos/docs/en/</loc>
-        <lastmod>2026-02-20</lastmod>
+        <lastmod>2026-02-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://cgarciagl.github.io/Ragnos/docs/en/"/>
         <xhtml:link rel="alternate" hreflang="es" href="https://cgarciagl.github.io/Ragnos/docs/"/>
     </url>
     <url>
         <loc>https://cgarciagl.github.io/Ragnos/docs/en/avanzado/auditlog/</loc>
-        <lastmod>2026-02-20</lastmod>
+        <lastmod>2026-02-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://cgarciagl.github.io/Ragnos/docs/en/avanzado/auditlog/"/>
         <xhtml:link rel="alternate" hreflang="es" href="https://cgarciagl.github.io/Ragnos/docs/avanzado/auditlog/"/>
     </url>
     <url>
         <loc>https://cgarciagl.github.io/Ragnos/docs/en/avanzado/autenticacion_integrada/</loc>
-        <lastmod>2026-02-20</lastmod>
+        <lastmod>2026-02-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://cgarciagl.github.io/Ragnos/docs/en/avanzado/autenticacion_integrada/"/>
         <xhtml:link rel="alternate" hreflang="es" href="https://cgarciagl.github.io/Ragnos/docs/avanzado/autenticacion_integrada/"/>
     </url>
     <url>
         <loc>https://cgarciagl.github.io/Ragnos/docs/en/avanzado/despliegue/</loc>
-        <lastmod>2026-02-20</lastmod>
+        <lastmod>2026-02-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://cgarciagl.github.io/Ragnos/docs/en/avanzado/despliegue/"/>
         <xhtml:link rel="alternate" hreflang="es" href="https://cgarciagl.github.io/Ragnos/docs/avanzado/despliegue/"/>
     </url>
     <url>
         <loc>https://cgarciagl.github.io/Ragnos/docs/en/avanzado/guia_modo_api/</loc>
-        <lastmod>2026-02-20</lastmod>
+        <lastmod>2026-02-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://cgarciagl.github.io/Ragnos/docs/en/avanzado/guia_modo_api/"/>
         <xhtml:link rel="alternate" hreflang="es" href="https://cgarciagl.github.io/Ragnos/docs/avanzado/guia_modo_api/"/>
     </url>
     <url>
         <loc>https://cgarciagl.github.io/Ragnos/docs/en/avanzado/helpers/</loc>
-        <lastmod>2026-02-20</lastmod>
+        <lastmod>2026-02-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://cgarciagl.github.io/Ragnos/docs/en/avanzado/helpers/"/>
         <xhtml:link rel="alternate" hreflang="es" href="https://cgarciagl.github.io/Ragnos/docs/avanzado/helpers/"/>
     </url>
     <url>
         <loc>https://cgarciagl.github.io/Ragnos/docs/en/avanzado/hooks/</loc>
-        <lastmod>2026-02-20</lastmod>
+        <lastmod>2026-02-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://cgarciagl.github.io/Ragnos/docs/en/avanzado/hooks/"/>
         <xhtml:link rel="alternate" hreflang="es" href="https://cgarciagl.github.io/Ragnos/docs/avanzado/hooks/"/>
     </url>
     <url>
         <loc>https://cgarciagl.github.io/Ragnos/docs/en/avanzado/server_side_events/</loc>
-        <lastmod>2026-02-20</lastmod>
+        <lastmod>2026-02-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://cgarciagl.github.io/Ragnos/docs/en/avanzado/server_side_events/"/>
         <xhtml:link rel="alternate" hreflang="es" href="https://cgarciagl.github.io/Ragnos/docs/avanzado/server_side_events/"/>
     </url>
     <url>
         <loc>https://cgarciagl.github.io/Ragnos/docs/en/datasets/campos/</loc>
-        <lastmod>2026-02-20</lastmod>
+        <lastmod>2026-02-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://cgarciagl.github.io/Ragnos/docs/en/datasets/campos/"/>
         <xhtml:link rel="alternate" hreflang="es" href="https://cgarciagl.github.io/Ragnos/docs/datasets/campos/"/>
     </url>
     <url>
         <loc>https://cgarciagl.github.io/Ragnos/docs/en/datasets/datasets/</loc>
-        <lastmod>2026-02-20</lastmod>
+        <lastmod>2026-02-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://cgarciagl.github.io/Ragnos/docs/en/datasets/datasets/"/>
         <xhtml:link rel="alternate" hreflang="es" href="https://cgarciagl.github.io/Ragnos/docs/datasets/datasets/"/>
     </url>
     <url>
         <loc>https://cgarciagl.github.io/Ragnos/docs/en/datasets/guia_RQueryController/</loc>
-        <lastmod>2026-02-20</lastmod>
+        <lastmod>2026-02-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://cgarciagl.github.io/Ragnos/docs/en/datasets/guia_RQueryController/"/>
         <xhtml:link rel="alternate" hreflang="es" href="https://cgarciagl.github.io/Ragnos/docs/datasets/guia_RQueryController/"/>
     </url>
     <url>
         <loc>https://cgarciagl.github.io/Ragnos/docs/en/datasets/maestro-detalle/</loc>
-        <lastmod>2026-02-20</lastmod>
+        <lastmod>2026-02-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://cgarciagl.github.io/Ragnos/docs/en/datasets/maestro-detalle/"/>
         <xhtml:link rel="alternate" hreflang="es" href="https://cgarciagl.github.io/Ragnos/docs/datasets/maestro-detalle/"/>
     </url>
     <url>
         <loc>https://cgarciagl.github.io/Ragnos/docs/en/frontend/funciones_javascript/</loc>
-        <lastmod>2026-02-20</lastmod>
+        <lastmod>2026-02-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://cgarciagl.github.io/Ragnos/docs/en/frontend/funciones_javascript/"/>
         <xhtml:link rel="alternate" hreflang="es" href="https://cgarciagl.github.io/Ragnos/docs/frontend/funciones_javascript/"/>
     </url>
     <url>
         <loc>https://cgarciagl.github.io/Ragnos/docs/en/frontend/personalizacion_ui/</loc>
-        <lastmod>2026-02-20</lastmod>
+        <lastmod>2026-02-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://cgarciagl.github.io/Ragnos/docs/en/frontend/personalizacion_ui/"/>
         <xhtml:link rel="alternate" hreflang="es" href="https://cgarciagl.github.io/Ragnos/docs/frontend/personalizacion_ui/"/>
     </url>
     <url>
         <loc>https://cgarciagl.github.io/Ragnos/docs/en/frontend/reportes_simples/</loc>
-        <lastmod>2026-02-20</lastmod>
+        <lastmod>2026-02-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://cgarciagl.github.io/Ragnos/docs/en/frontend/reportes_simples/"/>
         <xhtml:link rel="alternate" hreflang="es" href="https://cgarciagl.github.io/Ragnos/docs/frontend/reportes_simples/"/>
     </url>
     <url>
         <loc>https://cgarciagl.github.io/Ragnos/docs/en/fundamentos/configuracion/</loc>
-        <lastmod>2026-02-20</lastmod>
+        <lastmod>2026-02-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://cgarciagl.github.io/Ragnos/docs/en/fundamentos/configuracion/"/>
         <xhtml:link rel="alternate" hreflang="es" href="https://cgarciagl.github.io/Ragnos/docs/fundamentos/configuracion/"/>
     </url>
     <url>
         <loc>https://cgarciagl.github.io/Ragnos/docs/en/fundamentos/demo_database/</loc>
-        <lastmod>2026-02-20</lastmod>
+        <lastmod>2026-02-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://cgarciagl.github.io/Ragnos/docs/en/fundamentos/demo_database/"/>
     </url>
     <url>
         <loc>https://cgarciagl.github.io/Ragnos/docs/en/fundamentos/instalacion/</loc>
-        <lastmod>2026-02-20</lastmod>
+        <lastmod>2026-02-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://cgarciagl.github.io/Ragnos/docs/en/fundamentos/instalacion/"/>
         <xhtml:link rel="alternate" hreflang="es" href="https://cgarciagl.github.io/Ragnos/docs/fundamentos/instalacion/"/>
     </url>
     <url>
         <loc>https://cgarciagl.github.io/Ragnos/docs/en/fundamentos/plantilla/</loc>
-        <lastmod>2026-02-20</lastmod>
+        <lastmod>2026-02-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://cgarciagl.github.io/Ragnos/docs/en/fundamentos/plantilla/"/>
         <xhtml:link rel="alternate" hreflang="es" href="https://cgarciagl.github.io/Ragnos/docs/fundamentos/plantilla/"/>
     </url>
     <url>
         <loc>https://cgarciagl.github.io/Ragnos/docs/en/fundamentos/primeros_pasos/</loc>
-        <lastmod>2026-02-20</lastmod>
+        <lastmod>2026-02-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://cgarciagl.github.io/Ragnos/docs/en/fundamentos/primeros_pasos/"/>
         <xhtml:link rel="alternate" hreflang="es" href="https://cgarciagl.github.io/Ragnos/docs/fundamentos/primeros_pasos/"/>
     </url>
     <url>
         <loc>https://cgarciagl.github.io/Ragnos/docs/en/avanzado/reportes_automaticos/</loc>
-        <lastmod>2026-02-20</lastmod>
+        <lastmod>2026-02-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://cgarciagl.github.io/Ragnos/docs/en/avanzado/reportes_automaticos/"/>
         <xhtml:link rel="alternate" hreflang="es" href="https://cgarciagl.github.io/Ragnos/docs/avanzado/reportes_automaticos/"/>
     </url>
     <url>
         <loc>https://cgarciagl.github.io/Ragnos/docs/en/fundamentos/base_de_datos_demo/</loc>
-        <lastmod>2026-02-20</lastmod>
+        <lastmod>2026-02-25</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://cgarciagl.github.io/Ragnos/docs/en/fundamentos/base_de_datos_demo/"/>
         <xhtml:link rel="alternate" hreflang="es" href="https://cgarciagl.github.io/Ragnos/docs/fundamentos/base_de_datos_demo/"/>
