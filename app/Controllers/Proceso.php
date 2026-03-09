@@ -6,6 +6,9 @@ use App\ThirdParty\Ragnos\Controllers\RProcessController;
 
 class Proceso extends RProcessController
 {
+    public $requireConfirmation = true;
+    public $confirmationMessage = '¿Estás completamente seguro de iniciar el recálculo de precios? Esta acción no se puede deshacer.';
+
     public function start()
     {
         processStart('Recalculando precios');

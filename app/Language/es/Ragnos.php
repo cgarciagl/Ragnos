@@ -129,4 +129,10 @@ $lang['Ragnos_detail_form_alert_title'] = 'Estás editando un registro de detall
 $lang['Ragnos_detail_form_alert_text']  = 'Asegúrate de hacer clic en el botón <strong>Aceptar y Guardar Detalle</strong> en la parte inferior de esta pestaña para conservar estos cambios.';
 $lang['Ragnos_accept_and_save_detail']  = 'Aceptar y Guardar Detalle';
 
+// Procesos
+$lang['Ragnos_confirm_process_msg']  = '¿Estás seguro de que deseas iniciar este proceso?';
+$lang['Ragnos_waiting_confirmation'] = 'Esperando confirmación...';
+$lang['Ragnos_confirmation_title']   = 'Confirmación requerida';
+$lang['Ragnos_process_cancelled']    = 'Proceso cancelado.';
+
 return $lang;

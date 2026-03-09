@@ -30,8 +30,10 @@ Para crear un nuevo proceso, debes crear un controlador que extienda de `RProces
 
 **Ubicación**: `App\Controllers\` o cualquier subcarpeta, siempre que el namespace sea correcto.
 
-### Métodos Principales
+### Métodos y Propiedades Principales
 
+- **`$requireConfirmation`**: Propiedad booleana (por defecto `false`). Si se establece en `true`, aparecerá un cuadro de diálogo de confirmación antes de que inicie el proceso, advirtiendo al usuario.
+- **`$confirmationMessage`**: Propiedad de cadena para configurar un mensaje personalizado para el cuadro de diálogo de confirmación si `$requireConfirmation` es `true`. Por defecto, usa un mensaje genérico definido en los archivos de idioma del framework.
 - **`__construct()`**: Carga automáticamente el `process_helper`.
 - **`showProgress()`**: Muestra la interfaz de usuario con la barra de progreso. Calcula automáticamente la URL del endpoint `start` basándose en el nombre de la clase.
 - **`start()`**: **Debe ser sobreescrito**. Aquí reside la lógica de tu proceso larga duración.
@@ -103,6 +105,10 @@ use App\ThirdParty\Ragnos\Controllers\RProcessController;
 
 class RecalculoPrecios extends RProcessController
 {
+    // Definir si el proceso necesita de una confirmación previa (Opcional)
+    public $requireConfirmation = true;
+    public $confirmationMessage = '¿Estás completamente seguro de iniciar el recálculo de precios? Esta acción no se puede deshacer.';
+
     // Método principal que ejecuta la lógica
     public function start()
     {

@@ -30,8 +30,10 @@ To create new process, must create controller extending `RProcessController`.
 
 **Location**: `App\Controllers\` or any subfolder, provided namespace correct.
 
-### Main Methods
+### Main Methods and Properties
 
+- **`$requireConfirmation`**: Boolean property (default `false`). If set to `true`, a confirmation dialog will appear before the process starts, warning the user.
+- **`$confirmationMessage`**: String property to set a custom message for the confirmation dialog if `$requireConfirmation` is `true`. Defaults to a generic framework defined message.
 - **`__construct()`**: Automatically loads `process_helper`.
 - **`showProgress()`**: Shows UI with progress bar. Automatically calculates URL of `start` endpoint based on class name.
 - **`start()`**: **Must be overridden**. Logic of long running process resides here.
@@ -103,6 +105,10 @@ use App\ThirdParty\Ragnos\Controllers\RProcessController;
 
 class RecalculatePrices extends RProcessController
 {
+    // Define if the process needs a previous confirmation prompt (Optional)
+    public $requireConfirmation = true;
+    public $confirmationMessage = 'Are you totally sure you want to recalculate prices? This action cannot be undone.';
+
     // Main method executing logic
     public function start()
     {

@@ -129,4 +129,10 @@ $lang['Ragnos_detail_form_alert_title'] = 'You are editing a detail record';
 $lang['Ragnos_detail_form_alert_text']  = 'Make sure to click the <strong>Accept and Save Detail</strong> button at the bottom of this tab to keep these changes.';
 $lang['Ragnos_accept_and_save_detail']  = 'Accept and Save Detail';
 
+// Processes
+$lang['Ragnos_confirm_process_msg']  = 'Are you sure you want to start this process?';
+$lang['Ragnos_waiting_confirmation'] = 'Waiting for confirmation...';
+$lang['Ragnos_confirmation_title']   = 'Confirmation required';
+$lang['Ragnos_process_cancelled']    = 'Process cancelled.';
+
 return $lang;
