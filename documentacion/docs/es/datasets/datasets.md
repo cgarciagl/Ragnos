@@ -176,6 +176,14 @@ Otra ventaja clave es que los campos asociados mediante `addSearch` se convierte
 - **Sin Joins Manuales**: El framework gestiona las consultas subyacentes.
 - **UX Superior**: Selectores intuitivos que buscan por múltiples atributos relevantes.
 
+### Prevención de Referencias Circulares
+
+Al utilizar la función `addSearch()` para relacionar datasets, es de vital importancia asegurar que no se introduzcan referencias circulares, ya sean de manera directa o indirecta. Una referencia circular directa ocurre cuando un dataset **A** define una búsqueda hacia un dataset **B**, y a su vez, el dataset **B** define una búsqueda de vuelta hacia el dataset **A**. Esto genera un bucle infinito que puede saturar los recursos del servidor y provocar que el sistema falle inesperadamente al intentar resolver la dependencia mutua.
+
+El problema tiende a ser aún más difícil de detectar cuando se trata de referencias circulares indirectas. Por ejemplo, el dataset **A** se relaciona con **B**, el dataset **B** con **C**, y finalmente **C** establece una relación mediante `addSearch()` que apunta de regreso al dataset **A**. Esta cadena de dependencias ocultas no solo afecta los tiempos de carga, sino que rompe completamente las consultas SQL automatizadas y procesos de agrupación que el framework intenta resolver en segundo plano.
+
+Para evitar este inconveniente que compromete la estabilidad de la aplicación, se recomienda planificar proactivamente la arquitectura de los datos antes de implementar las relaciones. Es fundamental revisar el diseño de los módulos y mantener una jerarquía estricta (por ejemplo, de catálogos maestros hacia transacciones u operaciones dependientes), asegurando que el flujo de dependencias avance en una sola dirección y nunca retorne a un punto de origen ya evaluado.
+
 ## Configuración de la grilla
 
 - `setTableFields([...])` define columnas visibles en el listado (DataTable).

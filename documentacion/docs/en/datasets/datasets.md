@@ -161,6 +161,14 @@ Another key advantage is that fields associated via `addSearch` automatically be
 - **No Manual Joins**: The framework manages the underlying queries.
 - **Superior UX**: Intuitive selectors searching by multiple relevant attributes.
 
+### Preventing Circular References
+
+When using the `addSearch()` function to relate datasets, it is critically important to ensure that no circular references are introduced, whether directly or indirectly. A direct circular reference occurs when dataset **A** defines a search towards dataset **B**, and in turn, dataset **B** defines a search back towards dataset **A**. This creates an infinite loop that can deplete server resources and cause the system to fail unexpectedly when trying to resolve the mutual dependency.
+
+The problem tends to be even harder to detect when dealing with indirect circular references. For instance, dataset **A** relates to **B**, dataset **B** relates to **C**, and finally, **C** establishes a relationship via `addSearch()` pointing back to dataset **A**. This chain of hidden dependencies not only affects load times but completely breaks the automated SQL queries and grouping processes that the framework attempts to resolve in the background.
+
+To avoid this issue that compromises the application's stability, it is strongly recommended to proactively plan the data architecture before implementing relationships. It is essential to review the module design and maintain a strict hierarchy (for example, from master catalogs down to dependent transactions or operations), ensuring that the flow of dependencies always moves in a single direction and never returns to a previously evaluated origin point.
+
 ## Grid Configuration
 
 - `setTableFields([...])` defines visible columns in the list (DataTable).

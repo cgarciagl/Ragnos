@@ -42,17 +42,13 @@ class RagnosConfig extends BaseConfig
 | `$currency` | `string` | Define el código de moneda por defecto (ej. 'USD', 'MXN', 'EUR') utilizado en los helpers de formateo de dinero.                                              |
 | `$locale`   | `string` | Define el locale predeterminado para formatos de fecha y número (ej. 'es_MX', 'en_US'). Nota: Esto es independiente del idioma de la interfaz que maneja CI4. |
 
-## Enrutamiento (Auto Routing)
+## Enrutamiento (Auto Routing Legacy)
 
-Una particularidad importante de Ragnos es que mantiene habilitada la característica de **Auto Routing** (`$routes->setAutoRoute(true)`) de CodeIgniter 4 por defecto.
+Ragnos viene preconfigurado por defecto para funcionar bajo el modo **Auto Routing (Legacy)** de CodeIgniter 4. Este mecanismo de enrutamiento automático se refiere a la capacidad del framework para mapear directamente las solicitudes HTTP (URLs) hacia las clases y métodos de los controladores basándose en simples convenciones de nomenclatura, sin la necesidad de definir o registrar cada ruta de manera explícita en el archivo de configuración `Routes.php`. Cuando una petición ingresa al sistema, el componente encargado de las rutas analiza los segmentos de la URL: el primer segmento corresponde al nombre del controlador y el segundo segmento invoca al método específico a ejecutar dentro de esa clase.
 
-### ¿Qué implica esto para el desarrollador?
+Las características principales del modo Auto Routing radican en su transparencia y agilidad. Al evitar la labor tediosa de mantener un listado robusto de rutas y cierres (closures) por cada nuevo endpoint o módulo que se crea, el desarrollador puede centrarse inmediatamente en escribir la lógica de negocio y los controladores tipo Dataset que Ragnos facilita. Esto se alinea de forma natural con la filosofía "Low Code" del framework, donde la creación de componentes CRUD completos o reportes avanzados se logra prácticamente al instante, publicando automáticamente los métodos necesarios directamente a partir de su existencia en el archivo. Además, es un modo que ha madurado a lo largo del tiempo e históricamente ha sido la forma clásica de trabajo en versiones previas de CodeIgniter.
 
-1.  **Cero Configuración de Rutas:** Al crear un nuevo controlador (por ejemplo, con el [Generador CLI](plantilla.md)), este es accesible inmediatamente vía URL (`/TuControlador/metodo`) sin necesidad de editar `app/Config/Routes.php`.
-2.  **Agilidad:** Esto es fundamental para la filosofía "Low Code" de Ragnos, permitiendo prototipar y desplegar módulos CRUD en segundos.
-3.  **Seguridad y Personalización:** Si necesitas URLs específicas o restringir el acceso, puedes definir rutas manuales en `Config/Routes.php`. Las rutas manuales tienen prioridad sobre las automáticas.
-
-> ⚠️ **Importante:** Si decides desactivar el Auto Routing (`false`) por políticas de seguridad estrictas, deberás registrar manualmente cada ruta de tus Datasets, lo cual incrementa el trabajo de mantenimiento.
+Las ventajas más destacables de usar el entorno Legacy Auto Routing en Ragnos incluyen una drástica reducción del tiempo de configuración y un enrutamiento altamente predecible. Esto resulta invaluable para proyectos de gestión, paneles administrativos y utilidades internas interconectadas, en donde la cantidad de controladores tiende a crecer con gran rapidez. Permite también la rápida visualización y prototipado sin tener que alternar constantemente entre archivos de mapeo de rutas y los propios controladores. Es fundamental mencionar que esto no limita la flexibilidad de la plataforma; el desarrollador puede, en un modelo híbrido, seguir definiendo excepciones o rutas seguras de manera convencional en la configuración en los casos donde necesite control estricto sobre URI paramétricas específicas, manteniendo lo mejor de ambos mundos: rapidez productiva y control granular cuando la capa de seguridad o restricciones lo requieran.
 
 ## Otras Configuraciones (CodeIgniter)
 
