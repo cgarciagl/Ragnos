@@ -248,8 +248,10 @@
 <h2 id="rprocesscontroller-class">RProcessController Class</h2>
 <p>To create new process, must create controller extending <code>RProcessController</code>.</p>
 <p><strong>Location</strong>: <code>App\Controllers\</code> or any subfolder, provided namespace correct.</p>
-<h3 id="main-methods">Main Methods</h3>
+<h3 id="main-methods-and-properties">Main Methods and Properties</h3>
 <ul>
+<li><strong><code>$requireConfirmation</code></strong>: Boolean property (default <code>false</code>). If set to <code>true</code>, a confirmation dialog will appear before the process starts, warning the user.</li>
+<li><strong><code>$confirmationMessage</code></strong>: String property to set a custom message for the confirmation dialog if <code>$requireConfirmation</code> is <code>true</code>. Defaults to a generic framework defined message.</li>
 <li><strong><code>__construct()</code></strong>: Automatically loads <code>process_helper</code>.</li>
 <li><strong><code>showProgress()</code></strong>: Shows UI with progress bar. Automatically calculates URL of <code>start</code> endpoint based on class name.</li>
 <li><strong><code>start()</code></strong>: <strong>Must be overridden</strong>. Logic of long running process resides here.</li>
@@ -305,32 +307,36 @@
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="k">class</span> <span class="nc">RecalculatePrices</span> <span class="k">extends</span> <span class="nx">RProcessController</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="p">{</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="c1">// Main method executing logic</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="k">public</span> <span class="k">function</span> <span class="nf">start</span><span class="p">()</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="p">{</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>        <span class="c1">// 1. Start process</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>        <span class="nx">processStart</span><span class="p">(</span><span class="s1">&#39;Recalculating catalog prices&#39;</span><span class="p">);</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>        <span class="nv">$totalProducts</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;=</span> <span class="nv">$totalProducts</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>            <span class="c1">// Simulate heavy work</span>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>            <span class="nb">usleep</span><span class="p">(</span><span class="mi">100000</span><span class="p">);</span> <span class="c1">// 0.1 seconds</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="c1">// Define if the process needs a previous confirmation prompt (Optional)</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="k">public</span> <span class="nv">$requireConfirmation</span> <span class="o">=</span> <span class="k">true</span><span class="p">;</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="k">public</span> <span class="nv">$confirmationMessage</span> <span class="o">=</span> <span class="s1">&#39;Are you totally sure you want to recalculate prices? This action cannot be undone.&#39;</span><span class="p">;</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="c1">// Main method executing logic</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="k">public</span> <span class="k">function</span> <span class="nf">start</span><span class="p">()</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="p">{</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>        <span class="c1">// 1. Start process</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>        <span class="nx">processStart</span><span class="p">(</span><span class="s1">&#39;Recalculating catalog prices&#39;</span><span class="p">);</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>        <span class="nv">$totalProducts</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
 <a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>            <span class="c1">// 2. Update progress (calculates % automatically)</span>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>            <span class="nx">setProgressOf</span><span class="p">(</span><span class="nv">$i</span><span class="p">,</span> <span class="nv">$totalProducts</span><span class="p">);</span>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>            <span class="c1">// 3. Update info text</span>
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>            <span class="nx">setProgressText</span><span class="p">(</span><span class="s2">&quot;Updating product ID: #</span><span class="si">{</span><span class="nv">$i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">);</span>
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>        <span class="p">}</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;=</span> <span class="nv">$totalProducts</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>            <span class="c1">// Simulate heavy work</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>            <span class="nb">usleep</span><span class="p">(</span><span class="mi">100000</span><span class="p">);</span> <span class="c1">// 0.1 seconds</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>            <span class="c1">// 2. Update progress (calculates % automatically)</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>            <span class="nx">setProgressOf</span><span class="p">(</span><span class="nv">$i</span><span class="p">,</span> <span class="nv">$totalProducts</span><span class="p">);</span>
 <a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>        <span class="c1">// 4. Finish</span>
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>        <span class="nx">endProcess</span><span class="p">([</span>
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>            <span class="s1">&#39;message&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Prices updated successfully&#39;</span><span class="p">,</span>
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>            <span class="s1">&#39;total&#39;</span>   <span class="o">=&gt;</span> <span class="nv">$totalProducts</span>
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>        <span class="p">]);</span>
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>    <span class="p">}</span>
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a><span class="p">}</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>            <span class="c1">// 3. Update info text</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>            <span class="nx">setProgressText</span><span class="p">(</span><span class="s2">&quot;Updating product ID: #</span><span class="si">{</span><span class="nv">$i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">);</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>        <span class="p">}</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>        <span class="c1">// 4. Finish</span>
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>        <span class="nx">endProcess</span><span class="p">([</span>
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>            <span class="s1">&#39;message&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Prices updated successfully&#39;</span><span class="p">,</span>
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>            <span class="s1">&#39;total&#39;</span>   <span class="o">=&gt;</span> <span class="nv">$totalProducts</span>
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>        <span class="p">]);</span>
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>    <span class="p">}</span>
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a><span class="p">}</span>
 </code></pre></div>
 <h3 id="example-2-user-import-with-validation">Example 2: User Import (With Validation)</h3>
 <p>More complex example simulating import where info validated.</p>
