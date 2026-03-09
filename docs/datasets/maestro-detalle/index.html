@@ -238,12 +238,20 @@
 <li><strong>Campos:</strong> Definimos los campos normales como fecha (<code>orderDate</code>), estado (<code>status</code>) y cliente (<code>customerNumber</code>).</li>
 <li><strong>Campo Total (Calculado):</strong> Para mostrar el total de la orden sin guardarlo manualmente, usamos una pequeña consulta SQL dentro de la configuración del campo. Esta consulta suma <code>cantidad * precio</code> de la tabla de detalles.</li>
 <li><strong>Activar el modo detalle:</strong>
-  Hay una línea clave que debes agregar en tu controlador maestro para avisar que tendrá "hijos":
-  <div class="highlight"><pre><span></span><code><a href="#__codelineno-0-1" id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="x">$this-&gt;setDetailsController('Tienda\Ordenesdetalles');</span>
-</code></pre></div>
-  Esto le dice a Ragnos que el controlador <code>Ordenesdetalles</code> manejará los detalles relacionados con cada orden.
-  La relación se basa en que el campo <code>orderNumber</code> en ambos controladores es el mismo, y este es la llave primaria en el maestro.</li>
+  Hay una línea clave que debes agregar en tu controlador maestro para avisar que tendrá "hijos". Puedes pasar un solo controlador o un arreglo con múltiples controladores para crear pestañas automáticamente:</li>
 </ul>
+<p><strong>Para un solo detalle:</strong></p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-0-1" id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="x">$this-&gt;setDetailsController('Tienda\Ordenesdetalles');</span>
+</code></pre></div>
+<p>Esto le dice a Ragnos que el controlador <code>Ordenesdetalles</code> manejará los detalles relacionados con cada orden.</p>
+<p><strong>Para múltiples detalles (Pestañas):</strong>
+  Si tu registro principal tiene varios tipos de detalles (por ejemplo, productos y un historial), puedes pasar un arreglo de controladores. Ragnos generará automáticamente una interfaz con pestañas (nav-tabs) para mostrar cada detalle por separado:</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-1-1" id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="x">$this-&gt;setDetailsController([</span>
+<a href="#__codelineno-1-2" id="__codelineno-1-2" name="__codelineno-1-2"></a><span class="x">    'Tienda\Ordenesdetalles',</span>
+<a href="#__codelineno-1-3" id="__codelineno-1-3" name="__codelineno-1-3"></a><span class="x">    'Tienda\Ordeneshistorial'</span>
+<a href="#__codelineno-1-4" id="__codelineno-1-4" name="__codelineno-1-4"></a><span class="x">]);</span>
+</code></pre></div>
+<p>La relación se basa en que el campo <code>orderNumber</code> en estos controladores es el mismo, y este es la llave primaria en el maestro.</p>
 <h2 id="2-configurando-el-detalle-controlador-ordenesdetalles">2. Configurando el Detalle (Controlador <code>Ordenesdetalles</code>)</h2>
 <p>Este es el "hijo". Controla cada línea de producto.</p>
 <ul>
@@ -255,10 +263,10 @@
 <li><strong>Filtrar los datos:</strong>
   No queremos ver <em>todos</em> los productos de <em>todas</em> las órdenes. En el método <code>_filters()</code>, agregamos una regla para que solo se carguen los productos que coincidan con el ID del maestro actual (<code>$this-&gt;master</code>).</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a href="#__codelineno-1-1" id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="x">function _filters()</span>
-<a href="#__codelineno-1-2" id="__codelineno-1-2" name="__codelineno-1-2"></a><span class="x">{</span>
-<a href="#__codelineno-1-3" id="__codelineno-1-3" name="__codelineno-1-3"></a><span class="x">    $this-&gt;modelo-&gt;builder()-&gt;where('orderNumber', $this-&gt;master);</span>
-<a href="#__codelineno-1-4" id="__codelineno-1-4" name="__codelineno-1-4"></a><span class="x">}</span>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-2-1" id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="x">function _filters()</span>
+<a href="#__codelineno-2-2" id="__codelineno-2-2" name="__codelineno-2-2"></a><span class="x">{</span>
+<a href="#__codelineno-2-3" id="__codelineno-2-3" name="__codelineno-2-3"></a><span class="x">    $this-&gt;modelo-&gt;builder()-&gt;where('orderNumber', $this-&gt;master);</span>
+<a href="#__codelineno-2-4" id="__codelineno-2-4" name="__codelineno-2-4"></a><span class="x">}</span>
 </code></pre></div>
 <p>En este fragmento, <code>$this-&gt;modelo-&gt;builder()</code> permite interactuar directamente con la consulta SQL que generará la grilla. La variable <code>$this-&gt;master</code> es inyectada automáticamente por el framework cuando detecta que este controlador se está ejecutando como "hijo", y contiene el ID del registro que se está visualizando en el maestro (en este caso, el número de orden).</p>
 <ul>
@@ -268,14 +276,14 @@
 </ul>
 <h2 id="hooks-de-javascript-personalizados-opcional">Hooks de javascript personalizados (Opcional)</h2>
 <p>En el archivo custom.js se ha agregado la siguiente función:</p>
-<div class="highlight"><pre><span></span><code><a href="#__codelineno-2-1" id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="c1">// con cada cambio en la tabla de detalles de ordenes</span>
-<a href="#__codelineno-2-2" id="__codelineno-2-2" name="__codelineno-2-2"></a><span class="c1">// recalcula el total de la orden</span>
-<a href="#__codelineno-2-3" id="__codelineno-2-3" name="__codelineno-2-3"></a><span class="kd">function</span><span class="w"> </span><span class="nx">_OrdenesdetallesOnChange</span><span class="p">(</span><span class="nx">tabla</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a href="#__codelineno-2-4" id="__codelineno-2-4" name="__codelineno-2-4"></a><span class="w">  </span><span class="kd">let</span><span class="w"> </span><span class="nx">orden</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">$</span><span class="p">(</span><span class="s2">"input[name='orderNumber']"</span><span class="p">).</span><span class="nx">val</span><span class="p">();</span>
-<a href="#__codelineno-2-5" id="__codelineno-2-5" name="__codelineno-2-5"></a><span class="w">  </span><span class="nx">getObject</span><span class="p">(</span><span class="s2">"tienda/ordenes/calculatotal"</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">orden</span><span class="o">:</span><span class="w"> </span><span class="nx">orden</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="p">(</span><span class="nx">data</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a href="#__codelineno-2-6" id="__codelineno-2-6" name="__codelineno-2-6"></a><span class="w">    </span><span class="nx">$</span><span class="p">(</span><span class="s1">'input[name="total"]'</span><span class="p">).</span><span class="nx">val</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">total</span><span class="p">);</span>
-<a href="#__codelineno-2-7" id="__codelineno-2-7" name="__codelineno-2-7"></a><span class="w">  </span><span class="p">});</span>
-<a href="#__codelineno-2-8" id="__codelineno-2-8" name="__codelineno-2-8"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-3-1" id="__codelineno-3-1" name="__codelineno-3-1"></a><span class="c1">// con cada cambio en la tabla de detalles de ordenes</span>
+<a href="#__codelineno-3-2" id="__codelineno-3-2" name="__codelineno-3-2"></a><span class="c1">// recalcula el total de la orden</span>
+<a href="#__codelineno-3-3" id="__codelineno-3-3" name="__codelineno-3-3"></a><span class="kd">function</span><span class="w"> </span><span class="nx">_OrdenesdetallesOnChange</span><span class="p">(</span><span class="nx">tabla</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a href="#__codelineno-3-4" id="__codelineno-3-4" name="__codelineno-3-4"></a><span class="w">  </span><span class="kd">let</span><span class="w"> </span><span class="nx">orden</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">$</span><span class="p">(</span><span class="s2">"input[name='orderNumber']"</span><span class="p">).</span><span class="nx">val</span><span class="p">();</span>
+<a href="#__codelineno-3-5" id="__codelineno-3-5" name="__codelineno-3-5"></a><span class="w">  </span><span class="nx">getObject</span><span class="p">(</span><span class="s2">"tienda/ordenes/calculatotal"</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">orden</span><span class="o">:</span><span class="w"> </span><span class="nx">orden</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="p">(</span><span class="nx">data</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a href="#__codelineno-3-6" id="__codelineno-3-6" name="__codelineno-3-6"></a><span class="w">    </span><span class="nx">$</span><span class="p">(</span><span class="s1">'input[name="total"]'</span><span class="p">).</span><span class="nx">val</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">total</span><span class="p">);</span>
+<a href="#__codelineno-3-7" id="__codelineno-3-7" name="__codelineno-3-7"></a><span class="w">  </span><span class="p">});</span>
+<a href="#__codelineno-3-8" id="__codelineno-3-8" name="__codelineno-3-8"></a><span class="p">}</span>
 </code></pre></div>
 <p>Esta función se ejecuta cada vez que hay un cambio en la tabla de detalles de órdenes. Lo que hace es:</p>
 <ol>
