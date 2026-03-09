@@ -122,5 +122,6 @@ $lang['Ragnos_filters_incomplete']      = 'Incomplete filters';
 $lang['Ragnos_filters_incomplete_help'] = 'Please complete the values of the added filters or remove the ones you do not need.';
 $lang['Ragnos_understood']              = 'Understood';
 $lang['Ragnos_generating_report']       = 'Generating Report...';
+$lang['details']                        = 'Details';
 
 return $lang;

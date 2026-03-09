@@ -88,27 +88,72 @@
     });
 </script>
 
-<?php if (isset($detailsController) && $detailsController != NULL): ?>
+<?php if (isset($detailsController) && $detailsController != NULL):
+    $detailsControllers = is_array($detailsController) ? $detailsController : [$detailsController];
+    ?>
     <hr />
     <div class="row clearfix" id="panel<?= $primaryKey ?>_<?php echo $primaryKeyValue; ?>">
-        <div class="card text-bg-dark">
-            <h5 class="card-header">Detalles</h5>
-            <div class="card-body">
-                <div id="detalle<?= $primaryKey ?>_<?php echo $primaryKeyValue; ?>">
-
+        <div class="card shadow-sm border-secondary">
+            <?php if (count($detailsControllers) == 1): ?>
+                <div class="card-header text-bg-dark">
+                    <h5 class="card-title mb-0">
+                        <?= lang('Ragnos.details') ?>
+                    </h5>
                 </div>
-            </div>
+                <div class="card-body">
+                    <div id="detalle<?= $primaryKey ?>_<?php echo $primaryKeyValue; ?>_0"></div>
+                </div>
+            <?php else: ?>
+                <div class="card-header pt-3 bg-light">
+                    <ul class="nav nav-tabs card-header-tabs" id="detailsTab<?= $primaryKey ?>_<?= $primaryKeyValue ?>"
+                        role="tablist">
+                        <?php foreach ($detailsControllers as $index => $dc):
+                            $tabName   = str_replace('Controller', '', basename(str_replace('\\', '/', $dc)));
+                            $className = "\\App\\Controllers\\" . ltrim($dc, '\\');
+                            if (class_exists($className)) {
+                                try {
+                                    $controllerInstance = new $className();
+                                    if (method_exists($controllerInstance, 'getTitle') && !empty($controllerInstance->getTitle())) {
+                                        $tabName = $controllerInstance->getTitle();
+                                    }
+                                } catch (\Exception $e) {
+                                    // Ignorar si falla la instanciación y mantener el nombre de la clase
+                                }
+                            }
+                            ?>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link <?= $index === 0 ? 'active' : '' ?>" id="details-tab-<?= $index ?>"
+                                    data-bs-toggle="tab" data-bs-target="#details-pane-<?= $index ?>" type="button" role="tab"
+                                    aria-controls="details-pane-<?= $index ?>"
+                                    aria-selected="<?= $index === 0 ? 'true' : 'false' ?>"><strong><?= $tabName ?></strong></button>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+                <div class="card-body">
+                    <div class="tab-content" id="detailsTabContent<?= $primaryKey ?>_<?= $primaryKeyValue ?>">
+                        <?php foreach ($detailsControllers as $index => $dc): ?>
+                            <div class="tab-pane fade <?= $index === 0 ? 'show active' : '' ?>" id="details-pane-<?= $index ?>"
+                                role="tabpanel" aria-labelledby="details-tab-<?= $index ?>">
+                                <div id="detalle<?= $primaryKey ?>_<?php echo $primaryKeyValue; ?>_<?= $index ?>"></div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            <?php endif; ?>
         </div>
     </div>
 
     <script>
         $(document).ready(function () {
-            let detailsController = '<?= controllerNameToURL($detailsController) ?>';
             let primaryKeyValue = '<?php echo $primaryKeyValue; ?>';
             if (primaryKeyValue == '') {
                 $("#panel<?= $primaryKey ?>_<?php echo $primaryKeyValue; ?>").remove();
             } else {
-                RagnosUtils.showControllerTableIn('#detalle<?= $primaryKey ?>_<?php echo $primaryKeyValue; ?>', detailsController, primaryKeyValue);
+                <?php foreach ($detailsControllers as $index => $dc): ?>
+                    <?php $urlCont = controllerNameToURL($dc); ?>
+                    RagnosUtils.showControllerTableIn('#detalle<?= $primaryKey ?>_<?php echo $primaryKeyValue; ?>_<?= $index ?>', '<?= $urlCont ?>', primaryKeyValue);
+                <?php endforeach; ?>
             }
         });
     </script>

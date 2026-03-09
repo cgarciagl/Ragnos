@@ -59,6 +59,9 @@ abstract class RDatasetController extends RDataset
         return $this->hasDetailsProp;
     }
 
+    /**
+     * @param string|array $controllerClassName
+     */
     function setDetailsController($controllerClassName): void
     {
         $this->detailsController = $controllerClassName;

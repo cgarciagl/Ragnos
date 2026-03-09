@@ -52,12 +52,27 @@ This is the "parent" of the relationship. Here we define the invoice header.
 - **Fields:** We define normal fields like date (`orderDate`), status (`status`), and customer (`customerNumber`).
 - **Total Field (Calculated):** To show the order total without saving it manually, we use a small SQL query within the field configuration. This query sums `quantity * price` from the details table.
 - **Activate Detail Mode:**
-  There is a key line you must add to your master controller to warn that it will have "children":
+  There is a key line you must add to your master controller to warn that it will have "children". You can pass a single controller or an array of multiple controllers to automatically create tabs:
+
+  **For a single detail:**
+
   ```php
   $this->setDetailsController('Store\OrderDetails');
   ```
+
   This tells Ragnos that the `OrderDetails` controller will handle the details related to each order.
-  The relationship is based on the `orderNumber` field in both controllers being the same, and this is the primary key in the master.
+
+  **For multiple details (Tabs):**
+  If your main record has multiple types of details (e.g., products and a history log), you can pass an array of controllers. Ragnos will automatically generate a tabbed interface (nav-tabs) to display each detail separately:
+
+  ```php
+  $this->setDetailsController([
+      'Store\OrderDetails',
+      'Store\OrderHistory'
+  ]);
+  ```
+
+  The relationship is based on the `orderNumber` field in these controllers being the same, and this is the primary key in the master.
 
 ## 2. Configuring the Detail (`OrderDetails` Controller)
 

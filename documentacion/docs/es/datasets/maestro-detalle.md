@@ -52,12 +52,27 @@ Este es el "padre" de la relación. Aquí definimos la cabecera de la factura.
 - **Campos:** Definimos los campos normales como fecha (`orderDate`), estado (`status`) y cliente (`customerNumber`).
 - **Campo Total (Calculado):** Para mostrar el total de la orden sin guardarlo manualmente, usamos una pequeña consulta SQL dentro de la configuración del campo. Esta consulta suma `cantidad * precio` de la tabla de detalles.
 - **Activar el modo detalle:**
-  Hay una línea clave que debes agregar en tu controlador maestro para avisar que tendrá "hijos":
+  Hay una línea clave que debes agregar en tu controlador maestro para avisar que tendrá "hijos". Puedes pasar un solo controlador o un arreglo con múltiples controladores para crear pestañas automáticamente:
+
+  **Para un solo detalle:**
+
   ```php
   $this->setDetailsController('Tienda\Ordenesdetalles');
   ```
+
   Esto le dice a Ragnos que el controlador `Ordenesdetalles` manejará los detalles relacionados con cada orden.
-  La relación se basa en que el campo `orderNumber` en ambos controladores es el mismo, y este es la llave primaria en el maestro.
+
+  **Para múltiples detalles (Pestañas):**
+  Si tu registro principal tiene varios tipos de detalles (por ejemplo, productos y un historial), puedes pasar un arreglo de controladores. Ragnos generará automáticamente una interfaz con pestañas (nav-tabs) para mostrar cada detalle por separado:
+
+  ```php
+  $this->setDetailsController([
+      'Tienda\Ordenesdetalles',
+      'Tienda\Ordeneshistorial'
+  ]);
+  ```
+
+  La relación se basa en que el campo `orderNumber` en estos controladores es el mismo, y este es la llave primaria en el maestro.
 
 ## 2. Configurando el Detalle (Controlador `Ordenesdetalles`)
 
