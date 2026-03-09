@@ -381,6 +381,10 @@ If in the <strong>Customers</strong> dataset (<code>Store/Customers</code>) you 
 <li><strong>No Manual Joins</strong>: The framework manages the underlying queries.</li>
 <li><strong>Superior UX</strong>: Intuitive selectors searching by multiple relevant attributes.</li>
 </ul>
+<h3 id="preventing-circular-references">Preventing Circular References</h3>
+<p>When using the <code>addSearch()</code> function to relate datasets, it is critically important to ensure that no circular references are introduced, whether directly or indirectly. A direct circular reference occurs when dataset <strong>A</strong> defines a search towards dataset <strong>B</strong>, and in turn, dataset <strong>B</strong> defines a search back towards dataset <strong>A</strong>. This creates an infinite loop that can deplete server resources and cause the system to fail unexpectedly when trying to resolve the mutual dependency.</p>
+<p>The problem tends to be even harder to detect when dealing with indirect circular references. For instance, dataset <strong>A</strong> relates to <strong>B</strong>, dataset <strong>B</strong> relates to <strong>C</strong>, and finally, <strong>C</strong> establishes a relationship via <code>addSearch()</code> pointing back to dataset <strong>A</strong>. This chain of hidden dependencies not only affects load times but completely breaks the automated SQL queries and grouping processes that the framework attempts to resolve in the background.</p>
+<p>To avoid this issue that compromises the application's stability, it is strongly recommended to proactively plan the data architecture before implementing relationships. It is essential to review the module design and maintain a strict hierarchy (for example, from master catalogs down to dependent transactions or operations), ensuring that the flow of dependencies always moves in a single direction and never returns to a previously evaluated origin point.</p>
 <h2 id="grid-configuration">Grid Configuration</h2>
 <ul>
 <li><code>setTableFields([...])</code> defines visible columns in the list (DataTable).</li>

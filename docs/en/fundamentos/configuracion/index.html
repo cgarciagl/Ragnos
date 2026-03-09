@@ -205,7 +205,7 @@
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#routing-auto-routing" class="nav-link">Routing (Auto Routing)</a>
+            <li class="nav-item" data-bs-level="2"><a href="#routing-auto-routing-legacy" class="nav-link">Routing (Auto Routing Legacy)</a>
               <ul class="nav flex-column">
               </ul>
             </li>
@@ -294,17 +294,10 @@
 </tr>
 </tbody>
 </table>
-<h2 id="routing-auto-routing">Routing (Auto Routing)</h2>
-<p>An important feature of Ragnos is that it keeps the <strong>Auto Routing</strong> feature (<code>$routes-&gt;setAutoRoute(true)</code>) of CodeIgniter 4 enabled by default.</p>
-<h3 id="what-does-this-imply-for-the-developer">What does this imply for the developer?</h3>
-<ol>
-<li><strong>Zero Route Configuration:</strong> When creating a new controller (e.g., with the <a href="../plantilla/">CLI Generator</a>), it is immediately accessible via URL (<code>/YourController/method</code>) without needing to edit <code>app/Config/Routes.php</code>.</li>
-<li><strong>Agility:</strong> This is fundamental to Ragnos' "Low Code" philosophy, allowing CRUD modules to be prototyped and deployed in seconds.</li>
-<li><strong>Security and Customization:</strong> If you need specific URLs or to restrict access, you can define manual routes in <code>Config/Routes.php</code>. Manual routes have priority over automatic ones.</li>
-</ol>
-<blockquote>
-<p>⚠️ <strong>Important:</strong> If you decide to disable Auto Routing (<code>false</code>) due to strict security policies, you will need to manually register each route for your Datasets, which increases maintenance work.</p>
-</blockquote>
+<h2 id="routing-auto-routing-legacy">Routing (Auto Routing Legacy)</h2>
+<p>Ragnos comes pre-configured by default to operate under CodeIgniter 4's <strong>Auto Routing (Legacy)</strong> mode. This automatic routing mechanism refers to the framework's core ability to directly map HTTP requests (URLs) to controller classes and their respective methods based on simple naming conventions, entirely eliminating the need to explicitly define or register each route within the <code>Routes.php</code> configuration file. When a request enters the system, the routing component parses the uniform resource identifier's segments: typically, the first segment matches the controller's name, while the second segment subsequently delegates execution to a specific method defined within that class.</p>
+<p>The defining characteristics of the Auto Routing mode lie in its transparency and agility. By removing the tedious burden of maintaining a massive list of routes and closures for every new module or endpoint added to the application, developers are free to immediately focus entirely on writing business logic and leveraging the rapid Dataset controllers that Ragnos provides out of the box. This deeply aligns with the framework's overarching "Low Code" philosophy, where robust CRUDs and advanced reports are spun up almost instantaneously, making their methods publicly accessible just by generating the file. Furthermore, it is a robust approach that has matured substantially over time, historically serving as the classic foundation in earlier iterations of CodeIgniter.</p>
+<p>The most notable advantages of utilizing the Legacy Auto Routing environment in Ragnos revolve around significantly reducing setup time and establishing vastly predictable URL structures. This proves to be invaluable for management platforms, administrative dashboards, and internal data applications interconnected seamlessly, where the volume of distinct controllers usually expands extremely fast. It naturally facilitates quick prototyping without forcing constant context switches between routing configuration layers and the actual controllers holding the logic. Crucially, leveraging auto-routing does not severely bottleneck the system's flexibility; developers can effectively embrace a hybrid model by continuing to manually write specific secure routes conventionally in the registry whenever strict control is necessary over particular parameterized URIs, successfully blending peak productivity speed with granular protective control when demanded.</p>
 <h2 id="other-configurations-codeigniter">Other Configurations (CodeIgniter)</h2>
 <p>Remember that Ragnos respects the native CI4 configuration. Important files in <code>app/Config/</code>:</p>
 <ul>
