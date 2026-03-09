@@ -124,4 +124,9 @@ $lang['Ragnos_understood']              = 'Understood';
 $lang['Ragnos_generating_report']       = 'Generating Report...';
 $lang['details']                        = 'Details';
 
+// Details/Subforms
+$lang['Ragnos_detail_form_alert_title'] = 'You are editing a detail record';
+$lang['Ragnos_detail_form_alert_text']  = 'Make sure to click the <strong>Accept and Save Detail</strong> button at the bottom of this tab to keep these changes.';
+$lang['Ragnos_accept_and_save_detail']  = 'Accept and Save Detail';
+
 return $lang;

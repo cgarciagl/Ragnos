@@ -1,4 +1,5 @@
-<div class="card">
+<?php $formCardId = 'form_card_' . uniqid(); ?>
+<div class="card" id="<?= $formCardId ?>">
     <div class="card-body">
         <form class="" role="form" method='post' onsubmit='return false;'>
             <?php
@@ -85,6 +86,35 @@
         $('input[money]').each(function () {
             $(this).val(moneyFormat($(this).val(), currency));
         });
+
+        // Detectar si este formulario está dentro de una sección de "Detalles"
+        let $formCard = $('#<?= $formCardId ?>');
+        if ($formCard.parents('[id^="detalle"]').length > 0) {
+            // Añadir estilos para destacar la tarjeta
+            $formCard.removeClass('border-0 shadow-sm');
+            $formCard.addClass('border-warning border-3 shadow');
+
+            // Agregar alerta solo si no se ha agregado antes
+            if ($formCard.find('.alert-detail-form').length === 0) {
+                let htmlAlert = `
+                <div class="alert alert-warning d-flex align-items-center mb-0 alert-detail-form shadow-sm" style="border-bottom-left-radius: 0; border-bottom-right-radius: 0;">
+                    <i class="bi bi-info-circle-fill fs-3 me-3"></i>
+                    <div>
+                        <h5 class="mb-1 text-dark fw-bold"><?= lang('Ragnos.Ragnos_detail_form_alert_title') ?></h5>
+                        <p class="mb-0 text-dark"><?= lang('Ragnos.Ragnos_detail_form_alert_text') ?></p>
+                    </div>
+                </div>`;
+                $formCard.prepend(htmlAlert);
+
+                // Resaltar el botón de Aceptar propio de esta pestaña
+                let $footer = $formCard.closest('.tab-pane').find('.card-footer');
+                let $btnOk = $footer.find('.btn-success');
+                if ($btnOk.length) {
+                    $btnOk.removeClass('btn-success').addClass('btn-warning fw-bold text-dark border-dark');
+                    $btnOk.html('<i class="bi bi-check-lg"></i>&nbsp; <?= lang('Ragnos.Ragnos_accept_and_save_detail') ?>');
+                }
+            }
+        }
     });
 </script>
 
@@ -95,9 +125,9 @@
     <div class="row clearfix" id="panel<?= $primaryKey ?>_<?php echo $primaryKeyValue; ?>">
         <div class="card shadow-sm border-secondary">
             <?php if (count($detailsControllers) == 1): ?>
-                <div class="card-header text-bg-dark">
+                <div class="card-header pt-3 bg-light">
                     <h5 class="card-title mb-0">
-                        <?= lang('Ragnos.details') ?>
+                        <strong><?= lang('Ragnos.details') ?></strong>
                     </h5>
                 </div>
                 <div class="card-body">
