@@ -142,18 +142,10 @@ class Reportes extends BaseController
     function ventasporpais()
     {
         $this->checkLogin();
+        //cargar el helper utiles
         helper('App\ThirdParty\Ragnos\Helpers\ragnos_helper');
-        $model = new \App\Models\Dashboard();
-        $datos = $model->ventasPorPais();
-
-        foreach ($datos as $key => $value) {
-            $datos[$key]['Total'] = moneyFormat($value['Total']);
-        }
-
-        $reporte = new RSimpleLevelReport();
-        $reporte->setShowTotals(true);
-        $reporte->quickSetup('Ventas por País', $datos, ['Pais', 'Total']);
-        $contenido = $reporte->render();
-        return view('admin/reporte_view', ['contenido' => $contenido]);
+        $model               = new \App\Models\Dashboard();
+        $data['mapa_ventas'] = $model->ventasPorPais();
+        return view('admin/ventas_por_pais', $data);
     }
 }
