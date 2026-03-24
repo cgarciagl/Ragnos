@@ -309,15 +309,21 @@
 <a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span><span class="nt">&quot;total&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">122</span>
 <a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="p">}</span>
 </code></pre></div>
-<h4 id="parametros-de-paginacion-y-busqueda">Parámetros de Paginación y Búsqueda</h4>
+<h4 id="parametros-de-paginacion-busqueda-y-ordenamiento">Parámetros de Paginación, Búsqueda y Ordenamiento</h4>
 <p>Ragnos utiliza internamente el formato de parámetros de <strong>DataTables</strong> para manejar la grilla desde la API. Al hacer peticiones <code>GET</code> para listar registros, puedes enviar los siguientes parámetros en la <em>Query String</em> de la URL:</p>
 <ul>
-<li><code>start</code>: El índice de desplazamiento desde donde traer registros (Offset). Equivale a <code>(página - 1) * limite</code>. (ej. <code>0</code>)</li>
-<li><code>length</code>: El número de registros a traer (Límite máximo por página). El valor por defecto es 10.</li>
-<li><code>search[value]</code>: Cadena de texto para buscar coincidencias rápidas en toda la tabla.</li>
+<li><strong>Paginación:</strong></li>
+<li><code>start</code>: El índice de desplazamiento (Offset). Ej. <code>0</code>.</li>
+<li><code>length</code>: El número de registros a traer (Límite). Por defecto 10.</li>
+<li><strong>Búsqueda:</strong></li>
+<li><code>search[value]</code>: Cadena de texto para buscar coincidencias rápidas.</li>
+<li><strong>Ordenamiento:</strong></li>
+<li><code>order[0][column]</code>: (Opcional) Índice numérico de la columna (0, 1, 2...).</li>
+<li><code>order[0][name]</code>: (Recomendado) Nombre del campo de la tabla para ordenar directamente.</li>
+<li><code>order[0][dir]</code>: Dirección del ordenamiento (<code>asc</code> o <code>desc</code>).</li>
 </ul>
 <p>Ejemplo de uso:
-<code>GET /tienda/productos?start=0&amp;length=15&amp;search[value]=Laptop</code></p>
+<code>GET /tienda/productos?start=0&amp;length=15&amp;search[value]=Laptop&amp;order[0][name]=precio&amp;order[0][dir]=desc</code></p>
 <hr />
 <h3 id="2-crear-un-registro-post">2. Crear un Registro (POST)</h3>
 <p><strong>Request:</strong></p>

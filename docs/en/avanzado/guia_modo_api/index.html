@@ -309,15 +309,21 @@
 <a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span><span class="nt">&quot;total&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">122</span>
 <a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="p">}</span>
 </code></pre></div>
-<h4 id="pagination-and-search-parameters">Pagination and Search Parameters</h4>
+<h4 id="pagination-search-and-sorting-parameters">Pagination, Search, and Sorting Parameters</h4>
 <p>Ragnos internally uses the <strong>DataTables</strong> parameter format to handle grid data querying from the API. When making <code>GET</code> requests to list records, you can pass the following parameters in the URL Query String:</p>
 <ul>
-<li><code>start</code>: The starting offset index to fetch records from. Equivalent to <code>(page - 1) * limit</code>. (e.g., <code>0</code>)</li>
-<li><code>length</code>: The number of records to fetch per page (Limit). The default value is 10.</li>
+<li><strong>Pagination:</strong></li>
+<li><code>start</code>: The starting offset index to fetch records from. Ej. <code>0</code>.</li>
+<li><code>length</code>: The number of records to fetch per page (Limit). Default is 10.</li>
+<li><strong>Search:</strong></li>
 <li><code>search[value]</code>: A text string to search for matches across the dataset.</li>
+<li><strong>Sorting:</strong></li>
+<li><code>order[0][column]</code>: (Optional) Numerical index of the column (0, 1, 2...).</li>
+<li><code>order[0][name]</code>: (Recommended) Name of the database field to sort directly.</li>
+<li><code>order[0][dir]</code>: Direction of sorting (<code>asc</code> or <code>desc</code>).</li>
 </ul>
 <p>Example usage:
-<code>GET /store/products?start=0&amp;length=15&amp;search[value]=Laptop</code></p>
+<code>GET /store/products?start=0&amp;length=15&amp;search[value]=Laptop&amp;order[0][name]=price&amp;order[0][dir]=desc</code></p>
 <hr />
 <h3 id="2-create-record-post">2. Create Record (POST)</h3>
 <p><strong>Request:</strong></p>
