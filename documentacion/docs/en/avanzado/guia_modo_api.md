@@ -79,9 +79,21 @@ Headers:
     { "id": 1, "name": "Laptop", "price": 1500 },
     { "id": 2, "name": "Mouse", "price": 20 }
   ],
-  "count": 2
+  "count": 2,
+  "total": 122
 }
 ```
+
+#### Pagination and Search Parameters
+
+Ragnos internally uses the **DataTables** parameter format to handle grid data querying from the API. When making `GET` requests to list records, you can pass the following parameters in the URL Query String:
+
+- `start`: The starting offset index to fetch records from. Equivalent to `(page - 1) * limit`. (e.g., `0`)
+- `length`: The number of records to fetch per page (Limit). The default value is 10.
+- `search[value]`: A text string to search for matches across the dataset.
+
+Example usage:
+`GET /store/products?start=0&length=15&search[value]=Laptop`
 
 ---
 
@@ -142,6 +154,22 @@ Body (JSON):
   "status": 200,
   "message": "Record updated successfully.",
   "data": { "id": 15 }
+}
+```
+
+#### Relational Fields (SearchFields)
+
+If your controller uses `addSearch()` for related fields (e.g., `customerNumber` which opens a Customer lookup), in **API Mode** you can simply send the raw ID of the relationship in the corresponding field.
+
+Ragnos will automatically process the value without the internal prefixes used by the web interface.
+
+**Payment Example with Relation:**
+```json
+{
+    "customerNumber": 103,
+    "checkNumber": "ABC-123",
+    "paymentDate": "2024-03-24",
+    "amount": 500.00
 }
 ```
 

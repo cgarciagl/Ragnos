@@ -137,6 +137,10 @@ class RSearchField extends RFieldDecorator
 
     public function getDataFromInput(IncomingRequest $request): mixed
     {
-        return getInputValue('Ragnos_id_' . $this->getFieldName());
+        $val = getInputValue('Ragnos_id_' . $this->getFieldName());
+        if ($val === null && isApiCall()) {
+            $val = getInputValue($this->getFieldName());
+        }
+        return $val;
     }
 }

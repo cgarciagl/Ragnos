@@ -79,9 +79,21 @@ Headers:
     { "id": 1, "nombre": "Laptop", "precio": 1500 },
     { "id": 2, "nombre": "Mouse", "precio": 20 }
   ],
-  "count": 2
+  "count": 2,
+  "total": 122
 }
 ```
+
+#### Parámetros de Paginación y Búsqueda
+
+Ragnos utiliza internamente el formato de parámetros de **DataTables** para manejar la grilla desde la API. Al hacer peticiones `GET` para listar registros, puedes enviar los siguientes parámetros en la *Query String* de la URL:
+
+- `start`: El índice de desplazamiento desde donde traer registros (Offset). Equivale a `(página - 1) * limite`. (ej. `0`)
+- `length`: El número de registros a traer (Límite máximo por página). El valor por defecto es 10.
+- `search[value]`: Cadena de texto para buscar coincidencias rápidas en toda la tabla.
+
+Ejemplo de uso:
+`GET /tienda/productos?start=0&length=15&search[value]=Laptop`
 
 ---
 
@@ -142,6 +154,22 @@ Body (JSON):
   "status": 200,
   "message": "Registro actualizado exitosamente.",
   "data": { "id": 15 }
+}
+```
+
+#### Campos Relacionales (SearchFields)
+
+Si tu controlador utiliza `addSearch()` para campos relacionados (por ejemplo, `customerNumber` que abre un buscador de Clientes), en el **Modo API** puedes enviar simplemente el ID crudo de la relación en el campo correspondiente.
+
+Ragnos procesará automáticamente el valor sin necesidad de los prefijos internos que utiliza la interfaz web.
+
+**Ejemplo de Pago con Relación:**
+```json
+{
+    "customerNumber": 103,
+    "checkNumber": "ABC-123",
+    "paymentDate": "2024-03-24",
+    "amount": 500.00
 }
 ```
 

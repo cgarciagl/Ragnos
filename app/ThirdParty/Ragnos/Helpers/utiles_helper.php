@@ -311,7 +311,7 @@ function redirectAndDie($url, $statusCode = 302)
 function checkAjaxRequest()
 {
     $request = request();
-    if (!$request->isAJAX()) {
+    if (!$request->isAJAX() && !isApiCall()) {
         $response    = service('response');
         $urlcompleta = site_url('/');
 

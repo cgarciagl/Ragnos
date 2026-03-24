@@ -66,6 +66,8 @@ abstract class BaseController extends Controller
         // Si es API, buscar Header Authorization
         if (isApiCall()) {
             $token = request()->getHeaderLine('Authorization');
+            // Remover 'Bearer ' del token usando str_replace
+            $token = str_replace('Bearer ', '', $token);
             // Validar token (JWT o Bearer simple)
             if (!$this->validarToken($token)) {
                 // Detiene la ejecución enviando JSON 401
@@ -94,6 +96,8 @@ abstract class BaseController extends Controller
         // Si es API, buscar Header Authorization
         if (isApiCall()) {
             $token = request()->getHeaderLine('Authorization');
+            // Remover 'Bearer ' del token usando str_replace
+            $token = str_replace('Bearer ', '', $token);
             // Validar token (JWT o Bearer simple)
             if (!$this->validarToken($token)) {
                 // Detiene la ejecución enviando JSON 401

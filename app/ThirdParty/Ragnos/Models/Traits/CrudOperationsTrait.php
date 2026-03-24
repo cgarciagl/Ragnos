@@ -37,7 +37,8 @@ trait CrudOperationsTrait
 
                     $id = getInputValue($this->primaryKey);
 
-                    if (fieldHasChanged($this->primaryKey)) {
+                    $pkKeyAnt = 'Ragnos_value_ant_' . $this->primaryKey;
+                    if (getInputValue($pkKeyAnt) !== null && fieldHasChanged($this->primaryKey)) {
                         $id                                = oldValue($this->primaryKey);
                         $inputDataArray[$this->primaryKey] = newValue($this->primaryKey);
                     }

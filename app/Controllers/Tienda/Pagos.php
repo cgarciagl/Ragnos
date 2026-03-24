@@ -17,10 +17,11 @@ class Pagos extends RDatasetController
         $this->addSearch('customerNumber', 'Tienda\Clientes');
         $this->addField('checkNumber', ['label' => 'Número de cheque', 'rules' => 'required']);
         $this->addField('paymentDate', ['label' => 'Fecha de pago', 'rules' => 'required', 'type' => 'date']);
-        $this->addField('amount', ['label' => 'Monto', 'rules' => 'required|numeric|money']);
+        $this->addField('amount', ['label' => 'Monto', 'rules' => 'required|numeric|money|greater_than[0]']);
 
         $this->setTableFields(['customerNumber', 'checkNumber', 'paymentDate', 'amount']);
 
         $this->setSortingField('paymentDate', 'desc');
     }
+
 }

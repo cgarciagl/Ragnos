@@ -349,68 +349,54 @@ abstract class RDatasetController extends RDataset
         // 1. Obtener datos (Soporte híbrido JSON o POST)
         if (request()->getHeaderLine('Content-Type') === 'application/json') {
             $data = request()->getJSON(true);
+            
+            // Inyectar datos en $_POST para compatibilidad nativa con los RSearchFields y el core de Ragnos
+            if (is_array($data)) {
+                foreach ($data as $k => $v) {
+                    $_POST[$k] = $v;
+                }
+            }
         } else {
             $data = request()->getPost();
         }
 
-        // Determinar ID y si es Insert o Update
-        $pk       = $this->modelo->primaryKey; // Asumiendo que tu modelo tiene esta propiedad pública
+        // Determinar ID y si es Insert o Update para el mensaje
+        $pk       = $this->modelo->primaryKey;
         $id       = $data[$pk] ?? null;
         $isInsert = empty($id);
 
-        // 2. Validaciones (Usando las reglas acumuladas en el Dataset)
-        // Asumo que tienes una propiedad $this->validationRules poblada por addField
-        if (!$this->validate($this->validationRules ?? [])) {
-            $errors = $this->validator->getErrors();
-
-            if (isApiCall()) {
-                return $this->failValidationErrors($errors);
-            }
-
-            return redirect()->back()->withInput()->with('errors', $errors);
-        }
-
         try {
-            if ($isInsert) {
-                // --- INSERT ---
-                $this->modelo->performInsert($data);
+            // 2. Ejecutar validación y guardado usando el pipeline interno del modelo
+            // Esto dispara completado de listado, carga de reglas, run() y processFormAction() (Insert/Update)
+            $this->modelo->processFormInput();
 
-                $newId = $this->modelo->insertedId;
-
-                $message      = 'Registro creado exitosamente.';
-                $responseData = ['id' => $newId];
-
-            } else {
-                // --- UPDATE ---
-                $this->modelo->performUpdate($id, $data);
-
-                $message      = 'Registro actualizado exitosamente.';
-                $responseData = ['id' => $id];
-            }
-
-
-            if ($this->db->transStatus() === false) {
-                throw new \Exception("Error al guardar en base de datos.");
+            // 3. Evaluar los errores arrojados por el modelo
+            if (!empty($this->modelo->errors)) {
+                if (isApiCall()) {
+                    return $this->failValidationErrors($this->modelo->errors);
+                }
+                return redirect()->back()->withInput()->with('errors', $this->modelo->errors);
             }
 
             // 4. Respuesta Exitosa
+            $message      = $isInsert ? 'Registro creado exitosamente.' : 'Registro actualizado exitosamente.';
+            $responseData = ['id' => $this->modelo->insertedId ?? $id];
+
             if (isApiCall()) {
                 return $this->respond([
-                    'status'  => 200,
+                    'status'  => $isInsert ? 201 : 200,
                     'message' => $message,
                     'data'    => $responseData
-                ]);
+                ], $isInsert ? 201 : 200);
             }
 
-            // Redirección para Web (AdminLTE)
+            // Redirección para Web
             return redirect()->to(current_url())->with('success', $message);
 
         } catch (\Exception $e) {
-
             if (isApiCall()) {
                 return $this->failServerError($e->getMessage());
             }
-
             return redirect()->back()->withInput()->with('error', 'Error: ' . $e->getMessage());
         }
     }
