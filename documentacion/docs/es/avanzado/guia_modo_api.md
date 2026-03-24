@@ -84,16 +84,22 @@ Headers:
 }
 ```
 
-#### Parámetros de Paginación y Búsqueda
+#### Parámetros de Paginación, Búsqueda y Ordenamiento
 
 Ragnos utiliza internamente el formato de parámetros de **DataTables** para manejar la grilla desde la API. Al hacer peticiones `GET` para listar registros, puedes enviar los siguientes parámetros en la *Query String* de la URL:
 
-- `start`: El índice de desplazamiento desde donde traer registros (Offset). Equivale a `(página - 1) * limite`. (ej. `0`)
-- `length`: El número de registros a traer (Límite máximo por página). El valor por defecto es 10.
-- `search[value]`: Cadena de texto para buscar coincidencias rápidas en toda la tabla.
+- **Paginación:**
+  - `start`: El índice de desplazamiento (Offset). Ej. `0`.
+  - `length`: El número de registros a traer (Límite). Por defecto 10.
+- **Búsqueda:**
+  - `search[value]`: Cadena de texto para buscar coincidencias rápidas.
+- **Ordenamiento:**
+  - `order[0][column]`: (Opcional) Índice numérico de la columna (0, 1, 2...).
+  - `order[0][name]`: (Recomendado) Nombre del campo de la tabla para ordenar directamente.
+  - `order[0][dir]`: Dirección del ordenamiento (`asc` o `desc`).
 
 Ejemplo de uso:
-`GET /tienda/productos?start=0&length=15&search[value]=Laptop`
+`GET /tienda/productos?start=0&length=15&search[value]=Laptop&order[0][name]=precio&order[0][dir]=desc`
 
 ---
 

@@ -84,16 +84,22 @@ Headers:
 }
 ```
 
-#### Pagination and Search Parameters
+#### Pagination, Search, and Sorting Parameters
 
 Ragnos internally uses the **DataTables** parameter format to handle grid data querying from the API. When making `GET` requests to list records, you can pass the following parameters in the URL Query String:
 
-- `start`: The starting offset index to fetch records from. Equivalent to `(page - 1) * limit`. (e.g., `0`)
-- `length`: The number of records to fetch per page (Limit). The default value is 10.
-- `search[value]`: A text string to search for matches across the dataset.
+- **Pagination:**
+  - `start`: The starting offset index to fetch records from. Ej. `0`.
+  - `length`: The number of records to fetch per page (Limit). Default is 10.
+- **Search:**
+  - `search[value]`: A text string to search for matches across the dataset.
+- **Sorting:**
+  - `order[0][column]`: (Optional) Numerical index of the column (0, 1, 2...).
+  - `order[0][name]`: (Recommended) Name of the database field to sort directly.
+  - `order[0][dir]`: Direction of sorting (`asc` or `desc`).
 
 Example usage:
-`GET /store/products?start=0&length=15&search[value]=Laptop`
+`GET /store/products?start=0&length=15&search[value]=Laptop&order[0][name]=price&order[0][dir]=desc`
 
 ---
 

@@ -150,6 +150,8 @@ function app() {
         isAuthenticated: false,
         token: '',
         userId: '',
+        userName: '',
+        userGroup: '',
         loginForm: { usuario: '', pword: '' },
         loginError: '',
         loginLoading: false,
@@ -181,6 +183,8 @@ function app() {
                     const session = JSON.parse(saved);
                     this.token = session.token;
                     this.userId = session.userId;
+                    this.userName = session.userName || '';
+                    this.userGroup = session.userGroup || '';
                     this.isAuthenticated = true;
                 } catch { /* skip */ }
             }
@@ -213,11 +217,15 @@ function app() {
             if (result.ok && result.data?.token) {
                 this.token = result.data.token;
                 this.userId = result.data.user_id || result.data.userId || '?';
+                this.userName = result.data.user_name || '';
+                this.userGroup = result.data.user_group || '';
                 this.isAuthenticated = true;
 
                 localStorage.setItem('ragnos_api_session', JSON.stringify({
                     token: this.token,
-                    userId: this.userId
+                    userId: this.userId,
+                    userName: this.userName,
+                    userGroup: this.userGroup
                 }));
 
                 Alpine.store('app').token = this.token;
@@ -237,6 +245,8 @@ function app() {
             this.isAuthenticated = false;
             this.token = '';
             this.userId = '';
+            this.userName = '';
+            this.userGroup = '';
             this.currentModule = 'dashboard';
             localStorage.removeItem('ragnos_api_session');
             Alpine.store('app').token = '';
@@ -283,6 +293,8 @@ function pagosModule() {
         currentPage: 1,
         totalRecords: 0,
         totalPages: 1,
+        sortField: '',
+        sortDir: 'asc',
 
         // Form state
         formMode: 'create', // create | edit
@@ -316,6 +328,10 @@ function pagosModule() {
             if (this.searchTerm) {
                 params['search[value]'] = this.searchTerm;
             }
+            if (this.sortField) {
+                params['order[0][name]'] = this.sortField;
+                params['order[0][dir]'] = this.sortDir;
+            }
 
             const result = await apiCall(this.config.path, { token, params });
 
@@ -332,6 +348,21 @@ function pagosModule() {
             }
 
             this.loading = false;
+        },
+
+        // ── Sorting ──
+        sortBy(field) {
+            if (this.sortField === field) {
+                this.sortDir = this.sortDir === 'asc' ? 'desc' : 'asc';
+            } else {
+                this.sortField = field;
+                this.sortDir = 'asc';
+            }
+            this.loadData();
+        },
+        getSortIcon(field) {
+            if (this.sortField !== field) return 'bi-arrow-down-up opacity-25';
+            return this.sortDir === 'asc' ? 'bi-arrow-up-circle-fill text-accent' : 'bi-arrow-down-circle-fill text-accent';
         },
 
         // ── Pagination ──
@@ -560,6 +591,8 @@ function catalogModule() {
         currentPage: 1,
         totalRecords: 0,
         totalPages: 1,
+        sortField: '',
+        sortDir: 'asc',
 
         get currentModule() {
             return Alpine.store('app').currentModule;
@@ -572,6 +605,8 @@ function catalogModule() {
                 if (supportedModules.includes(val)) {
                     this.currentPage = 1;
                     this.searchTerm = '';
+                    this.sortField = '';
+                    this.sortDir = 'asc';
                     this.loadCatalog();
                 }
             });
@@ -599,6 +634,10 @@ function catalogModule() {
             if (this.searchTerm) {
                 params['search[value]'] = this.searchTerm;
             }
+            if (this.sortField) {
+                params['order[0][name]'] = this.sortField;
+                params['order[0][dir]'] = this.sortDir;
+            }
 
             const result = await apiCall(cfg.path, { token, params });
 
@@ -614,6 +653,20 @@ function catalogModule() {
             }
 
             this.loading = false;
+        },
+
+        sortBy(field) {
+            if (this.sortField === field) {
+                this.sortDir = this.sortDir === 'asc' ? 'desc' : 'asc';
+            } else {
+                this.sortField = field;
+                this.sortDir = 'asc';
+            }
+            this.loadCatalog();
+        },
+        getSortIcon(field) {
+            if (this.sortField !== field) return 'bi-arrow-down-up opacity-25';
+            return this.sortDir === 'asc' ? 'bi-arrow-up-circle-fill text-accent' : 'bi-arrow-down-circle-fill text-accent';
         },
 
         goToPage(p) {

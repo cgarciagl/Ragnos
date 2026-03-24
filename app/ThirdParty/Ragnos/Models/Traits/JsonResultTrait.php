@@ -72,11 +72,14 @@ trait JsonResultTrait
 
     private function setOrderByForJsonResult()
     {
-        $request     = request();
         $orderColumn = getInputValue('order[0][column]');
-        $orderDir    = getInputValue('order[0][dir]');
+        $orderDir    = getInputValue('order[0][dir]', 'asc');
+        $orderName   = getInputValue('order[0][name]');
 
-        if (!empty($orderColumn)) {
+        if ($orderName !== null && in_array($orderName, $this->tablefields)) {
+            $this->builder()->orderBy($this->realField($orderName), $orderDir);
+        } elseif ($orderColumn !== null) {
+            $orderColumn = (int) $orderColumn;
             if ($orderColumn < count($this->tablefields)) {
                 $this->builder()->orderBy($this->realField($this->tablefields[$orderColumn]), $orderDir);
             }

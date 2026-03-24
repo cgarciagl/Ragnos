@@ -81,6 +81,7 @@ body {
 
 /* ── Utilities ── */
 .text-accent { color: var(--accent) !important; }
+.x-small { font-size: 0.77rem; }
 .btn-accent {
     background: linear-gradient(135deg, var(--accent), var(--accent-dark));
     border: none;
@@ -135,6 +136,14 @@ body {
 }
 .table-row-animated:hover {
     background: var(--bg-surface-hover) !important;
+}
+
+.table th.sortable {
+    cursor: pointer;
+    transition: background var(--transition-speed);
+}
+.table th.sortable:hover {
+    background: var(--bg-surface-raised);
 }
 
 /* ═══════════════════════════════════════════════════

@@ -163,7 +163,10 @@
                             <div class="user-avatar">
                                 <i class="bi bi-person-circle"></i>
                             </div>
-                            <span class="user-name" x-text="'User #' + userId"></span>
+                            <div class="d-flex flex-column me-2 lh-1 text-end">
+                                <span class="user-name fw-bold" x-text="userName || ('User #' + userId)"></span>
+                                <small class="text-accent x-small fw-semibold mt-1" x-text="userGroup" x-show="userGroup"></small>
+                            </div>
                             <button class="btn btn-sm btn-ghost ms-2" @click="toggleTheme()" :title="appTheme === 'dark' ? 'Modo Claro' : 'Modo Oscuro'">
                                 <i class="bi" :class="appTheme === 'dark' ? 'bi-sun-fill text-warning' : 'bi-moon-stars-fill text-primary'"></i>
                             </button>
@@ -304,10 +307,26 @@
                                         <table class="table table-hover table-modern" id="pagos-table">
                                             <thead>
                                                 <tr>
-                                                    <th>Cliente</th>
-                                                    <th>Nº Cheque</th>
-                                                    <th>Fecha de Pago</th>
-                                                    <th class="text-end">Monto</th>
+                                                    <th class="sortable" @click="sortBy('customerNumber')">
+                                                        <div class="d-flex align-items-center justify-content-between">
+                                                            Cliente <i class="bi" :class="getSortIcon('customerNumber')"></i>
+                                                        </div>
+                                                    </th>
+                                                    <th class="sortable" @click="sortBy('checkNumber')">
+                                                        <div class="d-flex align-items-center justify-content-between">
+                                                            Nº Cheque <i class="bi" :class="getSortIcon('checkNumber')"></i>
+                                                        </div>
+                                                    </th>
+                                                    <th class="sortable" @click="sortBy('paymentDate')">
+                                                        <div class="d-flex align-items-center justify-content-between">
+                                                            Fecha <i class="bi" :class="getSortIcon('paymentDate')"></i>
+                                                        </div>
+                                                    </th>
+                                                    <th class="text-end sortable" @click="sortBy('amount')">
+                                                        <div class="d-flex align-items-center justify-content-end">
+                                                            Monto <i class="bi ms-2" :class="getSortIcon('amount')"></i>
+                                                        </div>
+                                                    </th>
                                                     <th class="text-center" style="width:120px">Acciones</th>
                                                 </tr>
                                             </thead>
@@ -653,7 +672,12 @@
                                             <thead>
                                                 <tr>
                                                     <template x-for="col in columns" :key="'col-'+col">
-                                                        <th x-text="col"></th>
+                                                        <th class="sortable" @click="sortBy(col)">
+                                                            <div class="d-flex align-items-center justify-content-between">
+                                                                <span x-text="col"></span>
+                                                                <i class="bi" :class="getSortIcon(col)"></i>
+                                                            </div>
+                                                        </th>
                                                     </template>
                                                 </tr>
                                             </thead>
