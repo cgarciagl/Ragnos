@@ -42,9 +42,23 @@ trait JsonResultTrait
             $this->setLimitForJsonResult();
             $this->setOrderByForJsonResult();
             $query = $this->builder()->get();
-            return ['data' => $query->getResultArray(), 'countAll' => $count];
-        } else
-            return NULL;
+            $datos = $query->getResultArray();
+
+            $processedData = [];
+            foreach ($datos as $aRow) {
+                $processedRow = [];
+                foreach ($this->tablefields as $f) {
+                    $processedRow[$f] = $this->textForTable($aRow, $f);
+                }
+                // Asegurar que el ID esté presente
+                $processedRow[$this->primaryKey] = $aRow[$this->primaryKey] ?? null;
+                $processedData[]                 = $processedRow;
+            }
+
+            return ['data' => $processedData, 'countAll' => $count];
+        } else {
+            return null;
+        }
     }
 
     public function generateJsonResult($query, $count)

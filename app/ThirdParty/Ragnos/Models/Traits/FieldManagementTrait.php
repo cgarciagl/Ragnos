@@ -94,7 +94,7 @@ trait FieldManagementTrait
         switch ($datasetField->getType()) {
             case 'multiselect':
                 $values = array_map(fn($v) => $datasetField->getOptions()[$v] ?? $v, explode(',', $value));
-                $value = implode(',', $values);
+                $value  = implode(',', $values);
                 break;
             case 'dropdown':
                 $value = $datasetField->getOptions()[$value] ?? $value;
@@ -114,6 +114,6 @@ trait FieldManagementTrait
         }
 
         helper('text');
-        return removeNewLines(character_limiter(strip_tags($value), 30));
+        return removeNewLines(character_limiter(strip_tags((string) $value), 30, '...'));
     }
 }
