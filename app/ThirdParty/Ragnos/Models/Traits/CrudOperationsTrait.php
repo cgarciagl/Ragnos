@@ -76,7 +76,7 @@ trait CrudOperationsTrait
                 $request        = request();
                 $inputDataArray = $this->createInputDataArray();
                 if (sizeof($inputDataArray) > 0) {
-                    $this->controller->_beforeDelete($inputDataArray);
+                    // Resolver el ID antes del callback para poder pre-cargar el registro
                     $id = getInputValue('id');
                     if (!$id) {
                         $id = $pid;
@@ -84,6 +84,16 @@ trait CrudOperationsTrait
                     if (!$id) {
                         throw new \Exception("ID del registro a eliminar no proporcionado.");
                     }
+
+                    // Pre-cargar registro desde DB si no hay campos Ragnos_value_ant_ (modo API)
+                    if (getInputValue('Ragnos_value_ant_' . $this->primaryKey) === null) {
+                        $currentRecord = $this->find($id);
+                        if ($currentRecord) {
+                            setOldRecordCache($currentRecord);
+                        }
+                    }
+
+                    $this->controller->_beforeDelete($inputDataArray);
                     if ($this->enableAudit) {
                         $datosaEliminar = $this->where($this->primaryKey, $id)->first();
                         if (!$datosaEliminar) {
@@ -171,6 +181,18 @@ trait CrudOperationsTrait
     function processFormInput()
     {
         $this->completeFieldList();
+
+        // Si es un update y el cliente no envió campos Ragnos_value_ant_ (modo API),
+        // pre-cargamos el registro actual desde la DB para que oldValue() funcione
+        // en callbacks, validaciones is_unique y el audit log.
+        $id = getInputValue($this->primaryKey);
+        if ($id !== null && getInputValue('Ragnos_value_ant_' . $this->primaryKey) === null) {
+            $currentRecord = $this->find($id);
+            if ($currentRecord) {
+                setOldRecordCache($currentRecord);
+            }
+        }
+
         $validation = \Config\Services::validation();
         $i          = 0;
         foreach ($this->ofieldlist as $k => $fieldItem) {

@@ -48,9 +48,32 @@ function newValue($fieldname)
     return getInputValue($fieldname);
 }
 
+/**
+ * Getter/setter de caché de registro anterior para el request actual.
+ * Usado como fallback de oldValue() cuando el cliente no envía campos Ragnos_value_ant_.
+ */
+function _oldRecordCache(?array $record = null): ?array
+{
+    static $cachedRecord = null;
+    if ($record !== null) {
+        $cachedRecord = $record;
+    }
+    return $cachedRecord;
+}
+
+function setOldRecordCache(?array $record): void
+{
+    _oldRecordCache($record);
+}
+
 function oldValue($fieldname)
 {
-    return getInputValue('Ragnos_value_ant_' . $fieldname);
+    $inputVal = getInputValue('Ragnos_value_ant_' . $fieldname);
+    if ($inputVal !== null) {
+        return $inputVal;
+    }
+    $cached = _oldRecordCache();
+    return $cached[$fieldname] ?? null;
 }
 
 function fieldHasChanged($fieldname)
