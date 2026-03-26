@@ -152,7 +152,7 @@ RagnosSearch.setupSimpleSearch(
       // Asignar valor al input visible
       e.val(resultado.nombre);
     }
-  }
+  },
 );
 ```
 
@@ -183,7 +183,7 @@ $("#inputBusquedaAvanzada").RagnosSearch({
     JSON.stringify([
       { field: "usu_activo", op: "=", value: "S" },
       { field: "usu_grupo", op: "=", value: 2 },
-    ])
+    ]),
   ),
 
   callback: function (e) {
@@ -270,4 +270,49 @@ function pruebaBusquedaOffice(e) {
 
 // Uso:
 // $('#oficina').RagnosSearch({ ..., callback: pruebaBusquedaOffice });
+```
+
+---
+
+## `RagnosUtils.showControllerTableIn(selector, controller, master)`
+
+Carga de forma asíncrona la tabla generada por un controlador en un elemento específico del DOM. Esta función es fundamental cuando se manejan relaciones de "Detalle" o cuando se quiere incrustar una vista de tabla de forma dinámica.
+
+### Parámetros
+
+- **`selector`** (string): Selector de jQuery (ej. `'#mi_tabla_detalle'`) donde se inyectará el contenido HTML.
+- **`controller`** (string): Nombre del controlador (o ruta URL) que responderá la petición. Internamente llama al método `tableByAjax` del controlador.
+- **`master`** (string, opcional): El ID del registro maestro. Si se proporciona, se asocia al objeto global de seguridad `Ragnos_csrf` para filtrar los resultados por este ID padre.
+
+### Ejemplo de uso
+
+```javascript
+// Cargar la tabla de detalles de una orden específica
+const idOrden = "10123";
+RagnosUtils.showControllerTableIn(
+  "#contenedor-detalles",
+  "ventas/detalles",
+  idOrden,
+);
+```
+
+---
+
+## `RagnosUtils.showControllerReportIn(selector, controller)`
+
+Similar a `showControllerTableIn`, pero diseñada específicamente para cargar vistas de reportes generadas por el controlador.
+
+### Parámetros
+
+- **`selector`** (string): Selector de jQuery donde se inyectará el reporte.
+- **`controller`** (string): Nombre del controlador. Internamente llama al método `reportByAjax` del controlador.
+
+### Ejemplo de uso
+
+```javascript
+// Cargar un resumen estadístico en un div lateral
+RagnosUtils.showControllerReportIn(
+  "#sidebar-report",
+  "estadisticas/grafico_ventas",
+);
 ```
