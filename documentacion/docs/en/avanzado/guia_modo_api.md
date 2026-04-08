@@ -45,11 +45,49 @@ You get a token to use in headers for future API requests.
 
 To activate "API Mode", client **must** send following HTTP headers. If not sent, Ragnos responds with HTML.
 
-| Header          | Value               | Description                                          |
-| :-------------- | :------------------ | :--------------------------------------------------- |
-| `Accept`        | `application/json`  | **Mandatory.** Tells Ragnos you want JSON, not HTML. |
-| `Authorization` | `Bearer YOUR_TOKEN` | **Mandatory.** Your security token.                  |
-| `Content-Type`  | `application/json`  | Necessary when sending data (POST/PUT).              |
+| Header             | Value               | Description                                          |
+| :----------------- | :------------------ | :--------------------------------------------------- |
+| `Accept`           | `application/json`  | **Mandatory.** Tells Ragnos you want JSON, not HTML. |
+| `Authorization`    | `Bearer YOUR_TOKEN` | **Mandatory.** Your security token.                  |
+| `Content-Type`     | `application/json`  | Necessary when sending data (POST/PUT).              |
+| `X-Requested-With` | `XMLHttpRequest`    | Identifies the request as AJAX/Fetch.                |
+
+---
+
+## 🛠️ Reference Implementation (Fetch API)
+
+To make it easier to consume the API, we recommend using a "wrapper" around fetch, as seen in the `apitest/app.js` example:
+
+```javascript
+async function apiCall(endpoint, options = {}) {
+  const { method = "GET", body = null, token = null, params = {} } = options;
+  let url = `${API_BASE}/${endpoint}`;
+
+  // Query Parameters
+  const searchParams = new URLSearchParams();
+  for (const [key, val] of Object.entries(params)) {
+    if (val) searchParams.set(key, val);
+  }
+  if (searchParams.toString()) url += "?" + searchParams.toString();
+
+  const headers = {
+    Accept: "application/json",
+    "X-Requested-With": "XMLHttpRequest",
+  };
+
+  if (token) headers["Authorization"] = `Bearer ${token}`;
+
+  const fetchOptions = { method, headers };
+
+  if (body && (method === "POST" || method === "PUT")) {
+    headers["Content-Type"] = "application/json";
+    fetchOptions.body = JSON.stringify(body);
+  }
+
+  const response = await fetch(url, fetchOptions);
+  return await response.json();
+}
+```
 
 ---
 
@@ -86,20 +124,51 @@ Headers:
 
 #### Pagination, Search, and Sorting Parameters
 
-Ragnos internally uses the **DataTables** parameter format to handle grid data querying from the API. When making `GET` requests to list records, you can pass the following parameters in the URL Query String:
+Ragnos internally uses the **DataTables** parameter format to handle grid data querying from the API. This allows for smooth integration with frontend components. When making `GET` requests to list records, you can pass the following parameters in the URL Query String:
 
 - **Pagination:**
-  - `start`: The starting offset index to fetch records from. Ej. `0`.
-  - `length`: The number of records to fetch per page (Limit). Default is 10.
+  - `start`: The starting offset index to fetch records from (e.g., `0` for page 1, `10` for page 2 if the limit is 10).
+  - `length`: The number of records to fetch per page (Limit). The default is 10.
 - **Search:**
-  - `search[value]`: A text string to search for matches across the dataset.
+  - `search[value]`: A text string to search for matches across all enabled fields in the controller.
 - **Sorting:**
-  - `order[0][column]`: (Optional) Numerical index of the column (0, 1, 2...).
-  - `order[0][name]`: (Recommended) Name of the database field to sort directly.
-  - `order[0][dir]`: Direction of sorting (`asc` or `desc`).
+  - `order[0][name]`: (Recommended) The name of the database column to sort by (e.g., `date`, `name`, `id`).
+  - `order[0][dir]`: The sorting direction, either `asc` (ascending) or `desc` (descending).
 
-Example usage:
-`GET /store/products?start=0&length=15&search[value]=Laptop&order[0][name]=price&order[0][dir]=desc`
+##### JavaScript Implementation Example (Fetch)
+
+Inspired by the `apitest` example, here's how you can dynamically build the parameters:
+
+```javascript
+const ITEMS_PER_PAGE = 10;
+const currentPage = 1;
+const searchTerm = 'Laptop';
+const sortField = 'price';
+const sortDir = 'desc';
+
+const params = {
+    start: (currentPage - 1) * ITEMS_PER_PAGE,
+    length: ITEMS_PER_PAGE,
+    'search[value]': searchTerm,
+    'order[0][name]': sortField,
+    'order[0][dir]': sortDir
+};
+
+// Convert object to Query String
+const queryString = new URLSearchParams(params).toString();
+const url = `/store/products?${queryString}`;
+
+const response = await fetch(url, {
+    headers: {
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${token}`,
+        'X-Requested-With': 'XMLHttpRequest'
+    }
+});
+const result = await response.json();
+console.log('Data:', result.data); // Records
+console.log('Total:', result.total); // Total filtered for pagination
+```
 
 ---
 
@@ -170,12 +239,13 @@ If your controller uses `addSearch()` for related fields (e.g., `customerNumber`
 Ragnos will automatically process the value without the internal prefixes used by the web interface.
 
 **Payment Example with Relation:**
+
 ```json
 {
-    "customerNumber": 103,
-    "checkNumber": "ABC-123",
-    "paymentDate": "2024-03-24",
-    "amount": 500.00
+  "customerNumber": 103,
+  "checkNumber": "ABC-123",
+  "paymentDate": "2024-03-24",
+  "amount": 500.0
 }
 ```
 
@@ -216,7 +286,7 @@ Body (JSON):
 
 If something fails (validation or server), Ragnos returns appropriate HTTP status and error JSON.
 
-**Example: Validation Error (400 Bad Request)**
+Example: Validation Error (400 Bad Request)
 
 ```json
 {
@@ -229,7 +299,7 @@ If something fails (validation or server), Ragnos returns appropriate HTTP statu
 }
 ```
 
-**Example: Invalid Token (401 Unauthorized)**
+Example: Invalid Token (401 Unauthorized)
 
 ```json
 {

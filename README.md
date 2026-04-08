@@ -1,6 +1,6 @@
-![Image](https://github.com/cgarciagl/Ragnos/blob/main/content/img/logo.webp?raw=true)
-
 # Ragnos
+
+![Image](https://github.com/cgarciagl/Ragnos/blob/main/content/img/logo.webp?raw=true)
 
 Ragnos es un framework moderno y ligero para el desarrollo de aplicaciones web. Su objetivo es proporcionar una base sólida y flexible para construir aplicaciones escalables y de alto rendimiento. Está basado en **CodeIgniter 4**, lo que garantiza un núcleo robusto y probado en el tiempo. Además, utiliza tecnologías como **jQuery**, **DataTables** y **AdminLTE** para ofrecer una experiencia de desarrollo completa y eficiente.
 

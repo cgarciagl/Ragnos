@@ -45,11 +45,49 @@ Así obtendrás un token que deberás usar en las cabeceras de tus futuras solic
 
 Para activar el "Modo API", el cliente **debe** enviar las siguientes cabeceras HTTP. Si no se envían, Ragnos responderá con HTML (redirecciones y vistas).
 
-| Header          | Valor                  | Descripción                                                       |
-| :-------------- | :--------------------- | :---------------------------------------------------------------- |
-| `Accept`        | `application/json`     | **Obligatorio.** Le dice a Ragnos que no quieres HTML, sino JSON. |
-| `Authorization` | `Bearer TU_TOKEN_AQUI` | **Obligatorio.** Tu token de seguridad.                           |
-| `Content-Type`  | `application/json`     | Necesario cuando envías datos (POST/PUT).                         |
+| Header             | Valor                  | Descripción                                                       |
+| :----------------- | :--------------------- | :---------------------------------------------------------------- |
+| `Accept`           | `application/json`     | **Obligatorio.** Le dice a Ragnos que no quieres HTML, sino JSON. |
+| `Authorization`    | `Bearer TU_TOKEN_AQUI` | **Obligatorio.** Tu token de seguridad.                           |
+| `Content-Type`     | `application/json`     | Necesario cuando envías datos (POST/PUT).                         |
+| `X-Requested-With` | `XMLHttpRequest`       | Identifica la petición como AJAX/Fetch.                           |
+
+---
+
+## 🛠️ Implementación de Referencia (Fetch API)
+
+Para facilitar el consumo de la API, se recomienda usar un "wrapper" de fetch como el que se encuentra en el ejemplo `apitest/app.js`:
+
+```javascript
+async function apiCall(endpoint, options = {}) {
+  const { method = "GET", body = null, token = null, params = {} } = options;
+  let url = `${API_BASE}/${endpoint}`;
+
+  // Parámetros de consulta (Query Params)
+  const searchParams = new URLSearchParams();
+  for (const [key, val] of Object.entries(params)) {
+    if (val) searchParams.set(key, val);
+  }
+  if (searchParams.toString()) url += "?" + searchParams.toString();
+
+  const headers = {
+    Accept: "application/json",
+    "X-Requested-With": "XMLHttpRequest",
+  };
+
+  if (token) headers["Authorization"] = `Bearer ${token}`;
+
+  const fetchOptions = { method, headers };
+
+  if (body && (method === "POST" || method === "PUT")) {
+    headers["Content-Type"] = "application/json";
+    fetchOptions.body = JSON.stringify(body);
+  }
+
+  const response = await fetch(url, fetchOptions);
+  return await response.json();
+}
+```
 
 ---
 
@@ -86,20 +124,51 @@ Headers:
 
 #### Parámetros de Paginación, Búsqueda y Ordenamiento
 
-Ragnos utiliza internamente el formato de parámetros de **DataTables** para manejar la grilla desde la API. Al hacer peticiones `GET` para listar registros, puedes enviar los siguientes parámetros en la *Query String* de la URL:
+Ragnos utiliza internamente el formato de parámetros de **DataTables** para manejar la grilla desde la API. Esto permite una integración fluida con componentes de frontend. Al hacer peticiones `GET` para listar registros, puedes enviar los siguientes parámetros en la _Query String_ de la URL:
 
 - **Paginación:**
-  - `start`: El índice de desplazamiento (Offset). Ej. `0`.
-  - `length`: El número de registros a traer (Límite). Por defecto 10.
+  - `start`: El índice de desplazamiento (Offset). Indica desde qué registro empezar (ej. `0` para la página 1, `10` para la página 2 si el límite es 10).
+  - `length`: El número de registros a traer (Límite). Por defecto es 10.
 - **Búsqueda:**
-  - `search[value]`: Cadena de texto para buscar coincidencias rápidas.
+  - `search[value]`: Cadena de texto para realizar una búsqueda global en todos los campos habilitados del controlador.
 - **Ordenamiento:**
-  - `order[0][column]`: (Opcional) Índice numérico de la columna (0, 1, 2...).
-  - `order[0][name]`: (Recomendado) Nombre del campo de la tabla para ordenar directamente.
-  - `order[0][dir]`: Dirección del ordenamiento (`asc` o `desc`).
+  - `order[0][name]`: (Recomendado) El nombre de la columna por la cual deseas ordenar (ej. `fecha`, `nombre`, `id`).
+  - `order[0][dir]`: La dirección del ordenamiento, ya sea `asc` (ascendente) o `desc` (descendente).
 
-Ejemplo de uso:
-`GET /tienda/productos?start=0&length=15&search[value]=Laptop&order[0][name]=precio&order[0][dir]=desc`
+##### Ejemplo de implementación en JavaScript (Fetch)
+
+Inspirado en el ejemplo `apitest`, así podrías construir los parámetros dinámicamente:
+
+```javascript
+const ITEMS_PER_PAGE = 10;
+const currentPage = 1;
+const searchTerm = "Laptop";
+const sortField = "precio";
+const sortDir = "desc";
+
+const params = {
+  start: (currentPage - 1) * ITEMS_PER_PAGE,
+  length: ITEMS_PER_PAGE,
+  "search[value]": searchTerm,
+  "order[0][name]": sortField,
+  "order[0][dir]": sortDir,
+};
+
+// Convertir objeto a Query String
+const queryString = new URLSearchParams(params).toString();
+const url = `/tienda/productos?${queryString}`;
+
+const response = await fetch(url, {
+  headers: {
+    Accept: "application/json",
+    Authorization: `Bearer ${token}`,
+    "X-Requested-With": "XMLHttpRequest",
+  },
+});
+const result = await response.json();
+console.log("Datos:", result.data); // Registros
+console.log("Total:", result.total); // Total filtrado para paginación
+```
 
 ---
 
@@ -170,12 +239,13 @@ Si tu controlador utiliza `addSearch()` para campos relacionados (por ejemplo, `
 Ragnos procesará automáticamente el valor sin necesidad de los prefijos internos que utiliza la interfaz web.
 
 **Ejemplo de Pago con Relación:**
+
 ```json
 {
-    "customerNumber": 103,
-    "checkNumber": "ABC-123",
-    "paymentDate": "2024-03-24",
-    "amount": 500.00
+  "customerNumber": 103,
+  "checkNumber": "ABC-123",
+  "paymentDate": "2024-03-24",
+  "amount": 500.0
 }
 ```
 
@@ -216,7 +286,7 @@ Body (JSON):
 
 Si algo sale mal (validación o servidor), Ragnos devolverá un código de estado HTTP apropiado y un JSON de error.
 
-**Ejemplo: Error de Validación (400 Bad Request)**
+Ejemplo: Error de Validación (400 Bad Request)
 
 ```json
 {
@@ -229,7 +299,7 @@ Si algo sale mal (validación o servidor), Ragnos devolverá un código de estad
 }
 ```
 
-**Ejemplo: Token Inválido (401 Unauthorized)**
+Ejemplo: Token Inválido (401 Unauthorized)
 
 ```json
 {
