@@ -17,7 +17,6 @@ use Psr\Log\LoggerInterface;
  * Extend this class in any new controllers:
  *     class Home extends BaseController
  *
- * For security be sure to declare any new methods as protected or private.
  */
 abstract class BaseController extends Controller
 {
@@ -37,10 +36,6 @@ abstract class BaseController extends Controller
      */
     protected $helpers = [];
 
-    /**
-     * Be sure to declare properties for any property fetch you initialized.
-     * The creation of dynamic property is deprecated in PHP 8.2.
-     */
     protected $session;
 
     /**
@@ -48,13 +43,10 @@ abstract class BaseController extends Controller
      */
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
     {
-        // Do Not Edit This Line
         parent::initController($request, $response, $logger);
 
-        // Preload any models, libraries, etc, here.
         helper('App\ThirdParty\Ragnos\Helpers\utiles_helper');
 
-        // E.g.: $this->session = \Config\Services::session();
         $this->session = \Config\Services::session();
         $this->db      = db_connect();
 
@@ -63,14 +55,10 @@ abstract class BaseController extends Controller
     public function checkLogin()
     {
 
-        // Si es API, buscar Header Authorization
         if (isApiCall()) {
             $token = request()->getHeaderLine('Authorization');
-            // Remover 'Bearer ' del token usando str_replace
             $token = str_replace('Bearer ', '', $token);
-            // Validar token (JWT o Bearer simple)
             if (!$this->validarToken($token)) {
-                // Detiene la ejecución enviando JSON 401
                 die(json_encode(['error' => 'Unauthorized']));
             }
             return;
@@ -92,15 +80,10 @@ abstract class BaseController extends Controller
 
     public function checkUserInGroup($grupos)
     {
-
-        // Si es API, buscar Header Authorization
         if (isApiCall()) {
             $token = request()->getHeaderLine('Authorization');
-            // Remover 'Bearer ' del token usando str_replace
             $token = str_replace('Bearer ', '', $token);
-            // Validar token (JWT o Bearer simple)
             if (!$this->validarToken($token)) {
-                // Detiene la ejecución enviando JSON 401
                 die(json_encode(['error' => 'Unauthorized']));
             }
             return;
