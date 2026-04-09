@@ -1,6 +1,20 @@
 # Ragnos
 
+<div align="center">
+
 ![Image](https://github.com/cgarciagl/Ragnos/blob/main/content/img/logo.webp?raw=true)
+
+## 📚 Master the Framework / Domina el Framework
+
+**The official manual is out now! / ¡El manual oficial ya está disponible!**
+
+Learn to build secure, enterprise-grade applications in record time using the _Configuration over Programming_ philosophy and AI Vibecoding.
+
+[![English Version](https://img.shields.io/badge/🇬🇧_Get_the_Book-Ragnos_From_Zero_to_Pro-blue?style=for-the-badge)](https://leanpub.com/ragnosfromzerotopro)
+[![Versión en Español](https://img.shields.io/badge/🇪🇸_Lee_el_Libro-Ragnos_de_Cero_a_Pro-green?style=for-the-badge)](https://leanpub.com/ragnosdeceroapro)
+
+</div>
+<br>
 
 Ragnos es un framework moderno y ligero para el desarrollo de aplicaciones web. Su objetivo es proporcionar una base sólida y flexible para construir aplicaciones escalables y de alto rendimiento. Está basado en **CodeIgniter 4**, lo que garantiza un núcleo robusto y probado en el tiempo. Además, utiliza tecnologías como **jQuery**, **DataTables** y **AdminLTE** para ofrecer una experiencia de desarrollo completa y eficiente.
 
