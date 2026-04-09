@@ -40,8 +40,6 @@ abstract class RTableModel extends Model
     /**
      * Asigna una condición al modelo para filtrar los resultados
      *
-     * @param string $field al campo a partir del cual se hará el filtro
-     * @param string $value el valor que se ha de buscar
      */
     function setWhere()
     {
@@ -103,7 +101,6 @@ abstract class RTableModel extends Model
     /**
      * Devuelve los registros de la tabla
      *
-     * @param string $table tabla a seleccionar
      * @return object
      */
     function get()
