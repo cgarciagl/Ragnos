@@ -1,0 +1,79 @@
+# Ragnos Framework
+
+> **Ragnos Framework** es un framework PHP moderno y declarativo basado en **CodeIgniter 4** diseñado para acelerar exponencialmente el desarrollo de aplicaciones empresariales. Mediante el principio de **"Configuración sobre Programación"**, Ragnos genera automáticamente CRUDs completos, APIs RESTful seguras y páneles administrativos profesionales (AdminLTE 3) a partir de simples definiciones de datos (datasets), eliminando código repetitivo y permitiendo el enfoque **"Vibecoding"**: programar escribiendo lo mínimo indispensable.
+
+### Características Core
+
+- **Datasets Declarativos**: Define tu estructura de datos una sola vez y obtén automáticamente CRUD, API, validaciones, y UI renderizada.
+- **API RESTful Integrada**: Todos tus datasets son accesibles como endpoints JSON listos para consumir desde apps móviles, SPAs o integraciones.
+- **Admin UI Automático**: Interfaz AdminLTE 3 responsive y mobile-first generada automáticamente con búsqueda, filtrado, paginación y exportación.
+- **Seguridad Empresarial**: RBAC integrado, auditoría inmutable, protección OWASP Top 10, validaciones automáticas y encriptación.
+- **Zero Configuration Philosophy**: Funciona inmediatamente con valores predeterminados inteligentes; personaliza solo lo necesario.
+- **Eficiencia Máxima**: Reduce el tiempo de desarrollo de semanas a días manteniendo código limpio y mantenible.
+
+Este archivo `llms.txt` es tu mapa de referencia para la documentación oficial compilada. Está optimizado para LLMs, facilitando respuestas precisas y contextualizadas sobre cómo usar Ragnos en el enfoque declarativo.
+
+## Comienza Aquí (Ruta recomendada)
+
+Para principiantes, sigue este orden:
+1. [Instalación](https://ragnos.build/docs/fundamentos/instalacion/): Requisitos del sistema (PHP 8.1+, MariaDB/MySQL) e instalación via Composer.
+2. [Primeros Pasos](https://ragnos.build/docs/fundamentos/primeros_pasos/): Tu primer dataset declarativo en 10 minutos.
+3. [Base de Datos Demo](https://ragnos.build/docs/fundamentos/base_de_datos_demo/): Dataset de ejemplo (Classicmodels) para experimentar inmediatamente.
+4. [Creando Datasets](https://ragnos.build/docs/datasets/datasets/): El concepto central de Ragnos: define una tabla, obtén todo automáticamente.
+
+## Fundamentos
+
+- [Configuración Detallada](https://ragnos.build/docs/fundamentos/configuracion/): Ajustes globales: base de datos, sesiones, seguridad, idioma, temas y comportamiento del framework.
+- [Generador CLI/ Plantilla](https://ragnos.build/docs/fundamentos/plantilla/): Crea datasets, modelos y migraciones desde la línea de comandos con `php spark`.
+
+## Datasets y Modelado de Datos
+
+- [Concepto de Datasets](https://ragnos.build/docs/datasets/datasets/): Núcleo declarativo de Ragnos. Cómo una tabla se convierte automáticamente en CRUD, API y UI.
+- [Referencia de Campos](https://ragnos.build/docs/datasets/campos/): Tipos de datos (email, tel, fecha, select, checkbox, etc.), renderizado automático, validaciones incorporadas y comportamientos especiales.
+- [Maestro-Detalle](https://ragnos.build/docs/datasets/maestro-detalle/): Relaciones 1:N entre datasets con sincronización automática de datos y validaciones de integridad referencial.
+- [Consultas Avanzadas (RQuery)](https://ragnos.build/docs/datasets/guia_RQueryController/): Filtrado, ordenamiento, búsqueda full-text, agregaciones y joins programáticos en tus endpoints API.
+
+## Frontend y Personalización UI
+
+## Frontend y Personalización UI
+
+- [Personalización de Temas y Menús](https://ragnos.build/docs/frontend/personalizacion_ui/): Modifica estilos CSS, temas de AdminLTE, estructura de menús laterales y branding corporativo.
+- [Reportes Automáticos](https://ragnos.build/docs/frontend/reportes_simples/): Genera dashboards, gráficos y exportaciones (PDF, Excel) directamente desde tus datasets.
+
+## Backend Avanzado
+
+- [Modo API (Headless)](https://ragnos.build/docs/avanzado/guia_modo_api/): Utiliza Ragnos como backend puro para aplicaciones móviles, SPAs (React, Vue, Angular) o integraciones de terceros. Todo es automáticamente verificado y autorizado.
+- [Sistema de Hooks y Eventos](https://ragnos.build/docs/avanzado/hooks/): Intercepta el ciclo de vida de datos (onCreate, onUpdate, onDelete, onView) para lógica personalizada, cálculos dinámicos, integraciones externas y notificaciones.
+- [Autenticación Integrada](https://ragnos.build/docs/avanzado/autenticacion_integrada/): RBAC (Control de Acceso Basado en Roles) nativo, gestión de permisos por dataset/campo, sesiones seguras y protección contra ataques comunes.
+- [Audit Log (Trazabilidad Inmutable)](https://ragnos.build/docs/avanzado/auditlog/): Registro automático de todos los cambios en base de datos: quién, qué, cuándo, dónde. Imprescindible para compliance y auditoría.
+- [Server Side Events (SSE)](https://ragnos.build/docs/avanzado/server_side_events/): Actualizaciones en tiempo real en la UI sin polling. Perfectos para dashboards de monitoreo y notificaciones instantáneas.
+- [Helpers y Utilidades del Sistema](https://ragnos.build/docs/avanzado/helpers/): Funciones globales para trabajar con formatos, validaciones, conversiones de datos, encriptación y operaciones comunes.
+
+## Despliegue y Producción
+
+- [Guía de Despliegue](https://ragnos.build/docs/avanzado/despliegue/): Preparación para producción, variables de entorno, optimización de rendimiento, configuración de servidores web (Apache/Nginx) y backups.
+
+## Opcional
+
+Recursos complementarios y referencias externas:
+
+- [Repositorio GitHub](https://github.com/cgarciagl/ragnos): Código fuente, issues, pulls requests y contribuciones.
+- [Demo en Vivo](https://ragnos.build/docs/fundamentos/base_de_datos_demo/): Accede a la aplicación demo en vivo con credenciales de prueba.
+- [CodeIgniter 4 User Guide](https://codeigniter.com/user_guide/index.html): Documentación oficial de CodeIgniter 4 para conceptos avanzados no cubiertos por Ragnos (servicios, librerías personalizadas, middleware adicional).
+- [AdminLTE 3 Documentation](https://adminlte.io/): Referencia de componentes UI, temas y personalizaciones visuales.
+
+### Requisitos Previos Recomendados
+
+Aunque Ragnos simplifica enormemente el desarrollo, se recomienda tener familiaridad previa con:
+- **PHP 8.1+**: Sintaxis moderna, tipos, atributos y características OOP.
+- **SQL Básico**: Escritura de consultas SELECT/JOIN, comprensión de claves primarias y relaciones.
+- **HTTP/REST**: Conceptos de verbos HTTP (GET, POST, PUT, DELETE), códigos de estado y headers.
+- **HTML/CSS Básico**: Para personalización de la UI y temas visuales.
+- **Git**: Control de versiones para proyectos en equipo.
+
+### Filosofía Ragnos
+
+- **Menos es Más**: Escribe menos código, obtén más funcionalidad. Una declaración simple produce un módulo CRUD completo.
+- **Opinionado pero Flexible**: Valores por defecto inteligentes que funcionan en 90% de los casos; personalizable cuando lo necesites.
+- **Seguridad por Defecto**: Inyección SQL, XSS y CSRF mitigados automáticamente. RBAC y auditoría incluidos.
+- **Developer Experience**: Herramientas CLI modernas, mensajes de error claros, documentación exhaustiva.
