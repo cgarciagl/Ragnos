@@ -10,24 +10,26 @@
     <div class="card card-outline card-primary shadow-lg">
         <div class="card-body login-card-body">
             <p class="login-box-msg fw-bold">
-                <i class="bi bi-person-circle"></i> Identifíquese
+                <i class="bi bi-person-circle"></i> <?= lang('Admin.login_title') ?>
             </p>
 
             <form action="<?= site_url('admin/login'); ?>" method="post" id="formlogin">
                 <div class="mb-3">
-                    <label for="usuario" class="form-label">Usuario</label>
+                    <label for="usuario" class="form-label"><?= lang('Admin.username_label') ?></label>
                     <div class="input-group">
                         <input type="text" class="form-control" id="usuario" name="usuario"
-                            placeholder="Ingrese su usuario" value="<?= set_value('usuario'); ?>" required>
+                            placeholder="<?= lang('Admin.username_placeholder') ?>" value="<?= set_value('usuario'); ?>"
+                            required>
                         <span class="input-group-text"><i class="bi bi-person-circle"></i></span>
                     </div>
                 </div>
 
                 <div class="mb-3">
-                    <label for="pword" class="form-label">Contraseña</label>
+                    <label for="pword" class="form-label"><?= lang('Admin.password_label') ?></label>
                     <div class="input-group">
                         <input type="password" class="form-control" id="pword" name="pword"
-                            placeholder="Ingrese su contraseña" value="<?= set_value('pword'); ?>" required>
+                            placeholder="<?= lang('Admin.password_placeholder') ?>" value="<?= set_value('pword'); ?>"
+                            required>
                         <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
                     </div>
                 </div>
@@ -47,13 +49,14 @@
                 <?php endif; ?>
 
                 <div class="d-grid">
-                    <button type="submit" class="btn btn-primary">Ingresar</button>
+                    <button type="submit" class="btn btn-primary"><?= lang('Admin.login_button') ?></button>
                 </div>
             </form>
 
             <div class="mt-3 text-center">
-                <small class="text-muted">Use <strong>admin</strong> / <strong>admin</strong> para ingresar al
-                    demo</small>
+                <small class="text-muted">
+                    <?= lang('Admin.demo_credentials_text') ?>
+                </small>
             </div>
 
         </div>
