@@ -162,7 +162,7 @@ trait CrudOperationsTrait
         $a = array_keys($this->ofieldlist);
         $this->evaluaSelect($a, $this->table);
         if ($id != '') {
-            $this->builder()->where($this->primaryKey, $id);
+            $this->builder()->where($this->table . '.' . $this->primaryKey, $id);
         }
         $this->checkRelations();
         $this->builder()->limit(1);

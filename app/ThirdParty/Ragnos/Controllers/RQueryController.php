@@ -1,10 +1,10 @@
 <?php
 
 /**
- * YQueryController class
+ * RQueryController class
  *
- * This class extends rdatasetcontroller and is responsible for handling 
- * query-related operations. It provides methods to set a base query and 
+ * This class extends rdatasetcontroller and is responsible for handling
+ * query-related operations. It provides methods to set a base query and
  * retrieve data for an AJAX grid.
  *
  * @package App\ThirdParty\Ragnos\Controllers
@@ -31,7 +31,15 @@ class RQueryController extends RDatasetController
     {
         $this->baseQuery = $query;
 
-        $this->setTableName('ragnosquerycte');
+        // Alias CTE único por clase concreta para evitar duplicados cuando
+        // múltiples RQueryControllers se usan en el mismo controlador padre.
+        $shortClass = strtolower(basename(str_replace('\\', '/', static::class)));
+        $this->setTableName('rqcte_' . $shortClass);
+
+        // Guardar el SQL base en el modelo para que RSearchField pueda
+        // construir un subquery JOIN en lugar de unirse a una tabla inexistente.
+        $this->modelo->baseQuerySQL = $query;
+
         $this->setCanInsert(false);
         $this->setCanUpdate(false);
         $this->setCanDelete(false);

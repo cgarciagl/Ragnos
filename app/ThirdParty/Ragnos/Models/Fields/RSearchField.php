@@ -111,11 +111,19 @@ class RSearchField extends RFieldDecorator
         $fieldToShow = $mock->tablefields[0];
         $this->setFieldToShow($fieldToShow);
 
-        $sql = $mock->fieldByName($fieldToShow)->getQuery();
+        $sql     = $mock->fieldByName($fieldToShow)->getQuery();
+        $baseSQL = $mock->baseQuerySQL ?? null;
         unset($mock);
 
         $db = $model->builder();
-        $db->join($tablename, $joincondition, 'left');
+
+        // Si el controlador es un RQueryController (tiene baseQuerySQL), se usa
+        // un subquery JOIN en lugar de un JOIN a una tabla que no existe.
+        if ($baseSQL) {
+            $db->join("({$baseSQL}) AS {$tablename}", $joincondition, 'left');
+        } else {
+            $db->join($tablename, $joincondition, 'left');
+        }
 
         if ($sql) {
             $this->setSQLforSearch($sql);

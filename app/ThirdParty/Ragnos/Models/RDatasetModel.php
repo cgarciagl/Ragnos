@@ -15,6 +15,12 @@ abstract class RDatasetModel extends RTableModel
     public $errors = [];
     public $insertedId = NULL;
 
+    /**
+     * SQL base para controladores RQueryController. Si está definido, el JOIN
+     * con este modelo se realiza como subquery en lugar de JOIN a tabla real.
+     */
+    public $baseQuerySQL = null;
+
     protected $enableAudit = true;
 
     public $defaultSortingField = '';
