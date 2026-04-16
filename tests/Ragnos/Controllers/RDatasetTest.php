@@ -159,12 +159,12 @@ class RDatasetTest extends RagnosTestCase
         $this->assertNotNull($controller);
     }
 
-    public function testCanSetUseTimestamps(): void
+    public function testCanSetUseTimeStamps(): void
     {
         $controller = new class extends RDataset {
             public function configure(): void
             {
-                $this->setUseTimestamps(true);
+                $this->setUseTimeStamps(true);
             }
         };
 

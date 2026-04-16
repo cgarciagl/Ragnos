@@ -108,7 +108,7 @@ abstract class RTableModel extends Model
         return $this->builder()->get();
     }
 
-    function setUseTimestamps($value)
+    function setUseTimeStamps($value)
     {
         $this->useTimestamps = (bool) $value;
     }

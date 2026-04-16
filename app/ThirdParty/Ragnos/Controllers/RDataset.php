@@ -295,9 +295,9 @@ abstract class RDataset extends RController
     {
     }
 
-    function setUseTimestamps($value)
+    function setUseTimesStamps($value)
     {
-        $this->modelo->setUseTimestamps($value);
+        $this->modelo->setUseTimeStamps($value);
     }
 
     function setCreatedField($value)

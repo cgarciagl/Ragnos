@@ -90,6 +90,34 @@ class Customers extends RDatasetController
 - `setIdField('id')` establishes the primary key.
 - `setAutoIncrement(true|false)` controls if the PK is auto-incrementing.
 
+## Automatic Timestamps
+
+If your table uses audit fields to track when records were created or updated, you can enable automatic timestamp handling directly in the controller. This will configure the underlying CodeIgniter 4 model to manage these dates for you.
+
+- `setUseTimeStamps(true|false)`: Enables or disables the use of timestamps.
+- `setCreatedField('field')`: Defines the column name for the creation date (defaults to `created_at`).
+- `setUpdatedField('field')`: Defines the column name for the last update date (defaults to `updated_at`).
+
+### Configuration Example
+
+```php
+public function __construct()
+{
+    parent::__construct();
+
+    // ... other configurations
+
+    // Enable automatic timestamps
+    $this->setUseTimeStamps(true);
+
+    // Optional: Customize field names if they are not the standard ones
+    $this->setCreatedField('created_at_dt');
+    $this->setUpdatedField('updated_at_dt');
+}
+```
+
+By enabling `setUseTimeStamps(true)`, Ragnos will take care of inserting the current date when creating a record and automatically updating it whenever a modification is made, using the date format configured in the database (usually `datetime`).
+
 ## Operation Control
 
 It is possible to restrict which CRUD operations are allowed in the dataset using the following methods:
