@@ -217,6 +217,10 @@
               <ul class="nav flex-column">
               </ul>
             </li>
+            <li class="nav-item" data-bs-level="2"><a href="#timestamps-automaticos" class="nav-link">Timestamps Automáticos</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
             <li class="nav-item" data-bs-level="2"><a href="#control-de-operaciones" class="nav-link">Control de Operaciones</a>
               <ul class="nav flex-column">
               </ul>
@@ -346,6 +350,29 @@
 </li>
 <li><code>setAutoIncrement(true|false)</code> controla si la PK es autoincremental.</li>
 </ul>
+<h2 id="timestamps-automaticos">Timestamps Automáticos</h2>
+<p>Si tu tabla utiliza campos de auditoría para rastrear cuándo se crearon o actualizaron los registros, puedes habilitar el manejo automático de timestamps directamente en el controlador. Esto configurará el modelo subyacente de CodeIgniter 4 para que gestione estas fechas por ti.</p>
+<ul>
+<li><code>setUseTimeStamps(true|false)</code>: Habilita o deshabilita el uso de timestamps.</li>
+<li><code>setCreatedField('campo')</code>: Define el nombre de la columna para la fecha de creación (por defecto <code>created_at</code>).</li>
+<li><code>setUpdatedField('campo')</code>: Define el nombre de la columna para la fecha de última actualización (por defecto <code>updated_at</code>).</li>
+</ul>
+<h3 id="ejemplo-de-configuracion">Ejemplo de configuración</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="x">public function __construct()</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="x">{</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="x">    parent::__construct();</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="x">    // ... otras configuraciones</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="x">    // Habilitar timestamps automáticos</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="x">    $this-&gt;setUseTimeStamps(true);</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="x">    // Opcional: Personalizar nombres de campos si no son los estándar</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="x">    $this-&gt;setCreatedField(&#39;fecha_creacion&#39;);</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="x">    $this-&gt;setUpdatedField(&#39;fecha_modificacion&#39;);</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="x">}</span>
+</code></pre></div>
+<p>Al activar <code>setUseTimeStamps(true)</code>, Ragnos se encargará de insertar la fecha actual al crear un registro y de actualizarla automáticamente cada vez que se realice una modificación, utilizando el formato de fecha configurado en la base de datos (habitualmente <code>datetime</code>).</p>
 <h2 id="control-de-operaciones">Control de Operaciones</h2>
 <p>Es posible restringir qué operaciones CRUD están permitidas en el dataset mediante los siguientes métodos:</p>
 <ul>
@@ -355,13 +382,13 @@
 </ul>
 <p>Esto es útil para tablas de solo lectura, catálogos históricos o datos sensibles que no deben modificarse ni borrarse.</p>
 <h3 id="ejemplo-de-uso">Ejemplo de uso</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="x">// Deshabilitar la eliminación de registros</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="x">$this-&gt;setCanDelete(false);</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="x">// Dataset de solo lectura (solo visualización)</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="x">$this-&gt;setCanInsert(false);</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="x">$this-&gt;setCanUpdate(false);</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="x">$this-&gt;setCanDelete(false);</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="x">// Deshabilitar la eliminación de registros</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="x">$this-&gt;setCanDelete(false);</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="x">// Dataset de solo lectura (solo visualización)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="x">$this-&gt;setCanInsert(false);</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="x">$this-&gt;setCanUpdate(false);</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="x">$this-&gt;setCanDelete(false);</span>
 </code></pre></div>
 <h2 id="definicion-de-campos">Definición de campos</h2>
 <p>Use <code>addField(name, options)</code> para describir validación, presentación y persistencia.
@@ -395,11 +422,11 @@ Para una referencia completa de todas las opciones y tipos de campo, consulta la
 <p><strong>Ejemplo:</strong>
 Imagina que estás en el módulo de <strong>Pagos</strong> (<code>Tienda/Pagos</code>) y necesitas seleccionar un <strong>Cliente</strong>.
 Si en el dataset de <strong>Clientes</strong> (<code>Tienda/Clientes</code>) definiste:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="x">$this-&gt;setTableFields([</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="x">    &#39;customerName&#39;,</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="x">    &#39;Contacto&#39;, // Campo calculado: concat(contactLastName, &#39;, &#39;, contactFirstName)</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="x">    &#39;salesRepEmployeeNumber&#39; // Empleado a cargo</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="x">]);</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="x">$this-&gt;setTableFields([</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="x">    &#39;customerName&#39;,</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="x">    &#39;Contacto&#39;, // Campo calculado: concat(contactLastName, &#39;, &#39;, contactFirstName)</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="x">    &#39;salesRepEmployeeNumber&#39; // Empleado a cargo</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="x">]);</span>
 </code></pre></div>
 <p>Cuando busques un cliente desde el formulario de Pagos, podrás escribir:</p>
 <ul>
