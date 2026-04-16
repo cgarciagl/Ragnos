@@ -127,9 +127,12 @@ class RSearchField extends RFieldDecorator
 
         if ($sql) {
             $this->setSQLforSearch($sql);
-            $db->select("($sql) as $fieldToShow", false);
+            $db->select("($sql) as {$fieldToShow}_{$this->getFieldName()}", false);
+            $this->setFieldToShow("{$fieldToShow}_{$this->getFieldName()}");
         } else {
-            $db->select("{$tablename}.{$fieldToShow}");
+            $alias = "{$fieldToShow}_{$this->getFieldName()}";
+            $db->select("{$tablename}.{$fieldToShow} as {$alias}", false);
+            $this->setFieldToShow($alias);
         }
     }
 
