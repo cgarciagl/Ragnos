@@ -123,7 +123,7 @@ trait SearchFilterTrait
         $this->completeFieldList();
         $this->checkRelations();
         $this->performSearchForJson();
-        return $this->builder()->countAllResults(false);
+        return $this->builder()->countAllResults(true);
     }
 
 

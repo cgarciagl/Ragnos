@@ -8,6 +8,7 @@ trait JsonResultTrait
     {
         if ($this->table) {
             $count = $this->getCountForSearch();
+            $this->checkRelations();
             $this->performSearchForJson();
             $this->setLimitForJsonResult();
             $this->setOrderByForJsonResult();
@@ -38,6 +39,7 @@ trait JsonResultTrait
     {
         if ($this->table) {
             $count = $this->getCountForSearch();
+            $this->checkRelations();
             $this->performSearchForJson();
             $this->setLimitForJsonResult();
             $this->setOrderByForJsonResult();
