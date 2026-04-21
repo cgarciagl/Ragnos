@@ -6,7 +6,7 @@ Esta guía describe cómo instalar Ragnos Framework a partir de un archivo ZIP d
 
 Ragnos está basado en **CodeIgniter 4**, por lo que comparte sus requisitos mínimos:
 
-- **PHP**: Versión 7.4 o superior (se recomienda PHP 8.1+).
+- **PHP**: Versión 8.2 o superior.
 - **Extensiones PHP**:
   - intl
   - mbstring
