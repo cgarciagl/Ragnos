@@ -2,124 +2,197 @@
 
 namespace Tests\Ragnos\Helpers;
 
-use CodeIgniter\Test\CIUnitTestCase;
+use Tests\Ragnos\RagnosTestCase;
 
-class UtilesHelperTest extends CIUnitTestCase
+/**
+ * Pruebas funcionales para app/ThirdParty/Ragnos/Helpers/utiles_helper.php.
+ * Las funciones son globales: se invocan con prefijo `\` para evitar
+ * la resolución en el namespace local cuando los tests corren aislados.
+ */
+class UtilesHelperTest extends RagnosTestCase
 {
     protected function setUp(): void
     {
         parent::setUp();
-        // Load the helper
-        helper('App\ThirdParty\Ragnos\Helpers\utiles_helper');
+        helper([
+            'App\ThirdParty\Ragnos\Helpers\utiles_helper',
+            'App\ThirdParty\Ragnos\Helpers\ragnos_helper',
+        ]);
     }
 
-    public function testIsJsonFunctionExists(): void
+    public function testIsJsonDetectaJsonValido(): void
     {
-        $this->assertTrue(function_exists('isJson'));
+        $this->assertTrue(\isJson('{}'));
+        $this->assertTrue(\isJson('[]'));
+        $this->assertTrue(\isJson('{"name":"John","age":30}'));
+        $this->assertTrue(\isJson('["a","b","c"]'));
     }
 
-    public function testRemoveNewLinesFunctionExists(): void
+    public function testIsJsonRechazaEntradasInvalidas(): void
     {
-        $this->assertTrue(function_exists('removeNewLines'));
+        $this->assertFalse(\isJson('not json at all'));
+        $this->assertFalse(\isJson('<root><item>v</item></root>'));
+        // No es string -> false directo
+        $this->assertFalse(\isJson(123));
+        $this->assertFalse(\isJson(null));
+        $this->assertFalse(\isJson([]));
     }
 
-    public function testIsJsonReturnsTrueForValidJson(): void
+    public function testRemoveNewLinesReemplazaTodosLosSaltosDeLineaPorEspacio(): void
     {
-        $json   = '{"name":"John","age":30}';
-        $result = isJson($json);
-        $this->assertTrue($result);
+        $this->assertSame('a b  c d', \removeNewLines("a\nb\r\nc\rd"));
+        $this->assertSame('Hola Mundo', \removeNewLines("Hola\nMundo"));
+        $this->assertSame('', \removeNewLines(''));
     }
 
-    public function testIsJsonReturnsFalseForInvalidJson(): void
+    public function testRemoveNewLinesNoAlteraTextoSinSaltos(): void
     {
-        $result = isJson('not json at all');
-        $this->assertFalse($result);
+        $this->assertSame('Sin saltos', \removeNewLines('Sin saltos'));
     }
 
-    public function testIsJsonReturnsTrueForJsonArray(): void
+    public function testIfSetDevuelveValorSiNoEstaVacio(): void
     {
-        $json   = '["item1","item2","item3"]';
-        $result = isJson($json);
-        $this->assertTrue($result);
+        $v = 'real';
+        $this->assertSame('real', \ifSet($v, 'default'));
     }
 
-    public function testIsJsonReturnsFalseForXml(): void
+    public function testIfSetDevuelveDefaultParaCadenaVacia(): void
     {
-        $xml    = '<root><item>value</item></root>';
-        $result = isJson($xml);
-        $this->assertFalse($result);
+        $v = '';
+        $this->assertSame('default', \ifSet($v, 'default'));
     }
 
-    public function testRemoveNewLinesRemovesLineBreaks(): void
+    public function testIfSetDevuelveDefaultParaCero(): void
     {
-        $text   = "Line 1\nLine 2\nLine 3";
-        $result = removeNewLines($text);
-
-        $this->assertStringNotContainsString("\n", $result);
+        $v = 0;
+        $this->assertSame('default', \ifSet($v, 'default'),
+            'ifSet usa empty() internamente; 0 cuenta como "no establecido"');
     }
 
-    public function testRemoveNewLinesPreservesContent(): void
+    public function testIfSetDevuelveDefaultParaNull(): void
     {
-        $text   = "Hello\nWorld";
-        $result = removeNewLines($text);
-
-        $this->assertStringContainsString('Hello', $result);
-        $this->assertStringContainsString('World', $result);
+        $v = null;
+        $this->assertSame('default', \ifSet($v, 'default'));
     }
 
-    public function testRemoveNewLinesWithWindowsLineEndings(): void
+    public function testArrayToSelectGeneraOpcionesConSeleccionado(): void
     {
-        $text   = "Line 1\r\nLine 2\r\nLine 3";
-        $result = removeNewLines($text);
+        $opts = [
+            ['v' => 'A', 't' => 'Alta'],
+            ['v' => 'B', 't' => 'Baja'],
+        ];
+        $html = \arrayToSelect('estado', $opts, 'v', 't', 'A');
 
-        $this->assertStringNotContainsString("\r\n", $result);
+        $this->assertStringContainsString('<select name="estado"', $html);
+        $this->assertStringContainsString('class="form-control"', $html);
+        $this->assertStringContainsString('<option value="A" selected>Alta</option>', $html);
+        $this->assertStringContainsString('<option value="B">Baja</option>', $html);
+        $this->assertStringEndsWith('</select>', $html);
     }
 
-    public function testRemoveNewLinesWithEmptyString(): void
+    public function testArrayToSelectEscapaContenidoHTMLPeligroso(): void
     {
-        $result = removeNewLines('');
-        $this->assertEquals('', $result);
+        $opts = [
+            ['v' => '1', 't' => '<script>alert(1)</script>'],
+        ];
+        $html = \arrayToSelect('campo', $opts, 'v', 't');
+
+        $this->assertStringNotContainsString('<script>alert(1)</script>', $html);
+        $this->assertStringContainsString('&lt;script&gt;', $html);
     }
 
-    public function testIfSetReturnsValueIfSet(): void
+    public function testArrayToSelectMultipleAgregaSufijoYAtributo(): void
     {
-        $value  = 'test';
-        $result = ifSet($value, 'default');
+        $opts = [['v' => '1', 't' => 'Uno']];
+        $html = \arrayToSelect('roles', $opts, 'v', 't', null, ['multiple' => true]);
 
-        $this->assertEquals('test', $result);
+        // Sufijo [] añadido al name
+        $this->assertStringContainsString('name="roles[]"', $html);
+        // Atributo multiple presente
+        $this->assertStringContainsString('multiple', $html);
     }
 
-    public function testIfSetReturnsDefaultIfNotSet(): void
+    public function testArrayToSelectAtributosExtraSeRenderizan(): void
     {
-        $undefined = null;
-        $result    = ifSet($undefined, 'default');
+        $opts = [['v' => '1', 't' => 'Uno']];
+        $html = \arrayToSelect('campo', $opts, 'v', 't', null, ['id' => 'mi-select', 'class' => 'custom']);
 
-        $this->assertEquals('default', $result);
+        $this->assertStringContainsString('id="mi-select"', $html);
+        $this->assertStringContainsString('class="custom"', $html);
     }
 
-    public function testIfSetWithNullValue(): void
+    public function testExecuteQueryConSQLite(): void
     {
-        $value  = null;
-        $result = ifSet($value, 'fallback');
+        // executeQuery() invoca \Config\Database::connect() (grupo default).
+        // Configuramos el grupo default como SQLite en memoria para el test.
+        $config                       = config('Database');
+        $original                     = $config->default;
+        $config->default['DBDriver']  = 'SQLite3';
+        $config->default['database']  = ':memory:';
+        $config->default['DBDebug']   = false;
 
-        $this->assertEquals('fallback', $result);
+        // Reset para que connect() devuelva una conexión fresca con la nueva config
+        \Config\Database::reset();
+        $defDb = \Config\Database::connect();
+        $defDb->query('CREATE TABLE prueba_exec (id INTEGER PRIMARY KEY, nombre TEXT)');
+        $defDb->query("INSERT INTO prueba_exec (nombre) VALUES ('Ana'), ('Bea'), ('Cris')");
+
+        $rows = \executeQuery('SELECT nombre FROM prueba_exec ORDER BY id');
+        $this->assertCount(3, $rows);
+        $this->assertSame('Ana', $rows[0]['nombre']);
+        $this->assertSame('Cris', $rows[2]['nombre']);
+
+        // Restaurar
+        $config->default = $original;
+        \Config\Database::reset();
     }
 
-    public function testCurrencyFunctionExists(): void
+    public function testQueryToAssocArrayConSQLite(): void
     {
-        $this->assertTrue(function_exists('currency'));
+        $config                       = config('Database');
+        $original                     = $config->default;
+        $config->default['DBDriver']  = 'SQLite3';
+        $config->default['database']  = ':memory:';
+        $config->default['DBDebug']   = false;
+
+        $defDb = \Config\Database::connect();
+        $defDb->query('CREATE TABLE mapa (k TEXT, v TEXT)');
+        $defDb->query("INSERT INTO mapa (k, v) VALUES ('a','Alpha'), ('b','Beta')");
+
+        $result = \queryToAssocArray('SELECT k, v FROM mapa', 'k', 'v');
+        $this->assertSame(['a' => 'Alpha', 'b' => 'Beta'], $result);
+
+        $config->default = $original;
     }
 
-    public function testCurrencyReturnsString(): void
+    public function testQueryToAssocArrayReturnEmptyOnMissingKeys(): void
     {
-        $result = currency(100);
-        $this->assertIsString($result);
+        $config                       = config('Database');
+        $original                     = $config->default;
+        $config->default['DBDriver']  = 'SQLite3';
+        $config->default['database']  = ':memory:';
+        $config->default['DBDebug']   = false;
+
+        $defDb = \Config\Database::connect();
+        $defDb->query('CREATE TABLE mapa2 (k TEXT, v TEXT)');
+        $defDb->query("INSERT INTO mapa2 (k, v) VALUES ('a','Alpha')");
+
+        // Pedimos un campo que no existe => devuelve array vacío
+        $result = \queryToAssocArray('SELECT k, v FROM mapa2', 'no_existe', 'v');
+        $this->assertSame([], $result);
+
+        $config->default = $original;
     }
 
-    public function testCurrencyWithDecimal(): void
+    public function testCurrencyDevuelveStringFormateado(): void
     {
-        $result = currency(99.99);
+        if (! extension_loaded('intl')) {
+            $this->markTestSkipped('intl extension is not loaded');
+        }
+        $result = \currency(1234.56);
         $this->assertIsString($result);
         $this->assertNotEmpty($result);
+        // Debe contener algún dígito y separador decimal
+        $this->assertMatchesRegularExpression('/\d/', $result);
     }
 }

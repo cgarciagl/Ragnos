@@ -6,126 +6,201 @@ use Tests\Ragnos\RagnosTestCase;
 use App\ThirdParty\Ragnos\Models\RConcreteDatasetModel;
 use App\ThirdParty\Ragnos\Models\Fields\RSimpleTextField;
 use App\ThirdParty\Ragnos\Models\Fields\RSwitchField;
+use App\ThirdParty\Ragnos\Models\Fields\RPillboxField;
 
+/**
+ * Pruebas de comportamiento real para FieldManagementTrait.
+ * Verifica addFieldFromArray (mapeo de tipos), fieldByName, realField,
+ * completeFieldList y textForTable (formato de salida por tipo).
+ */
 class FieldManagementTraitTest extends RagnosTestCase
 {
-    protected string $testTable = 'test_fields';
-    protected RConcreteDatasetModel $model;
+    private RConcreteDatasetModel $model;
 
     protected function setUp(): void
     {
         parent::setUp();
+        helper([
+            'App\ThirdParty\Ragnos\Helpers\utiles_helper',
+            'App\ThirdParty\Ragnos\Helpers\ragnos_helper',
+            'text',
+        ]);
         $this->model = new RConcreteDatasetModel();
     }
 
-    protected function tearDown(): void
+    public function testAddFieldFromArrayConTypeSwitchCreaRSwitchField(): void
     {
-        parent::tearDown();
+        $this->model->addFieldFromArray('activo', ['type' => 'switch']);
+        $this->assertInstanceOf(RSwitchField::class, $this->model->ofieldlist['activo']);
     }
 
-    /**
-     * @test
-     * Verifica que se puede agregar un campo al modelo con addFieldFromArray
-     */
-    public function testCanAddField(): void
+    public function testAddFieldFromArrayConTypePillboxCreaRPillboxField(): void
     {
-        $this->assertTrue(method_exists($this->model, 'addFieldFromArray'));
-        $this->assertTrue(is_callable([$this->model, 'addFieldFromArray']));
+        $this->model->addFieldFromArray('tags', ['type' => 'pillbox']);
+        $this->assertInstanceOf(RPillboxField::class, $this->model->ofieldlist['tags']);
     }
 
-    /**
-     * @test
-     * Verifica que completeFieldList agrega múltiples campos
-     */
-    public function testCanAddMultipleFields(): void
+    public function testAddFieldFromArrayConTypeTextCreaRSimpleTextField(): void
     {
-        $this->assertTrue(method_exists($this->model, 'completeFieldList'));
-        // completeFieldList configura varios campos
-        $this->assertTrue(method_exists($this->model, 'addFieldFromArray'));
+        $this->model->addFieldFromArray('nombre', ['type' => 'text']);
+        $this->assertInstanceOf(RSimpleTextField::class, $this->model->ofieldlist['nombre']);
     }
 
-    /**
-     * @test
-     * Verifica que se puede recuperar un campo por nombre
-     */
-    public function testFieldByNameReturnsCorrectField(): void
+    public function testAddFieldFromArraySinTypeUsaRSimpleTextField(): void
     {
-        $this->assertTrue(method_exists($this->model, 'fieldByName'));
-        // El método debe retornar un campo o null
-        $this->assertTrue(is_callable([$this->model, 'fieldByName']));
+        $this->model->addFieldFromArray('descripcion', []);
+        $this->assertInstanceOf(RSimpleTextField::class, $this->model->ofieldlist['descripcion']);
     }
 
-    /**
-     * @test
-     * Verifica que fieldByName retorna null para campo inexistente
-     */
-    public function testFieldByNameReturnsNullForNonexistent(): void
+    public function testAddFieldFromArrayConTypeDateUsaRSimpleTextField(): void
     {
-        $this->assertTrue(method_exists($this->model, 'fieldByName'));
-        // fieldByName busca en ofieldlist
-        $this->assertTrue(property_exists($this->model, 'ofieldlist'));
+        // type='date' no está en classMap, por lo que cae a RSimpleTextField pero conserva type='date'
+        $this->model->addFieldFromArray('fecha', ['type' => 'date']);
+        $field = $this->model->ofieldlist['fecha'];
+        $this->assertInstanceOf(RSimpleTextField::class, $field);
+        $this->assertSame('date', $field->getType());
     }
 
-    /**
-     * @test
-     * Verifica que completeFieldList inicializa los campos correctamente
-     */
-    public function testCompleteFieldListInitializesFields(): void
+    public function testAddFieldFromArrayAsignaLabelYRules(): void
     {
-        $this->assertTrue(method_exists($this->model, 'completeFieldList'));
-        $this->assertTrue(property_exists($this->model, 'ofieldlist'));
+        $this->model->addFieldFromArray('email', [
+            'label' => 'Correo',
+            'rules' => 'required|valid_email',
+        ]);
+        $f = $this->model->ofieldlist['email'];
+
+        $this->assertSame('Correo', $f->getLabel());
+        $this->assertSame('required|valid_email', $f->getRules());
     }
 
-    /**
-     * @test
-     * Verifica que un campo puede tener valor por defecto
-     */
-    public function testFieldDefaultValueIsSet(): void
+    public function testAddFieldFromArrayAsignaOptions(): void
     {
-        $this->assertTrue(method_exists($this->model, 'addFieldFromArray'));
-        // addFieldFromArray soporta parámetros incluyendo default
-        $this->assertTrue(method_exists($this->model, 'fieldByName'));
+        $this->model->addFieldFromArray('estado', [
+            'type'    => 'dropdown',
+            'options' => ['1' => 'Activo', '0' => 'Inactivo'],
+        ]);
+        $f = $this->model->ofieldlist['estado'];
+
+        $this->assertSame(['1' => 'Activo', '0' => 'Inactivo'], $f->getOptions());
     }
 
-    /**
-     * @test
-     * Verifica que realField retorna el campo a mostrar
-     */
-    public function testCanRemoveField(): void
+    public function testAddFieldFromArrayRetornaElCampoCreado(): void
     {
-        $this->assertTrue(method_exists($this->model, 'realField'));
-        $this->assertTrue(is_callable([$this->model, 'realField']));
+        $field = $this->model->addFieldFromArray('nombre', ['label' => 'X']);
+        $this->assertInstanceOf(RSimpleTextField::class, $field);
+        $this->assertSame($field, $this->model->ofieldlist['nombre']);
     }
 
-    /**
-     * @test
-     * Verifica que los campos pueden tener reglas de validación
-     */
-    public function testFieldsCanHaveCustomRules(): void
+    public function testFieldByNameDevuelveCampoExistente(): void
     {
-        $this->assertTrue(method_exists($this->model, 'addFieldFromArray'));
-        // Los campos heredan de RField que soporta rules
-        $this->assertTrue(method_exists($this->model, 'fieldByName'));
+        $this->model->addFieldFromArray('email', ['label' => 'Correo']);
+        $f = $this->model->fieldByName('email');
+
+        $this->assertInstanceOf(RSimpleTextField::class, $f);
+        $this->assertSame('Correo', $f->getLabel());
     }
 
-    /**
-     * @test
-     * Verifica que se puede establecer y recuperar la etiqueta de un campo
-     */
-    public function testFieldLabelCanBeSetAndRetrieved(): void
+    public function testFieldByNameLanzaExcepcionSiNoExiste(): void
     {
-        $this->assertTrue(method_exists($this->model, 'addFieldFromArray'));
-        // addFieldFromArray soporta label en array
-        $this->assertTrue(property_exists($this->model, 'tablefields'));
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage("Field 'no_existe' not found");
+        $this->model->fieldByName('no_existe');
     }
 
-    /**
-     * @test
-     * Verifica que textForTable retorna valor formateado para tabla
-     */
-    public function testTextForTableReturnsFormattedValue(): void
+    public function testRealFieldRetornaFieldName(): void
     {
-        $this->assertTrue(method_exists($this->model, 'textForTable'));
-        $this->assertTrue(is_callable([$this->model, 'textForTable']));
+        $this->model->addFieldFromArray('email', []);
+        $this->assertSame('email', $this->model->realField('email'));
+    }
+
+    public function testCompleteFieldListAgregaCamposFaltantesYPK(): void
+    {
+        $this->model->tablefields = ['a', 'b'];
+        $this->model->completeFieldList();
+
+        $this->assertArrayHasKey('a', $this->model->ofieldlist);
+        $this->assertArrayHasKey('b', $this->model->ofieldlist);
+        $this->assertArrayHasKey('id', $this->model->ofieldlist);
+    }
+
+    public function testTextForTableDropdownTraduceKeyAOption(): void
+    {
+        $this->model->addFieldFromArray('estado', [
+            'type'    => 'dropdown',
+            'options' => ['1' => 'Activo', '0' => 'Inactivo'],
+        ]);
+        $resultado = $this->model->textForTable(['estado' => '1'], 'estado');
+        $this->assertSame('Activo', $resultado);
+    }
+
+    public function testTextForTableDropdownConValorNoEnOptionsDevuelveValor(): void
+    {
+        $this->model->addFieldFromArray('estado', [
+            'type'    => 'dropdown',
+            'options' => ['1' => 'Activo'],
+        ]);
+        $resultado = $this->model->textForTable(['estado' => 'X'], 'estado');
+        $this->assertSame('X', $resultado);
+    }
+
+    public function testTextForTableSwitchOn(): void
+    {
+        $this->model->addFieldFromArray('activo', [
+            'type' => 'switch',
+        ]);
+        // onValue por defecto = '1'
+        $resultado = $this->model->textForTable(['activo' => '1'], 'activo');
+        $this->assertStringContainsString('✅', $resultado);
+    }
+
+    public function testTextForTableSwitchOff(): void
+    {
+        $this->model->addFieldFromArray('activo', [
+            'type' => 'switch',
+        ]);
+        $resultado = $this->model->textForTable(['activo' => '0'], 'activo');
+        $this->assertStringContainsString('❌', $resultado);
+    }
+
+    public function testTextForTableDateFormatea(): void
+    {
+        $this->model->addFieldFromArray('fecha', ['type' => 'date']);
+        $resultado = $this->model->textForTable(['fecha' => '2024-01-15'], 'fecha');
+        $this->assertSame('15/01/2024', $resultado);
+    }
+
+    public function testTextForTableMoneyAplicaFormato(): void
+    {
+        if (! extension_loaded('intl')) {
+            $this->markTestSkipped('intl extension is not loaded');
+        }
+        $this->model->addFieldFromArray('precio', [
+            'rules' => 'money',
+        ]);
+        $resultado = $this->model->textForTable(['precio' => 1234.5], 'precio');
+        $this->assertStringContainsString('$', $resultado);
+    }
+
+    public function testTextForTableTruncaTextosLargos(): void
+    {
+        $this->model->addFieldFromArray('descripcion', []);
+        // character_limiter requiere espacios para truncar
+        $textoLargo = 'palabra1 palabra2 palabra3 palabra4 palabra5 palabra6 palabra7';
+        $resultado  = $this->model->textForTable(['descripcion' => $textoLargo], 'descripcion');
+
+        // character_limiter trunca y añade '...'
+        $this->assertLessThan(strlen($textoLargo), strlen($resultado));
+        $this->assertStringEndsWith('...', $resultado);
+    }
+
+    public function testTextForTableMultiselectMapeaCadaValor(): void
+    {
+        $this->model->addFieldFromArray('roles', [
+            'type'    => 'multiselect',
+            'options' => ['1' => 'Admin', '2' => 'User', '3' => 'Guest'],
+        ]);
+        $resultado = $this->model->textForTable(['roles' => '1,3'], 'roles');
+        $this->assertStringContainsString('Admin', $resultado);
+        $this->assertStringContainsString('Guest', $resultado);
     }
 }

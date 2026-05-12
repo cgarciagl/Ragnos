@@ -3,107 +3,206 @@
 namespace Tests\Ragnos\Models\Traits;
 
 use Tests\Ragnos\RagnosTestCase;
+use App\ThirdParty\Ragnos\Models\RDatasetModel;
 use App\ThirdParty\Ragnos\Models\RConcreteDatasetModel;
 
+/**
+ * Modelo concreto para JsonResultTrait.
+ */
+class JsonProductoModel extends RDatasetModel
+{
+    public $table         = 'productos_json';
+    public $primaryKey    = 'id';
+    protected $returnType = 'array';
+
+    public function __construct($db = null)
+    {
+        parent::__construct();
+        if ($db !== null) {
+            $this->db = $db;
+        }
+    }
+}
+
+/**
+ * Pruebas reales para JsonResultTrait. Verifica:
+ * - getTableAjax y getTableForAPI con $table vacío retornan null
+ * - getTableAjax produce JSON con estructura draw/recordsTotal/recordsFiltered/data
+ * - Paginación (length/start)
+ * - Ordenamiento via input order[0][column]
+ * - getTableForAPI retorna estructura [data, countAll]
+ */
 class JsonResultTraitTest extends RagnosTestCase
 {
-    protected string $testTable = 'test_json';
-    protected RConcreteDatasetModel $model;
+    private JsonProductoModel $model;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->model = new RConcreteDatasetModel();
+        helper([
+            'App\ThirdParty\Ragnos\Helpers\utiles_helper',
+            'App\ThirdParty\Ragnos\Helpers\ragnos_helper',
+            'text',
+        ]);
+
+        $this->createTestTable('productos_json', [
+            'nombre' => ['type' => 'TEXT'],
+            'precio' => ['type' => 'REAL'],
+        ]);
+        for ($i = 1; $i <= 5; $i++) {
+            $this->insertTestData('productos_json', [
+                'nombre' => "Item {$i}",
+                'precio' => $i * 10,
+            ]);
+        }
+
+        $this->model              = new JsonProductoModel($this->db);
+        $this->model->tablefields = ['nombre', 'precio'];
+
+        \CodeIgniter\Config\Services::reset(true);
+        $_POST = [];
+        $_GET  = [];
     }
 
     protected function tearDown(): void
     {
+        $this->dropTestTable('productos_json');
+        \CodeIgniter\Config\Services::reset(true);
+        $_POST = [];
+        $_GET  = [];
         parent::tearDown();
     }
 
-    /**
-     * @test
-     * Verifica que el modelo tiene método para devolver tabla en JSON
-     */
-    public function testCanGenerateJsonResult(): void
+    private function setGet(array $data): void
     {
-        $this->assertTrue(method_exists($this->model, 'getTableAjax'));
-        $this->assertTrue(is_callable([$this->model, 'getTableAjax']));
+        service('request')->setGlobal('get', $data);
+        service('request')->setGlobal('request', $data);
     }
 
-    /**
-     * @test
-     * Verifica que hay método para obtener tabla por SQL en formato JSON
-     */
-    public function testJsonResultContainsValidData(): void
+    public function testGetTableAjaxSinTableRetornaNull(): void
     {
-        $this->assertTrue(method_exists($this->model, 'getTableAjaxBySQL'));
-        $this->assertEquals('array', $this->model->returnType);
+        $modelo        = new RConcreteDatasetModel();
+        $modelo->table = '';
+        $this->assertNull($modelo->getTableAjax());
     }
 
-    /**
-     * @test
-     * Verifica que el modelo puede generar resultado JSON
-     */
-    public function testCanSerializeToJson(): void
+    public function testGetTableForAPISinTableRetornaNull(): void
     {
-        $this->assertTrue(method_exists($this->model, 'generateJsonResult'));
-        $this->assertTrue(is_callable([$this->model, 'generateJsonResult']));
+        $modelo        = new RConcreteDatasetModel();
+        $modelo->table = '';
+        $this->assertNull($modelo->getTableForAPI());
     }
 
-    /**
-     * @test
-     * Verifica que el modelo tiene método para obtener resultados decodificables
-     */
-    public function testJsonResultIsDecodableToArray(): void
+    public function testGetTableAjaxRetornaJsonValido(): void
     {
-        $this->assertTrue(method_exists($this->model, 'getTableForAPI'));
-        // getTableForAPI retorna datos para API
-        $this->assertTrue(method_exists($this->model, 'performSearchForJson'));
+        $json = $this->model->getTableAjax();
+        $this->assertIsString($json);
+        $decoded = json_decode($json, true);
+        $this->assertSame(JSON_ERROR_NONE, json_last_error());
+        $this->assertIsArray($decoded);
     }
 
-    /**
-     * @test
-     * Verifica que getTableForAPI devuelve datos para API
-     */
-    public function testCanGetTableForAPI(): void
+    public function testGetTableAjaxContieneLlavesEstandarDataTables(): void
     {
-        $this->assertTrue(method_exists($this->model, 'getTableForAPI'));
-        // getTableForAPI requiere tabla configurada
-        $this->assertTrue(method_exists($this->model, 'builder'));
+        $decoded = json_decode($this->model->getTableAjax(), true);
+
+        $this->assertArrayHasKey('draw', $decoded);
+        $this->assertArrayHasKey('recordsTotal', $decoded);
+        $this->assertArrayHasKey('recordsFiltered', $decoded);
+        $this->assertArrayHasKey('data', $decoded);
+        $this->assertArrayHasKey('sSearch', $decoded);
     }
 
-    /**
-     * @test
-     * Verifica que los datos se preservan en serialización JSON
-     */
-    public function testJsonResultMaintainsDataIntegrity(): void
+    public function testRecordsTotalCoincideConCountEnBD(): void
     {
-        $this->assertTrue(method_exists($this->model, 'getTableAjax'));
-        $this->assertTrue(method_exists($this->model, 'generateJsonResult'));
-        // Fluent chain support
-        $this->assertTrue(method_exists($this->model, 'builder'));
+        $decoded = json_decode($this->model->getTableAjax(), true);
+        $this->assertSame(5, $decoded['recordsTotal']);
+        $this->assertSame(5, $decoded['recordsFiltered']);
     }
 
-    /**
-     * @test
-     * Verifica que se pueden filtrar campos antes de JSON
-     */
-    public function testCanFilterBeforeJsonSerialization(): void
+    public function testDataContieneFilasDeLaTabla(): void
     {
-        $this->assertTrue(method_exists($this->model, 'performSearchForJson'));
-        // performSearchForJson permite filtrado
-        $this->assertTrue(method_exists($this->model, 'select'));
+        $decoded = json_decode($this->model->getTableAjax(), true);
+        // Default limit es 10, hay 5 filas
+        $this->assertCount(5, $decoded['data']);
+
+        // Cada fila tiene: tablefields (2: nombre, precio) + el id como columna extra
+        // Total: 3 columnas
+        $this->assertCount(3, $decoded['data'][0]);
     }
 
-    /**
-     * @test
-     * Verifica que la estructura de resultado JSON es consistente
-     */
-    public function testJsonResultStructure(): void
+    public function testPaginacionConLengthYStart(): void
     {
-        $this->assertTrue(method_exists($this->model, 'getTableAjax'));
-        // Métodos necesarios para generar JSON válido
-        $this->assertTrue(method_exists($this->model, 'getCountForSearch'));
+        $this->setGet(['length' => '2', 'start' => '0', 'draw' => '7']);
+        $decoded = json_decode($this->model->getTableAjax(), true);
+
+        $this->assertCount(2, $decoded['data']);
+        $this->assertSame(7, $decoded['draw']);
+        $this->assertSame(5, $decoded['recordsTotal'], 'recordsTotal cuenta TODA la tabla');
+    }
+
+    public function testPaginacionDevuelveSegundaPagina(): void
+    {
+        $this->setGet(['length' => '2', 'start' => '2']);
+        $decoded = json_decode($this->model->getTableAjax(), true);
+
+        $this->assertCount(2, $decoded['data']);
+    }
+
+    public function testGetTableForAPIRetornaArrayConDataYCountAll(): void
+    {
+        $result = $this->model->getTableForAPI();
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('data', $result);
+        $this->assertArrayHasKey('countAll', $result);
+        $this->assertSame(5, $result['countAll']);
+    }
+
+    public function testGetTableForAPIDataFilasSonAssocArrays(): void
+    {
+        $result = $this->model->getTableForAPI();
+        $this->assertNotEmpty($result['data']);
+        $primero = $result['data'][0];
+
+        // Cada fila tiene los tablefields como llaves
+        $this->assertArrayHasKey('nombre', $primero);
+        $this->assertArrayHasKey('precio', $primero);
+        // Plus la clave del primary key
+        $this->assertArrayHasKey('id', $primero);
+    }
+
+    public function testGenerateJsonResultEnsamblaEstructura(): void
+    {
+        $this->model->completeFieldList();
+        $query = $this->model->builder()->select('nombre, precio, id')->limit(2)->get();
+
+        $json    = $this->model->generateJsonResult($query, 100);
+        $decoded = json_decode($json, true);
+
+        $this->assertSame(100, $decoded['recordsTotal']);
+        $this->assertSame(100, $decoded['recordsFiltered']);
+        $this->assertCount(2, $decoded['data']);
+    }
+
+    public function testOrdenamientoViaOrderColumnDescendente(): void
+    {
+        $this->setGet([
+            'order' => [['column' => '1', 'dir' => 'desc']], // ordenar por precio (col 1) DESC
+        ]);
+        $decoded = json_decode($this->model->getTableAjax(), true);
+
+        // El primer registro debe ser el de precio más alto (Item 5 = $50)
+        $this->assertStringContainsString('Item 5', $decoded['data'][0][0]);
+    }
+
+    public function testBusquedaGlobalReduceData(): void
+    {
+        $this->setGet(['search' => ['value' => 'Item 3']]);
+        $decoded = json_decode($this->model->getTableAjax(), true);
+
+        // Solo el item 3 coincide
+        $this->assertSame(1, $decoded['recordsFiltered']);
+        $this->assertCount(1, $decoded['data']);
+        $this->assertStringContainsString('Item 3', $decoded['data'][0][0]);
     }
 }

@@ -3,143 +3,217 @@
 namespace Tests\Ragnos\Models\Traits;
 
 use Tests\Ragnos\RagnosTestCase;
-use App\ThirdParty\Ragnos\Models\RConcreteDatasetModel;
+use App\ThirdParty\Ragnos\Models\RDatasetModel;
 
+/**
+ * Modelo concreto para SearchFilterTrait sobre tabla 'productos'.
+ */
+class SearchProductoModel extends RDatasetModel
+{
+    public $table         = 'productos';
+    public $primaryKey    = 'id';
+    protected $returnType = 'array';
+
+    public function __construct($db = null)
+    {
+        parent::__construct();
+        if ($db !== null) {
+            $this->db = $db;
+        }
+    }
+}
+
+/**
+ * Pruebas reales para SearchFilterTrait.
+ * Cubre isPostgres, parseStructuredFilters (incluyendo validación de
+ * campos/operadores) y getCountForSearch contra datos reales.
+ */
 class SearchFilterTraitTest extends RagnosTestCase
 {
-    /**
-     * @test
-     * Verifica que findAll() es accesible (heredado de Model)
-     */
-    public function testCanFindAllRecords(): void
+    private SearchProductoModel $model;
+
+    protected function setUp(): void
     {
-        $model = new RConcreteDatasetModel();
-        $this->assertTrue(method_exists($model, 'findAll'));
+        parent::setUp();
+        helper([
+            'App\ThirdParty\Ragnos\Helpers\utiles_helper',
+            'App\ThirdParty\Ragnos\Helpers\ragnos_helper',
+            'text',
+        ]);
+
+        $this->createTestTable('productos', [
+            'nombre'    => ['type' => 'TEXT'],
+            'categoria' => ['type' => 'TEXT'],
+            'precio'    => ['type' => 'REAL'],
+            'stock'     => ['type' => 'INTEGER'],
+        ]);
+
+        $this->insertTestData('productos', ['nombre' => 'Widget A', 'categoria' => 'Tools',   'precio' =>  50, 'stock' => 10]);
+        $this->insertTestData('productos', ['nombre' => 'Widget B', 'categoria' => 'Tools',   'precio' => 150, 'stock' => 5]);
+        $this->insertTestData('productos', ['nombre' => 'Gadget X', 'categoria' => 'Gadgets', 'precio' => 250, 'stock' => 0]);
+        $this->insertTestData('productos', ['nombre' => 'Gadget Y', 'categoria' => 'Gadgets', 'precio' => 350, 'stock' => 8]);
+        $this->insertTestData('productos', ['nombre' => 'Other Z',  'categoria' => 'Other',   'precio' => 100, 'stock' => 3]);
+
+        $this->model              = new SearchProductoModel($this->db);
+        $this->model->tablefields = ['nombre', 'categoria', 'precio', 'stock'];
+
+        // Limpiar request anterior
+        \CodeIgniter\Config\Services::reset(true);
+        $_POST = [];
+        $_GET  = [];
     }
 
-    /**
-     * @test
-     * Verifica que el método where() fue heredado correctamente
-     */
-    public function testCanSearchByField(): void
+    protected function tearDown(): void
     {
-        $model = new RConcreteDatasetModel();
-
-        // setWhere es la implementación en RTableModel
-        $this->assertTrue(method_exists($model, 'setWhere'));
-        $this->assertTrue(is_callable([$model, 'setWhere']));
+        $this->dropTestTable('productos');
+        \CodeIgniter\Config\Services::reset(true);
+        $_POST = [];
+        $_GET  = [];
+        parent::tearDown();
     }
 
-    /**
-     * @test
-     * Verifica que setWhere acepta dos parámetros
-     */
-    public function testCanSearchByMultipleFields(): void
+    private function setGet(array $data): void
     {
-        $model = new RConcreteDatasetModel();
-
-        // Verifica que se puede encadenar llamadas
-        $this->assertTrue(method_exists($model, 'setWhere'));
+        service('request')->setGlobal('get', $data);
+        service('request')->setGlobal('request', $data);
     }
 
-    /**
-     * @test
-     * Verifica que el modelo puede ser usado para construir queries
-     */
-    public function testCanFilterByCategoryFurniture(): void
+    public function testIsPostgresEnSQLiteRetornaFalse(): void
     {
-        $model = new RConcreteDatasetModel();
-
-        // Verifica que builder() está disponible (heredado de Model)
-        $this->assertTrue(method_exists($model, 'builder'));
+        $this->assertFalse($this->model->isPostgres());
     }
 
-    /**
-     * @test
-     * Verifica que countAllResults() está disponible
-     */
-    public function testCanCountSearchResults(): void
+    public function testGetCountForSearchSinFiltrosCuentaTodo(): void
     {
-        $model = new RConcreteDatasetModel();
-
-        // Método heredado de Model
-        $this->assertTrue(method_exists($model, 'countAllResults'));
+        $this->assertSame(5, $this->model->getCountForSearch());
     }
 
-    /**
-     * @test
-     * Verifica que se pueden construir queries base sin parámetros
-     */
-    public function testEmptySearchReturnsAllRecords(): void
+    public function testParseStructuredFiltersAplicaFiltroPrecioMayor(): void
     {
-        $model = new RConcreteDatasetModel();
+        // Codificar filtro estructurado y simular el GET correspondiente
+        $filter = base64_encode(json_encode([
+            ['field' => 'precio', 'op' => '>', 'value' => 100],
+        ]));
+        $this->setGet(['sFilter' => $filter]);
 
-        // findAll() es heredado de Model y debe estar disponible
-        $this->assertTrue(method_exists($model, 'findAll'));
-        $this->assertTrue(method_exists($model, 'withDeleted'));
+        // 3 productos con precio > 100: Widget B (150), Gadget X (250), Gadget Y (350)
+        $this->assertSame(3, $this->model->getCountForSearch());
     }
 
-    /**
-     * @test
-     * Verifica que el método select() funciona para restringir columnas
-     */
-    public function testSearchByPriceLessThan(): void
+    public function testParseStructuredFiltersConIgualdad(): void
     {
-        $model = new RConcreteDatasetModel();
+        $filter = base64_encode(json_encode([
+            ['field' => 'categoria', 'op' => '=', 'value' => 'Gadgets'],
+        ]));
+        $this->setGet(['sFilter' => $filter]);
 
-        // Verifica que el método select existe y es callable
-        $this->assertTrue(method_exists($model, 'select'));
-        $this->assertTrue(is_callable([$model, 'select']));
+        $this->assertSame(2, $this->model->getCountForSearch());
     }
 
-    /**
-     * @test
-     * Verifica que limit() funciona correctamente
-     */
-    public function testSearchByPriceGreaterThan(): void
+    public function testParseStructuredFiltersConMultiplesCondicionesAND(): void
     {
-        $model = new RConcreteDatasetModel();
+        $filter = base64_encode(json_encode([
+            ['field' => 'categoria', 'op' => '=',  'value' => 'Tools'],
+            ['field' => 'precio',    'op' => '>=', 'value' => 100],
+        ]));
+        $this->setGet(['sFilter' => $filter]);
 
-        // Verifica que el método limit existe y es callable
-        $this->assertTrue(method_exists($model, 'limit'));
-        $this->assertTrue(is_callable([$model, 'limit']));
+        // Solo Widget B cumple ambos
+        $this->assertSame(1, $this->model->getCountForSearch());
     }
 
-    /**
-     * @test
-     * Verifica que el modelo tiene métodos de búsqueda básicos
-     */
-    public function testSearchByExactMatch(): void
+    public function testParseStructuredFiltersLanzaConCampoNoPermitido(): void
     {
-        $model = new RConcreteDatasetModel();
+        $filter = base64_encode(json_encode([
+            ['field' => 'campo_inyectado', 'op' => '=', 'value' => 'x'],
+        ]));
+        $this->setGet(['sFilter' => $filter]);
 
-        // Métodos básicos de búsqueda deben existir
-        $this->assertTrue(method_exists($model, 'find'));
-        $this->assertTrue(method_exists($model, 'first'));
+        $this->expectException(\InvalidArgumentException::class);
+        $this->model->getCountForSearch();
     }
 
-    /**
-     * @test
-     * Verifica que se puede encadenar métodos de búsqueda
-     */
-    public function testSearchReturnsNoResultsForNonexistent(): void
+    public function testParseStructuredFiltersLanzaConOperadorNoPermitido(): void
     {
-        $model = new RConcreteDatasetModel();
+        $filter = base64_encode(json_encode([
+            ['field' => 'precio', 'op' => 'DROP TABLE', 'value' => 1],
+        ]));
+        $this->setGet(['sFilter' => $filter]);
 
-        // withDeleted() es heredado de Model con soft deletes trait
-        $this->assertTrue(method_exists($model, 'withDeleted'));
-        $this->assertTrue(method_exists($model, 'onlyDeleted'));
+        $this->expectException(\InvalidArgumentException::class);
+        $this->model->getCountForSearch();
     }
 
-    /**
-     * @test
-     * Verifica que el modelo soporta join() para búsquedas complejas
-     */
-    public function testCanChainMultipleWheres(): void
+    public function testParseStructuredFiltersLanzaConFiltroSinKeysRequeridas(): void
     {
-        $model = new RConcreteDatasetModel();
+        $filter = base64_encode(json_encode([
+            ['field' => 'precio'], // falta op y value
+        ]));
+        $this->setGet(['sFilter' => $filter]);
 
-        // join() debe retornar $this para chaining
-        $this->assertTrue(method_exists($model, 'join'));
+        $this->expectException(\InvalidArgumentException::class);
+        $this->model->getCountForSearch();
+    }
+
+    public function testParseStructuredFiltersDirectoViaReflection(): void
+    {
+        $ref = new \ReflectionMethod($this->model, 'parseStructuredFilters');
+        $ref->setAccessible(true);
+
+        // Caso válido: no lanza
+        $ref->invoke($this->model, [['field' => 'precio', 'op' => '<', 'value' => 200]]);
+        $this->addToAssertionCount(1);
+
+        // Caso inválido: lanza
+        $this->expectException(\InvalidArgumentException::class);
+        $ref->invoke($this->model, [['field' => 'precio', 'op' => 'XX', 'value' => 1]]);
+    }
+
+    public function testGetCountForSearchConBusquedaGlobal(): void
+    {
+        // Búsqueda global: buscar 'Widget' en cualquier campo
+        $this->setGet(['search' => ['value' => 'Widget']]);
+
+        // 2 productos contienen 'Widget' en nombre
+        $count = $this->model->getCountForSearch();
+        $this->assertSame(2, $count);
+    }
+
+    public function testGetCountForSearchConBusquedaSoloUnCampo(): void
+    {
+        $this->setGet([
+            'search'     => ['value' => 'Gadget'],
+            'sOnlyField' => 'nombre',
+        ]);
+        $count = $this->model->getCountForSearch();
+        $this->assertSame(2, $count);
+    }
+
+    public function testCheckRelationsAgregaSELECTParaCampoConQuery(): void
+    {
+        $this->model->addFieldFromArray('nombre_upper', [
+            'query' => 'UPPER(productos.nombre)',
+        ]);
+        $this->model->tablefields[] = 'nombre_upper';
+        $this->model->completeFieldList();
+        $this->model->checkRelations();
+
+        $sql = $this->model->builder()->getCompiledSelect();
+        $this->assertStringContainsString('UPPER(productos.nombre)', $sql);
+    }
+
+    public function testGetCountForSearchSeRecalculaCadaLlamada(): void
+    {
+        // Sin filtros: 5
+        $this->assertSame(5, $this->model->getCountForSearch());
+
+        // Con filtros: subset
+        $filter = base64_encode(json_encode([
+            ['field' => 'stock', 'op' => '>', 'value' => 0],
+        ]));
+        $this->setGet(['sFilter' => $filter]);
+
+        // 4 productos con stock > 0
+        $this->assertSame(4, $this->model->getCountForSearch());
     }
 }

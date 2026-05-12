@@ -5,6 +5,11 @@ namespace Tests\Ragnos\Controllers;
 use CodeIgniter\Test\CIUnitTestCase;
 use App\ThirdParty\Ragnos\Controllers\RagnosRules;
 
+/**
+ * Pruebas para RagnosRules::readonly_Ragnos.
+ * Simula valores nuevos vía service('request')->setGlobal('post', ...) y
+ * valores anteriores vía setOldRecordCache (helper de Ragnos).
+ */
 class RagnosRulesTest extends CIUnitTestCase
 {
     protected RagnosRules $rules;
@@ -12,45 +17,94 @@ class RagnosRulesTest extends CIUnitTestCase
     protected function setUp(): void
     {
         parent::setUp();
+        helper([
+            'App\ThirdParty\Ragnos\Helpers\utiles_helper',
+            'App\ThirdParty\Ragnos\Helpers\ragnos_helper',
+        ]);
+        // Resetear request y caches
+        \CodeIgniter\Config\Services::reset(true);
+        $_POST = [];
+        $_GET  = [];
+        $this->resetCache();
         $this->rules = new RagnosRules();
     }
 
-    public function testCanInstantiateRagnosRules(): void
+    protected function tearDown(): void
     {
-        $this->assertInstanceOf(RagnosRules::class, $this->rules);
+        \CodeIgniter\Config\Services::reset(true);
+        $_POST = [];
+        $_GET  = [];
+        $this->resetCache();
+        parent::tearDown();
     }
 
-    public function testReadonlyRagnosRuleExists(): void
+    private function resetCache(): void
     {
-        $this->assertTrue(method_exists($this->rules, 'readonly_Ragnos'));
+        // _oldRecordCache mantiene una variable static interna; usamos una
+        // marca centinela para "limpiar" entre tests (todos los campos quedan null vía null coalesce).
+        \setOldRecordCache([]);
     }
 
-    public function testRuleIsCallable(): void
+    private function setPost(array $data): void
     {
-        $method = 'readonly_Ragnos';
-        $this->assertTrue(method_exists($this->rules, $method));
-        $this->assertTrue(is_callable([$this->rules, $method]));
+        $request = service('request');
+        $request->setGlobal('post', $data);
+        $request->setGlobal('request', $data);
     }
 
-    public function testCanCreateMultipleInstances(): void
+    public function testReadonlyReturnsTrueCuandoValorNoCambia(): void
     {
-        $rules1 = new RagnosRules();
-        $rules2 = new RagnosRules();
+        \setOldRecordCache(['estado' => 'ACTIVO']);
+        $this->setPost(['estado' => 'ACTIVO']);
 
-        $this->assertInstanceOf(RagnosRules::class, $rules1);
-        $this->assertInstanceOf(RagnosRules::class, $rules2);
+        $error  = null;
+        $result = $this->rules->readonly_Ragnos('ACTIVO', 'estado', [], $error);
+        $this->assertTrue($result);
+        $this->assertNull($error);
     }
 
-    public function testRuleCanBeCalledWithValidSignature(): void
+    public function testReadonlyReturnsFalseCuandoValorCambia(): void
     {
-        // Just verify the method can be called with proper validation signature
-        // Don't execute the logic since fieldHasChanged() is a helper
-        $this->assertTrue(method_exists($this->rules, 'readonly_Ragnos'));
+        \setOldRecordCache(['estado' => 'ACTIVO']);
+        $this->setPost(['estado' => 'INACTIVO']);
+
+        $error  = null;
+        $result = $this->rules->readonly_Ragnos('INACTIVO', 'estado', [], $error);
+        $this->assertFalse($result);
+        $this->assertNotNull($error, 'Se debe asignar mensaje de error cuando la regla falla');
     }
 
-    public function testRuleClassImplementsCorrectInterface(): void
+    public function testReadonlyReturnsTrueSinCacheYSinInput(): void
     {
-        // Verify it's a validation rule provider
-        $this->assertTrue(class_exists('App\ThirdParty\Ragnos\Controllers\RagnosRules'));
+        // Sin cache (campo no existe) y sin input: oldValue=null, newValue=null => no cambió
+        $error  = null;
+        $result = $this->rules->readonly_Ragnos(null, 'campo_no_existe', [], $error);
+        $this->assertTrue($result);
+    }
+
+    public function testReadonlyDetectaCambioContraValorRagnosValueAnt(): void
+    {
+        // Si el cliente envía Ragnos_value_ant_*, ese tiene prioridad sobre la cache
+        \setOldRecordCache(['estado' => 'OTRO']);
+        $this->setPost([
+            'Ragnos_value_ant_estado' => 'ACTIVO',
+            'estado'                  => 'INACTIVO',
+        ]);
+
+        $error  = null;
+        $result = $this->rules->readonly_Ragnos('INACTIVO', 'estado', [], $error);
+        $this->assertFalse($result);
+        $this->assertNotNull($error);
+    }
+
+    public function testInstanciasMultiplesNoComparteEstado(): void
+    {
+        $r1 = new RagnosRules();
+        $r2 = new RagnosRules();
+        $this->assertNotSame($r1, $r2);
+
+        $error = null;
+        $this->assertTrue($r1->readonly_Ragnos(null, 'x_nuevo', [], $error));
+        $this->assertTrue($r2->readonly_Ragnos(null, 'x_nuevo', [], $error));
     }
 }

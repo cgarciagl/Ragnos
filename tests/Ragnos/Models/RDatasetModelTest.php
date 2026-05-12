@@ -4,153 +4,138 @@ namespace Tests\Ragnos\Models;
 
 use Tests\Ragnos\RagnosTestCase;
 use App\ThirdParty\Ragnos\Models\RConcreteDatasetModel;
+use App\ThirdParty\Ragnos\Models\Fields\RSimpleTextField;
+use App\ThirdParty\Ragnos\Models\Fields\RIdField;
 
+/**
+ * Pruebas para RDatasetModel:
+ * - Estado inicial documentado
+ * - completeFieldList puebla ofieldlist + RIdField + allowedFields
+ * - Comportamiento de propiedades públicas relevantes
+ *
+ * Para CRUD/búsqueda/JSON ver los tests de los traits correspondientes.
+ */
 class RDatasetModelTest extends RagnosTestCase
 {
-    /**
-     * @test
-     * Verifica que RConcreteDatasetModel se instancia correctamente
-     */
-    public function testCanCreateDatasetModel(): void
-    {
-        $model = new RConcreteDatasetModel();
-        $this->assertInstanceOf(RConcreteDatasetModel::class, $model);
-    }
-
-    /**
-     * @test
-     * Verifica que la tabla base se puede obtener (herencia de Model)
-     */
-    public function testCanSetAndGetTable(): void
+    public function testEstadoInicialColeccionesVacias(): void
     {
         $model = new RConcreteDatasetModel();
 
-        // Las propiedades deben inicializarse sin errores
-        $this->assertIsArray($model->ofieldlist);
-        $this->assertIsArray($model->tablefields);
-        $this->assertIsArray($model->errors);
+        $this->assertSame([], $model->ofieldlist);
+        $this->assertSame([], $model->tablefields);
+        $this->assertSame([], $model->errors);
     }
 
-    /**
-     * @test
-     * Verifica que la lista de campos está vacía inicialmente
-     */
-    public function testCanAddFieldFromArray(): void
-    {
-        $model       = new RConcreteDatasetModel();
-        $fieldsCount = count($model->tablefields);
-
-        // Inicialmente debe ser 0
-        $this->assertEquals(0, $fieldsCount);
-    }
-
-    /**
-     * @test
-     * Verifica que la lista de objetos field está vacía inicialmente
-     */
-    public function testCanCompleteFieldList(): void
-    {
-        $model             = new RConcreteDatasetModel();
-        $objectFieldsCount = count($model->ofieldlist);
-
-        // Inicialmente debe ser 0
-        $this->assertEquals(0, $objectFieldsCount);
-    }
-
-    /**
-     * @test
-     * Verifica que se puede acceder a la propiedad errors
-     */
-    public function testCanGetFieldByName(): void
+    public function testPropiedadesPorDefecto(): void
     {
         $model = new RConcreteDatasetModel();
 
-        // Errors debe ser inicialmente un array vacío
-        $this->assertIsArray($model->errors);
-        $this->assertEmpty($model->errors);
-    }
-
-    /**
-     * @test
-     * Verifica que el controlador se inicializa como NULL
-     */
-    public function testCanProcessFormInput(): void
-    {
-        $model = new RConcreteDatasetModel();
+        $this->assertSame('id', $model->primaryKey);
+        $this->assertNull($model->insertedId);
         $this->assertNull($model->controller);
+        $this->assertNull($model->baseQuerySQL);
+        $this->assertSame('', $model->defaultSortingField);
+        $this->assertSame('asc', $model->defaultSortingDir);
     }
 
-    /**
-     * @test
-     * Verifica que primaryKey tiene el valor por defecto 'id'
-     */
-    public function testPrimaryKeyIsIdByDefault(): void
-    {
-        $model = new RConcreteDatasetModel();
-        $this->assertEquals('id', $model->primaryKey);
-    }
-
-    /**
-     * @test
-     * Verifica que las capacidades CRUD están habilitadas por defecto
-     */
-    public function testCanSetCustomPrimaryKey(): void
+    public function testFlagsCRUDHabilitadosPorDefecto(): void
     {
         $model = new RConcreteDatasetModel();
 
-        // Verifica que los permisos CRUD están habilitados
         $this->assertTrue($model->canInsert);
         $this->assertTrue($model->canUpdate);
         $this->assertTrue($model->canDelete);
     }
 
-    /**
-     * @test
-     * Verifica que insertedId se inicializa como NULL
-     */
-    public function testCanInsertAndRetrieve(): void
+    public function testEnableAuditHabilitadoPorDefecto(): void
     {
         $model = new RConcreteDatasetModel();
-        $this->assertNull($model->insertedId);
+
+        $ref = new \ReflectionProperty($model, 'enableAudit');
+        $ref->setAccessible(true);
+        $this->assertTrue($ref->getValue($model));
     }
 
-    /**
-     * @test
-     * Verifica que enableAudit está habilitado por defecto
-     */
-    public function testCanUpdateRecord(): void
+    public function testCompleteFieldListLlenaOfieldlistDesdeTablefields(): void
     {
-        $model = new RConcreteDatasetModel();
-        // Propiedad protegida, pero podemos verificar el comportamiento
-        $this->assertInstanceOf(RConcreteDatasetModel::class, $model);
+        $model              = new RConcreteDatasetModel();
+        $model->tablefields = ['nombre', 'precio'];
+        $model->completeFieldList();
+
+        $this->assertArrayHasKey('nombre', $model->ofieldlist);
+        $this->assertArrayHasKey('precio', $model->ofieldlist);
+        $this->assertInstanceOf(RSimpleTextField::class, $model->ofieldlist['nombre']);
+        $this->assertInstanceOf(RSimpleTextField::class, $model->ofieldlist['precio']);
     }
 
-    /**
-     * @test
-     * Verifica que se pueden acceder a las propiedades de ordenamiento
-     */
-    public function testCanDeleteRecord(): void
+    public function testCompleteFieldListAgregaRIdFieldParaPK(): void
     {
-        $model = new RConcreteDatasetModel();
+        $model              = new RConcreteDatasetModel();
+        $model->tablefields = ['nombre'];
+        $model->completeFieldList();
 
-        // Verifica que las propiedades de ordenamiento existen y tienen valores por defecto
-        $this->assertIsString($model->defaultSortingField);
-        $this->assertEmpty($model->defaultSortingField);
-        $this->assertEquals('asc', $model->defaultSortingDir);
+        // Después de completeFieldList, debe haber un RIdField asociado al primaryKey
+        $this->assertArrayHasKey('id', $model->ofieldlist);
+        $this->assertInstanceOf(RIdField::class, $model->ofieldlist['id']);
     }
 
-    /**
-     * @test
-     * Verifica que los traits se aplicaron correctamente (métodos existen)
-     */
-    public function testTimestampsAreSetOnInsert(): void
+    public function testCompleteFieldListLlenaAllowedFields(): void
+    {
+        $model              = new RConcreteDatasetModel();
+        $model->tablefields = ['nombre', 'precio'];
+        $model->completeFieldList();
+
+        $ref = new \ReflectionProperty($model, 'allowedFields');
+        $ref->setAccessible(true);
+        $allowed = $ref->getValue($model);
+
+        $this->assertContains('nombre', $allowed);
+        $this->assertContains('precio', $allowed);
+        $this->assertContains('id', $allowed, 'allowedFields debe incluir el primaryKey');
+    }
+
+    public function testCompleteFieldListNoDuplicaCamposPreviamenteAgregados(): void
     {
         $model = new RConcreteDatasetModel();
+        $model->addFieldFromArray('nombre', ['label' => 'Nombre']);
+        $model->tablefields = ['nombre'];
+        $model->completeFieldList();
 
-        // Los traits proporcionan estos métodos
-        $this->assertTrue(method_exists($model, 'setWhere'));
-        $this->assertTrue(method_exists($model, 'select'));
-        $this->assertTrue(method_exists($model, 'limit'));
-        $this->assertTrue(method_exists($model, 'join'));
+        $this->assertSame('Nombre', $model->ofieldlist['nombre']->getLabel(),
+            'El label personalizado se preserva, no se sobreescribe');
+    }
+
+    public function testCompleteFieldListRellenaTablefieldsSiVacios(): void
+    {
+        $model = new RConcreteDatasetModel();
+        $model->addFieldFromArray('a', []);
+        $model->addFieldFromArray('b', []);
+        // tablefields vacía: completeFieldList lo deduce de ofieldlist
+        $model->completeFieldList();
+
+        $this->assertContains('a', $model->tablefields);
+        $this->assertContains('b', $model->tablefields);
+    }
+
+    public function testComposicionDeTraitsExpuestaEnAPIPublica(): void
+    {
+        // Verificamos que los 4 traits están compuestos: usamos métodos públicos clave
+        $model = new RConcreteDatasetModel();
+
+        // FieldManagementTrait
+        $this->assertTrue(is_callable([$model, 'addFieldFromArray']));
+        $this->assertTrue(is_callable([$model, 'fieldByName']));
+        $this->assertTrue(is_callable([$model, 'textForTable']));
+        // SearchFilterTrait
+        $this->assertTrue(is_callable([$model, 'getCountForSearch']));
+        $this->assertTrue(is_callable([$model, 'checkRelations']));
+        // CrudOperationsTrait
+        $this->assertTrue(is_callable([$model, 'processFormInput']));
+        $this->assertTrue(is_callable([$model, 'performDelete']));
+        $this->assertTrue(is_callable([$model, 'createInputDataArray']));
+        // JsonResultTrait
+        $this->assertTrue(is_callable([$model, 'getTableAjax']));
+        $this->assertTrue(is_callable([$model, 'getTableForAPI']));
+        $this->assertTrue(is_callable([$model, 'generateJsonResult']));
     }
 }

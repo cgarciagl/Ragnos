@@ -34,18 +34,27 @@ class RagnosTestCase extends CIUnitTestCase
     }
 
     /**
-     * Initialize in-memory SQLite database for testing
+     * Initialize in-memory SQLite database for testing.
+     *
+     * En ENVIRONMENT=='testing', Config\Database::__construct() asigna
+     * defaultGroup='tests'. Por eso reconfiguramos el grupo 'tests'
+     * (no 'default') y limpiamos el DBPrefix='db_' para evitar discrepancia
+     * entre tablas creadas en el test y nombres usados por los Modelos.
      */
     protected function initializeDatabase()
     {
         $config = config('Database');
 
-        // Use SQLite in-memory for tests
         $config->tests['DBDriver'] = 'SQLite3';
         $config->tests['database'] = ':memory:';
         $config->tests['DBDebug']  = false;
+        $config->tests['DBPrefix'] = '';
 
-        return \Config\Database::connect('tests');
+        // Resetear conexiones previas para que connect() use la nueva config
+        \Config\Database::reset();
+
+        // Connect sin grupo => usa defaultGroup (que en testing es 'tests')
+        return \Config\Database::connect();
     }
 
     /**
