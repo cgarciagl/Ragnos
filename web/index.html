@@ -3,643 +3,695 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ragnos Framework - The Declarative PHP Solution</title>
+    <title>Ragnos Framework — El framework PHP declarativo</title>
     <meta
       name="description"
-      content="Ragnos: A powerful declarative framework for modern PHP development based on CodeIgniter 4."
+      content="Ragnos: framework PHP declarativo sobre CodeIgniter 4. Define una clase y obtén CRUD, API REST, validaciones y panel administrativo automáticamente."
     />
     <link rel="icon" type="image/webp" href="./assets/img/logo.webp" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./css/style.css" />
   </head>
   <body>
-    <!-- Background Canvas -->
+    <!-- Background Canvas (kept) -->
     <canvas id="particles-canvas"></canvas>
+    <div class="grain-overlay" aria-hidden="true"></div>
 
     <!-- Header -->
     <header>
       <div class="header-container">
-        <div class="logo">
+        <a href="#top" class="logo">
           <img
             src="./assets/img/logo.webp"
             alt="Ragnos Logo"
             class="brand-logo"
           />
-          <span style="letter-spacing: 2px; color: #fff">RAGNOS</span>
-        </div>
+          <span class="brand-name">RAGNOS</span>
+          <span class="brand-tag">/ v1.0</span>
+        </a>
         <nav class="nav-links">
-          <a href="https://github.com/cgarciagl/Ragnos" target="_blank"
-            >GitHub</a
-          >
-          <a href="https://discord.gg/4z7tCxA4Fp" target="_blank">Discord</a>
-          <a href="./docs/" data-lang="es">Documentación</a>
-          <a href="./docs/en/" data-lang="en" class="hidden">Documentation</a>
-          <button id="langToggle" class="lang-switch">EN / ES</button>
+          <a href="#features" data-lang="es">Características</a>
+          <a href="#features" data-lang="en" class="hidden">Features</a>
+          <a href="#code" data-lang="es">Código</a>
+          <a href="#code" data-lang="en" class="hidden">Code</a>
+          <a href="https://github.com/cgarciagl/Ragnos" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://discord.gg/4z7tCxA4Fp" target="_blank" rel="noopener">Discord</a>
+          <a href="./docs/" class="nav-cta" data-lang="es">Documentación →</a>
+          <a href="./docs/en/" class="nav-cta hidden" data-lang="en">Documentation →</a>
+          <button id="langToggle" class="lang-switch" aria-label="Toggle language">EN / ES</button>
         </nav>
       </div>
     </header>
 
     <!-- Hero Section -->
-    <section class="hero">
+    <section class="hero" id="top">
       <div class="hero-container">
         <div class="hero-content">
           <div class="hero-badge">
             <span class="dot"></span>
-            <span>v1.0 Release</span>
+            <span data-lang="es">v1.0 disponible · MIT Open Source</span>
+            <span data-lang="en" class="hidden">v1.0 available · MIT Open Source</span>
           </div>
 
           <h1 data-lang="es">
-            El Framework Declarativo para <br /><span>PHP Profesional</span>
+            El framework declarativo<br />
+            para <em class="serif-accent">PHP profesional.</em>
           </h1>
           <h1 data-lang="en" class="hidden">
-            The Declarative Framework for <br /><span>Professional PHP</span>
+            The declarative framework<br />
+            for <em class="serif-accent">professional PHP.</em>
           </h1>
 
-          <p data-lang="es">
-            Deja de escribir código repetitivo. Ragnos genera automáticamente
-            APIs, Interfaces y Validaciones complejas a partir de tus modelos de
-            datos.
+          <p class="lead" data-lang="es">
+            Define tus modelos una sola vez. Ragnos genera automáticamente
+            CRUD, API REST, validaciones, búsqueda y panel administrativo.
+            Construido sobre CodeIgniter 4.
           </p>
-          <p data-lang="en" class="hidden">
-            Stop writing repetitive code. Ragnos automatically generates APIs,
-            UIs, and complex Validations directly from your data models.
+          <p class="lead hidden" data-lang="en">
+            Define your models just once. Ragnos automatically generates
+            CRUD, REST API, validations, search and admin panel. Built on
+            CodeIgniter 4.
           </p>
 
           <div class="btn-group">
             <a href="./docs/" class="btn btn-primary" data-lang="es">
-              Leer Documentación
+              <span>Empezar gratis</span>
+              <span class="arrow">→</span>
             </a>
             <a href="./docs/en/" class="btn btn-primary hidden" data-lang="en">
-              Read Documentation
+              <span>Get started</span>
+              <span class="arrow">→</span>
             </a>
             <a
               href="https://ragnos.yupii.org/"
               target="_blank"
-              class="btn btn-outline"
+              rel="noopener"
+              class="btn btn-ghost"
               data-lang="es"
             >
-              Ver Demo
+              <span class="play-icon">▶</span> Ver demo en vivo
             </a>
             <a
               href="https://ragnos.yupii.org/"
               target="_blank"
-              class="btn btn-outline hidden"
+              rel="noopener"
+              class="btn btn-ghost hidden"
               data-lang="en"
             >
-              Live Demo
+              <span class="play-icon">▶</span> Watch live demo
             </a>
-            <a
-              href="https://github.com/cgarciagl/Ragnos"
-              target="_blank"
-              class="btn btn-outline"
-            >
-              GitHub
-            </a>
-            <a
-              href="https://discord.gg/4z7tCxA4Fp"
-              target="_blank"
-              class="btn btn-discord"
-            >
-              Discord
-            </a>
+          </div>
+
+          <div class="hero-stats">
+            <div class="stat">
+              <div class="stat-num">~5<span>min</span></div>
+              <div class="stat-label" data-lang="es">primer CRUD funcional</div>
+              <div class="stat-label hidden" data-lang="en">to first working CRUD</div>
+            </div>
+            <div class="stat">
+              <div class="stat-num">−70<span>%</span></div>
+              <div class="stat-label" data-lang="es">código boilerplate</div>
+              <div class="stat-label hidden" data-lang="en">boilerplate code</div>
+            </div>
+            <div class="stat">
+              <div class="stat-num">100<span>%</span></div>
+              <div class="stat-label" data-lang="es">compatible CodeIgniter 4</div>
+              <div class="stat-label hidden" data-lang="en">CodeIgniter 4 compatible</div>
+            </div>
           </div>
         </div>
 
         <div class="hero-visual-3d">
-          <img
-            src="./assets/img/hero_core.png"
-            alt="Ragnos Core Technology"
-            class="visual-base"
-          />
+          <div class="visual-halo" aria-hidden="true"></div>
           <img
             src="./assets/img/logo.webp"
             alt="Ragnos Logo"
-            class="visual-overlay"
+            class="visual-logo"
           />
+        </div>
+      </div>
+
+      <div class="hero-scroll-hint" aria-hidden="true">
+        <span></span>
+      </div>
+    </section>
+
+    <!-- Trust Strip -->
+    <section class="trust-strip">
+      <div class="trust-inner">
+        <span class="trust-label" data-lang="es">Construido sobre tecnología probada</span>
+        <span class="trust-label hidden" data-lang="en">Built on battle-tested technology</span>
+        <div class="trust-items">
+          <span class="trust-chip">CodeIgniter 4</span>
+          <span class="trust-chip">AdminLTE 3</span>
+          <span class="trust-chip">jQuery</span>
+          <span class="trust-chip">DataTables</span>
+          <span class="trust-chip">Bootstrap 4</span>
+          <span class="trust-chip">PHP 8.2+</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Code Example Section -->
+    <section class="code-section" id="code">
+      <div class="section-container">
+        <div class="section-header section-header-left">
+          <span class="eyebrow" data-lang="es">01 / Filosofía</span>
+          <span class="eyebrow hidden" data-lang="en">01 / Philosophy</span>
+          <h2 data-lang="es">
+            Una clase. <em class="serif-accent">Una aplicación entera.</em>
+          </h2>
+          <h2 data-lang="en" class="hidden">
+            One class. <em class="serif-accent">A whole application.</em>
+          </h2>
+          <p data-lang="es">
+            Configuration over programming. Define el modelo declarativamente y
+            Ragnos materializa toda la infraestructura: controladores, vistas,
+            rutas, API REST, validaciones y permisos.
+          </p>
+          <p data-lang="en" class="hidden">
+            Configuration over programming. Define your model declaratively and
+            Ragnos materializes the entire infrastructure: controllers, views,
+            routes, REST API, validations and permissions.
+          </p>
+        </div>
+
+        <div class="code-grid">
+          <div class="code-block">
+            <div class="code-window">
+              <div class="code-window-bar">
+                <span class="dot-r"></span>
+                <span class="dot-y"></span>
+                <span class="dot-g"></span>
+                <span class="code-filename">app/Controllers/Tienda/Pagos.php</span>
+              </div>
+              <pre class="code-content"><span class="tk-c">&lt;?php</span>
+
+<span class="tk-k">namespace</span> <span class="tk-n">App\Controllers\Tienda</span>;
+
+<span class="tk-k">use</span> <span class="tk-n">App\ThirdParty\Ragnos\Controllers\RDatasetController</span>;
+
+<span class="tk-k">class</span> <span class="tk-cl">Pagos</span> <span class="tk-k">extends</span> <span class="tk-cl">RDatasetController</span>
+{
+    <span class="tk-k">function</span> <span class="tk-m">__construct</span>()
+    {
+        <span class="tk-k">parent</span>::<span class="tk-m">__construct</span>();
+        <span class="tk-v">$this</span>-&gt;<span class="tk-m">checkLogin</span>();
+        <span class="tk-v">$this</span>-&gt;<span class="tk-m">setTitle</span>(<span class="tk-s">'Pagos'</span>);
+        <span class="tk-v">$this</span>-&gt;<span class="tk-m">setTableName</span>(<span class="tk-s">'payments'</span>);
+        <span class="tk-v">$this</span>-&gt;<span class="tk-m">setIdField</span>(<span class="tk-s">'idPayment'</span>);
+        <span class="tk-v">$this</span>-&gt;<span class="tk-m">addField</span>(<span class="tk-s">'customerNumber'</span>, [<span class="tk-s">'label'</span> =&gt; <span class="tk-s">'Cliente'</span>, <span class="tk-s">'rules'</span> =&gt; <span class="tk-s">'required'</span>]);
+        <span class="tk-v">$this</span>-&gt;<span class="tk-m">addSearch</span>(<span class="tk-s">'customerNumber'</span>, <span class="tk-s">'Tienda\Clientes'</span>);
+        <span class="tk-v">$this</span>-&gt;<span class="tk-m">addField</span>(<span class="tk-s">'checkNumber'</span>, [<span class="tk-s">'label'</span> =&gt; <span class="tk-s">'Número de cheque'</span>, <span class="tk-s">'rules'</span> =&gt; <span class="tk-s">'required'</span>]);
+        <span class="tk-v">$this</span>-&gt;<span class="tk-m">addField</span>(<span class="tk-s">'paymentDate'</span>, [<span class="tk-s">'label'</span> =&gt; <span class="tk-s">'Fecha de pago'</span>, <span class="tk-s">'rules'</span> =&gt; <span class="tk-s">'required'</span>, <span class="tk-s">'type'</span> =&gt; <span class="tk-s">'date'</span>]);
+        <span class="tk-v">$this</span>-&gt;<span class="tk-m">addField</span>(<span class="tk-s">'amount'</span>, [<span class="tk-s">'label'</span> =&gt; <span class="tk-s">'Monto'</span>, <span class="tk-s">'rules'</span> =&gt; <span class="tk-s">'required|numeric|money|greater_than[0]'</span>]);
+
+        <span class="tk-v">$this</span>-&gt;<span class="tk-m">setTableFields</span>([<span class="tk-s">'customerNumber'</span>, <span class="tk-s">'checkNumber'</span>, <span class="tk-s">'paymentDate'</span>, <span class="tk-s">'amount'</span>]);
+
+        <span class="tk-v">$this</span>-&gt;<span class="tk-m">setSortingField</span>(<span class="tk-s">'paymentDate'</span>, <span class="tk-s">'desc'</span>);
+    }
+}</pre>
+            </div>
+          </div>
+
+          <div class="code-result">
+            <span class="eyebrow eyebrow-result" data-lang="es">Ragnos genera</span>
+            <span class="eyebrow eyebrow-result hidden" data-lang="en">Ragnos generates</span>
+            <ul class="result-list">
+              <li>
+                <span class="check">✓</span>
+                <div>
+                  <strong data-lang="es">CRUD completo con UI</strong>
+                  <strong data-lang="en" class="hidden">Complete CRUD with UI</strong>
+                  <em data-lang="es">listado, formulario, edición, borrado</em>
+                  <em data-lang="en" class="hidden">listing, form, editing, deletion</em>
+                </div>
+              </li>
+              <li>
+                <span class="check">✓</span>
+                <div>
+                  <strong data-lang="es">API REST documentada</strong>
+                  <strong data-lang="en" class="hidden">Documented REST API</strong>
+                  <em data-lang="es">GET, POST, PUT, DELETE con tokens</em>
+                  <em data-lang="en" class="hidden">GET, POST, PUT, DELETE with tokens</em>
+                </div>
+              </li>
+              <li>
+                <span class="check">✓</span>
+                <div>
+                  <strong data-lang="es">Validación cliente + servidor</strong>
+                  <strong data-lang="en" class="hidden">Client + server validation</strong>
+                  <em data-lang="es">una sola fuente de verdad</em>
+                  <em data-lang="en" class="hidden">a single source of truth</em>
+                </div>
+              </li>
+              <li>
+                <span class="check">✓</span>
+                <div>
+                  <strong data-lang="es">Búsqueda y paginación</strong>
+                  <strong data-lang="en" class="hidden">Search and pagination</strong>
+                  <em data-lang="es">DataTables integrado</em>
+                  <em data-lang="en" class="hidden">DataTables integrated</em>
+                </div>
+              </li>
+              <li>
+                <span class="check">✓</span>
+                <div>
+                  <strong data-lang="es">Permisos RBAC</strong>
+                  <strong data-lang="en" class="hidden">RBAC permissions</strong>
+                  <em data-lang="es">control granular por rol</em>
+                  <em data-lang="en" class="hidden">granular role-based control</em>
+                </div>
+              </li>
+              <li>
+                <span class="check">✓</span>
+                <div>
+                  <strong data-lang="es">Auditoría inmutable</strong>
+                  <strong data-lang="en" class="hidden">Immutable audit log</strong>
+                  <em data-lang="es">cada cambio registrado</em>
+                  <em data-lang="en" class="hidden">every change recorded</em>
+                </div>
+              </li>
+            </ul>
+            <a href="./docs/" class="result-link" data-lang="es">
+              Leer la guía completa <span class="arrow">→</span>
+            </a>
+            <a href="./docs/en/" class="result-link hidden" data-lang="en">
+              Read the full guide <span class="arrow">→</span>
+            </a>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- Video Section -->
     <section class="video-section">
-      <div class="video-container">
-        <div class="section-header" style="margin-bottom: 3rem">
-          <h2 data-lang="es">Mira Ragnos en Acción</h2>
-          <h2 data-lang="en" class="hidden">See Ragnos in Action</h2>
+      <div class="section-container">
+        <div class="section-header">
+          <span class="eyebrow" data-lang="es">02 / Demo</span>
+          <span class="eyebrow hidden" data-lang="en">02 / Demo</span>
+          <h2 data-lang="es">
+            Ragnos <em class="serif-accent">en acción.</em>
+          </h2>
+          <h2 data-lang="en" class="hidden">
+            Ragnos <em class="serif-accent">in action.</em>
+          </h2>
           <p data-lang="es">
-            Descubre cómo crear una aplicación completa en minutos.
+            De una clase PHP a una aplicación completa en minutos. Mira el flujo
+            real de desarrollo paso a paso.
           </p>
           <p data-lang="en" class="hidden">
-            Discover how to build a full application in minutes.
+            From a PHP class to a full application in minutes. Watch the real
+            development flow step by step.
           </p>
         </div>
 
-        <div class="video-wrapper glass-panel">
-          <!-- Spanish Video -->
-          <iframe
-            data-lang="es"
-            src="https://www.youtube.com/embed/HIhzOJdv38I?enablejsapi=1"
-            title="Introduction to Ragnos (ES)"
-            allow="
-              accelerometer;
-              autoplay;
-              clipboard-write;
-              encrypted-media;
-              gyroscope;
-              picture-in-picture;
-              web-share;
-            "
-            allowfullscreen
-          ></iframe>
-
-          <!-- English Video -->
-          <iframe
-            data-lang="en"
-            class="hidden"
-            src="https://www.youtube.com/embed/-fHB5KAP0As?enablejsapi=1"
-            title="Introduction to Ragnos (EN)"
-            allow="
-              accelerometer;
-              autoplay;
-              clipboard-write;
-              encrypted-media;
-              gyroscope;
-              picture-in-picture;
-              web-share;
-            "
-            allowfullscreen
-          ></iframe>
-        </div>
-      </div>
-    </section>
-
-    <!-- Book Section -->
-    <section
-      style="
-        padding: 4rem 2rem;
-        text-align: center;
-        background: linear-gradient(
-          135deg,
-          rgba(99, 102, 241, 0.1) 0%,
-          rgba(139, 92, 246, 0.1) 100%
-        );
-      "
-    >
-      <div style="max-width: 900px; margin: 0 auto" class="glass-panel">
-        <div style="padding: 3rem">
-          <div style="margin-bottom: 0.5rem">
-            <span style="font-size: 2rem">📚</span>
+        <div class="video-wrapper">
+          <div class="video-chrome">
+            <span class="dot-r"></span>
+            <span class="dot-y"></span>
+            <span class="dot-g"></span>
+            <span class="video-url">ragnos.yupii.org / introducción</span>
           </div>
-          <h2 data-lang="es" style="margin-bottom: 1rem; font-size: 2.2rem">
-            Domina el Framework
-          </h2>
-          <h2
-            data-lang="en"
-            class="hidden"
-            style="margin-bottom: 1rem; font-size: 2.2rem"
-          >
-            Master the Framework
-          </h2>
-
-          <p
-            data-lang="es"
-            style="
-              color: var(--text-secondary);
-              margin-bottom: 2rem;
-              font-size: 1.05rem;
-              line-height: 1.6;
-            "
-          >
-            <strong>¡El manual oficial ya está disponible!</strong><br />
-            Aprende a construir aplicaciones empresariales seguras en tiempo
-            récord usando la filosofía de
-            <em>Configuration over Programming</em> y AI Vibecoding.
-          </p>
-          <p
-            data-lang="en"
-            class="hidden"
-            style="
-              color: var(--text-secondary);
-              margin-bottom: 2rem;
-              font-size: 1.05rem;
-              line-height: 1.6;
-            "
-          >
-            <strong>The official manual is out now!</strong><br />
-            Learn to build secure, enterprise-grade applications in record time
-            using the <em>Configuration over Programming</em> philosophy and AI
-            Vibecoding.
-          </p>
-
-          <div
-            style="
-              display: flex;
-              gap: 1.5rem;
-              justify-content: center;
-              flex-wrap: wrap;
-              margin-top: 2rem;
-            "
-          >
-            <a
-              href="https://leanpub.com/ragnosdeceroapro"
-              target="_blank"
+          <div class="video-frame">
+            <iframe
               data-lang="es"
-              style="
-                display: inline-flex;
-                align-items: center;
-                gap: 0.8rem;
-                padding: 1rem 2rem;
-                background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-                color: white;
-                border-radius: 0.5rem;
-                text-decoration: none;
-                font-weight: 600;
-                transition:
-                  transform 0.3s,
-                  box-shadow 0.3s;
-              "
-              onmouseover="
-                this.style.transform = 'translateY(-2px)';
-                this.style.boxShadow = '0 10px 30px rgba(16, 185, 129, 0.3)';
-              "
-              onmouseout="
-                this.style.transform = 'translateY(0)';
-                this.style.boxShadow = 'none';
-              "
-            >
-              <span>🇪🇸</span>
-              <span>Lee el Libro: Ragnos de Cero a Pro</span>
-            </a>
-            <a
-              href="https://leanpub.com/ragnosfromzerotopro"
-              target="_blank"
+              src="https://www.youtube.com/embed/HIhzOJdv38I?enablejsapi=1"
+              title="Introducción a Ragnos (ES)"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen
+            ></iframe>
+            <iframe
               data-lang="en"
               class="hidden"
-              style="
-                display: inline-flex;
-                align-items: center;
-                gap: 0.8rem;
-                padding: 1rem 2rem;
-                background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-                color: white;
-                border-radius: 0.5rem;
-                text-decoration: none;
-                font-weight: 600;
-                transition:
-                  transform 0.3s,
-                  box-shadow 0.3s;
-              "
-              onmouseover="
-                this.style.transform = 'translateY(-2px)';
-                this.style.boxShadow = '0 10px 30px rgba(59, 130, 246, 0.3)';
-              "
-              onmouseout="
-                this.style.transform = 'translateY(0)';
-                this.style.boxShadow = 'none';
-              "
-            >
-              <span>🇬🇧</span>
-              <span>Get the Book: Ragnos From Zero to Pro</span>
-            </a>
+              src="https://www.youtube.com/embed/-fHB5KAP0As?enablejsapi=1"
+              title="Introduction to Ragnos (EN)"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen
+            ></iframe>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- About Section -->
-    <section
-      style="
-        padding: 5rem 2rem;
-        background: linear-gradient(
-          180deg,
-          rgba(5, 6, 10, 0.5) 0%,
-          transparent 100%
-        );
-      "
-    >
-      <div style="max-width: 1000px; margin: 0 auto">
-        <div
-          class="section-header"
-          style="margin-bottom: 3rem; text-align: left"
-        >
-          <h2 data-lang="es" style="font-size: 2.5rem; margin-bottom: 1.5rem">
-            ¿Qué es Ragnos?
+    <!-- About Section: 3 pillars -->
+    <section class="about-section" id="about">
+      <div class="section-container">
+        <div class="section-header section-header-left">
+          <span class="eyebrow" data-lang="es">03 / Qué es Ragnos</span>
+          <span class="eyebrow hidden" data-lang="en">03 / What is Ragnos</span>
+          <h2 data-lang="es">
+            Programación declarativa <em class="serif-accent">sin renunciar a PHP.</em>
           </h2>
-          <h2
-            data-lang="en"
-            class="hidden"
-            style="font-size: 2.5rem; margin-bottom: 1.5rem"
-          >
-            What is Ragnos?
+          <h2 data-lang="en" class="hidden">
+            Declarative programming <em class="serif-accent">without leaving PHP.</em>
           </h2>
-
-          <p
-            data-lang="es"
-            style="
-              font-size: 1.1rem;
-              line-height: 1.8;
-              color: var(--text-secondary);
-              margin-bottom: 2rem;
-            "
-          >
-            Ragnos es un framework PHP moderno y ligero que revoluciona el
-            desarrollo de aplicaciones web a través de la programación
-            declarativa. Construido sobre la sólida base de CodeIgniter 4,
-            integra tecnologías probadas en batalla como jQuery, DataTables y
-            AdminLTE 3 para ofrecer una experiencia de desarrollo completa y
-            eficiente.
+          <p data-lang="es">
+            Ragnos no reemplaza tu stack: lo amplifica. Conserva todo lo que
+            conoces de CodeIgniter 4 y añade la capa declarativa que elimina
+            días de trabajo repetitivo.
           </p>
-          <p
-            data-lang="en"
-            class="hidden"
-            style="
-              font-size: 1.1rem;
-              line-height: 1.8;
-              color: var(--text-secondary);
-              margin-bottom: 2rem;
-            "
-          >
-            Ragnos is a modern, lightweight PHP framework that revolutionizes
-            web application development through declarative programming. Built
-            on the solid foundation of CodeIgniter 4, it integrates
-            battle-tested technologies like jQuery, DataTables, and AdminLTE 3
-            to deliver a complete, efficient development experience.
+          <p data-lang="en" class="hidden">
+            Ragnos doesn't replace your stack: it amplifies it. Everything you
+            know from CodeIgniter 4 stays, plus a declarative layer that
+            eliminates days of repetitive work.
           </p>
         </div>
 
-        <div
-          style="
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 3rem;
-            margin-top: 3rem;
-          "
-        >
-          <!-- Core Philosophy Card -->
-          <div
-            style="
-              padding: 2rem;
-              border-left: 4px solid #6366f1;
-              background: rgba(99, 102, 241, 0.05);
-              border-radius: 0.5rem;
-            "
-          >
-            <h3
-              data-lang="es"
-              style="font-size: 1.4rem; margin-bottom: 1rem; color: #fff"
-            >
-              💡 Filosofía Central
-            </h3>
-            <h3
-              data-lang="en"
-              class="hidden"
-              style="font-size: 1.4rem; margin-bottom: 1rem; color: #fff"
-            >
-              💡 Core Philosophy
-            </h3>
+        <div class="pillar-grid">
+          <article class="pillar">
+            <div class="pillar-num">i</div>
+            <h3 data-lang="es">Filosofía</h3>
+            <h3 data-lang="en" class="hidden">Philosophy</h3>
+            <p data-lang="es">
+              <strong>Configuration over programming.</strong> Describes el
+              <em>qué</em> en una clase y Ragnos resuelve el <em>cómo</em>:
+              controladores, vistas, rutas y validaciones se generan al vuelo.
+            </p>
+            <p data-lang="en" class="hidden">
+              <strong>Configuration over programming.</strong> You describe the
+              <em>what</em> in a class and Ragnos resolves the <em>how</em>:
+              controllers, views, routes and validations are generated on the fly.
+            </p>
+          </article>
 
-            <p
-              data-lang="es"
-              style="
-                font-size: 1rem;
-                line-height: 1.8;
-                color: var(--text-secondary);
-              "
-            >
-              En lugar de escribir código repetitivo, defines tu estructura de
-              datos y reglas de negocio una sola vez:
-              <strong style="color: #fff">Ragnos se encarga del resto</strong>.
-              Los controladores, vistas, APIs, validaciones y componentes de UI
-              se generan automáticamente.
+          <article class="pillar">
+            <div class="pillar-num">ii</div>
+            <h3 data-lang="es">Núcleo híbrido</h3>
+            <h3 data-lang="en" class="hidden">Hybrid core</h3>
+            <p data-lang="es">
+              Cada modelo es <strong>panel web + API REST</strong> al mismo
+              tiempo. Una sola fuente de verdad para web, móviles y SPAs, con
+              seguridad tokenizada y validación centralizada.
             </p>
-            <p
-              data-lang="en"
-              class="hidden"
-              style="
-                font-size: 1rem;
-                line-height: 1.8;
-                color: var(--text-secondary);
-              "
-            >
-              Instead of writing boilerplate code, you define your data
-              structure and business rules once—<strong style="color: #fff"
-                >Ragnos handles the rest</strong
-              >. Controllers, views, APIs, validations, and UI components are
-              generated automatically.
+            <p data-lang="en" class="hidden">
+              Every model is <strong>web panel + REST API</strong> at the same
+              time. A single source of truth for web, mobile and SPAs, with
+              tokenized security and centralized validation.
             </p>
-          </div>
+          </article>
+
+          <article class="pillar">
+            <div class="pillar-num">iii</div>
+            <h3 data-lang="es">Seguridad nativa</h3>
+            <h3 data-lang="en" class="hidden">Native security</h3>
+            <p data-lang="es">
+              <strong>OWASP Top 10 mitigado de fábrica</strong>: SQLi, XSS,
+              CSRF, control RBAC granular, auditoría inmutable y encriptación
+              de datos sensibles. Tu app nace asegurada.
+            </p>
+            <p data-lang="en" class="hidden">
+              <strong>OWASP Top 10 mitigated out of the box</strong>: SQLi,
+              XSS, CSRF, granular RBAC, immutable audit log and sensitive data
+              encryption. Your app is born secure.
+            </p>
+          </article>
         </div>
       </div>
     </section>
 
     <!-- Detailed Features Section -->
-    <section class="features-section">
-      <div class="section-header">
-        <h2 data-lang="es">Arquitectura de Siguiente Nivel</h2>
-        <h2 data-lang="en" class="hidden">Next-Level Architecture</h2>
-        <p data-lang="es">
-          Diseñado para escalabilidad y velocidad de desarrollo.
-        </p>
-        <p data-lang="en" class="hidden">
-          Engineered for scalability and development speed.
-        </p>
-      </div>
-
-      <!-- Feature 1: Datasets -->
-      <div class="feature-row">
-        <div class="feature-content">
-          <div class="feature-icon-box">💾</div>
-          <h3 data-lang="es">Datasets Declarativos</h3>
-          <h3 data-lang="en" class="hidden">Declarative Datasets</h3>
+    <section class="features-section" id="features">
+      <div class="section-container">
+        <div class="section-header">
+          <span class="eyebrow" data-lang="es">04 / Arquitectura</span>
+          <span class="eyebrow hidden" data-lang="en">04 / Architecture</span>
+          <h2 data-lang="es">
+            Pensado para <em class="serif-accent">escalar.</em>
+          </h2>
+          <h2 data-lang="en" class="hidden">
+            Engineered to <em class="serif-accent">scale.</em>
+          </h2>
           <p data-lang="es">
-            Olvídate de crear manualmente controladores, vistas y modelos
-            repetitivos. Define tu estructura de datos y reglas de negocio
-            <strong>una única vez</strong> en una clase PHP limpia, y Ragnos
-            genera automáticamente:
-            <strong>CRUD completo con interfaz web</strong>,
-            <strong>endpoints REST</strong> listos para producción,
-            <strong>validaciones inteligentes</strong> basadas en tu modelo,
-            búsqueda avanzada, paginación, y toda la infraestructura necesaria.
-            Lo que normalmente toma
-            <strong>días en desarrollo manual, ahora toma minutos</strong>.
+            Tres pilares que reemplazan miles de líneas de código boilerplate
+            por declaraciones limpias y mantenibles.
           </p>
           <p data-lang="en" class="hidden">
-            Stop manually creating repetitive controllers, views, and models.
-            Define your data structure and business rules
-            <strong>just once</strong> in clean PHP, and Ragnos automatically
-            generates: <strong>complete CRUD with web interface</strong>,
-            <strong>production-ready REST endpoints</strong>,
-            <strong>intelligent validations</strong> based on your model,
-            advanced search, pagination, and all necessary infrastructure. What
-            normally takes
-            <strong>days of manual development now takes minutes</strong>.
+            Three pillars that replace thousands of lines of boilerplate code
+            with clean, maintainable declarations.
           </p>
-        </div>
-        <div class="feature-image">
-          <img
-            src="./assets/img/feat_db.png"
-            alt="Declarative Data Structure"
-          />
-        </div>
-      </div>
-
-      <!-- Feature 2: Hybrid API (Reversed) -->
-      <div class="feature-row reverse">
-        <div class="feature-content">
-          <div class="feature-icon-box">🔌</div>
-          <h3 data-lang="es">Núcleo Híbrido (HTML + API)</h3>
-          <h3 data-lang="en" class="hidden">Hybrid Core (HTML + API)</h3>
-          <p data-lang="es">
-            Arquitectura revolucionaria "Dual-Stack". Tu panel de administración
-            no es solo una interfaz web potente—<strong
-              >automáticamente sirve como una API RESTful segura y
-              productiva</strong
-            >. Consume los mismos datos desde aplicaciones móviles nativas
-            (iOS/Android), frameworks multiplataforma (React Native, Flutter),
-            SPAs modernas (Vue, React, Angular), o cualquier cliente HTTP.
-            <strong>Una única fuente de verdad</strong>, con seguridad
-            tokenizada integrada, validaciones centralizadas, y datos siempre
-            sincronizados. Perfecto para
-            <strong
-              >aplicaciones escalables y ecosistemas multi-plataforma</strong
-            >.
-          </p>
-          <p data-lang="en" class="hidden">
-            Revolutionary "Dual-Stack" architecture. Your admin panel isn't just
-            a powerful web interface—it
-            <strong
-              >automatically serves as a secure, production-ready RESTful
-              API</strong
-            >. Consume the same data from native mobile apps (iOS/Android),
-            cross-platform frameworks (React Native, Flutter), modern SPAs (Vue,
-            React, Angular), or any HTTP client.
-            <strong>One single source of truth</strong>, with integrated
-            tokenized security, centralized validation, and always-synchronized
-            data. Perfect for
-            <strong>scalable applications and multi-platform ecosystems</strong
-            >.
-          </p>
-        </div>
-        <div class="feature-image">
-          <img src="./assets/img/feat_api.png" alt="Hybrid API Connectivity" />
-        </div>
-      </div>
-
-      <!-- Feature 3: Security -->
-      <div class="feature-row">
-        <div class="feature-content">
-          <div class="feature-icon-box">🛡️</div>
-          <h3 data-lang="es">Seguridad Empresarial</h3>
-          <h3 data-lang="en" class="hidden">Enterprise Security</h3>
-          <p data-lang="es">
-            Protección <strong>robusta desde el primer día</strong>, sin
-            configuración adicional compleja. Ragnos viene armado con:
-            <strong>RBAC multirol granular</strong> para control de acceso
-            preciso basado en roles,
-            <strong>Logs de Auditoría inmutables</strong> que registran cada
-            acción crítica para compliance, mitigación
-            <strong>automática de OWASP Top 10</strong> (SQL injection, XSS,
-            CSRF, etc.), encriptación nativa de datos sensibles, validaciones en
-            servidor que previenen ataques comunes. Cumple con estándares
-            empresariales: <strong>PCI-DSS ready, GDPR compliant</strong>. Tu
-            aplicación nace asegurada.
-          </p>
-          <p data-lang="en" class="hidden">
-            <strong>Robust protection from day one</strong>, with zero complex
-            configuration needed. Ragnos comes armed with:
-            <strong>granular multi-role RBAC</strong> for precise access control
-            based on roles, <strong>immutable Audit Logs</strong> recording
-            every critical action for compliance,
-            <strong>automatic OWASP Top 10</strong> mitigation (SQL injection,
-            XSS, CSRF, etc.), native sensitive data encryption, server-side
-            validations preventing common attacks. Enterprise standards
-            compliant: <strong>PCI-DSS ready, GDPR compliant</strong>. Your
-            application is born secure.
-          </p>
-        </div>
-        <div class="feature-image">
-          <img src="./assets/img/feat_sec.png" alt="Cyber Security Shield" />
-        </div>
-      </div>
-
-      <!-- Tech Stack Section -->
-      <div class="tech-stack-wrapper">
-        <div class="tech-header-small">
-          <span class="line"></span>
-          <span data-lang="es">TECNOLOGÍA BASE</span>
-          <span data-lang="en" class="hidden">CORE STACK</span>
-          <span class="line"></span>
         </div>
 
-        <div class="tech-grid">
-          <!-- Card 1 -->
-          <div class="tech-card">
-            <div class="tech-icon">🔥</div>
-            <div class="tech-info">
-              <h4>CodeIgniter 4</h4>
-              <p data-lang="es">
-                Framework PHP ultraligero. Sin bloatware, con una curva de
-                aprendizaje mínima y rendimiento excepcional para apps de alto
-                tráfico.
-              </p>
-              <p data-lang="en" class="hidden">
-                Ultra-lightweight PHP framework. Bloat-free, minimal learning
-                curve, and exceptional performance for high-traffic apps.
-              </p>
-            </div>
+        <!-- Feature 1: Datasets -->
+        <div class="feature-row">
+          <div class="feature-content">
+            <span class="feature-number">01</span>
+            <h3 data-lang="es">Datasets declarativos</h3>
+            <h3 data-lang="en" class="hidden">Declarative datasets</h3>
+            <p data-lang="es">
+              Olvídate de crear manualmente controladores, vistas y modelos
+              repetitivos. Define tu estructura de datos y reglas de negocio
+              <strong>una única vez</strong> en una clase PHP limpia, y Ragnos
+              genera automáticamente CRUD completo con interfaz web,
+              <strong>endpoints REST</strong> listos para producción,
+              <strong>validaciones inteligentes</strong> basadas en tu modelo,
+              búsqueda avanzada y paginación.
+            </p>
+            <p data-lang="en" class="hidden">
+              Stop manually creating repetitive controllers, views and models.
+              Define your data structure and business rules
+              <strong>just once</strong> in clean PHP, and Ragnos automatically
+              generates complete CRUD with web interface,
+              <strong>production-ready REST endpoints</strong>,
+              <strong>intelligent validations</strong> based on your model,
+              advanced search and pagination.
+            </p>
+            <a href="./docs/" class="feature-link" data-lang="es">
+              Explorar datasets <span class="arrow">→</span>
+            </a>
+            <a href="./docs/en/" class="feature-link hidden" data-lang="en">
+              Explore datasets <span class="arrow">→</span>
+            </a>
+          </div>
+          <div class="feature-image">
+            <img src="./assets/img/feat_db.png" alt="Declarative data structure" />
+          </div>
+        </div>
+
+        <!-- Feature 2: Hybrid API (Reversed) -->
+        <div class="feature-row reverse">
+          <div class="feature-content">
+            <span class="feature-number">02</span>
+            <h3 data-lang="es">Núcleo híbrido Web + API</h3>
+            <h3 data-lang="en" class="hidden">Hybrid Web + API core</h3>
+            <p data-lang="es">
+              Arquitectura <strong>dual-stack</strong>. Tu panel administrativo
+              no es solo una interfaz web potente: <strong>automáticamente
+              sirve como API RESTful</strong> con seguridad tokenizada.
+              Consume los mismos datos desde apps nativas (iOS/Android),
+              frameworks multiplataforma (React Native, Flutter), SPAs modernas
+              o cualquier cliente HTTP. Una sola fuente de verdad, validaciones
+              centralizadas, datos siempre sincronizados.
+            </p>
+            <p data-lang="en" class="hidden">
+              <strong>Dual-stack</strong> architecture. Your admin panel isn't
+              just a powerful web interface: it <strong>automatically serves
+              as a RESTful API</strong> with tokenized security. Consume the
+              same data from native apps (iOS/Android), cross-platform
+              frameworks (React Native, Flutter), modern SPAs or any HTTP
+              client. One source of truth, centralized validations,
+              always-synchronized data.
+            </p>
+            <a href="./docs/" class="feature-link" data-lang="es">
+              Ver arquitectura API <span class="arrow">→</span>
+            </a>
+            <a href="./docs/en/" class="feature-link hidden" data-lang="en">
+              View API architecture <span class="arrow">→</span>
+            </a>
+          </div>
+          <div class="feature-image">
+            <img src="./assets/img/feat_api.png" alt="Hybrid API connectivity" />
+          </div>
+        </div>
+
+        <!-- Feature 3: Security -->
+        <div class="feature-row">
+          <div class="feature-content">
+            <span class="feature-number">03</span>
+            <h3 data-lang="es">Seguridad empresarial</h3>
+            <h3 data-lang="en" class="hidden">Enterprise security</h3>
+            <p data-lang="es">
+              Protección <strong>robusta desde el primer día</strong>, sin
+              configuración compleja: <strong>RBAC multirol granular</strong>,
+              <strong>logs de auditoría inmutables</strong> para compliance,
+              mitigación <strong>automática del OWASP Top 10</strong>
+              (SQLi, XSS, CSRF), encriptación nativa de datos sensibles y
+              validaciones en servidor. Lista para entornos PCI-DSS y GDPR.
+              Tu aplicación nace asegurada.
+            </p>
+            <p data-lang="en" class="hidden">
+              <strong>Robust protection from day one</strong>, with no complex
+              configuration: <strong>granular multi-role RBAC</strong>,
+              <strong>immutable audit logs</strong> for compliance,
+              <strong>automatic OWASP Top 10</strong> mitigation (SQLi, XSS,
+              CSRF), native sensitive-data encryption and server-side
+              validation. PCI-DSS and GDPR ready. Your application is born
+              secure.
+            </p>
+            <a href="./docs/" class="feature-link" data-lang="es">
+              Revisar checklist de seguridad <span class="arrow">→</span>
+            </a>
+            <a href="./docs/en/" class="feature-link hidden" data-lang="en">
+              Review security checklist <span class="arrow">→</span>
+            </a>
+          </div>
+          <div class="feature-image">
+            <img src="./assets/img/feat_sec.png" alt="Cyber security shield" />
+          </div>
+        </div>
+
+        <!-- Tech Stack Section -->
+        <div class="tech-stack-wrapper">
+          <div class="tech-header-small">
+            <span class="line"></span>
+            <span data-lang="es">STACK SUBYACENTE</span>
+            <span data-lang="en" class="hidden">UNDERLYING STACK</span>
+            <span class="line"></span>
           </div>
 
-          <!-- Card 2 -->
-          <div class="tech-card">
-            <div class="tech-icon">💎</div>
-            <div class="tech-info">
-              <h4>AdminLTE 3</h4>
-              <p data-lang="es">
-                Interfaz probada en batalla. Basada en Bootstrap, totalmente
-                responsiva y personalizable, reduciendo el tiempo de diseño en
-                un 80%.
-              </p>
-              <p data-lang="en" class="hidden">
-                Battle-tested UI. Built on Bootstrap, fully responsive and
-                customizable, slashing frontend design time by 80%.
-              </p>
+          <div class="tech-grid">
+            <div class="tech-card">
+              <div class="tech-icon">🔥</div>
+              <div class="tech-info">
+                <h4>CodeIgniter 4</h4>
+                <p data-lang="es">
+                  Framework PHP ultraligero. Sin bloatware, curva mínima
+                  y rendimiento excepcional para alto tráfico.
+                </p>
+                <p data-lang="en" class="hidden">
+                  Ultra-lightweight PHP framework. No bloat, minimal learning
+                  curve and exceptional performance under load.
+                </p>
+              </div>
+            </div>
+
+            <div class="tech-card">
+              <div class="tech-icon">💎</div>
+              <div class="tech-info">
+                <h4>AdminLTE 3</h4>
+                <p data-lang="es">
+                  UI probada en batalla. Basada en Bootstrap, totalmente
+                  responsiva y personalizable.
+                </p>
+                <p data-lang="en" class="hidden">
+                  Battle-tested UI. Built on Bootstrap, fully responsive
+                  and customizable.
+                </p>
+              </div>
+            </div>
+
+            <div class="tech-card">
+              <div class="tech-icon">⚡</div>
+              <div class="tech-info">
+                <h4>jQuery · DataTables</h4>
+                <p data-lang="es">
+                  Tablas dinámicas con búsqueda y orden instantáneo,
+                  sin pipeline de build JS.
+                </p>
+                <p data-lang="en" class="hidden">
+                  Dynamic tables with instant search and sorting, no JS
+                  build pipeline required.
+                </p>
+              </div>
+            </div>
+
+            <div class="tech-card">
+              <div class="tech-icon">🚀</div>
+              <div class="tech-info">
+                <h4>Native REST API</h4>
+                <p data-lang="es">
+                  Expón tus datos automáticamente a móviles o SPAs con
+                  seguridad tokenizada integrada.
+                </p>
+                <p data-lang="en" class="hidden">
+                  Automatically expose data to mobile apps or SPAs with
+                  integrated tokenized security.
+                </p>
+              </div>
             </div>
           </div>
+        </div>
+      </div>
+    </section>
 
-          <!-- Card 3 -->
-          <div class="tech-card">
-            <div class="tech-icon">⚡</div>
-            <div class="tech-info">
-              <h4>jQuery & DataTables</h4>
-              <p data-lang="es">
-                Manipulación robusta de datos. Tablas dinámicas con búsqueda y
-                ordenamiento instantáneo, sin la complejidad de compilación JS.
-              </p>
-              <p data-lang="en" class="hidden">
-                Robust data manipulation. Dynamic tables with instant search and
-                sorting, without the complexity of a JS build process.
-              </p>
-            </div>
+    <!-- Book Section -->
+    <section class="book-section">
+      <div class="section-container">
+        <div class="book-card glass-panel">
+          <div class="book-cover">
+            <a
+              href="https://leanpub.com/ragnosdeceroapro"
+              target="_blank"
+              rel="noopener"
+              data-lang="es"
+            >
+              <img src="./assets/img/portada_es.png" alt="Ragnos de Cero a Pro" />
+            </a>
+            <a
+              href="https://leanpub.com/ragnosfromzerotopro"
+              target="_blank"
+              rel="noopener"
+              data-lang="en"
+              class="hidden"
+            >
+              <img src="./assets/img/portada_en.png" alt="Ragnos From Zero to Pro" />
+            </a>
           </div>
-
-          <!-- Card 4 -->
-          <div class="tech-card">
-            <div class="tech-icon">🚀</div>
-            <div class="tech-info">
-              <h4>Native REST API</h4>
-              <p data-lang="es">
-                Conectividad universal. Expón tus datos automáticamente a
-                móviles (iOS/Android) o SPAs con seguridad tokenizada integrada.
-              </p>
-              <p data-lang="en" class="hidden">
-                Universal connectivity. Automatically expose data to mobile apps
-                (iOS/Android) or SPAs with integrated tokenized security.
-              </p>
+          <div class="book-content">
+            <span class="eyebrow" data-lang="es">05 / Manual oficial</span>
+            <span class="eyebrow hidden" data-lang="en">05 / Official manual</span>
+            <h2 data-lang="es">
+              Domina <em class="serif-accent">el framework.</em>
+            </h2>
+            <h2 data-lang="en" class="hidden">
+              Master <em class="serif-accent">the framework.</em>
+            </h2>
+            <p data-lang="es">
+              <strong>Ragnos de Cero a Pro</strong> — el manual oficial.
+              Aprende a construir aplicaciones empresariales seguras en tiempo
+              récord aplicando <em>Configuration over Programming</em> y
+              AI Vibecoding.
+            </p>
+            <p data-lang="en" class="hidden">
+              <strong>Ragnos From Zero to Pro</strong> — the official manual.
+              Learn to build secure, enterprise-grade applications in record
+              time using <em>Configuration over Programming</em> and AI
+              Vibecoding.
+            </p>
+            <ul class="book-bullets">
+              <li data-lang="es">Patrones declarativos paso a paso</li>
+              <li data-lang="en" class="hidden">Declarative patterns step by step</li>
+              <li data-lang="es">Casos reales y mejores prácticas</li>
+              <li data-lang="en" class="hidden">Real cases and best practices</li>
+              <li data-lang="es">Workflow asistido por IA</li>
+              <li data-lang="en" class="hidden">AI-assisted workflow</li>
+            </ul>
+            <div class="book-cta-row">
+              <a
+                href="https://leanpub.com/ragnosdeceroapro"
+                target="_blank"
+                rel="noopener"
+                class="btn btn-book"
+                data-lang="es"
+              >
+                Lee el libro <span class="arrow">→</span>
+              </a>
+              <a
+                href="https://leanpub.com/ragnosfromzerotopro"
+                target="_blank"
+                rel="noopener"
+                class="btn btn-book hidden"
+                data-lang="en"
+              >
+                Get the book <span class="arrow">→</span>
+              </a>
+              <span class="book-meta" data-lang="es">Leanpub · Pay what you want</span>
+              <span class="book-meta hidden" data-lang="en">Leanpub · Pay what you want</span>
             </div>
           </div>
         </div>
@@ -647,76 +699,100 @@
     </section>
 
     <!-- Community Section CTA -->
-    <section
-      style="
-        padding: 4rem 2rem;
-        text-align: center;
-        background: linear-gradient(
-          to bottom,
-          transparent,
-          rgba(5, 6, 10, 0.8)
-        );
-      "
-    >
-      <div style="max-width: 800px; margin: 0 auto" class="glass-panel">
-        <div style="padding: 3rem">
-          <h2 data-lang="es" style="margin-bottom: 1rem; font-size: 2rem">
-            Únete a la Comunidad
+    <section class="community-section">
+      <div class="section-container">
+        <div class="community-card">
+          <div class="community-grid-bg" aria-hidden="true"></div>
+          <span class="eyebrow" data-lang="es">06 / Comunidad</span>
+          <span class="eyebrow hidden" data-lang="en">06 / Community</span>
+          <h2 data-lang="es">
+            Construyamos <em class="serif-accent">algo enorme.</em>
           </h2>
-          <h2
-            data-lang="en"
-            class="hidden"
-            style="margin-bottom: 1rem; font-size: 2rem"
-          >
-            Join the Community
+          <h2 data-lang="en" class="hidden">
+            Let's build <em class="serif-accent">something huge.</em>
           </h2>
-
-          <p
-            data-lang="es"
-            style="
-              color: var(--text-secondary);
-              margin-bottom: 2rem;
-              font-size: 1.1rem;
-            "
-          >
-            Conecta con otros desarrolladores, resuelve dudas y colabora en el
-            futuro de Ragnos.
+          <p data-lang="es">
+            Conecta con otros desarrolladores, resuelve dudas, comparte
+            patrones y colabora en el futuro de Ragnos. Es open source y nos
+            mantenemos cerca de cada quien que lo adopta.
           </p>
-          <p
-            data-lang="en"
-            class="hidden"
-            style="
-              color: var(--text-secondary);
-              margin-bottom: 2rem;
-              font-size: 1.1rem;
-            "
-          >
-            Connect with other developers, solve doubts, and collaborate on the
-            future of Ragnos.
+          <p data-lang="en" class="hidden">
+            Connect with other developers, solve doubts, share patterns and
+            collaborate on the future of Ragnos. It's open source and we stay
+            close to everyone who adopts it.
           </p>
 
-          <a
-            href="https://discord.gg/4z7tCxA4Fp"
-            target="_blank"
-            class="btn btn-discord"
-            data-lang="es"
-          >
-            Unirse al servidor de Discord
-          </a>
-          <a
-            href="https://discord.gg/4z7tCxA4Fp"
-            target="_blank"
-            class="btn btn-discord hidden"
-            data-lang="en"
-          >
-            Join Discord Server
-          </a>
+          <div class="community-actions">
+            <a
+              href="https://discord.gg/4z7tCxA4Fp"
+              target="_blank"
+              rel="noopener"
+              class="btn btn-discord"
+              data-lang="es"
+            >
+              Unirme al Discord <span class="arrow">→</span>
+            </a>
+            <a
+              href="https://discord.gg/4z7tCxA4Fp"
+              target="_blank"
+              rel="noopener"
+              class="btn btn-discord hidden"
+              data-lang="en"
+            >
+              Join Discord <span class="arrow">→</span>
+            </a>
+            <a
+              href="https://github.com/cgarciagl/Ragnos"
+              target="_blank"
+              rel="noopener"
+              class="btn btn-ghost"
+              data-lang="es"
+            >
+              <span class="github-icon">★</span> Star en GitHub
+            </a>
+            <a
+              href="https://github.com/cgarciagl/Ragnos"
+              target="_blank"
+              rel="noopener"
+              class="btn btn-ghost hidden"
+              data-lang="en"
+            >
+              <span class="github-icon">★</span> Star on GitHub
+            </a>
+          </div>
         </div>
       </div>
     </section>
 
     <footer>
-      <p>&copy; 2026 Ragnos Framework. Open Source MIT License.</p>
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <img src="./assets/img/logo.webp" alt="Ragnos" class="brand-logo" />
+          <div>
+            <div class="footer-brandname">RAGNOS</div>
+            <div class="footer-tagline" data-lang="es">
+              Framework PHP declarativo · MIT
+            </div>
+            <div class="footer-tagline hidden" data-lang="en">
+              Declarative PHP framework · MIT
+            </div>
+          </div>
+        </div>
+        <div class="footer-links">
+          <a href="./docs/" data-lang="es">Documentación</a>
+          <a href="./docs/en/" data-lang="en" class="hidden">Documentation</a>
+          <a href="https://github.com/cgarciagl/Ragnos" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://discord.gg/4z7tCxA4Fp" target="_blank" rel="noopener">Discord</a>
+          <a href="https://ragnos.yupii.org/" target="_blank" rel="noopener" data-lang="es">Demo</a>
+          <a href="https://ragnos.yupii.org/" target="_blank" rel="noopener" data-lang="en" class="hidden">Demo</a>
+        </div>
+        <div class="footer-copy">
+          <span>&copy; 2026 Ragnos Framework</span>
+          <span class="footer-divider">·</span>
+          <span data-lang="es">Open Source MIT License</span>
+          <span data-lang="en" class="hidden">Open Source MIT License</span>
+        </div>
+      </div>
     </footer>
 
     <script src="./js/main.js"></script>
@@ -732,15 +808,16 @@
         dataLayer.push(arguments);
       }
       gtag("js", new Date());
-
       gtag("config", "G-JGEDJD0GZP");
     </script>
+
     <!-- Floating Book Cover -->
     <div class="floating-book">
       <div class="book-container">
         <a
           href="https://leanpub.com/ragnosdeceroapro"
           target="_blank"
+          rel="noopener"
           data-lang="es"
         >
           <img src="./assets/img/portada_es.png" alt="Ragnos Book Cover" />
@@ -748,6 +825,7 @@
         <a
           href="https://leanpub.com/ragnosfromzerotopro"
           target="_blank"
+          rel="noopener"
           data-lang="en"
           class="hidden"
         >
