@@ -153,12 +153,12 @@ function importModelFromController(string $controllername): Model
  */
 function mapClassToURL(string $class): string
 {
-    // Remove the first 16 characters (likely "App\Controllers\") and convert to lowercase
-    $path = strtolower(substr($class, 16));
+    // Remove the first 16 characters (likely "App\Controllers\") and keep the case
+    $path = substr($class, 16);
 
     // Replace backslashes with forward slashes for URL compatibility
     $path = str_replace('\\', '/', $path);
-    $path = str_replace('\\', '/', $path);
+
     return $path;
 }
 
