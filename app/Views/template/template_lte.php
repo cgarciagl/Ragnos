@@ -96,7 +96,7 @@ $lang         = explode('_', $ragnosConfig->locale)[0];
         <!-- Main Footer -->
         <footer class="app-footer">
             <!-- To the right -->
-            <div class="float-right d-none d-sm-block-down">
+            <div class="float-end d-none d-sm-block-down">
 
             </div>
 

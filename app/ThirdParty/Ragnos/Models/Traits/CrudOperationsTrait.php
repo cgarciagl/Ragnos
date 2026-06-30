@@ -21,6 +21,7 @@ trait CrudOperationsTrait
                 $this->logAudit('INSERT', $primaryKey, ['new' => $inputDataArray]);
                 $this->controller->_afterInsert();
             } catch (\Exception $e) {
+                log_message('error', '[CrudOperationsTrait::performInsert] ' . $e->getMessage());
                 $this->errors['general_error'] = $e->getMessage();
             }
         }
@@ -63,6 +64,7 @@ trait CrudOperationsTrait
                     $this->controller->_afterUpdate();
                 }
             } catch (\Exception $e) {
+                log_message('error', '[CrudOperationsTrait::performUpdate] ' . $e->getMessage());
                 $this->errors['general_error'] = $e->getMessage();
             }
         }
@@ -106,6 +108,7 @@ trait CrudOperationsTrait
 
                 }
             } catch (\Exception $e) {
+                log_message('error', '[CrudOperationsTrait::performDelete] ' . $e->getMessage());
                 $this->errors['general_error'] = $e->getMessage();
             }
         }

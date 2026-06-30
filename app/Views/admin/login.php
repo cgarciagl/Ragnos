@@ -170,18 +170,6 @@
     });
 </script>
 
-<style>
-    body {
-        background-color: #05060a !important;
-        color: #ffffff;
-        overflow-x: hidden;
-        line-height: 1.6;
-        min-height: 100vh;
-    }
-
-    .login-box .card {
-        z-index: 1;
-    }
-</style>
+<link rel="stylesheet" href="<?= base_url(); ?>/assets/css/login.css">
 
 <?= $this->endSection() ?>

@@ -36,18 +36,6 @@ class RController extends BaseController
         $this->getPartial();
     }
 
-    public function __get($attr)
-    {
-        $CI = Ragnos::get_CI();
-        if (isset($this->$attr)) {
-            return $this->$attr;
-        } else
-            if (isset($CI->$attr)) {
-                return $CI->$attr;
-            } else
-                return NULL;
-    }
-
     /**
      * Método que revisa si existe una vista parcial para la clase del controlador
      */

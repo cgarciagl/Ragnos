@@ -1,12 +1,12 @@
 {
-  "name": "codeigniter4/framework",
-  "description": "The CodeIgniter framework v4",
+  "name": "cgarciagl/ragnos",
+  "description": "Ragnos Framework - Enterprise declarative PHP framework on CodeIgniter 4",
   "license": "MIT",
   "type": "project",
-  "homepage": "https://codeigniter.com",
+  "homepage": "https://ragnos.dev",
   "support": {
     "forum": "https://forum.codeigniter.com/",
-    "source": "https://github.com/codeigniter4/CodeIgniter4",
+    "source": "https://github.com/cgarciagl/Ragnos",
     "slack": "https://codeigniterchat.slack.com"
   },
   "require": {

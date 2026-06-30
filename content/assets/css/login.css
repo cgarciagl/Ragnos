@@ -1,0 +1,16 @@
+/* ============================================================
+   Login Page Styles - Ragnos Framework
+   Extracted from app/Views/admin/login.php
+   ============================================================ */
+
+body {
+  background-color: #05060a !important;
+  color: #ffffff;
+  overflow-x: hidden;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+.login-box .card {
+  z-index: 1;
+}

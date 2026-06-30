@@ -1,0 +1,187 @@
+/* ============================================================
+   Dashboard Styles - Ragnos Framework
+   Extracted from app/Views/admin/dashboard.php
+   ============================================================ */
+
+/* --- Info Cards --- */
+.custom-info-card {
+  background-color: #fff;
+  border: 1px solid #e3e6f0;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.05);
+  height: 100%;
+  transition: all 0.3s ease;
+}
+
+.custom-info-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0.5rem 2rem 0 rgba(58, 59, 69, 0.15) !important;
+}
+
+.icon-container {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0.25rem;
+  font-size: 2rem;
+  color: #fff;
+  margin-right: 1rem;
+  flex-shrink: 0;
+  animation: iconPulse 2s ease-in-out infinite;
+}
+
+.custom-info-card:hover .icon-container {
+  animation: iconBounce 0.6s ease;
+}
+
+.text-content h3 {
+  margin-bottom: 0.1rem;
+  font-weight: 700;
+}
+
+.text-content p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+
+/* --- Clickable Links in Tables --- */
+.btn-link {
+  cursor: pointer;
+  color: blue;
+  text-decoration: underline;
+  transition: all 0.3s ease;
+}
+
+.btn-link:hover {
+  color: #0056b3;
+  transform: translateX(3px);
+}
+
+.card-title {
+  font-weight: bold;
+}
+
+/* --- Chart Containers --- */
+#chartventas,
+#chartventasporlinea {
+  min-height: 350px;
+  width: 100%;
+}
+
+/* --- Table Row Animations --- */
+.table tbody tr {
+  transition: all 0.3s ease;
+}
+
+.table tbody tr:hover {
+  transform: scale(1.01);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background-color: rgba(0, 123, 255, 0.05) !important;
+}
+
+/* --- Card Animations --- */
+.card {
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.card:hover {
+  box-shadow: 0 0.5rem 2.5rem 0 rgba(58, 59, 69, 0.2) !important;
+}
+
+/* --- Badge Animations --- */
+.badge {
+  transition: all 0.3s ease;
+}
+
+.badge:hover {
+  transform: scale(1.1);
+}
+
+/* --- Fade-In Animations for Charts --- */
+#chartventas,
+#chartventasporlinea,
+#echarts-map,
+#chartMargenDona,
+#chartEmpleadosRanking,
+#chartInventarioMuerto,
+#chartParetoDeuda {
+  opacity: 0;
+  animation: fadeInChart 1s ease forwards;
+}
+
+#chartventas {
+  animation-delay: 0.3s;
+}
+#chartventasporlinea {
+  animation-delay: 0.4s;
+}
+#echarts-map {
+  animation-delay: 0.5s;
+}
+#chartMargenDona {
+  animation-delay: 0.6s;
+}
+#chartEmpleadosRanking {
+  animation-delay: 0.7s;
+}
+#chartInventarioMuerto {
+  animation-delay: 0.8s;
+}
+#chartParetoDeuda {
+  animation-delay: 0.9s;
+}
+
+@keyframes iconPulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes iconBounce {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+@keyframes fadeInChart {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* --- Card Tools --- */
+.card-tools a {
+  transition: all 0.3s ease;
+}
+
+.card-tools a:hover {
+  transform: translateX(-3px);
+}
+
+.btn-tool {
+  transition: all 0.3s ease;
+}
+
+.btn-tool:hover {
+  transform: rotate(90deg);
+}

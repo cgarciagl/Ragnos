@@ -43,15 +43,6 @@ class RSimpleLevelReport
         $this->summableFields = $fields;
     }
 
-    public function __get(string $attr)
-    {
-        $CI = Ragnos::get_CI();
-        if (isset($CI->$attr)) {
-            return $CI->$attr;
-        }
-        return NULL;
-    }
-
     public function getData(): array
     {
         return $this->data;
