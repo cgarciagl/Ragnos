@@ -1,0 +1,34 @@
+parameters:
+    level: 0
+    paths:
+        - app
+        - tests
+        - system
+    ignoreErrors:
+        # Los helpers globales de Ragnos no tienen type hints
+        - '/Function startsWith not found/'
+        - '/Function endsWith not found/'
+        - '/Function moneyFormat not found/'
+        - '/Function moneyToNumber not found/'
+        - '/Function raise not found/'
+        - '/Function mapClassToURL not found/'
+        - '/Function controllerNameToURL not found/'
+        - '/Function setOldRecordCache not found/'
+        - '/Function _oldRecordCache not found/'
+        - '/Function oldValue not found/'
+        - '/Function fieldHasChanged not found/'
+        - '/Function isJson not found/'
+        - '/Function removeNewLines not found/'
+        - '/Function ifSet not found/'
+        - '/Function arrayToSelect not found/'
+        - '/Function executeQuery not found/'
+        - '/Function queryToAssocArray not found/'
+        - '/Function currency not found/'
+        - '/Function getCachedData not found/'
+        - '/Function character_limiter not found/'
+    scan:
+        paths:
+            - app/ThirdParty/Ragnos/Helpers
+            - app/Helpers
+    dynamicReturnTypeExtension:
+        - NexusPhpArray\DynamicReturnTypeExtension

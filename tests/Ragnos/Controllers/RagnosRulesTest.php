@@ -3,6 +3,7 @@
 namespace Tests\Ragnos\Controllers;
 
 use CodeIgniter\Test\CIUnitTestCase;
+use Tests\Support\RequestSimulator;
 use App\ThirdParty\Ragnos\Controllers\RagnosRules;
 
 /**
@@ -12,44 +13,22 @@ use App\ThirdParty\Ragnos\Controllers\RagnosRules;
  */
 class RagnosRulesTest extends CIUnitTestCase
 {
+    use RequestSimulator;
+
     protected RagnosRules $rules;
 
     protected function setUp(): void
     {
         parent::setUp();
-        helper([
-            'App\ThirdParty\Ragnos\Helpers\utiles_helper',
-            'App\ThirdParty\Ragnos\Helpers\ragnos_helper',
-        ]);
-        // Resetear request y caches
-        \CodeIgniter\Config\Services::reset(true);
-        $_POST = [];
-        $_GET  = [];
-        $this->resetCache();
+        $this->loadRagnosHelpers();
+        $this->resetRequest();
         $this->rules = new RagnosRules();
     }
 
     protected function tearDown(): void
     {
-        \CodeIgniter\Config\Services::reset(true);
-        $_POST = [];
-        $_GET  = [];
-        $this->resetCache();
+        $this->resetRequest();
         parent::tearDown();
-    }
-
-    private function resetCache(): void
-    {
-        // _oldRecordCache mantiene una variable static interna; usamos una
-        // marca centinela para "limpiar" entre tests (todos los campos quedan null vía null coalesce).
-        \setOldRecordCache([]);
-    }
-
-    private function setPost(array $data): void
-    {
-        $request = service('request');
-        $request->setGlobal('post', $data);
-        $request->setGlobal('request', $data);
     }
 
     public function testReadonlyReturnsTrueCuandoValorNoCambia(): void

@@ -3,24 +3,7 @@
 namespace Tests\Ragnos\Integration;
 
 use Tests\Ragnos\RagnosTestCase;
-use App\ThirdParty\Ragnos\Controllers\RDataset;
-use App\ThirdParty\Ragnos\Controllers\Ragnos;
-use App\ThirdParty\Ragnos\Models\RDatasetModel;
-
-class AuditProductoModel extends RDatasetModel
-{
-    public $table         = 'productos_audit';
-    public $primaryKey    = 'id';
-    protected $returnType = 'array';
-
-    public function __construct($db = null)
-    {
-        parent::__construct();
-        if ($db !== null) {
-            $this->db = $db;
-        }
-    }
-}
+use Tests\Support\CrudTestSetup;
 
 /**
  * Tests de integración para auditoría (CrudOperationsTrait::logAudit).
@@ -29,70 +12,35 @@ class AuditProductoModel extends RDatasetModel
  */
 class AuditLogTest extends RagnosTestCase
 {
-    private RDataset $controller;
-    private AuditProductoModel $model;
+    use CrudTestSetup;
 
     protected function setUp(): void
     {
         parent::setUp();
-        helper([
-            'App\ThirdParty\Ragnos\Helpers\utiles_helper',
-            'App\ThirdParty\Ragnos\Helpers\ragnos_helper',
-            'text',
-        ]);
 
         // logAudit() consulta session()->has('usu_id'); el DatabaseHandler
         // por defecto no soporta SQLite, así que forzamos FileHandler en tests.
         $sessionConfig = config('Session');
         if ($sessionConfig !== null && property_exists($sessionConfig, 'driver')) {
-            $sessionConfig->driver  = \CodeIgniter\Session\Handlers\FileHandler::class;
+            $sessionConfig->driver   = \CodeIgniter\Session\Handlers\FileHandler::class;
             $sessionConfig->savePath = WRITEPATH . 'session';
         }
 
-        // Tabla bajo auditoría
-        $this->createTestTable('productos_audit', [
+        $this->initCrudTest('productos_audit', [
             'nombre' => ['type' => 'TEXT'],
             'precio' => ['type' => 'REAL'],
-        ]);
+        ], ['nombre', 'precio'], enableAudit: true);
 
-        // Tabla de log que el modelo AuditLogModel espera
-        $this->createTestTable('gen_audit_logs', [
-            'user_id'    => ['type' => 'INTEGER', 'null' => true],
-            'table_name' => ['type' => 'TEXT'],
-            'record_id'  => ['type' => 'INTEGER', 'null' => true],
-            'action'     => ['type' => 'TEXT'],
-            'changes'    => ['type' => 'TEXT', 'null' => true],
-            'ip_address' => ['type' => 'TEXT', 'null' => true],
-            'user_agent' => ['type' => 'TEXT', 'null' => true],
-        ]);
-
-        Ragnos::$CI = null;
-
-        $this->controller = new class extends RDataset {
+        // AuditLogTest espera que _beforeInsert no modifique los datos
+        $this->controller->onBeforeInsert = function (&$dataArray): void {
+            // No-op: preservar valor original
         };
-        $this->model = new AuditProductoModel($this->db);
-        $this->controller->setModel($this->model);
-        $this->model->tablefields = ['nombre', 'precio'];
-
-        \CodeIgniter\Config\Services::reset(true);
-        $_POST = [];
-        $_GET  = [];
     }
 
     protected function tearDown(): void
     {
-        $this->dropTestTable('productos_audit');
-        $this->dropTestTable('gen_audit_logs');
-        \CodeIgniter\Config\Services::reset(true);
-        $_POST = [];
-        $_GET  = [];
+        $this->cleanupCrudTest();
         parent::tearDown();
-    }
-
-    private function setPost(array $data): void
-    {
-        service('request')->setGlobal('post', $data);
-        service('request')->setGlobal('request', $data);
     }
 
     private function getAuditLogs(): array
@@ -136,12 +84,12 @@ class AuditLogTest extends RagnosTestCase
         $audit->setValue($this->model, true);
 
         $this->setPost([
-            'id'                       => (string) $insertId,
-            'nombre'                   => 'Despues',
-            'precio'                   => '200',
-            'Ragnos_value_ant_id'      => (string) $insertId,
-            'Ragnos_value_ant_nombre'  => 'Antes',
-            'Ragnos_value_ant_precio'  => '100',
+            'id'                      => (string) $insertId,
+            'nombre'                  => 'Despues',
+            'precio'                  => '200',
+            'Ragnos_value_ant_id'     => (string) $insertId,
+            'Ragnos_value_ant_nombre' => 'Antes',
+            'Ragnos_value_ant_precio' => '100',
         ]);
         $this->model->completeFieldList();
         $this->model->processFormInput();

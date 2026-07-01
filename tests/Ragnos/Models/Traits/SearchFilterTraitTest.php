@@ -3,6 +3,7 @@
 namespace Tests\Ragnos\Models\Traits;
 
 use Tests\Ragnos\RagnosTestCase;
+use Tests\Support\RequestSimulator;
 use App\ThirdParty\Ragnos\Models\RDatasetModel;
 
 /**
@@ -10,8 +11,8 @@ use App\ThirdParty\Ragnos\Models\RDatasetModel;
  */
 class SearchProductoModel extends RDatasetModel
 {
-    public $table         = 'productos';
-    public $primaryKey    = 'id';
+    public $table = 'productos';
+    public $primaryKey = 'id';
     protected $returnType = 'array';
 
     public function __construct($db = null)
@@ -30,16 +31,15 @@ class SearchProductoModel extends RDatasetModel
  */
 class SearchFilterTraitTest extends RagnosTestCase
 {
+    use RequestSimulator;
+
     private SearchProductoModel $model;
 
     protected function setUp(): void
     {
         parent::setUp();
-        helper([
-            'App\ThirdParty\Ragnos\Helpers\utiles_helper',
-            'App\ThirdParty\Ragnos\Helpers\ragnos_helper',
-            'text',
-        ]);
+        $this->loadRagnosHelpers();
+        $this->resetRequest();
 
         $this->createTestTable('productos', [
             'nombre'    => ['type' => 'TEXT'],
@@ -48,34 +48,21 @@ class SearchFilterTraitTest extends RagnosTestCase
             'stock'     => ['type' => 'INTEGER'],
         ]);
 
-        $this->insertTestData('productos', ['nombre' => 'Widget A', 'categoria' => 'Tools',   'precio' =>  50, 'stock' => 10]);
-        $this->insertTestData('productos', ['nombre' => 'Widget B', 'categoria' => 'Tools',   'precio' => 150, 'stock' => 5]);
+        $this->insertTestData('productos', ['nombre' => 'Widget A', 'categoria' => 'Tools', 'precio' => 50, 'stock' => 10]);
+        $this->insertTestData('productos', ['nombre' => 'Widget B', 'categoria' => 'Tools', 'precio' => 150, 'stock' => 5]);
         $this->insertTestData('productos', ['nombre' => 'Gadget X', 'categoria' => 'Gadgets', 'precio' => 250, 'stock' => 0]);
         $this->insertTestData('productos', ['nombre' => 'Gadget Y', 'categoria' => 'Gadgets', 'precio' => 350, 'stock' => 8]);
-        $this->insertTestData('productos', ['nombre' => 'Other Z',  'categoria' => 'Other',   'precio' => 100, 'stock' => 3]);
+        $this->insertTestData('productos', ['nombre' => 'Other Z', 'categoria' => 'Other', 'precio' => 100, 'stock' => 3]);
 
         $this->model              = new SearchProductoModel($this->db);
         $this->model->tablefields = ['nombre', 'categoria', 'precio', 'stock'];
-
-        // Limpiar request anterior
-        \CodeIgniter\Config\Services::reset(true);
-        $_POST = [];
-        $_GET  = [];
     }
 
     protected function tearDown(): void
     {
         $this->dropTestTable('productos');
-        \CodeIgniter\Config\Services::reset(true);
-        $_POST = [];
-        $_GET  = [];
+        $this->resetRequest();
         parent::tearDown();
-    }
-
-    private function setGet(array $data): void
-    {
-        service('request')->setGlobal('get', $data);
-        service('request')->setGlobal('request', $data);
     }
 
     public function testIsPostgresEnSQLiteRetornaFalse(): void
@@ -113,8 +100,8 @@ class SearchFilterTraitTest extends RagnosTestCase
     public function testParseStructuredFiltersConMultiplesCondicionesAND(): void
     {
         $filter = base64_encode(json_encode([
-            ['field' => 'categoria', 'op' => '=',  'value' => 'Tools'],
-            ['field' => 'precio',    'op' => '>=', 'value' => 100],
+            ['field' => 'categoria', 'op' => '=', 'value' => 'Tools'],
+            ['field' => 'precio', 'op' => '>=', 'value' => 100],
         ]));
         $this->setGet(['sFilter' => $filter]);
 

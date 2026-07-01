@@ -3,6 +3,7 @@
 namespace Tests\Ragnos\Models\Traits;
 
 use Tests\Ragnos\RagnosTestCase;
+use Tests\Support\RequestSimulator;
 use App\ThirdParty\Ragnos\Models\RDatasetModel;
 use App\ThirdParty\Ragnos\Models\RConcreteDatasetModel;
 
@@ -11,8 +12,8 @@ use App\ThirdParty\Ragnos\Models\RConcreteDatasetModel;
  */
 class JsonProductoModel extends RDatasetModel
 {
-    public $table         = 'productos_json';
-    public $primaryKey    = 'id';
+    public $table = 'productos_json';
+    public $primaryKey = 'id';
     protected $returnType = 'array';
 
     public function __construct($db = null)
@@ -34,16 +35,15 @@ class JsonProductoModel extends RDatasetModel
  */
 class JsonResultTraitTest extends RagnosTestCase
 {
+    use RequestSimulator;
+
     private JsonProductoModel $model;
 
     protected function setUp(): void
     {
         parent::setUp();
-        helper([
-            'App\ThirdParty\Ragnos\Helpers\utiles_helper',
-            'App\ThirdParty\Ragnos\Helpers\ragnos_helper',
-            'text',
-        ]);
+        $this->loadRagnosHelpers();
+        $this->resetRequest();
 
         $this->createTestTable('productos_json', [
             'nombre' => ['type' => 'TEXT'],
@@ -58,25 +58,13 @@ class JsonResultTraitTest extends RagnosTestCase
 
         $this->model              = new JsonProductoModel($this->db);
         $this->model->tablefields = ['nombre', 'precio'];
-
-        \CodeIgniter\Config\Services::reset(true);
-        $_POST = [];
-        $_GET  = [];
     }
 
     protected function tearDown(): void
     {
         $this->dropTestTable('productos_json');
-        \CodeIgniter\Config\Services::reset(true);
-        $_POST = [];
-        $_GET  = [];
+        $this->resetRequest();
         parent::tearDown();
-    }
-
-    private function setGet(array $data): void
-    {
-        service('request')->setGlobal('get', $data);
-        service('request')->setGlobal('request', $data);
     }
 
     public function testGetTableAjaxSinTableRetornaNull(): void

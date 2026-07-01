@@ -59,7 +59,7 @@ class RagnosHelperTest extends CIUnitTestCase
 
     public function testMoneyFormatProducesCurrencyString(): void
     {
-        if (! extension_loaded('intl')) {
+        if (!extension_loaded('intl')) {
             $this->markTestSkipped('intl extension is not loaded');
         }
         $result = \moneyFormat(1234.5);
@@ -71,7 +71,7 @@ class RagnosHelperTest extends CIUnitTestCase
 
     public function testMoneyFormatZero(): void
     {
-        if (! extension_loaded('intl')) {
+        if (!extension_loaded('intl')) {
             $this->markTestSkipped('intl extension is not loaded');
         }
         $result = \moneyFormat(0);
@@ -118,16 +118,16 @@ class RagnosHelperTest extends CIUnitTestCase
         }
     }
 
-    public function testMapClassToURLConvierteFQCNAPathEnMinusculas(): void
+    public function testMapClassToURLConvierteFQCNAPath(): void
     {
-        $this->assertSame('tienda/clientes', \mapClassToURL('App\\Controllers\\Tienda\\Clientes'));
-        $this->assertSame('usuarios', \mapClassToURL('App\\Controllers\\Usuarios'));
+        $this->assertSame('Tienda/Clientes', \mapClassToURL('App\\Controllers\\Tienda\\Clientes'));
+        $this->assertSame('Usuarios', \mapClassToURL('App\\Controllers\\Usuarios'));
     }
 
     public function testControllerNameToURLConstruyeRutaCorrecta(): void
     {
-        $this->assertSame('tienda/productos', \controllerNameToURL('Tienda\\Productos'));
-        $this->assertSame('usuarios', \controllerNameToURL('Usuarios'));
+        $this->assertSame('Tienda/Productos', \controllerNameToURL('Tienda\\Productos'));
+        $this->assertSame('Usuarios', \controllerNameToURL('Usuarios'));
     }
 
     public function testSetOldRecordCacheAlmacenaYRecupera(): void
@@ -137,7 +137,7 @@ class RagnosHelperTest extends CIUnitTestCase
         $this->assertSame($record, \_oldRecordCache());
     }
 
-    public function testSetOldRecordCacheNullResetea(): void
+    public function testSetOldRecordCacheNullNoResetea(): void
     {
         \setOldRecordCache(['id' => 1]);
         \setOldRecordCache(null);

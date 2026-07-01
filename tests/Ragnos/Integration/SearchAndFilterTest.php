@@ -3,12 +3,13 @@
 namespace Tests\Ragnos\Integration;
 
 use Tests\Ragnos\RagnosTestCase;
+use Tests\Support\RequestSimulator;
 use App\ThirdParty\Ragnos\Models\RDatasetModel;
 
 class ArticuloSearchModel extends RDatasetModel
 {
-    public $table         = 'articulos_search';
-    public $primaryKey    = 'id';
+    public $table = 'articulos_search';
+    public $primaryKey = 'id';
     protected $returnType = 'array';
 
     public function __construct($db = null)
@@ -27,16 +28,15 @@ class ArticuloSearchModel extends RDatasetModel
  */
 class SearchAndFilterTest extends RagnosTestCase
 {
+    use RequestSimulator;
+
     private ArticuloSearchModel $model;
 
     protected function setUp(): void
     {
         parent::setUp();
-        helper([
-            'App\ThirdParty\Ragnos\Helpers\utiles_helper',
-            'App\ThirdParty\Ragnos\Helpers\ragnos_helper',
-            'text',
-        ]);
+        $this->loadRagnosHelpers();
+        $this->resetRequest();
 
         $this->createTestTable('articulos_search', [
             'nombre'    => ['type' => 'TEXT'],
@@ -47,40 +47,28 @@ class SearchAndFilterTest extends RagnosTestCase
 
         // 10 registros con suficiente variedad para distintos filtros
         $rows = [
-            ['nombre' => 'Widget Alpha',  'categoria' => 'Tools',    'precio' =>  50, 'stock' => 10],
-            ['nombre' => 'Widget Beta',   'categoria' => 'Tools',    'precio' => 150, 'stock' =>  5],
-            ['nombre' => 'Widget Gamma',  'categoria' => 'Tools',    'precio' => 250, 'stock' =>  0],
-            ['nombre' => 'Gadget Lambda', 'categoria' => 'Gadgets',  'precio' => 350, 'stock' =>  8],
-            ['nombre' => 'Gadget Sigma',  'categoria' => 'Gadgets',  'precio' => 450, 'stock' =>  2],
-            ['nombre' => 'Gizmo Delta',   'categoria' => 'Gizmos',   'precio' => 100, 'stock' => 12],
-            ['nombre' => 'Gizmo Epsilon', 'categoria' => 'Gizmos',   'precio' => 200, 'stock' =>  4],
-            ['nombre' => 'Other Mu',      'categoria' => 'Other',    'precio' =>  75, 'stock' => 20],
-            ['nombre' => 'Other Nu',      'categoria' => 'Other',    'precio' => 125, 'stock' => 15],
-            ['nombre' => 'Other Xi',      'categoria' => 'Other',    'precio' => 300, 'stock' =>  0],
+            ['nombre' => 'Widget Alpha', 'categoria' => 'Tools', 'precio' => 50, 'stock' => 10],
+            ['nombre' => 'Widget Beta', 'categoria' => 'Tools', 'precio' => 150, 'stock' => 5],
+            ['nombre' => 'Widget Gamma', 'categoria' => 'Tools', 'precio' => 250, 'stock' => 0],
+            ['nombre' => 'Gadget Lambda', 'categoria' => 'Gadgets', 'precio' => 350, 'stock' => 8],
+            ['nombre' => 'Gadget Sigma', 'categoria' => 'Gadgets', 'precio' => 450, 'stock' => 2],
+            ['nombre' => 'Gizmo Delta', 'categoria' => 'Gizmos', 'precio' => 100, 'stock' => 12],
+            ['nombre' => 'Gizmo Epsilon', 'categoria' => 'Gizmos', 'precio' => 200, 'stock' => 4],
+            ['nombre' => 'Other Mu', 'categoria' => 'Other', 'precio' => 75, 'stock' => 20],
+            ['nombre' => 'Other Nu', 'categoria' => 'Other', 'precio' => 125, 'stock' => 15],
+            ['nombre' => 'Other Xi', 'categoria' => 'Other', 'precio' => 300, 'stock' => 0],
         ];
         $this->insertMultiple('articulos_search', $rows);
 
         $this->model              = new ArticuloSearchModel($this->db);
         $this->model->tablefields = ['nombre', 'categoria', 'precio', 'stock'];
-
-        \CodeIgniter\Config\Services::reset(true);
-        $_POST = [];
-        $_GET  = [];
     }
 
     protected function tearDown(): void
     {
         $this->dropTestTable('articulos_search');
-        \CodeIgniter\Config\Services::reset(true);
-        $_POST = [];
-        $_GET  = [];
+        $this->resetRequest();
         parent::tearDown();
-    }
-
-    private function setGet(array $data): void
-    {
-        service('request')->setGlobal('get', $data);
-        service('request')->setGlobal('request', $data);
     }
 
     public function testBusquedaSinFiltrosCuentaTodo(): void
@@ -104,7 +92,7 @@ class SearchAndFilterTest extends RagnosTestCase
     public function testFiltroEstructuradoPrecioRangoSimple(): void
     {
         $filter = base64_encode(json_encode([
-            ['field' => 'precio', 'op' => '>',  'value' => 200],
+            ['field' => 'precio', 'op' => '>', 'value' => 200],
             ['field' => 'precio', 'op' => '<=', 'value' => 400],
         ]));
         $this->setGet(['sFilter' => $filter]);

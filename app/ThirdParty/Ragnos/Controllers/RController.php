@@ -37,6 +37,15 @@ class RController extends BaseController
     }
 
     /**
+     * Magic getter: retorna null para propiedades indefinidas.
+     * Permite acceso seguro a propiedades dinámicas sin lanzar error.
+     */
+    public function __get($name)
+    {
+        return null;
+    }
+
+    /**
      * Método que revisa si existe una vista parcial para la clase del controlador
      */
     private function getPartial()

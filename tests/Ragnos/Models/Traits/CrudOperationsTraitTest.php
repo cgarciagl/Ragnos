@@ -3,27 +3,7 @@
 namespace Tests\Ragnos\Models\Traits;
 
 use Tests\Ragnos\RagnosTestCase;
-use App\ThirdParty\Ragnos\Controllers\RDataset;
-use App\ThirdParty\Ragnos\Controllers\Ragnos;
-use App\ThirdParty\Ragnos\Models\RDatasetModel;
-
-/**
- * Modelo concreto para CrudOperationsTrait sobre tabla 'productos_crud'.
- */
-class CrudProductoModel extends RDatasetModel
-{
-    public $table         = 'productos_crud';
-    public $primaryKey    = 'id';
-    protected $returnType = 'array';
-
-    public function __construct($db = null)
-    {
-        parent::__construct();
-        if ($db !== null) {
-            $this->db = $db;
-        }
-    }
-}
+use Tests\Support\CrudTestSetup;
 
 /**
  * Pruebas reales para CrudOperationsTrait. Verifica:
@@ -37,86 +17,22 @@ class CrudProductoModel extends RDatasetModel
  */
 class CrudOperationsTraitTest extends RagnosTestCase
 {
-    private RDataset $controller;
-    private CrudProductoModel $model;
+    use CrudTestSetup;
 
     protected function setUp(): void
     {
         parent::setUp();
-        helper([
-            'App\ThirdParty\Ragnos\Helpers\utiles_helper',
-            'App\ThirdParty\Ragnos\Helpers\ragnos_helper',
-            'text',
-        ]);
-
-        $this->createTestTable('productos_crud', [
+        $this->initCrudTest('productos_crud', [
             'nombre' => ['type' => 'TEXT'],
             'precio' => ['type' => 'REAL', 'null' => true],
             'stock'  => ['type' => 'INTEGER', 'null' => true],
-        ]);
-
-        // Reset singleton de Ragnos
-        Ragnos::$CI = null;
-
-        $this->controller = new class extends RDataset {
-            public array $beforeInsertCalls = [];
-            public array $afterInsertCalls  = [];
-            public array $beforeUpdateCalls = [];
-            public bool $beforeDeleteCalled = false;
-            public bool $afterDeleteCalled  = false;
-
-            public function _beforeInsert(&$dataArray): void
-            {
-                $this->beforeInsertCalls[] = $dataArray;
-                // Modificamos los datos para verificar referencia
-                $dataArray['nombre'] = strtoupper($dataArray['nombre'] ?? '');
-            }
-            public function _afterInsert(): void
-            {
-                $this->afterInsertCalls[] = true;
-            }
-            public function _beforeUpdate(&$dataArray): void
-            {
-                $this->beforeUpdateCalls[] = $dataArray;
-            }
-            public function _beforeDelete(): void
-            {
-                $this->beforeDeleteCalled = true;
-            }
-            public function _afterDelete(): void
-            {
-                $this->afterDeleteCalled = true;
-            }
-        };
-
-        $this->model = new CrudProductoModel($this->db);
-        $this->controller->setModel($this->model);
-        $this->model->tablefields = ['nombre', 'precio', 'stock'];
-
-        // Desactivar auditoría (no necesitamos gen_audit_logs aquí)
-        $audit = new \ReflectionProperty($this->model, 'enableAudit');
-        $audit->setAccessible(true);
-        $audit->setValue($this->model, false);
-
-        \CodeIgniter\Config\Services::reset(true);
-        $_POST = [];
-        $_GET  = [];
-        \setOldRecordCache([]);
+        ], ['nombre', 'precio', 'stock']);
     }
 
     protected function tearDown(): void
     {
-        $this->dropTestTable('productos_crud');
-        \CodeIgniter\Config\Services::reset(true);
-        $_POST = [];
-        $_GET  = [];
+        $this->cleanupCrudTest();
         parent::tearDown();
-    }
-
-    private function setPost(array $data): void
-    {
-        service('request')->setGlobal('post', $data);
-        service('request')->setGlobal('request', $data);
     }
 
     public function testCreateInputDataArraySinFieldsDevuelveArrayVacio(): void
@@ -188,18 +104,20 @@ class CrudOperationsTraitTest extends RagnosTestCase
 
     public function testProcessFormInputActualizaCuandoVienePrimaryKey(): void
     {
-        $id = $this->db->table('productos_crud')->insert([
-            'nombre' => 'Antes', 'precio' => 1, 'stock' => 1,
+        $id       = $this->db->table('productos_crud')->insert([
+            'nombre' => 'Antes',
+            'precio' => 1,
+            'stock'  => 1,
         ]);
         $insertId = $this->db->insertID();
 
         $this->model->completeFieldList();
         $this->setPost([
-            'id'                       => (string) $insertId,
-            'nombre'                   => 'Despues',
-            'Ragnos_value_ant_nombre'  => 'Antes',
-            'Ragnos_value_ant_precio'  => '1',
-            'Ragnos_value_ant_stock'   => '1',
+            'id'                      => (string) $insertId,
+            'nombre'                  => 'Despues',
+            'Ragnos_value_ant_nombre' => 'Antes',
+            'Ragnos_value_ant_precio' => '1',
+            'Ragnos_value_ant_stock'  => '1',
         ]);
 
         $this->model->processFormInput();
@@ -253,7 +171,7 @@ class CrudOperationsTraitTest extends RagnosTestCase
 
     public function testInsertBloqueadoCuandoCanInsertFalso(): void
     {
-        $this->model->canInsert  = false;
+        $this->model->canInsert = false;
         $this->model->completeFieldList();
         $this->setPost(['nombre' => 'NoInsert']);
 
