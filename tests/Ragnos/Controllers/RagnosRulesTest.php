@@ -47,10 +47,10 @@ class RagnosRulesTest extends CIUnitTestCase
         \setOldRecordCache(['estado' => 'ACTIVO']);
         $this->setPost(['estado' => 'INACTIVO']);
 
-        $error  = null;
+        $error  = '';
         $result = $this->rules->readonly_Ragnos('INACTIVO', 'estado', [], $error);
         $this->assertFalse($result);
-        $this->assertNotNull($error, 'Se debe asignar mensaje de error cuando la regla falla');
+        $this->assertNotEmpty($error, 'Se debe asignar mensaje de error cuando la regla falla');
     }
 
     public function testReadonlyReturnsTrueSinCacheYSinInput(): void
@@ -70,10 +70,10 @@ class RagnosRulesTest extends CIUnitTestCase
             'estado'                  => 'INACTIVO',
         ]);
 
-        $error  = null;
+        $error  = '';
         $result = $this->rules->readonly_Ragnos('INACTIVO', 'estado', [], $error);
         $this->assertFalse($result);
-        $this->assertNotNull($error);
+        $this->assertNotEmpty($error);
     }
 
     public function testInstanciasMultiplesNoComparteEstado(): void
