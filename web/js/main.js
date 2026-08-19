@@ -1,6 +1,17 @@
 document.addEventListener("DOMContentLoaded", () => {
   /* --- Language Switcher --- */
-  let currentLang = navigator.language.startsWith("es") ? "es" : "en";
+  let savedLang = null;
+  try {
+    savedLang = window.localStorage.getItem("ragnos-language");
+  } catch {
+    // Storage may be unavailable in privacy-restricted contexts.
+  }
+
+  let currentLang = savedLang === "es" || savedLang === "en"
+    ? savedLang
+    : navigator.language.startsWith("es")
+      ? "es"
+      : "en";
 
   const updateLang = () => {
     const showEs = currentLang === "es";
@@ -18,10 +29,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.querySelectorAll('[data-lang="es"]').forEach((el) => toggleElement(el, showEs));
     document.querySelectorAll('[data-lang="en"]').forEach((el) => toggleElement(el, !showEs));
-    
+
+    document.documentElement.lang = currentLang;
+
     // Update button text
     const btn = document.getElementById("langToggle");
-    if(btn) btn.innerText = showEs ? "EN / ES" : "ES / EN";
+    if (btn) {
+      btn.innerText = showEs ? "EN / ES" : "ES / EN";
+      btn.setAttribute("aria-label", showEs ? "Cambiar a inglés" : "Switch to Spanish");
+      btn.setAttribute("aria-pressed", String(!showEs));
+    }
   };
 
   // Initial call
@@ -31,6 +48,11 @@ document.addEventListener("DOMContentLoaded", () => {
   if (langBtn) {
     langBtn.addEventListener("click", () => {
       currentLang = currentLang === "es" ? "en" : "es";
+      try {
+        window.localStorage.setItem("ragnos-language", currentLang);
+      } catch {
+        // Keep the preference for this session when storage is unavailable.
+      }
       updateLang();
     });
   }
@@ -40,6 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (canvas) {
     const ctx = canvas.getContext("2d");
     let particlesArray;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     const resizeCanvas = () => {
       canvas.width = window.innerWidth;
@@ -108,7 +131,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function initParticles() {
       particlesArray = [];
       // Increase density slightly
-      let numberOfParticles = (canvas.height * canvas.width) / 15000;
+      let numberOfParticles = (canvas.height * canvas.width) / (reduceMotion ? 36000 : 20000);
       for (let i = 0; i < numberOfParticles; i++) {
         let size = Math.random() * 3 + 1; // Slightly larger
         let x = Math.random() * canvas.width;
@@ -133,6 +156,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     initParticles();
-    animateParticles();
+    if (reduceMotion) {
+      particlesArray.forEach((particle) => particle.draw());
+    } else {
+      animateParticles();
+    }
   }
 });
