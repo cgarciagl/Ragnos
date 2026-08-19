@@ -4,21 +4,20 @@
 
 <?= $this->section('content') ?>
 
-<div class="row animate__animated animate__fadeIn">
+<div class="row perfil-view animate__animated animate__fadeIn">
     <!-- Columna Izquierda: Perfil y Datos Personales -->
-    <div class="col-lg-4 col-xl-3">
+    <div class="col-lg-4 col-xl-3 perfil-sidebar">
 
         <!-- Card de Perfil Principal -->
-        <div class="card border-0 shadow-lg rounded-4 overflow-hidden mb-4 animate__animated animate__fadeInLeft">
+        <div class="card perfil-card profile-card overflow-hidden mb-4 animate__animated animate__fadeInLeft">
             <!-- Fondo de cabecera decorativo -->
-            <div class="bg-primary bg-gradient" style="height: 100px; opacity: 0.8;"></div>
+            <div class="profile-cover" aria-hidden="true"></div>
 
-            <div class="card-body box-profile pt-0" style="margin-top: -50px;">
+            <div class="card-body box-profile profile-card-body pt-0">
                 <div class="text-center mb-3 position-relative">
-                    <div class="d-inline-block p-1 bg-white rounded-circle shadow-sm">
+                    <div class="profile-avatar-frame d-inline-block p-1 bg-white rounded-circle shadow-sm">
                         <img class="profile-user-img rounded-circle img-fluid border border-3 border-white shadow-sm hover-grow"
-                            src="./img/logomini.webp" id="fotoPerfil" alt="Foto de perfil"
-                            style="width: 110px; height: 110px; object-fit: cover; cursor: pointer; transition: transform 0.3s;">
+                            src="./img/logomini.webp" id="fotoPerfil" alt="Foto de perfil" width="110" height="110">
                     </div>
                 </div>
 
@@ -27,13 +26,12 @@
                 </h4>
 
                 <p class="text-muted text-center mb-4 small">
-                    <span
-                        class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-10 px-3 py-2 rounded-pill">
+                    <span class="badge profile-role px-3 py-2 rounded-pill">
                         <i class="bi bi-shield-check me-1"></i><?= $auth->getField('gru_nombre'); ?>
                     </span>
                 </p>
 
-                <div class="row g-0 text-center mb-4 bg-light bg-opacity-50 rounded-3 py-3 mx-1">
+                <div class="row g-0 profile-stats text-center mb-4 rounded-3 py-3 mx-1">
                     <div class="col-4 border-end border-light-subtle">
                         <h6 class="fw-bold text-dark mb-0">1,322</h6>
                         <small class="text-muted text-uppercase tracking-wider"
@@ -51,26 +49,27 @@
                     </div>
                 </div>
 
-                <div class="d-grid gap-2 px-2">
-                    <button class="btn btn-primary shadow-sm rounded-pill fw-bold py-2 btn-hover-shine" id="btnSeguir">
+                <div class="d-grid gap-2 px-2 profile-actions">
+                    <button type="button" class="btn btn-primary rounded-pill fw-bold py-2 btn-hover-shine"
+                        id="btnSeguir">
                         <i class="bi bi-person-plus-fill me-1"></i> Seguir Usuario
                     </button>
-                    <button class="btn btn-outline-secondary btn-sm border-light-subtle rounded-pill text-muted">
-                        Enviar Mensaje
+                    <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill text-muted">
+                        <i class="bi bi-chat-left-text me-1"></i>Enviar mensaje
                     </button>
                 </div>
             </div>
         </div>
 
         <!-- Card "Acerca de mí" Estilizada -->
-        <div class="card border-0 shadow-sm rounded-4 mb-4 animate__animated animate__fadeInLeft"
+        <div class="card perfil-card profile-details mb-4 animate__animated animate__fadeInLeft"
             style="animation-delay: 0.1s;">
-            <div class="card-header bg-white py-3 border-bottom-0">
+            <div class="card-header profile-section-header py-3">
                 <h6 class="card-title fw-bold text-dark mb-0">
                     <i class="bi bi-info-circle-fill text-primary me-2"></i>Información Personal
                 </h6>
             </div>
-            <div class="card-body pt-1">
+            <div class="card-body profile-details-body pt-1">
                 <div class="d-flex align-items-start mb-4">
                     <div class="bg-light rounded-3 p-2 me-3">
                         <i class="bi bi-book text-secondary"></i>
@@ -129,11 +128,11 @@
     </div>
 
     <!-- Columna Derecha: Actividades, Herramientas y Tareas -->
-    <div class="col-lg-8 col-xl-9">
-        <div class="card border-0 shadow-sm rounded-4 overflow-hidden animate__animated animate__fadeInRight">
+    <div class="col-lg-8 col-xl-9 perfil-main">
+        <div class="card perfil-card profile-workspace overflow-hidden animate__animated animate__fadeInRight">
             <!-- Navegación de Pestañas Premium -->
-            <div class="card-header bg-white p-0 border-bottom">
-                <ul class="nav nav-tabs border-0 px-3 pt-2" id="profileTabs" role="tablist">
+            <div class="card-header profile-tabs-header p-0">
+                <ul class="nav nav-tabs profile-tabs border-0 px-3 pt-2" id="profileTabs" role="tablist">
                     <li class="nav-item me-2" role="presentation">
                         <button
                             class="nav-link active border-0 border-bottom border-3 border-transparent fw-bold py-3 px-4"
@@ -153,7 +152,7 @@
                 </ul>
             </div>
 
-            <div class="card-body p-4">
+            <div class="card-body profile-workspace-body p-4">
                 <div class="tab-content" id="profileTabsContent">
 
                     <!-- TAB: Actividades -->
@@ -172,7 +171,8 @@
                                     </div>
                                 </div>
                                 <div class="dropdown">
-                                    <button class="btn btn-link text-muted p-0" data-bs-toggle="dropdown">
+                                    <button type="button" class="btn btn-link text-muted p-0" data-bs-toggle="dropdown"
+                                        aria-label="Más opciones de la actividad">
                                         <i class="bi bi-three-dots-vertical"></i>
                                     </button>
                                 </div>
@@ -206,15 +206,15 @@
                                 <div class="input-group">
                                     <input type="text"
                                         class="form-control form-control-sm border-0 bg-light rounded-pill px-4"
-                                        placeholder="Escribe un comentario amable...">
-                                    <button class="btn btn-sm btn-link text-primary ms-1"><i
-                                            class="bi bi-cursor-fill"></i></button>
+                                        placeholder="Escribe un comentario amable..." aria-label="Comentario">
+                                    <button type="button" class="btn btn-sm btn-link text-primary ms-1"
+                                        aria-label="Enviar comentario"><i class="bi bi-cursor-fill"></i></button>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Sección de Herramientas de Búsqueda Ragnos -->
-                        <div class="mt-5 mb-4">
+                        <div class="search-tools mt-5 mb-4">
                             <div class="d-flex align-items-center mb-4">
                                 <div class="bg-primary bg-opacity-10 p-2 rounded-circle me-3">
                                     <i class="bi bi-search text-primary fs-5"></i>
@@ -224,10 +224,9 @@
 
                             <div class="row g-4">
                                 <div class="col-12">
-                                    <div
-                                        class="card border-0 bg-light bg-opacity-25 rounded-4 border-start border-4 border-primary">
+                                    <div class="search-feature rounded-4">
                                         <div class="card-body p-4">
-                                            <label
+                                            <label for="editusuario"
                                                 class="form-label small fw-bold text-primary text-uppercase tracking-widest mb-3">Autocompleta
                                                 Rápido</label>
                                             <div class="input-group shadow-sm rounded-pill bg-white">
@@ -236,8 +235,8 @@
                                                 </span>
                                                 <input type="text"
                                                     class="form-control border-0 py-3 ps-1 bg-transparent"
-                                                    id="editusuario"
-                                                    placeholder="Escribe el nombre del usuario para ver la magia...">
+                                                    id="editusuario" placeholder="Escribe el nombre del usuario..."
+                                                    aria-label="Autocompletar usuario">
                                             </div>
                                             <div class="d-flex align-items-center mt-3 text-muted smaller">
                                                 <i class="bi bi-info-circle me-2"></i>
@@ -249,8 +248,7 @@
                                 </div>
 
                                 <div class="col-md-6">
-                                    <div
-                                        class="card border-0 bg-white border border-light-subtle rounded-4 h-100 shadow-sm hover-shadow transition-all">
+                                    <div class="search-module h-100 hover-shadow transition-all">
                                         <div class="card-body p-4">
                                             <h6 class="fw-bold text-dark mb-3">Catálogo con Lógica de Negocio</h6>
                                             <div class="input-group shadow-sm rounded-3">
@@ -269,8 +267,7 @@
                                 </div>
 
                                 <div class="col-md-6">
-                                    <div
-                                        class="card border-0 bg-white border border-light-subtle rounded-4 h-100 shadow-sm hover-shadow transition-all">
+                                    <div class="search-module h-100 hover-shadow transition-all">
                                         <div class="card-body p-4">
                                             <h6 class="fw-bold text-dark mb-3">Búsqueda Nativa SQL</h6>
                                             <div class="input-group shadow-sm rounded-3">
@@ -303,11 +300,10 @@
                                 class="timeline-group border-start border-3 border-light ms-4 ps-4 mb-5 position-relative">
 
                                 <div class="timeline-entry mb-5 position-relative">
-                                    <div class="entry-icon position-absolute bg-primary text-white shadow"
-                                        style="left: -42px; top: 0; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 2;">
+                                    <div class="entry-icon position-absolute bg-primary text-white shadow">
                                         <i class="bi bi-envelope-check fs-6"></i>
                                     </div>
-                                    <div class="card border-0 shadow-sm rounded-4 animate__animated animate__fadeInUp">
+                                    <div class="timeline-card animate__animated animate__fadeInUp">
                                         <div class="card-body p-4">
                                             <div class="d-flex justify-content-between mb-2">
                                                 <h6 class="fw-bold text-dark mb-0">Soporte Técnico Especializado</h6>
@@ -327,11 +323,10 @@
                                 </div>
 
                                 <div class="timeline-entry mb-5 position-relative">
-                                    <div class="entry-icon position-absolute bg-info text-white shadow"
-                                        style="left: -42px; top: 0; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 2;">
+                                    <div class="entry-icon position-absolute bg-info text-white shadow">
                                         <i class="bi bi-person-check fs-6"></i>
                                     </div>
-                                    <div class="card border-0 shadow-sm rounded-4 animate__animated animate__fadeInUp"
+                                    <div class="timeline-card animate__animated animate__fadeInUp"
                                         style="animation-delay: 0.1s;">
                                         <div class="card-body p-3 ps-4">
                                             <div class="d-flex align-items-center">
@@ -349,11 +344,10 @@
                                 </div>
 
                                 <div class="timeline-entry mb-5 position-relative">
-                                    <div class="entry-icon position-absolute bg-warning text-white shadow"
-                                        style="left: -42px; top: 0; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 2;">
+                                    <div class="entry-icon position-absolute bg-warning text-white shadow">
                                         <i class="bi bi-chat-left-dots fs-6"></i>
                                     </div>
-                                    <div class="card border-0 shadow-sm rounded-4 animate__animated animate__fadeInUp"
+                                    <div class="timeline-card animate__animated animate__fadeInUp"
                                         style="animation-delay: 0.2s;">
                                         <div class="card-body p-4">
                                             <div class="d-flex justify-content-between mb-3">
@@ -383,11 +377,10 @@
                             <div
                                 class="timeline-group border-start border-3 border-light ms-4 ps-4 mb-5 position-relative">
                                 <div class="timeline-entry mb-2 position-relative">
-                                    <div class="entry-icon position-absolute bg-dark text-white shadow"
-                                        style="left: -42px; top: 0; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 2;">
+                                    <div class="entry-icon position-absolute bg-dark text-white shadow">
                                         <i class="bi bi-camera-fill fs-6"></i>
                                     </div>
-                                    <div class="card border-0 shadow-sm rounded-4 animate__animated animate__fadeInUp">
+                                    <div class="timeline-card animate__animated animate__fadeInUp">
                                         <div class="card-body p-4">
                                             <div class="d-flex justify-content-between mb-3">
                                                 <h6 class="fw-bold text-dark mb-0"><span class="text-dark">Karla
@@ -426,23 +419,21 @@
         </div>
 
         <!-- Sección de Tareas Estilo Dashboard -->
-        <div class="card border-0 shadow-lg rounded-4 overflow-hidden mt-4 animate__animated animate__fadeInUp"
+        <div class="card perfil-card task-center overflow-hidden mt-4 animate__animated animate__fadeInUp"
             style="animation-delay: 0.3s;">
-            <div
-                class="card-header bg-white py-4 px-4 border-bottom-0 d-flex align-items-center justify-content-between">
+            <div class="card-header task-header py-4 px-4 d-flex align-items-center justify-content-between">
                 <div>
                     <h5 class="fw-bold text-dark mb-1">Centro de Tareas y Pendientes</h5>
                     <p class="text-muted small mb-0">Gestión de flujo de trabajo en tiempo real</p>
                 </div>
-                <div
-                    class="badge bg-success bg-opacity-10 text-success rounded-pill px-4 py-2 border border-success border-opacity-10 fw-bold">
+                <div class="badge task-status rounded-pill px-4 py-2 fw-bold">
                     <i class="bi bi-check-circle-fill me-2"></i>Todo bajo control
                 </div>
             </div>
 
             <div class="card-body p-0 pb-3">
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0">
+                    <table class="table task-table table-hover align-middle mb-0">
                         <thead class="bg-light bg-opacity-50">
                             <tr class="text-muted small">
                                 <th class="ps-4 border-0 py-3" style="width: 50px;">REF</th>
@@ -573,7 +564,7 @@
                     </table>
                 </div>
             </div>
-            <div class="card-footer bg-white border-top py-3 d-flex justify-content-between align-items-center">
+            <div class="card-footer task-footer border-top py-3 d-flex justify-content-between align-items-center">
                 <small class="text-muted">Mostrando 4 tareas activas del ciclo actual</small>
                 <nav>
                     <ul class="pagination pagination-sm m-0 shadow-none border-0 gap-1">
@@ -595,87 +586,311 @@
 </div>
 
 <style>
-    /* Estilos Premium para esta Vista */
-    :root {
-        --bs-primary: #0d6efd;
-        --bs-primary-rgb: 13, 110, 253;
+    .perfil-view {
+        --perfil-ink: #1f2937;
+        --perfil-muted: #667085;
+        --perfil-line: #e4e9f0;
+        --perfil-soft: #f5f7fa;
+        --perfil-primary: #0d6efd;
+        --perfil-radius: 14px;
+        color: var(--perfil-ink);
     }
 
-    .hover-shadow {
-        transition: box-shadow 0.3s ease;
+    .perfil-view .perfil-card {
+        border: 1px solid var(--perfil-line);
+        border-radius: var(--perfil-radius);
+        background: #fff;
+        box-shadow: 0 8px 24px rgba(31, 41, 55, 0.06);
     }
 
-    .hover-shadow:hover {
-        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1) !important;
+    .perfil-view .profile-cover {
+        height: 112px;
+        background: linear-gradient(120deg, #0d6efd 0%, #0a58ca 58%, #0dcaf0 100%);
     }
 
-    .transition-all {
-        transition: all 0.3s ease;
-    }
-
-    .hover-grow:hover {
-        transform: scale(1.02);
-    }
-
-    .btn-hover-shine {
+    .perfil-view .profile-card-body {
         position: relative;
-        overflow: hidden;
+        margin-top: -50px;
     }
 
-    .btn-hover-shine::after {
-        content: '';
-        position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: linear-gradient(to bottom right,
-                rgba(255, 255, 255, 0) 0%,
-                rgba(255, 255, 255, 0.1) 100%);
-        transform: rotate(45deg);
-        transition: all 0.3s ease;
+    .perfil-view .profile-avatar-frame {
+        box-shadow: 0 8px 18px rgba(31, 41, 55, 0.14) !important;
     }
 
-    .btn-hover-shine:hover::after {
-        left: 50%;
-        top: 50%;
+    .perfil-view .profile-user-img {
+        display: block;
+        width: 110px;
+        height: 110px;
+        object-fit: cover;
+        cursor: pointer;
+        transition: transform 180ms ease;
     }
 
-    .nav-tabs .nav-link:hover {
-        color: var(--bs-primary) !important;
+    .perfil-view .profile-avatar-frame:hover .profile-user-img,
+    .perfil-view .modern-timeline img[src="./img/sample.webp"]:hover {
+        transform: scale(1.03);
     }
 
-    .nav-tabs .nav-link.active {
-        border-bottom-color: var(--bs-primary) !important;
-        color: var(--bs-primary) !important;
+    .perfil-view .profile-username {
+        color: var(--perfil-ink) !important;
+        letter-spacing: -0.02em;
     }
 
-    .timeline-icon {
-        transition: transform 0.3s ease;
+    .perfil-view .profile-role,
+    .perfil-view .task-status {
+        color: #0757c9;
+        background: #eaf2ff;
+        border: 1px solid #cfe0ff;
     }
 
-    .timeline-entry:hover .entry-icon {
-        transform: scale(1.2);
+    .perfil-view .profile-stats {
+        background: var(--perfil-soft);
+        border: 1px solid var(--perfil-line);
     }
 
-    .smaller {
-        font-size: 0.75rem;
+    .perfil-view .profile-stats small,
+    .perfil-view .text-muted {
+        color: var(--perfil-muted) !important;
     }
 
-    /* Mejora de la barra de búsqueda */
-    .search-box-premium input:focus {
+    .perfil-view .profile-actions .btn {
+        min-height: 42px;
+    }
+
+    .perfil-view .profile-section-header,
+    .perfil-view .profile-tabs-header,
+    .perfil-view .task-header,
+    .perfil-view .task-footer {
+        background: #fff;
+        border-color: var(--perfil-line) !important;
+    }
+
+    .perfil-view .profile-tabs {
+        gap: 0.35rem;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    .perfil-view .profile-tabs .nav-link {
+        color: var(--perfil-muted) !important;
+        border-bottom: 2px solid transparent !important;
+        transition: color 180ms ease, border-color 180ms ease;
+    }
+
+    .perfil-view .profile-tabs .nav-link:hover,
+    .perfil-view .profile-tabs .nav-link.active {
+        color: var(--perfil-primary) !important;
+        border-bottom-color: var(--perfil-primary) !important;
+    }
+
+    .perfil-view .post-item {
+        border-color: var(--perfil-line) !important;
+        border-radius: var(--perfil-radius) !important;
+    }
+
+    .perfil-view .search-feature,
+    .perfil-view .search-module {
+        border: 1px solid var(--perfil-line);
+        background: #fff;
+        box-shadow: 0 4px 14px rgba(31, 41, 55, 0.04);
+    }
+
+    .perfil-view .search-feature {
+        border-top: 3px solid var(--perfil-primary);
+    }
+
+    .perfil-view .search-feature .card-body,
+    .perfil-view .search-module .card-body {
+        padding: 1.25rem !important;
+    }
+
+    .perfil-view .search-feature .input-group,
+    .perfil-view .search-module .input-group {
+        border: 1px solid var(--perfil-line);
+        box-shadow: none !important;
+    }
+
+    .perfil-view .search-feature input:focus,
+    .perfil-view .search-module input:focus,
+    .perfil-view .post-item input:focus {
         box-shadow: none;
+    }
+
+    .perfil-view .profile-details-body .border-start {
+        border-left-width: 1px !important;
+        border-left-color: var(--perfil-line) !important;
+    }
+
+    .perfil-view .timeline-card .border-start {
+        border-left-width: 1px !important;
+        border-left-color: var(--perfil-line) !important;
+    }
+
+    .perfil-view .timeline-group {
+        border-left-width: 1px !important;
+        border-color: var(--perfil-line) !important;
+    }
+
+    .perfil-view .entry-icon {
+        left: -17px;
+        top: 0;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        transition: transform 180ms ease;
+    }
+
+    .perfil-view .timeline-entry:hover .entry-icon {
+        transform: scale(1.08);
+    }
+
+    .perfil-view .timeline-card {
+        border: 1px solid var(--perfil-line);
+        border-radius: var(--perfil-radius);
         background: #fff;
     }
 
-    /* Bordes de tablas redondeados */
-    .table-responsive {
-        border-radius: 0 0 1rem 1rem;
+    .perfil-view .modern-timeline img[src="./img/sample.webp"] {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        transition: transform 180ms ease;
     }
 
-    /* Animación para barras de progreso */
-    .progress-bar {
-        transition: width 1.5s cubic-bezier(0.1, 0.7, 1.0, 0.1);
+    .perfil-view .task-table {
+        min-width: 720px;
+    }
+
+    .perfil-view .task-table thead th {
+        color: var(--perfil-muted);
+        background: var(--perfil-soft);
+        font-size: 0.72rem;
+        letter-spacing: 0.06em;
+    }
+
+    .perfil-view .task-table tbody tr {
+        transition: background-color 180ms ease;
+    }
+
+    .perfil-view .task-table tbody tr:hover {
+        background: #f8fbff;
+    }
+
+    .perfil-view .task-table .progress {
+        min-width: 90px;
+        height: 6px !important;
+    }
+
+    .perfil-view .task-footer {
+        color: var(--perfil-muted);
+    }
+
+    .perfil-view .btn:focus-visible,
+    .perfil-view .nav-link:focus-visible,
+    .perfil-view input:focus-visible,
+    .perfil-view a:focus-visible {
+        outline: 3px solid rgba(13, 110, 253, 0.3);
+        outline-offset: 2px;
+        box-shadow: none;
+    }
+
+    .perfil-view .hover-shadow {
+        transition: box-shadow 180ms ease, border-color 180ms ease;
+    }
+
+    .perfil-view .hover-shadow:hover {
+        border-color: #bfd6fb !important;
+        box-shadow: 0 10px 22px rgba(31, 41, 55, 0.09) !important;
+    }
+
+    .perfil-view .hover-grow:hover {
+        transform: none;
+    }
+
+    .perfil-view .smaller {
+        font-size: 0.75rem;
+    }
+
+    @media (max-width: 991.98px) {
+        .perfil-view .perfil-sidebar {
+            margin-bottom: 1rem;
+        }
+
+        .perfil-view .profile-details {
+            margin-bottom: 1rem !important;
+        }
+    }
+
+    @media (max-width: 767.98px) {
+        .perfil-view .profile-workspace-body {
+            padding: 1rem !important;
+        }
+
+        .perfil-view .post-item {
+            padding: 1rem !important;
+        }
+
+        .perfil-view .task-header {
+            align-items: flex-start !important;
+            flex-direction: column;
+            gap: 0.85rem;
+        }
+
+        .perfil-view .task-status {
+            align-self: flex-start;
+        }
+    }
+
+    @media (max-width: 575.98px) {
+        .perfil-view .profile-card-body {
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+
+        .perfil-view .profile-tabs {
+            padding-left: 0.75rem !important;
+            padding-right: 0.75rem !important;
+        }
+
+        .perfil-view .profile-tabs .nav-link {
+            padding: 0.85rem 0.75rem !important;
+            font-size: 0.84rem;
+        }
+
+        .perfil-view .search-tools .row {
+            --bs-gutter-y: 1rem;
+        }
+
+        .perfil-view .timeline-group {
+            margin-left: 1rem !important;
+            padding-left: 1rem !important;
+        }
+
+        .perfil-view .entry-icon {
+            left: -17px;
+        }
+
+        .perfil-view .time-stamp span {
+            padding-left: 0.8rem !important;
+            padding-right: 0.8rem !important;
+            font-size: 0.78rem;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+
+        .perfil-view *,
+        .perfil-view *::before,
+        .perfil-view *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            scroll-behavior: auto !important;
+            transition-duration: 0.01ms !important;
+        }
     }
 </style>
 
