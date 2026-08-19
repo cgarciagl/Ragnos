@@ -250,31 +250,31 @@
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="x">        parent::__construct();</span>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="x">        // 1. Seguridad</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="x">        $this-&gt;checkUserInGroup(&#39;Administrador&#39;);</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="x">        $this-&gt;checkUserInGroup('Administrador');</span>
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="x">        // 2. Configuración Visual</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="x">        $this-&gt;setTitle(&#39;🔎 Usuarios&#39;);</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="x">        $this-&gt;setTitle('🔎 Usuarios');</span>
 <a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
 <a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="x">        // 3. La Fuente de Datos (SQL)</span>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="x">        $this-&gt;setQuery(&quot;SELECT usu_id, usu_nombre as &#39;Nombre&#39;, usu_login as &#39;Login&#39;, usu_activo as Activo, usu_grupo FROM gen_usuarios&quot;);</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="x">        $this-&gt;setQuery("SELECT usu_id, usu_nombre as 'Nombre', usu_login as 'Login', usu_activo as Activo, usu_grupo FROM gen_usuarios");</span>
 <a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
 <a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="x">        // 4. Clave Primaria (Virtual o Real)</span>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="x">        $this-&gt;setIdField(&#39;usu_id&#39;);</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="x">        $this-&gt;setIdField('usu_id');</span>
 <a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
 <a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="x">        // 5. Configuración de Campos (Filtros y Visualización)</span>
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="x">        $this-&gt;addField(&#39;Activo&#39;, [</span>
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="x">            &#39;label&#39;   =&gt; &#39;Activo&#39;,</span>
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="x">            &#39;type&#39;    =&gt; &#39;dropdown&#39;,</span>
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="x">            &#39;options&#39; =&gt; [&#39;S&#39; =&gt; &#39;SI&#39;, &#39;N&#39; =&gt; &#39;NO&#39;],</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="x">        $this-&gt;addField('Activo', [</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="x">            'label'   =&gt; 'Activo',</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="x">            'type'    =&gt; 'dropdown',</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="x">            'options' =&gt; ['S' =&gt; 'SI', 'N' =&gt; 'NO'],</span>
 <a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="x">        ]);</span>
 <a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="x">        $this-&gt;addField(&#39;usu_grupo&#39;, [&#39;label&#39; =&gt; &#39;Grupo&#39;]);</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="x">        $this-&gt;addField('usu_grupo', ['label' =&gt; 'Grupo']);</span>
 <a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>
 <a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a><span class="x">        // 6. Relaciones para Búsqueda</span>
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a><span class="x">        $this-&gt;addSearch(&#39;usu_grupo&#39;, &#39;Gruposdeusuarios&#39;);</span>
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a><span class="x">        $this-&gt;addSearch('usu_grupo', 'Gruposdeusuarios');</span>
 <a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>
 <a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a><span class="x">        // 7. Definición de la Grilla</span>
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a><span class="x">        $this-&gt;setTableFields([&#39;Nombre&#39;, &#39;Login&#39;, &#39;Activo&#39;, &#39;usu_grupo&#39;]);</span>
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a><span class="x">        $this-&gt;setTableFields(['Nombre', 'Login', 'Activo', 'usu_grupo']);</span>
 <a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a><span class="x">    }</span>
 <a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a><span class="x">}</span>
 </code></pre></div>
@@ -347,18 +347,18 @@
 <li>
 <p><strong>Campos Calculados:</strong>
     Puedes crear columnas "virtuales" en el SQL y usarlas en la grilla:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="x">$this-&gt;setQuery(&quot;SELECT id, precio * cantidad AS Total, ... FROM ventas&quot;);</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="x">$this-&gt;setTableFields([&#39;id&#39;, &#39;Total&#39;]);</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="x">$this-&gt;setQuery("SELECT id, precio * cantidad AS Total, ... FROM ventas");</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="x">$this-&gt;setTableFields(['id', 'Total']);</span>
 </code></pre></div>
 </li>
 <li>
 <p><strong>Uniones (JOINs):</strong>
     Ideal para mostrar nombres en lugar de IDs sin configurar <code>addSearch</code> visualmente:
-    <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="x">$this-&gt;setQuery(&quot;</span>
+    <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="x">$this-&gt;setQuery("</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="x">    SELECT p.nombre, c.categoria_nombre</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="x">    FROM productos p</span>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="x">    JOIN categorias c ON p.cat_id = c.id</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="x">&quot;);</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="x">");</span>
 </code></pre></div></p>
 </li>
 </ol></div>

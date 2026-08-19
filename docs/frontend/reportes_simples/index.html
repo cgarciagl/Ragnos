@@ -285,11 +285,11 @@
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>        <span class="nv">$model</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\App\Models\Dashboard</span><span class="p">();</span>
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>        <span class="nv">$datos</span> <span class="o">=</span> <span class="nv">$model</span><span class="o">-&gt;</span><span class="na">ventasultimos12meses</span><span class="p">();</span>
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>        <span class="c1">// Estructura esperada de $datos:</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>        <span class="c1">// [[&#39;Mes&#39; =&gt; &#39;Enero&#39;, &#39;Total&#39; =&gt; 1000], [&#39;Mes&#39; =&gt; &#39;Febrero&#39;, &#39;Total&#39; =&gt; 1500], ...]</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>        <span class="c1">// [['Mes' =&gt; 'Enero', 'Total' =&gt; 1000], ['Mes' =&gt; 'Febrero', 'Total' =&gt; 1500], ...]</span>
 <a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
 <a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>        <span class="c1">// 2. Formatear datos (opcional pero recomendado)</span>
 <a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>        <span class="k">foreach</span> <span class="p">(</span><span class="nv">$datos</span> <span class="k">as</span> <span class="nv">$key</span> <span class="o">=&gt;</span> <span class="nv">$value</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>            <span class="nv">$datos</span><span class="p">[</span><span class="nv">$key</span><span class="p">][</span><span class="s1">&#39;Total&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;$ &#39;</span> <span class="o">.</span> <span class="nb">number_format</span><span class="p">(</span><span class="nv">$value</span><span class="p">[</span><span class="s1">&#39;Total&#39;</span><span class="p">],</span> <span class="mi">2</span><span class="p">);</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>            <span class="nv">$datos</span><span class="p">[</span><span class="nv">$key</span><span class="p">][</span><span class="s1">'Total'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'$ '</span> <span class="o">.</span> <span class="nb">number_format</span><span class="p">(</span><span class="nv">$value</span><span class="p">[</span><span class="s1">'Total'</span><span class="p">],</span> <span class="mi">2</span><span class="p">);</span>
 <a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>        <span class="p">}</span>
 <a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
 <a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>        <span class="c1">// 3. Configurar Reporte</span>
@@ -297,11 +297,11 @@
 <a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>        <span class="nv">$reporte</span><span class="o">-&gt;</span><span class="na">setShowTotals</span><span class="p">(</span><span class="k">false</span><span class="p">);</span> <span class="c1">// Ocultar conteo de registros xq es irrelevante aquí</span>
 <a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>
 <a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>        <span class="c1">// quickSetup(Título, Datos, Columnas a mostrar)</span>
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>        <span class="nv">$reporte</span><span class="o">-&gt;</span><span class="na">quickSetup</span><span class="p">(</span><span class="s1">&#39;Ventas por Mes&#39;</span><span class="p">,</span> <span class="nv">$datos</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Mes&#39;</span><span class="p">,</span> <span class="s1">&#39;Total&#39;</span><span class="p">]);</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>        <span class="nv">$reporte</span><span class="o">-&gt;</span><span class="na">quickSetup</span><span class="p">(</span><span class="s1">'Ventas por Mes'</span><span class="p">,</span> <span class="nv">$datos</span><span class="p">,</span> <span class="p">[</span><span class="s1">'Mes'</span><span class="p">,</span> <span class="s1">'Total'</span><span class="p">]);</span>
 <a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>
 <a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>        <span class="c1">// 4. Renderizar</span>
 <a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>        <span class="nv">$contenido</span> <span class="o">=</span> <span class="nv">$reporte</span><span class="o">-&gt;</span><span class="na">render</span><span class="p">();</span>
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>        <span class="k">return</span> <span class="nx">view</span><span class="p">(</span><span class="s1">&#39;admin/reporte_view&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;contenido&#39;</span> <span class="o">=&gt;</span> <span class="nv">$contenido</span><span class="p">]);</span>
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>        <span class="k">return</span> <span class="nx">view</span><span class="p">(</span><span class="s1">'admin/reporte_view'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'contenido'</span> <span class="o">=&gt;</span> <span class="nv">$contenido</span><span class="p">]);</span>
 <a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>    <span class="p">}</span>
 <a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a><span class="p">}</span>
 </code></pre></div>
@@ -321,63 +321,63 @@
 <a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    <span class="p">{</span>
 <a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>        <span class="c1">// 1. Obtener datos (¡Ordenados por categoría!)</span>
 <a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>        <span class="nv">$data</span> <span class="o">=</span> <span class="p">[</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>            <span class="p">[</span><span class="s1">&#39;categoria&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Electrónica&#39;</span><span class="p">,</span> <span class="s1">&#39;producto&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Televisor&#39;</span><span class="p">,</span> <span class="s1">&#39;precio&#39;</span> <span class="o">=&gt;</span> <span class="mi">500</span><span class="p">],</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>            <span class="p">[</span><span class="s1">&#39;categoria&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Electrónica&#39;</span><span class="p">,</span> <span class="s1">&#39;producto&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Radio&#39;</span><span class="p">,</span> <span class="s1">&#39;precio&#39;</span> <span class="o">=&gt;</span> <span class="mi">50</span><span class="p">],</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>            <span class="p">[</span><span class="s1">&#39;categoria&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Hogar&#39;</span><span class="p">,</span> <span class="s1">&#39;producto&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Silla&#39;</span><span class="p">,</span> <span class="s1">&#39;precio&#39;</span> <span class="o">=&gt;</span> <span class="mi">25</span><span class="p">],</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>            <span class="p">[</span><span class="s1">&#39;categoria&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Hogar&#39;</span><span class="p">,</span> <span class="s1">&#39;producto&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Mesa&#39;</span><span class="p">,</span> <span class="s1">&#39;precio&#39;</span> <span class="o">=&gt;</span> <span class="mi">100</span><span class="p">],</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>            <span class="p">[</span><span class="s1">'categoria'</span> <span class="o">=&gt;</span> <span class="s1">'Electrónica'</span><span class="p">,</span> <span class="s1">'producto'</span> <span class="o">=&gt;</span> <span class="s1">'Televisor'</span><span class="p">,</span> <span class="s1">'precio'</span> <span class="o">=&gt;</span> <span class="mi">500</span><span class="p">],</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>            <span class="p">[</span><span class="s1">'categoria'</span> <span class="o">=&gt;</span> <span class="s1">'Electrónica'</span><span class="p">,</span> <span class="s1">'producto'</span> <span class="o">=&gt;</span> <span class="s1">'Radio'</span><span class="p">,</span> <span class="s1">'precio'</span> <span class="o">=&gt;</span> <span class="mi">50</span><span class="p">],</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>            <span class="p">[</span><span class="s1">'categoria'</span> <span class="o">=&gt;</span> <span class="s1">'Hogar'</span><span class="p">,</span> <span class="s1">'producto'</span> <span class="o">=&gt;</span> <span class="s1">'Silla'</span><span class="p">,</span> <span class="s1">'precio'</span> <span class="o">=&gt;</span> <span class="mi">25</span><span class="p">],</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>            <span class="p">[</span><span class="s1">'categoria'</span> <span class="o">=&gt;</span> <span class="s1">'Hogar'</span><span class="p">,</span> <span class="s1">'producto'</span> <span class="o">=&gt;</span> <span class="s1">'Mesa'</span><span class="p">,</span> <span class="s1">'precio'</span> <span class="o">=&gt;</span> <span class="mi">100</span><span class="p">],</span>
 <a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>        <span class="p">];</span>
 <a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
 <a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>        <span class="nv">$reporte</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">RSimpleLevelReport</span><span class="p">();</span>
 <a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
 <a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>        <span class="c1">// 2. Definir Agrupación</span>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>        <span class="c1">// La clave &#39;categoria&#39; debe existir en $data.</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>        <span class="c1">// La clave 'categoria' debe existir en $data.</span>
 <a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>        <span class="nv">$grupos</span> <span class="o">=</span> <span class="p">[</span>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>            <span class="s1">&#39;categoria&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="s1">&#39;label&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Categoría de Producto&#39;</span><span class="p">]</span>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>            <span class="s1">'categoria'</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="s1">'label'</span> <span class="o">=&gt;</span> <span class="s1">'Categoría de Producto'</span><span class="p">]</span>
 <a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>        <span class="p">];</span>
 <a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
 <a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>        <span class="c1">// 3. Configurar</span>
 <a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>        <span class="nv">$reporte</span><span class="o">-&gt;</span><span class="na">quickSetup</span><span class="p">(</span>
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>            <span class="s1">&#39;Listado de Productos&#39;</span><span class="p">,</span>
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>            <span class="s1">'Listado de Productos'</span><span class="p">,</span>
 <a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>            <span class="nv">$data</span><span class="p">,</span>
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>            <span class="p">[</span><span class="s1">&#39;producto&#39;</span><span class="p">,</span> <span class="s1">&#39;precio&#39;</span><span class="p">],</span> <span class="c1">// Campos a mostrar en las columnas</span>
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>            <span class="p">[</span><span class="s1">'producto'</span><span class="p">,</span> <span class="s1">'precio'</span><span class="p">],</span> <span class="c1">// Campos a mostrar en las columnas</span>
 <a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>            <span class="nv">$grupos</span><span class="p">,</span>                <span class="c1">// Configuración de grupos</span>
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>            <span class="s1">&#39;Filtro: Todos los productos activos&#39;</span> <span class="c1">// Subtítulo opcional</span>
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>            <span class="s1">'Filtro: Todos los productos activos'</span> <span class="c1">// Subtítulo opcional</span>
 <a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>        <span class="p">);</span>
 <a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>        <span class="k">return</span> <span class="nx">view</span><span class="p">(</span><span class="s1">&#39;admin/reporte_view&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;contenido&#39;</span> <span class="o">=&gt;</span> <span class="nv">$reporte</span><span class="o">-&gt;</span><span class="na">render</span><span class="p">()]);</span>
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>        <span class="k">return</span> <span class="nx">view</span><span class="p">(</span><span class="s1">'admin/reporte_view'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'contenido'</span> <span class="o">=&gt;</span> <span class="nv">$reporte</span><span class="o">-&gt;</span><span class="na">render</span><span class="p">()]);</span>
 <a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>    <span class="p">}</span>
 <a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a><span class="p">}</span>
 </code></pre></div>
 <h3 id="3-reporte-multi-nivel">3. Reporte Multi-Nivel</h3>
 <p>Es posible agrupar por múltiples niveles (ej: País -&gt; Estado -&gt; Ciudad).</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="x">$grupos = [</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="x">    &#39;pais&#39;   =&gt; [&#39;label&#39; =&gt; &#39;País&#39;],</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="x">    &#39;estado&#39; =&gt; [&#39;label&#39; =&gt; &#39;Estado/Provincia&#39;]</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="x">    'pais'   =&gt; ['label' =&gt; 'País'],</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="x">    'estado' =&gt; ['label' =&gt; 'Estado/Provincia']</span>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="x">];</span>
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="x">// Los datos deben venir ordenados por pais y luego por estado</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="x">$reporte-&gt;quickSetup(&#39;Reporte Geográfico&#39;, $data, [&#39;ciudad&#39;, &#39;poblacion&#39;], $grupos);</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="x">$reporte-&gt;quickSetup('Reporte Geográfico', $data, ['ciudad', 'poblacion'], $grupos);</span>
 </code></pre></div>
 <h3 id="4-reporte-financiero-con-totales">4. Reporte Financiero con Totales</h3>
 <p>Este ejemplo muestra cómo la clase maneja automáticamente las sumas y totales generales.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="x">// Datos de ventas</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="x">$data = [</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="x">    [&#39;vendedor&#39; =&gt; &#39;Juan&#39;,  &#39;venta&#39; =&gt; 100.50, &#39;comision&#39; =&gt; 10],</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="x">    [&#39;vendedor&#39; =&gt; &#39;Maria&#39;, &#39;venta&#39; =&gt; 200.00, &#39;comision&#39; =&gt; 20],</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="x">    [&#39;vendedor&#39; =&gt; &#39;Pedro&#39;, &#39;venta&#39; =&gt; 150.00, &#39;comision&#39; =&gt; 15],</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="x">    ['vendedor' =&gt; 'Juan',  'venta' =&gt; 100.50, 'comision' =&gt; 10],</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="x">    ['vendedor' =&gt; 'Maria', 'venta' =&gt; 200.00, 'comision' =&gt; 20],</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="x">    ['vendedor' =&gt; 'Pedro', 'venta' =&gt; 150.00, 'comision' =&gt; 15],</span>
 <a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="x">];</span>
 <a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
 <a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="x">$reporte = new RSimpleLevelReport();</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="x">$reporte-&gt;quickSetup(&#39;Reporte de Comisiones&#39;, $data, [&#39;vendedor&#39;, &#39;venta&#39;, &#39;comision&#39;]);</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="x">$reporte-&gt;quickSetup('Reporte de Comisiones', $data, ['vendedor', 'venta', 'comision']);</span>
 <a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
 <a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="x">// Opcional: Forzar qué campos sumar (si no se detectan automáticamente)</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="x">// $reporte-&gt;setSummableFields([&#39;venta&#39;, &#39;comision&#39;]);</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="x">// $reporte-&gt;setSummableFields(['venta', 'comision']);</span>
 <a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
 <a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="x">// Al renderizar, se generará:</span>
 <a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="x">// - Una tabla con los datos.</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="x">// - Un pie de tabla &quot;TOTAL GENERAL&quot; alineado.</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="x">// - La columna &#39;venta&#39; sumará 450.50</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="x">// - La columna &#39;comision&#39; sumará 45</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="x">// - Un pie de tabla "TOTAL GENERAL" alineado.</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="x">// - La columna 'venta' sumará 450.50</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="x">// - La columna 'comision' sumará 45</span>
 <a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="x">return $reporte-&gt;render();</span>
 </code></pre></div>
 <h2 id="aplicaciones-comunes">Aplicaciones Comunes</h2>

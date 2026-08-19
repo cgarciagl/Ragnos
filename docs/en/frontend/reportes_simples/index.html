@@ -285,11 +285,11 @@
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>        <span class="nv">$model</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\App\Models\Dashboard</span><span class="p">();</span>
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>        <span class="nv">$data</span> <span class="o">=</span> <span class="nv">$model</span><span class="o">-&gt;</span><span class="na">last12monthssales</span><span class="p">();</span>
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>        <span class="c1">// Expected structure of $data:</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>        <span class="c1">// [[&#39;Month&#39; =&gt; &#39;January&#39;, &#39;Total&#39; =&gt; 1000], [&#39;Month&#39; =&gt; &#39;February&#39;, &#39;Total&#39; =&gt; 1500], ...]</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>        <span class="c1">// [['Month' =&gt; 'January', 'Total' =&gt; 1000], ['Month' =&gt; 'February', 'Total' =&gt; 1500], ...]</span>
 <a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
 <a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>        <span class="c1">// 2. Format data (optional but recommended)</span>
 <a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>        <span class="k">foreach</span> <span class="p">(</span><span class="nv">$data</span> <span class="k">as</span> <span class="nv">$key</span> <span class="o">=&gt;</span> <span class="nv">$value</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>            <span class="nv">$data</span><span class="p">[</span><span class="nv">$key</span><span class="p">][</span><span class="s1">&#39;Total&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;$ &#39;</span> <span class="o">.</span> <span class="nb">number_format</span><span class="p">(</span><span class="nv">$value</span><span class="p">[</span><span class="s1">&#39;Total&#39;</span><span class="p">],</span> <span class="mi">2</span><span class="p">);</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>            <span class="nv">$data</span><span class="p">[</span><span class="nv">$key</span><span class="p">][</span><span class="s1">'Total'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'$ '</span> <span class="o">.</span> <span class="nb">number_format</span><span class="p">(</span><span class="nv">$value</span><span class="p">[</span><span class="s1">'Total'</span><span class="p">],</span> <span class="mi">2</span><span class="p">);</span>
 <a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>        <span class="p">}</span>
 <a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
 <a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>        <span class="c1">// 3. Configure Report</span>
@@ -297,11 +297,11 @@
 <a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>        <span class="nv">$report</span><span class="o">-&gt;</span><span class="na">setShowTotals</span><span class="p">(</span><span class="k">false</span><span class="p">);</span> <span class="c1">// Hide record count as irrelevant here</span>
 <a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>
 <a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>        <span class="c1">// quickSetup(Title, Data, Columns to show)</span>
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>        <span class="nv">$report</span><span class="o">-&gt;</span><span class="na">quickSetup</span><span class="p">(</span><span class="s1">&#39;Sales by Month&#39;</span><span class="p">,</span> <span class="nv">$data</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Month&#39;</span><span class="p">,</span> <span class="s1">&#39;Total&#39;</span><span class="p">]);</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>        <span class="nv">$report</span><span class="o">-&gt;</span><span class="na">quickSetup</span><span class="p">(</span><span class="s1">'Sales by Month'</span><span class="p">,</span> <span class="nv">$data</span><span class="p">,</span> <span class="p">[</span><span class="s1">'Month'</span><span class="p">,</span> <span class="s1">'Total'</span><span class="p">]);</span>
 <a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>
 <a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>        <span class="c1">// 4. Render</span>
 <a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>        <span class="nv">$content</span> <span class="o">=</span> <span class="nv">$report</span><span class="o">-&gt;</span><span class="na">render</span><span class="p">();</span>
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>        <span class="k">return</span> <span class="nx">view</span><span class="p">(</span><span class="s1">&#39;admin/report_view&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;content&#39;</span> <span class="o">=&gt;</span> <span class="nv">$content</span><span class="p">]);</span>
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>        <span class="k">return</span> <span class="nx">view</span><span class="p">(</span><span class="s1">'admin/report_view'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'content'</span> <span class="o">=&gt;</span> <span class="nv">$content</span><span class="p">]);</span>
 <a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>    <span class="p">}</span>
 <a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a><span class="p">}</span>
 </code></pre></div>
@@ -321,63 +321,63 @@
 <a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    <span class="p">{</span>
 <a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>        <span class="c1">// 1. Get data (Sorted by category!)</span>
 <a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>        <span class="nv">$data</span> <span class="o">=</span> <span class="p">[</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>            <span class="p">[</span><span class="s1">&#39;category&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Electronics&#39;</span><span class="p">,</span> <span class="s1">&#39;product&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;TV&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span> <span class="o">=&gt;</span> <span class="mi">500</span><span class="p">],</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>            <span class="p">[</span><span class="s1">&#39;category&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Electronics&#39;</span><span class="p">,</span> <span class="s1">&#39;product&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Radio&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span> <span class="o">=&gt;</span> <span class="mi">50</span><span class="p">],</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>            <span class="p">[</span><span class="s1">&#39;category&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Home&#39;</span><span class="p">,</span> <span class="s1">&#39;product&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Chair&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span> <span class="o">=&gt;</span> <span class="mi">25</span><span class="p">],</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>            <span class="p">[</span><span class="s1">&#39;category&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Home&#39;</span><span class="p">,</span> <span class="s1">&#39;product&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Table&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span> <span class="o">=&gt;</span> <span class="mi">100</span><span class="p">],</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>            <span class="p">[</span><span class="s1">'category'</span> <span class="o">=&gt;</span> <span class="s1">'Electronics'</span><span class="p">,</span> <span class="s1">'product'</span> <span class="o">=&gt;</span> <span class="s1">'TV'</span><span class="p">,</span> <span class="s1">'price'</span> <span class="o">=&gt;</span> <span class="mi">500</span><span class="p">],</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>            <span class="p">[</span><span class="s1">'category'</span> <span class="o">=&gt;</span> <span class="s1">'Electronics'</span><span class="p">,</span> <span class="s1">'product'</span> <span class="o">=&gt;</span> <span class="s1">'Radio'</span><span class="p">,</span> <span class="s1">'price'</span> <span class="o">=&gt;</span> <span class="mi">50</span><span class="p">],</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>            <span class="p">[</span><span class="s1">'category'</span> <span class="o">=&gt;</span> <span class="s1">'Home'</span><span class="p">,</span> <span class="s1">'product'</span> <span class="o">=&gt;</span> <span class="s1">'Chair'</span><span class="p">,</span> <span class="s1">'price'</span> <span class="o">=&gt;</span> <span class="mi">25</span><span class="p">],</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>            <span class="p">[</span><span class="s1">'category'</span> <span class="o">=&gt;</span> <span class="s1">'Home'</span><span class="p">,</span> <span class="s1">'product'</span> <span class="o">=&gt;</span> <span class="s1">'Table'</span><span class="p">,</span> <span class="s1">'price'</span> <span class="o">=&gt;</span> <span class="mi">100</span><span class="p">],</span>
 <a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>        <span class="p">];</span>
 <a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
 <a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>        <span class="nv">$report</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">RSimpleLevelReport</span><span class="p">();</span>
 <a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
 <a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>        <span class="c1">// 2. Define Grouping</span>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>        <span class="c1">// Key &#39;category&#39; must exist in $data.</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>        <span class="c1">// Key 'category' must exist in $data.</span>
 <a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>        <span class="nv">$groups</span> <span class="o">=</span> <span class="p">[</span>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>            <span class="s1">&#39;category&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="s1">&#39;label&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Product Category&#39;</span><span class="p">]</span>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>            <span class="s1">'category'</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="s1">'label'</span> <span class="o">=&gt;</span> <span class="s1">'Product Category'</span><span class="p">]</span>
 <a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>        <span class="p">];</span>
 <a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
 <a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>        <span class="c1">// 3. Configure</span>
 <a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>        <span class="nv">$report</span><span class="o">-&gt;</span><span class="na">quickSetup</span><span class="p">(</span>
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>            <span class="s1">&#39;Product List&#39;</span><span class="p">,</span>
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>            <span class="s1">'Product List'</span><span class="p">,</span>
 <a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>            <span class="nv">$data</span><span class="p">,</span>
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>            <span class="p">[</span><span class="s1">&#39;product&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">],</span> <span class="c1">// Fields to show in columns</span>
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>            <span class="p">[</span><span class="s1">'product'</span><span class="p">,</span> <span class="s1">'price'</span><span class="p">],</span> <span class="c1">// Fields to show in columns</span>
 <a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>            <span class="nv">$groups</span><span class="p">,</span>              <span class="c1">// Groups config</span>
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>            <span class="s1">&#39;Filter: All active products&#39;</span> <span class="c1">// Optional subtitle</span>
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>            <span class="s1">'Filter: All active products'</span> <span class="c1">// Optional subtitle</span>
 <a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>        <span class="p">);</span>
 <a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>        <span class="k">return</span> <span class="nx">view</span><span class="p">(</span><span class="s1">&#39;admin/report_view&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;content&#39;</span> <span class="o">=&gt;</span> <span class="nv">$report</span><span class="o">-&gt;</span><span class="na">render</span><span class="p">()]);</span>
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>        <span class="k">return</span> <span class="nx">view</span><span class="p">(</span><span class="s1">'admin/report_view'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'content'</span> <span class="o">=&gt;</span> <span class="nv">$report</span><span class="o">-&gt;</span><span class="na">render</span><span class="p">()]);</span>
 <a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>    <span class="p">}</span>
 <a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a><span class="p">}</span>
 </code></pre></div>
 <h3 id="3-multi-level-report">3. Multi-Level Report</h3>
 <p>Possible to group by multiple levels (e.g. Country -&gt; State -&gt; City).</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="x">$groups = [</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="x">    &#39;country&#39; =&gt; [&#39;label&#39; =&gt; &#39;Country&#39;],</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="x">    &#39;state&#39;   =&gt; [&#39;label&#39; =&gt; &#39;State/Province&#39;]</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="x">    'country' =&gt; ['label' =&gt; 'Country'],</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="x">    'state'   =&gt; ['label' =&gt; 'State/Province']</span>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="x">];</span>
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="x">// Data must come sorted by country then state</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="x">$report-&gt;quickSetup(&#39;Geographic Report&#39;, $data, [&#39;city&#39;, &#39;population&#39;], $groups);</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="x">$report-&gt;quickSetup('Geographic Report', $data, ['city', 'population'], $groups);</span>
 </code></pre></div>
 <h3 id="4-financial-report-with-totals">4. Financial Report with Totals</h3>
 <p>This example shows how the class automatically handles sums and grand totals.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="x">// Sales data</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="x">$data = [</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="x">    [&#39;salesperson&#39; =&gt; &#39;John&#39;, &#39;sale&#39; =&gt; 100.50, &#39;commission&#39; =&gt; 10],</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="x">    [&#39;salesperson&#39; =&gt; &#39;Mary&#39;, &#39;sale&#39; =&gt; 200.00, &#39;commission&#39; =&gt; 20],</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="x">    [&#39;salesperson&#39; =&gt; &#39;Pete&#39;, &#39;sale&#39; =&gt; 150.00, &#39;commission&#39; =&gt; 15],</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="x">    ['salesperson' =&gt; 'John', 'sale' =&gt; 100.50, 'commission' =&gt; 10],</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="x">    ['salesperson' =&gt; 'Mary', 'sale' =&gt; 200.00, 'commission' =&gt; 20],</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="x">    ['salesperson' =&gt; 'Pete', 'sale' =&gt; 150.00, 'commission' =&gt; 15],</span>
 <a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="x">];</span>
 <a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
 <a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="x">$report = new RSimpleLevelReport();</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="x">$report-&gt;quickSetup(&#39;Commission Report&#39;, $data, [&#39;salesperson&#39;, &#39;sale&#39;, &#39;commission&#39;]);</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="x">$report-&gt;quickSetup('Commission Report', $data, ['salesperson', 'sale', 'commission']);</span>
 <a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
 <a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="x">// Optional: Force which fields to sum (if not automatically detected)</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="x">// $report-&gt;setSummableFields([&#39;sale&#39;, &#39;commission&#39;]);</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="x">// $report-&gt;setSummableFields(['sale', 'commission']);</span>
 <a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
 <a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="x">// Rendering will generate:</span>
 <a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="x">// - A table with the data.</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="x">// - A &quot;GRAND TOTAL&quot; footer aligned correctly.</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="x">// - The &#39;sale&#39; column will sum to 450.50</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="x">// - The &#39;commission&#39; column will sum to 45</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="x">// - A "GRAND TOTAL" footer aligned correctly.</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="x">// - The 'sale' column will sum to 450.50</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="x">// - The 'commission' column will sum to 45</span>
 <a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="x">return $report-&gt;render();</span>
 </code></pre></div>
 <h2 id="common-applications">Common Applications</h2>

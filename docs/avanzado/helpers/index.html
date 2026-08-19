@@ -262,15 +262,15 @@
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="x">public function obtenerMetricas()</span>
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="x">{</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="x">    $sql = &quot;SELECT</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="x">    $sql = "SELECT</span>
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="x">                p.productLine,</span>
 <a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="x">                SUM(od.quantityOrdered * od.priceEach) as Total</span>
 <a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="x">            FROM products p</span>
 <a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="x">            JOIN orderdetails od ON p.productCode = od.productCode</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="x">            GROUP BY p.productLine&quot;;</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="x">            GROUP BY p.productLine";</span>
 <a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
 <a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="x">    // Cachear el resultado por 1 hora (3600 segundos) con una clave específica</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="x">    return getCachedData($sql, [], &#39;metricas_dashboard&#39;, 3600);</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="x">    return getCachedData($sql, [], 'metricas_dashboard', 3600);</span>
 <a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="x">}</span>
 </code></pre></div>
 <h4 id="advertencias-y-consideraciones">⚠️ Advertencias y Consideraciones</h4>
@@ -285,20 +285,20 @@
 </code></pre></div>
 <h4 id="ejemplo">Ejemplo</h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="x">// Obtener lista de categorías para un Dropdown</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="x">$sql = &quot;SELECT id, nombre FROM categorias ORDER BY nombre ASC&quot;;</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="x">$opciones = queryToAssocArray($sql, &#39;id&#39;, &#39;nombre&#39;);</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="x">$sql = "SELECT id, nombre FROM categorias ORDER BY nombre ASC";</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="x">$opciones = queryToAssocArray($sql, 'id', 'nombre');</span>
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="x">// Resultado: [1 =&gt; &#39;Electrónica&#39;, 2 =&gt; &#39;Hogar&#39;, ...]</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="x">// Resultado: [1 =&gt; 'Electrónica', 2 =&gt; 'Hogar', ...]</span>
 </code></pre></div>
 <hr />
 <h2 id="depuracion-y-diagnostico">Depuración y Diagnóstico</h2>
 <h3 id="dbgconsola"><code>dbgConsola()</code></h3>
 <p>Envía datos de PHP directamente a la consola del navegador del desarrollador. Utiliza <code>console.log</code> vía inyección de script. <strong>Solo funciona en entorno de desarrollo (<code>development</code>).</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="x">function dbgConsola($data, string $label = &#39;dbgConsola&#39;)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="x">function dbgConsola($data, string $label = 'dbgConsola')</span>
 </code></pre></div>
 <h4 id="ejemplo_1">Ejemplo</h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="x">$usuarios = $model-&gt;findAll();</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="x">dbgConsola($usuarios, &#39;Lista de Usuarios&#39;);</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="x">dbgConsola($usuarios, 'Lista de Usuarios');</span>
 <a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="x">// Verifica la consola de Chrome/Firefox (F12)</span>
 </code></pre></div>
 <h3 id="dbgdie"><code>dbgDie()</code></h3>
@@ -312,7 +312,7 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="x">function currency(float|int $number, bool $includeSymbol = true): string</span>
 </code></pre></div>
 <h4 id="ejemplo_2">Ejemplo</h4>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="x">echo currency(1500.50); // Muestra &quot;$1,500.50&quot; (dependiendo de config)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="x">echo currency(1500.50); // Muestra "$1,500.50" (dependiendo de config)</span>
 </code></pre></div>
 <h3 id="returnasjson"><code>returnAsJSON()</code></h3>
 <p>Estandariza las respuestas JSON de tu API o controladores AJAX. Maneja automáticamente los encabezados HTTP y la codificación UTF-8.</p>
@@ -320,7 +320,7 @@
 </code></pre></div>
 <h4 id="ejemplo_3">Ejemplo</h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="x">if (!$usuario) {</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="x">    returnAsJSON([&#39;error&#39; =&gt; &#39;Usuario no encontrado&#39;], 404);</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="x">    returnAsJSON(['error' =&gt; 'Usuario no encontrado'], 404);</span>
 <a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="x">}</span>
 <a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="x">returnAsJSON($usuario);</span>
 </code></pre></div></div>

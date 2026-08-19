@@ -309,13 +309,13 @@
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="p">{</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="c1">// Definir si el proceso necesita de una confirmación previa (Opcional)</span>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="k">public</span> <span class="nv">$requireConfirmation</span> <span class="o">=</span> <span class="k">true</span><span class="p">;</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="k">public</span> <span class="nv">$confirmationMessage</span> <span class="o">=</span> <span class="s1">&#39;¿Estás completamente seguro de iniciar el recálculo de precios? Esta acción no se puede deshacer.&#39;</span><span class="p">;</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="k">public</span> <span class="nv">$confirmationMessage</span> <span class="o">=</span> <span class="s1">'¿Estás completamente seguro de iniciar el recálculo de precios? Esta acción no se puede deshacer.'</span><span class="p">;</span>
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="c1">// Método principal que ejecuta la lógica</span>
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="k">public</span> <span class="k">function</span> <span class="nf">start</span><span class="p">()</span>
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="p">{</span>
 <a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>        <span class="c1">// 1. Iniciar el proceso</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>        <span class="nx">processStart</span><span class="p">(</span><span class="s1">&#39;Recalculando precios del catálogo&#39;</span><span class="p">);</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>        <span class="nx">processStart</span><span class="p">(</span><span class="s1">'Recalculando precios del catálogo'</span><span class="p">);</span>
 <a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
 <a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>        <span class="nv">$totalProductos</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
 <a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
@@ -327,13 +327,13 @@
 <a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>            <span class="nx">setProgressOf</span><span class="p">(</span><span class="nv">$i</span><span class="p">,</span> <span class="nv">$totalProductos</span><span class="p">);</span>
 <a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>
 <a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>            <span class="c1">// 3. Actualizar texto informativo</span>
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>            <span class="nx">setProgressText</span><span class="p">(</span><span class="s2">&quot;Actualizando producto ID: #</span><span class="si">{</span><span class="nv">$i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">);</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>            <span class="nx">setProgressText</span><span class="p">(</span><span class="s2">"Actualizando producto ID: #</span><span class="si">{</span><span class="nv">$i</span><span class="si">}</span><span class="s2">"</span><span class="p">);</span>
 <a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>        <span class="p">}</span>
 <a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>
 <a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>        <span class="c1">// 4. Finalizar</span>
 <a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>        <span class="nx">endProcess</span><span class="p">([</span>
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>            <span class="s1">&#39;mensaje&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Se han actualizado los precios correctamente&#39;</span><span class="p">,</span>
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>            <span class="s1">&#39;total&#39;</span>   <span class="o">=&gt;</span> <span class="nv">$totalProductos</span>
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>            <span class="s1">'mensaje'</span> <span class="o">=&gt;</span> <span class="s1">'Se han actualizado los precios correctamente'</span><span class="p">,</span>
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>            <span class="s1">'total'</span>   <span class="o">=&gt;</span> <span class="nv">$totalProductos</span>
 <a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>        <span class="p">]);</span>
 <a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>    <span class="p">}</span>
 <a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a><span class="p">}</span>
@@ -350,7 +350,7 @@
 <a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="p">{</span>
 <a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    <span class="k">public</span> <span class="k">function</span> <span class="nf">start</span><span class="p">()</span>
 <a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    <span class="p">{</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>        <span class="nx">processStart</span><span class="p">(</span><span class="s1">&#39;Importando Base de Datos de Usuarios&#39;</span><span class="p">);</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>        <span class="nx">processStart</span><span class="p">(</span><span class="s1">'Importando Base de Datos de Usuarios'</span><span class="p">);</span>
 <a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
 <a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>        <span class="c1">// Simular obtención de datos (ej. leer un CSV)</span>
 <a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>        <span class="nv">$usuarios</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">obtenerDatosSimulados</span><span class="p">(</span><span class="mi">500</span><span class="p">);</span>
@@ -364,10 +364,10 @@
 <a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>            <span class="c1">// Lógica de negocio simulada</span>
 <a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">guardarUsuario</span><span class="p">(</span><span class="nv">$usuario</span><span class="p">))</span> <span class="p">{</span>
 <a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>                <span class="nv">$importados</span><span class="o">++</span><span class="p">;</span>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>                <span class="nx">setProgressText</span><span class="p">(</span><span class="s2">&quot;Usuario </span><span class="si">{</span><span class="nv">$usuario</span><span class="p">[</span><span class="s1">&#39;nombre&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> importado.&quot;</span><span class="p">);</span>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>                <span class="nx">setProgressText</span><span class="p">(</span><span class="s2">"Usuario </span><span class="si">{</span><span class="nv">$usuario</span><span class="p">[</span><span class="s1">'nombre'</span><span class="p">]</span><span class="si">}</span><span class="s2"> importado."</span><span class="p">);</span>
 <a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
 <a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>                <span class="nv">$errores</span><span class="o">++</span><span class="p">;</span>
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>                <span class="nx">setProgressText</span><span class="p">(</span><span class="s2">&quot;Error importando </span><span class="si">{</span><span class="nv">$usuario</span><span class="p">[</span><span class="s1">&#39;nombre&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">);</span>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>                <span class="nx">setProgressText</span><span class="p">(</span><span class="s2">"Error importando </span><span class="si">{</span><span class="nv">$usuario</span><span class="p">[</span><span class="s1">'nombre'</span><span class="p">]</span><span class="si">}</span><span class="s2">."</span><span class="p">);</span>
 <a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>            <span class="p">}</span>
 <a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>
 <a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>            <span class="c1">// Actualizar barra de progreso cada 5 registros para no saturar la red</span>
@@ -381,11 +381,11 @@
 <a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>        <span class="p">}</span>
 <a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>
 <a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>        <span class="nx">endProcess</span><span class="p">([</span>
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>            <span class="s1">&#39;resultado&#39;</span> <span class="o">=&gt;</span> <span class="s2">&quot;Importación finalizada. Éxito: </span><span class="si">{</span><span class="nv">$importados</span><span class="si">}</span><span class="s2">, Errores: </span><span class="si">{</span><span class="nv">$errores</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>            <span class="s1">'resultado'</span> <span class="o">=&gt;</span> <span class="s2">"Importación finalizada. Éxito: </span><span class="si">{</span><span class="nv">$importados</span><span class="si">}</span><span class="s2">, Errores: </span><span class="si">{</span><span class="nv">$errores</span><span class="si">}</span><span class="s2">"</span>
 <a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>        <span class="p">]);</span>
 <a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>    <span class="p">}</span>
 <a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>
-<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>    <span class="k">private</span> <span class="k">function</span> <span class="nf">obtenerDatosSimulados</span><span class="p">(</span><span class="nv">$qty</span><span class="p">)</span> <span class="p">{</span> <span class="cm">/* ... */</span> <span class="k">return</span> <span class="nb">array_fill</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nv">$qty</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;nombre&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;User&#39;</span><span class="p">]);</span> <span class="p">}</span>
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>    <span class="k">private</span> <span class="k">function</span> <span class="nf">obtenerDatosSimulados</span><span class="p">(</span><span class="nv">$qty</span><span class="p">)</span> <span class="p">{</span> <span class="cm">/* ... */</span> <span class="k">return</span> <span class="nb">array_fill</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nv">$qty</span><span class="p">,</span> <span class="p">[</span><span class="s1">'nombre'</span> <span class="o">=&gt;</span> <span class="s1">'User'</span><span class="p">]);</span> <span class="p">}</span>
 <a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>    <span class="k">private</span> <span class="k">function</span> <span class="nf">guardarUsuario</span><span class="p">(</span><span class="nv">$user</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nb">rand</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
 <a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a><span class="p">}</span>
 </code></pre></div>
@@ -400,13 +400,13 @@
 <a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="p">{</span>
 <a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    <span class="k">public</span> <span class="k">function</span> <span class="nf">start</span><span class="p">()</span>
 <a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    <span class="p">{</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>        <span class="nx">processStart</span><span class="p">(</span><span class="s1">&#39;Generando Backup del Sistema&#39;</span><span class="p">);</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>        <span class="nx">processStart</span><span class="p">(</span><span class="s1">'Generando Backup del Sistema'</span><span class="p">);</span>
 <a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
 <a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>        <span class="nv">$steps</span> <span class="o">=</span> <span class="p">[</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>            <span class="s1">&#39;Comprimiendo imágenes...&#39;</span><span class="p">,</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>            <span class="s1">&#39;Exportando base de datos...&#39;</span><span class="p">,</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>            <span class="s1">&#39;Generando archivos de log...&#39;</span><span class="p">,</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>            <span class="s1">&#39;Empaquetando ZIP final...&#39;</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>            <span class="s1">'Comprimiendo imágenes...'</span><span class="p">,</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>            <span class="s1">'Exportando base de datos...'</span><span class="p">,</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>            <span class="s1">'Generando archivos de log...'</span><span class="p">,</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>            <span class="s1">'Empaquetando ZIP final...'</span>
 <a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>        <span class="p">];</span>
 <a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>
 <a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>        <span class="nv">$totalSteps</span> <span class="o">=</span> <span class="nb">count</span><span class="p">(</span><span class="nv">$steps</span><span class="p">);</span>
@@ -420,7 +420,7 @@
 <a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>            <span class="nx">setProgressOf</span><span class="p">(</span><span class="nv">$index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nv">$totalSteps</span><span class="p">);</span>
 <a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>        <span class="p">}</span>
 <a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>
-<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>        <span class="nx">endProcess</span><span class="p">([</span><span class="s1">&#39;file&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;backup_2023.zip&#39;</span><span class="p">]);</span>
+<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>        <span class="nx">endProcess</span><span class="p">([</span><span class="s1">'file'</span> <span class="o">=&gt;</span> <span class="s1">'backup_2023.zip'</span><span class="p">]);</span>
 <a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>    <span class="p">}</span>
 <a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a><span class="p">}</span>
 </code></pre></div></div>
