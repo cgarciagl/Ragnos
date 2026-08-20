@@ -24,4 +24,24 @@ class Pagos extends RDatasetController
         $this->setSortingField('paymentDate', 'desc');
     }
 
+    function _afterInsert()
+    {
+        $this->invalidateDashboardCache();
+    }
+
+    function _afterUpdate()
+    {
+        $this->invalidateDashboardCache();
+    }
+
+    function _afterDelete()
+    {
+        $this->invalidateDashboardCache();
+    }
+
+    private function invalidateDashboardCache(): void
+    {
+        \Config\Services::cache()->delete('estadosdecuenta');
+    }
+
 }

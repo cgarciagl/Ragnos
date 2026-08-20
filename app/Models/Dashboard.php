@@ -16,6 +16,7 @@ class Dashboard extends Model
                 SUM(od.priceEach * od.quantityOrdered) AS Total
             FROM orders o
             JOIN orderdetails od ON o.orderNumber = od.orderNumber
+            WHERE o.status <> 'Cancelled'
             GROUP BY YEAR(o.orderDate), MONTH(o.orderDate), MONTHNAME(o.orderDate)
             ORDER BY MAX(o.orderDate) DESC
             LIMIT 12";
@@ -32,9 +33,10 @@ class Dashboard extends Model
                         c.customerNumber,
                         c.customerName,
                         COALESCE(ROUND(SUM(od.priceEach * od.quantityOrdered), 2), 0) AS Comprado,
-                        c.creditLimit
+                        COALESCE(c.creditLimit, 0) AS creditLimit
                     FROM customers c
                     LEFT JOIN orders o ON o.customerNumber = c.customerNumber
+                        AND o.status <> 'Cancelled'
                     LEFT JOIN orderdetails od ON od.orderNumber = o.orderNumber
                     GROUP BY c.customerNumber, c.customerName, c.creditLimit
                 ),
@@ -86,6 +88,7 @@ class Dashboard extends Model
                 JOIN orderdetails od ON o.orderNumber = od.orderNumber
                 JOIN products p ON p.productCode = od.productCode
                 JOIN Last12Months l12m ON YEAR(o.orderDate) = l12m.Anio AND MONTH(o.orderDate) = l12m.MesNum
+                WHERE o.status <> 'Cancelled'
                 GROUP BY p.productLine, l12m.Mes, l12m.Anio, l12m.MesNum
                 ORDER BY p.productLine ASC, l12m.Anio DESC, l12m.MesNum DESC;";
         return getCachedData($sql);
@@ -103,7 +106,8 @@ class Dashboard extends Model
                     FROM customers c
                     JOIN orders ord ON c.customerNumber = ord.customerNumber
                     JOIN orderdetails od ON ord.orderNumber = od.orderNumber
-                    WHERE ord.orderDate >= DATE_SUB((SELECT MAX(orderDate) FROM orders), INTERVAL 3 MONTH)
+                    WHERE ord.status <> 'Cancelled'
+                    AND ord.orderDate >= DATE_SUB((SELECT MAX(orderDate) FROM orders), INTERVAL 3 MONTH)
                     GROUP BY c.salesRepEmployeeNumber
                 )
                 SELECT 
@@ -130,7 +134,8 @@ class Dashboard extends Model
                         SUM(od.quantityOrdered) AS TotalVendido
                     FROM orderdetails od
                     JOIN orders o ON od.orderNumber = o.orderNumber
-                    WHERE o.orderDate >= DATE_SUB((SELECT MAX(orderDate) FROM orders), INTERVAL 6 MONTH)
+                    WHERE o.status <> 'Cancelled'
+                    AND o.orderDate >= DATE_SUB((SELECT MAX(orderDate) FROM orders), INTERVAL 6 MONTH)
                     GROUP BY od.productCode
                 )
                 SELECT 
@@ -154,14 +159,15 @@ class Dashboard extends Model
         $sql = "SELECT
                     p.productLine,
                     SUM(od.quantityOrdered * (od.priceEach - p.buyPrice)) AS MargenTotal,
-                    ROUND(
+                    COALESCE(ROUND(
                         (SUM(od.quantityOrdered * (od.priceEach - p.buyPrice)) / 
                         NULLIF(SUM(od.quantityOrdered * od.priceEach), 0)) * 100,
-                    2) AS PorcentajeMargen
+                    2), 0) AS PorcentajeMargen
                 FROM orderdetails od
                 JOIN orders o ON od.orderNumber = o.orderNumber
                 JOIN products p ON od.productCode = p.productCode
-                WHERE o.orderDate >= DATE_SUB((SELECT MAX(orderDate) FROM orders), INTERVAL 6 MONTH)
+                WHERE o.status <> 'Cancelled'
+                AND o.orderDate >= DATE_SUB((SELECT MAX(orderDate) FROM orders), INTERVAL 6 MONTH)
                 GROUP BY p.productLine
                 ORDER BY MargenTotal DESC;";
         return getCachedData($sql);
@@ -175,10 +181,11 @@ class Dashboard extends Model
         $sql = "SELECT
                 -- 1. Total de Ventas del Último Semestre
                 (
-                    SELECT FORMAT(COALESCE(SUM(od.priceEach * od.quantityOrdered), 0), 2)
+                    SELECT COALESCE(ROUND(SUM(od.priceEach * od.quantityOrdered), 2), 0)
                     FROM orders o
                     JOIN orderdetails od ON o.orderNumber = od.orderNumber
-                    WHERE o.orderDate >= DATE_SUB((SELECT MAX(orderDate) FROM orders), INTERVAL 6 MONTH)
+                    WHERE o.status <> 'Cancelled'
+                    AND o.orderDate >= DATE_SUB((SELECT MAX(orderDate) FROM orders), INTERVAL 6 MONTH)
                 ) AS VentasUltimoSemestre,
 
                 -- 2. Órdenes Enviadas en el Último Semestre
@@ -186,31 +193,34 @@ class Dashboard extends Model
                     SELECT COUNT(orderNumber)
                     FROM orders o
                     WHERE o.status = 'Shipped'
-                    AND o.orderDate >= DATE_SUB((SELECT MAX(orderDate) FROM orders), INTERVAL 6 MONTH)
+                    AND o.shippedDate IS NOT NULL
+                    AND o.shippedDate >= DATE_SUB((SELECT MAX(shippedDate) FROM orders), INTERVAL 6 MONTH)
                 ) AS OrdenesEnviadasSemestre,
 
                 -- 3. Valor Promedio de la Orden
                 (
-                    SELECT FORMAT(COALESCE(AVG(TotalVentas), 0), 2)
+                    SELECT COALESCE(ROUND(AVG(TotalVentas), 2), 0)
                     FROM (
                         SELECT o.orderNumber, SUM(od.priceEach * od.quantityOrdered) AS TotalVentas
                         FROM orders o
                         JOIN orderdetails od ON o.orderNumber = od.orderNumber
-                        WHERE o.orderDate >= DATE_SUB((SELECT MAX(orderDate) FROM orders), INTERVAL 6 MONTH)
+                        WHERE o.status <> 'Cancelled'
+                        AND o.orderDate >= DATE_SUB((SELECT MAX(orderDate) FROM orders), INTERVAL 6 MONTH)
                         GROUP BY o.orderNumber
                     ) AS VentasPorOrden
                 ) AS ValorPromedioOrdenSemestral,
 
                 -- 4. Margen Promedio de Beneficio
                 (
-                    SELECT ROUND(
+                    SELECT COALESCE(ROUND(
                         (SUM(od.quantityOrdered * (od.priceEach - p.buyPrice)) / 
                         NULLIF(SUM(od.quantityOrdered * od.priceEach), 0)) * 100,
-                    2)
+                    2), 0)
                     FROM orderdetails od
                     JOIN orders o ON od.orderNumber = o.orderNumber
                     JOIN products p ON od.productCode = p.productCode
-                    WHERE o.orderDate >= DATE_SUB((SELECT MAX(orderDate) FROM orders), INTERVAL 6 MONTH)
+                    WHERE o.status <> 'Cancelled'
+                    AND o.orderDate >= DATE_SUB((SELECT MAX(orderDate) FROM orders), INTERVAL 6 MONTH)
                 ) AS MargenPromedioSemestral;";
         return getCachedData($sql);
     }
@@ -226,6 +236,7 @@ class Dashboard extends Model
                 FROM customers c
                 JOIN orders o ON c.customerNumber = o.customerNumber
                 JOIN orderdetails od ON o.orderNumber = od.orderNumber
+                WHERE o.status <> 'Cancelled'
                 GROUP BY c.country
                 ORDER BY Total DESC;";
         return getCachedData($sql, [], 'ventaspais');
