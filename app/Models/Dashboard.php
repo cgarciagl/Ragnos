@@ -6,27 +6,32 @@ use CodeIgniter\Model;
 
 class Dashboard extends Model
 {
-
-    function ventasultimos12meses()
+    /**
+     * Obtiene el total de ventas mensuales de los últimos 12 meses registrados.
+     */
+    public function ventasultimos12meses(): array
     {
         $sql = "SELECT
-                concat(MONTHNAME(o.orderDate), '/', YEAR(o.orderDate)) AS Mes,
+                CONCAT(MONTHNAME(o.orderDate), '/', YEAR(o.orderDate)) AS Mes,
                 SUM(od.priceEach * od.quantityOrdered) AS Total
             FROM orders o
-                JOIN orderdetails od ON o.orderNumber = od.orderNumber
-            GROUP BY 1
-            ORDER BY o.orderDate DESC
+            JOIN orderdetails od ON o.orderNumber = od.orderNumber
+            GROUP BY YEAR(o.orderDate), MONTH(o.orderDate), MONTHNAME(o.orderDate)
+            ORDER BY MAX(o.orderDate) DESC
             LIMIT 12";
         return getCachedData($sql);
     }
 
-    function estadosDeCuenta()
+    /**
+     * Calcula el estado de cuenta y saldos pendientes por cliente.
+     */
+    public function estadosDeCuenta(): array
     {
         $sql = "WITH Compras AS (
                     SELECT
                         c.customerNumber,
                         c.customerName,
-                        ROUND(SUM(od.priceEach * od.quantityOrdered), 2) AS Comprado,
+                        COALESCE(ROUND(SUM(od.priceEach * od.quantityOrdered), 2), 0) AS Comprado,
                         c.creditLimit
                     FROM customers c
                     LEFT JOIN orders o ON o.customerNumber = c.customerNumber
@@ -35,23 +40,21 @@ class Dashboard extends Model
                 ),
                 Pagos AS (
                     SELECT
-                        c.customerNumber,
-                        c.customerName,
-                        ROUND(SUM(p.amount), 2) AS Pagado
-                    FROM customers c
-                    LEFT JOIN payments p ON c.customerNumber = p.customerNumber
-                    GROUP BY c.customerNumber, c.customerName
+                        customerNumber,
+                        COALESCE(ROUND(SUM(amount), 2), 0) AS Pagado
+                    FROM payments
+                    GROUP BY customerNumber
                 ),
                 Deudas AS (
                     SELECT
-                        Compras.customerNumber,
-                        Compras.customerName,
-                        Compras.Comprado,
-                        Pagos.Pagado,
-                        ROUND(Compras.Comprado - COALESCE(Pagos.Pagado, 0), 2) AS Deuda,
-                        Compras.creditLimit AS LimiteDeCredito
-                    FROM Compras
-                    LEFT JOIN Pagos ON Compras.customerNumber = Pagos.customerNumber
+                        c.customerNumber,
+                        c.customerName,
+                        c.Comprado,
+                        COALESCE(p.Pagado, 0) AS Pagado,
+                        ROUND(c.Comprado - COALESCE(p.Pagado, 0), 2) AS Deuda,
+                        c.creditLimit AS LimiteDeCredito
+                    FROM Compras c
+                    LEFT JOIN Pagos p ON c.customerNumber = p.customerNumber
                 )
                 SELECT *
                 FROM Deudas
@@ -60,127 +63,149 @@ class Dashboard extends Model
         return getCachedData($sql, [], 'estadosdecuenta');
     }
 
-    function ventasPorLinea()
+    /**
+     * Desglosa las ventas por línea de producto en los últimos 12 meses.
+     */
+    public function ventasPorLinea(): array
     {
         $sql = "WITH Last12Months AS (
-                SELECT CONCAT(MONTHNAME(o.orderDate), '/', YEAR(o.orderDate)) AS Mes
-                FROM  orders o
-                GROUP BY  1
-                ORDER BY  o.orderDate DESC
-                LIMIT 12
-            )
-            SELECT 
-                p.productLine, 
-                concat(MONTHNAME(o.orderDate),'/', YEAR(o.orderDate)) as Mes, 
-                SUM(od.priceEach * od.quantityOrdered) AS Total
-            FROM  orders o
-            INNER JOIN orderdetails od ON o.orderNumber = od.orderNumber
-            INNER JOIN products p ON p.productCode = od.productCode
-            INNER JOIN  Last12Months l12m ON concat(MONTHNAME(o.orderDate),'/', YEAR(o.orderDate)) = l12m.Mes
-            GROUP BY  1, 2;";
+                    SELECT 
+                        YEAR(o.orderDate) AS Anio,
+                        MONTH(o.orderDate) AS MesNum,
+                        CONCAT(MONTHNAME(o.orderDate), '/', YEAR(o.orderDate)) AS Mes
+                    FROM orders o
+                    GROUP BY YEAR(o.orderDate), MONTH(o.orderDate), MONTHNAME(o.orderDate)
+                    ORDER BY MAX(o.orderDate) DESC
+                    LIMIT 12
+                )
+                SELECT 
+                    p.productLine, 
+                    l12m.Mes, 
+                    SUM(od.priceEach * od.quantityOrdered) AS Total
+                FROM orders o
+                JOIN orderdetails od ON o.orderNumber = od.orderNumber
+                JOIN products p ON p.productCode = od.productCode
+                JOIN Last12Months l12m ON YEAR(o.orderDate) = l12m.Anio AND MONTH(o.orderDate) = l12m.MesNum
+                GROUP BY p.productLine, l12m.Mes, l12m.Anio, l12m.MesNum
+                ORDER BY p.productLine ASC, l12m.Anio DESC, l12m.MesNum DESC;";
         return getCachedData($sql);
     }
 
-    function empleadosConMasVentasEnElUltimoTrimestre()
+    /**
+     * Obtiene los 10 mejores vendedores por ventas en el último trimestre registrado.
+     */
+    public function empleadosConMasVentasEnElUltimoTrimestre(): array
     {
-        $sql = "WITH 
-                VentasPorVendedor AS (
-                    SELECT c.salesRepEmployeeNumber AS employeeNumber, SUM(od.priceEach * od.quantityOrdered) AS TotalVentasTrimestre
+        $sql = "WITH VentasPorVendedor AS (
+                    SELECT 
+                        c.salesRepEmployeeNumber AS employeeNumber, 
+                        SUM(od.priceEach * od.quantityOrdered) AS TotalVentasTrimestre
                     FROM customers c
                     JOIN orders ord ON c.customerNumber = ord.customerNumber
                     JOIN orderdetails od ON ord.orderNumber = od.orderNumber
-                    WHERE ord.orderDate >=  DATE_SUB((SELECT MAX(orderDate) FROM orders), INTERVAL 3 MONTH)
+                    WHERE ord.orderDate >= DATE_SUB((SELECT MAX(orderDate) FROM orders), INTERVAL 3 MONTH)
                     GROUP BY c.salesRepEmployeeNumber
                 )
-                SELECT e.employeeNumber, CONCAT( e.lastName, ', ', e.firstName) AS Empleado, o.city AS Oficina, v.TotalVentasTrimestre
+                SELECT 
+                    e.employeeNumber, 
+                    CONCAT(e.lastName, ', ', e.firstName) AS Empleado, 
+                    o.city AS Oficina, 
+                    v.TotalVentasTrimestre
                 FROM employees e
                 JOIN offices o ON e.officeCode = o.officeCode
-                JOIN  VentasPorVendedor v ON e.employeeNumber = v.employeeNumber
+                JOIN VentasPorVendedor v ON e.employeeNumber = v.employeeNumber
                 ORDER BY v.TotalVentasTrimestre DESC
                 LIMIT 10;";
         return getCachedData($sql);
     }
 
-    function productosConMenorRotacion()
+    /**
+     * Identifica los productos con menor volumen de venta en los últimos 6 meses.
+     */
+    public function productosConMenorRotacion(): array
     {
-        $sql = "SELECT p.productCode, 
+        $sql = "WITH VentasRecientes AS (
+                    SELECT 
+                        od.productCode, 
+                        SUM(od.quantityOrdered) AS TotalVendido
+                    FROM orderdetails od
+                    JOIN orders o ON od.orderNumber = o.orderNumber
+                    WHERE o.orderDate >= DATE_SUB((SELECT MAX(orderDate) FROM orders), INTERVAL 6 MONTH)
+                    GROUP BY od.productCode
+                )
+                SELECT 
+                    p.productCode, 
                     p.productName, 
                     p.quantityInStock, 
                     p.productLine,
-                    IFNULL(SUM(od.quantityOrdered), 0) AS TotalVendidoUltimos6Meses
+                    COALESCE(vr.TotalVendido, 0) AS TotalVendidoUltimos6Meses
                 FROM products p
-                LEFT JOIN orderdetails od ON p.productCode = od.productCode
-                LEFT JOIN orders o ON od.orderNumber = o.orderNumber 
-                    AND o.orderDate >= DATE_SUB((SELECT MAX(orderDate) FROM orders), INTERVAL 6 MONTH)
-                GROUP BY p.productCode, 
-                    p.productName, 
-                    p.quantityInStock
-                ORDER BY TotalVendidoUltimos6Meses ASC
+                LEFT JOIN VentasRecientes vr ON p.productCode = vr.productCode
+                ORDER BY TotalVendidoUltimos6Meses ASC, p.quantityInStock DESC
                 LIMIT 10;";
         return getCachedData($sql);
     }
 
-    function margenDeGananciaPorLinea()
+    /**
+     * Calcula el margen bruto y porcentaje de beneficio por línea de producto.
+     */
+    public function margenDeGananciaPorLinea(): array
     {
         $sql = "SELECT
-                p.productLine,
-                SUM(od.quantityOrdered * (od.priceEach - p.buyPrice)) AS MargenTotal,
-                ROUND(
-                    (SUM(od.quantityOrdered * (od.priceEach - p.buyPrice)) / SUM(od.quantityOrdered * od.priceEach)) * 100,
-                2) AS PorcentajeMargen
+                    p.productLine,
+                    SUM(od.quantityOrdered * (od.priceEach - p.buyPrice)) AS MargenTotal,
+                    ROUND(
+                        (SUM(od.quantityOrdered * (od.priceEach - p.buyPrice)) / 
+                        NULLIF(SUM(od.quantityOrdered * od.priceEach), 0)) * 100,
+                    2) AS PorcentajeMargen
                 FROM orderdetails od
                 JOIN orders o ON od.orderNumber = o.orderNumber
                 JOIN products p ON od.productCode = p.productCode
-                WHERE
-                o.orderDate >= DATE_SUB(
-                    (SELECT MAX(orderDate) FROM orders), INTERVAL 6 MONTH
-                )
-                GROUP BY 1
+                WHERE o.orderDate >= DATE_SUB((SELECT MAX(orderDate) FROM orders), INTERVAL 6 MONTH)
+                GROUP BY p.productLine
                 ORDER BY MargenTotal DESC;";
         return getCachedData($sql);
     }
 
-    function datosAtomicosDashboard()
+    /**
+     * Métrica atómica unificada para las tarjetas principales del Dashboard.
+     */
+    public function datosAtomicosDashboard(): array
     {
         $sql = "SELECT
-                -- 1. Total de Ventas del Último Semestre (Métrica de Rendimiento)
+                -- 1. Total de Ventas del Último Semestre
                 (
-                    SELECT 
-                    FORMAT(SUM(od.priceEach * od.quantityOrdered), 2)
+                    SELECT FORMAT(COALESCE(SUM(od.priceEach * od.quantityOrdered), 0), 2)
                     FROM orders o
                     JOIN orderdetails od ON o.orderNumber = od.orderNumber
                     WHERE o.orderDate >= DATE_SUB((SELECT MAX(orderDate) FROM orders), INTERVAL 6 MONTH)
                 ) AS VentasUltimoSemestre,
 
-                -- 2. Órdenes Enviadas en el Último Semestre (Métrica de Volumen/Operación)
+                -- 2. Órdenes Enviadas en el Último Semestre
                 (
-                    SELECT
-                    COUNT(orderNumber)
+                    SELECT COUNT(orderNumber)
                     FROM orders o
                     WHERE o.status = 'Shipped'
                     AND o.orderDate >= DATE_SUB((SELECT MAX(orderDate) FROM orders), INTERVAL 6 MONTH)
                 ) AS OrdenesEnviadasSemestre,
 
-                -- 3. Valor Promedio de la Orden (Métrica de Valor de Cliente)
+                -- 3. Valor Promedio de la Orden
                 (
-                    SELECT 
-                    FORMAT(AVG(TotalVentas), 2)
+                    SELECT FORMAT(COALESCE(AVG(TotalVentas), 0), 2)
                     FROM (
-                    SELECT
-                        o.orderNumber,
-                        SUM(od.priceEach * od.quantityOrdered) AS TotalVentas
-                    FROM orders o
-                    JOIN orderdetails od ON o.orderNumber = od.orderNumber
-                    WHERE o.orderDate >= DATE_SUB((SELECT MAX(orderDate) FROM orders), INTERVAL 6 MONTH)
-                    GROUP BY 1
+                        SELECT o.orderNumber, SUM(od.priceEach * od.quantityOrdered) AS TotalVentas
+                        FROM orders o
+                        JOIN orderdetails od ON o.orderNumber = od.orderNumber
+                        WHERE o.orderDate >= DATE_SUB((SELECT MAX(orderDate) FROM orders), INTERVAL 6 MONTH)
+                        GROUP BY o.orderNumber
                     ) AS VentasPorOrden
                 ) AS ValorPromedioOrdenSemestral,
 
-                -- 4. Margen Promedio de Beneficio (Métrica de Rentabilidad)
+                -- 4. Margen Promedio de Beneficio
                 (
-                    SELECT 
-                    ROUND(
-                        (SUM(od.quantityOrdered * (od.priceEach - p.buyPrice)) / SUM(od.quantityOrdered * od.priceEach)) * 100,
+                    SELECT ROUND(
+                        (SUM(od.quantityOrdered * (od.priceEach - p.buyPrice)) / 
+                        NULLIF(SUM(od.quantityOrdered * od.priceEach), 0)) * 100,
                     2)
                     FROM orderdetails od
                     JOIN orders o ON od.orderNumber = o.orderNumber
@@ -190,32 +215,38 @@ class Dashboard extends Model
         return getCachedData($sql);
     }
 
-    function ventasPorPais()
+    /**
+     * Distribución geográfica de ventas totales agrupadas por país del cliente.
+     */
+    public function ventasPorPais(): array
     {
         $sql = "SELECT 
-                c.country AS Pais, 
-                SUM(od.quantityOrdered * od.priceEach) AS Total
-            FROM customers c
-            JOIN orders o ON c.customerNumber = o.customerNumber
-            JOIN orderdetails od ON o.orderNumber = od.orderNumber
-            GROUP BY c.country
-            ORDER BY Total DESC";
+                    c.country AS Pais, 
+                    SUM(od.quantityOrdered * od.priceEach) AS Total
+                FROM customers c
+                JOIN orders o ON c.customerNumber = o.customerNumber
+                JOIN orderdetails od ON o.orderNumber = od.orderNumber
+                GROUP BY c.country
+                ORDER BY Total DESC;";
         return getCachedData($sql, [], 'ventaspais');
     }
 
-    function ventasDelCliente($customerNumber)
+    /**
+     * Historial de órdenes de un cliente específico (no cacheado para tiempo real).
+     */
+    public function ventasDelCliente(int $customerNumber): array
     {
         $sql = "SELECT 
-                o.orderNumber,
-                o.orderDate,
-                o.status,
-                SUM(od.quantityOrdered * od.priceEach) AS TotalVenta
-            FROM orders o
-            JOIN orderdetails od ON o.orderNumber = od.orderNumber
-            WHERE o.customerNumber = ?
-            GROUP BY o.orderNumber, o.orderDate, o.status
-            ORDER BY o.orderDate DESC
-            Limit 50;";
+                    o.orderNumber,
+                    o.orderDate,
+                    o.status,
+                    SUM(od.quantityOrdered * od.priceEach) AS TotalVenta
+                FROM orders o
+                JOIN orderdetails od ON o.orderNumber = od.orderNumber
+                WHERE o.customerNumber = ?
+                GROUP BY o.orderNumber, o.orderDate, o.status
+                ORDER BY o.orderDate DESC
+                LIMIT 50;";
         return $this->db->query($sql, [$customerNumber])->getResultArray();
     }
 }
