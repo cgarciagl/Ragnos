@@ -176,6 +176,25 @@ class SearchFilterTraitTest extends RagnosTestCase
         $this->assertSame(2, $count);
     }
 
+    public function testBusquedaRechazaCampoNoPermitido(): void
+    {
+        $this->setGet([
+            'search'     => ['value' => 'Gadget'],
+            'sOnlyField' => 'campo_inexistente',
+        ]);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->model->getCountForSearch();
+    }
+
+    public function testFiltroRechazaBase64Invalido(): void
+    {
+        $this->setGet(['sFilter' => '%%%no-es-base64%%%']);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->model->getCountForSearch();
+    }
+
     public function testCheckRelationsAgregaSELECTParaCampoConQuery(): void
     {
         $this->model->addFieldFromArray('nombre_upper', [

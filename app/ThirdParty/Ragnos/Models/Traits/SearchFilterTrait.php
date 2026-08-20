@@ -8,6 +8,10 @@ trait SearchFilterTrait
 {
     private function setWhereForSearchInMultipleFields($textForSearch, $onlyfield = '')
     {
+        if ($onlyfield !== null && $onlyfield !== '' && !in_array($onlyfield, $this->tablefields, true)) {
+            throw new \InvalidArgumentException('Campo de búsqueda no permitido.');
+        }
+
         $campos     = $onlyfield ? [$onlyfield] : $this->tablefields;
         $conditions = array_map(function ($k) use ($textForSearch) {
             return $this->buildConditionForField($k, $textForSearch);
@@ -88,12 +92,27 @@ trait SearchFilterTrait
 
         $filterJson = getInputValue('sFilter');
         if ($filterJson) {
-            $filters = json_decode(base64_decode($filterJson), true);
-            if (json_last_error() === JSON_ERROR_NONE) {
-                $this->parseStructuredFilters($filters);
-            } else {
+            $maxFilterPayloadBytes = 16384;
+            if (strlen($filterJson) > $maxFilterPayloadBytes) {
+                throw new \InvalidArgumentException('El filtro excede el tamaño permitido.');
+            }
+
+            $decodedFilter = base64_decode($filterJson, true);
+            if ($decodedFilter === false) {
+                throw new \InvalidArgumentException('Formato de filtro Base64 inválido.');
+            }
+
+            $filters = json_decode($decodedFilter, true);
+            if (json_last_error() !== JSON_ERROR_NONE || !is_array($filters)) {
                 throw new \InvalidArgumentException("Formato de filtro JSON inválido.");
             }
+
+            $maxStructuredFilters = 50;
+            if (count($filters) > $maxStructuredFilters) {
+                throw new \InvalidArgumentException('Se excedió el número máximo de filtros.');
+            }
+
+            $this->parseStructuredFilters($filters);
         }
     }
 
@@ -105,8 +124,8 @@ trait SearchFilterTrait
         foreach ($filters as $filter) {
             if (
                 isset($filter['field'], $filter['op'], $filter['value']) &&
-                in_array($filter['field'], $allowedFields) &&
-                in_array($filter['op'], $allowedOperators)
+                in_array($filter['field'], $allowedFields, true) &&
+                in_array($filter['op'], $allowedOperators, true)
             ) {
                 $this->builder()->where(
                     $filter['field'] . ' ' . $filter['op'],

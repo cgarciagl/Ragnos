@@ -103,7 +103,7 @@ abstract class RDataset extends RController
 
     function setAutoIncrement($value)
     {
-        $this->modelo->autoIncrement = $value;
+        $this->modelo->setAutoIncrement((bool) $value);
     }
 
     /**

@@ -137,6 +137,32 @@ class JsonResultTraitTest extends RagnosTestCase
         $this->assertCount(2, $decoded['data']);
     }
 
+    public function testPaginacionLimitaElTamanoMaximo(): void
+    {
+        for ($i = 6; $i <= 120; $i++) {
+            $this->insertTestData('productos_json', [
+                'nombre' => "Item {$i}",
+                'precio' => $i * 10,
+            ]);
+        }
+        $this->setGet(['length' => '500', 'start' => '0']);
+
+        $decoded = json_decode($this->model->getTableAjax(), true);
+
+        $this->assertCount(100, $decoded['data']);
+    }
+
+    public function testOrdenamientoInvalidoUsaAscendente(): void
+    {
+        $this->setGet([
+            'order' => [['column' => '1', 'dir' => 'desc; drop table productos_json']],
+        ]);
+
+        $decoded = json_decode($this->model->getTableAjax(), true);
+
+        $this->assertStringContainsString('Item 1', $decoded['data'][0][0]);
+    }
+
     public function testGetTableForAPIRetornaArrayConDataYCountAll(): void
     {
         $result = $this->model->getTableForAPI();

@@ -192,7 +192,7 @@ class RDatasetTest extends RagnosTestCase
     {
         $controller = $this->makeController();
         $controller->setAutoIncrement(false);
-        $this->assertFalse($controller->getModel()->autoIncrement);
+        $this->assertFalse($controller->getModel()->usesAutoIncrement());
     }
 
     public function testHooksPorDefectoSonNoOpYNoLanzanExcepcion(): void

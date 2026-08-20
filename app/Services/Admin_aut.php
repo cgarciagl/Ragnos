@@ -81,8 +81,7 @@ class Admin_aut extends BaseService
         $this->checkLogin();
         $groupName = trim(strtolower($this->getField('gru_nombre')));
         if (is_array($grupos)) {
-            array_map('trim', $grupos);
-            array_map('strtolower', $grupos);
+            $grupos = array_map(static fn($grupo) => trim(strtolower($grupo)), $grupos);
             if (!in_array($groupName, $grupos)) {
                 redirectAndDie('admin/index', 403);
             }

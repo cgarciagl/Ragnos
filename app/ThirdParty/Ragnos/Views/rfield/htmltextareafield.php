@@ -1,8 +1,8 @@
 <div class="divfield col-sm-12 mb-2">
     <div class="form-floating" id='group_<?= $name ?>'>
         <textarea name="<?= $name ?>" id="<?= $name ?>" class="form-control"
-            placeholder="<?= $label ?>"><?= $value ?></textarea>
-        <label for="<?= $name ?>"><?= $label ?></label>
+            placeholder="<?= esc($label, 'attr') ?>"><?= esc($value) ?></textarea>
+        <label for="<?= $name ?>"><?= esc($label) ?></label>
 
         <style>
             /* Integración de Summernote con estilo Floating Labels */

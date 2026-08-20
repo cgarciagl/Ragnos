@@ -117,4 +117,14 @@ abstract class RTableModel extends Model
     {
         $this->useSoftDeletes = (bool) $value;
     }
+
+    public function setAutoIncrement(bool $value): void
+    {
+        $this->useAutoIncrement = $value;
+    }
+
+    public function usesAutoIncrement(): bool
+    {
+        return $this->useAutoIncrement;
+    }
 }

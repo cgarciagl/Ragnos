@@ -80,7 +80,7 @@ trait JsonResultTrait
             foreach ($this->tablefields as $f) {
                 $responseData['data'][$i][] = $this->textForTable($aRow, $f);
             }
-            $responseData['data'][$i][] = addslashes(@$aRow[$this->primaryKey]);
+            $responseData['data'][$i][] = $aRow[$this->primaryKey] ?? null;
             $i++;
         }
         return json_encode($responseData);
@@ -91,12 +91,15 @@ trait JsonResultTrait
         $orderColumn = getInputValue('order[0][column]');
         $orderDir    = getInputValue('order[0][dir]', 'asc');
         $orderName   = getInputValue('order[0][name]');
+        $orderDir    = in_array(strtolower((string) $orderDir), ['asc', 'desc'], true)
+            ? strtolower((string) $orderDir)
+            : 'asc';
 
-        if ($orderName !== null && in_array($orderName, $this->tablefields)) {
+        if ($orderName !== null && in_array($orderName, $this->tablefields, true)) {
             $this->builder()->orderBy($this->realField($orderName), $orderDir);
         } elseif ($orderColumn !== null) {
             $orderColumn = (int) $orderColumn;
-            if ($orderColumn < count($this->tablefields)) {
+            if ($orderColumn >= 0 && $orderColumn < count($this->tablefields)) {
                 $this->builder()->orderBy($this->realField($this->tablefields[$orderColumn]), $orderDir);
             }
         } elseif (!empty($this->defaultSortingField)) {
@@ -106,9 +109,13 @@ trait JsonResultTrait
 
     private function setLimitForJsonResult()
     {
-        $request = request();
-        $limit   = (int) getInputValue('length') ?: 10; // Default limit
-        $offset  = (int) getInputValue('start') ?: 0;   // Default offset
+        $limit = (int) getInputValue('length', 10);
+        if ($limit < 1) {
+            $limit = 10;
+        }
+        $maxPageSize = 100;
+        $limit       = min($limit, $maxPageSize);
+        $offset      = max(0, (int) getInputValue('start', 0));
         $this->builder()->limit($limit, $offset);
     }
 }

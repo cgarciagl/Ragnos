@@ -2,6 +2,7 @@
 <div class="card" id="<?= $formCardId ?>">
     <div class="card-body">
         <form class="" role="form" method='post' onsubmit='return false;'>
+            <input type="hidden" name="Ragnos_action" value="<?= $primaryKeyValue === 'new' ? 'insert' : 'update' ?>">
             <?php
             // Agrupar campos por pestañas
             $tabs    = [];

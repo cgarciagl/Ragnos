@@ -132,7 +132,7 @@
         formContent.html('').hide();
 
         <?php if ($master): ?>
-            Ragnos_csrf.Ragnos_master = '<?= $master ?>';
+            Ragnos_csrf.Ragnos_master = <?= json_encode((string) $master, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
         <?php endif; ?>
 
         getValue(`<?= $clase ?>/getFormData/${id}`, Ragnos_csrf, function (response) {
@@ -320,7 +320,7 @@
         }
 
         <?php if ($master): ?>
-            data.Ragnos_master = '<?= $master ?>';
+            data.Ragnos_master = <?= json_encode((string) $master, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
         <?php endif; ?>
 
         const sourceUrl = '<?= site_url($clase . '/getAjaxGridData'); ?>';

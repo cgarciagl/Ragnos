@@ -6,67 +6,96 @@ use App\ThirdParty\Ragnos\Models\Fields\RSearchField;
 
 trait CrudOperationsTrait
 {
-    private function performInsert()
+    private function performInsert(): void
     {
-        if ($this->canInsert) {
-            try {
-                $inputDataArray = $this->createInputDataArray();
-                if (isset($inputDataArray[$this->primaryKey])) {
-                    unset($inputDataArray[$this->primaryKey]);
-                }
-                $this->controller->_beforeInsert($inputDataArray);
-                $primaryKey               = $this->insert($inputDataArray);
-                $_POST[$this->primaryKey] = $primaryKey;
-                $this->insertedId         = $primaryKey;
-                $this->logAudit('INSERT', $primaryKey, ['new' => $inputDataArray]);
-                $this->controller->_afterInsert();
-            } catch (\Exception $e) {
-                log_message('error', '[CrudOperationsTrait::performInsert] ' . $e->getMessage());
-                $this->errors['general_error'] = $e->getMessage();
+        if (!$this->canInsert) {
+            $this->errors['general_error'] = 'No tiene permisos para crear registros.';
+            return;
+        }
+
+        try {
+            $inputDataArray = $this->createInputDataArray();
+            if ($this->usesAutoIncrement() && isset($inputDataArray[$this->primaryKey])) {
+                unset($inputDataArray[$this->primaryKey]);
             }
+
+            $this->db->transBegin();
+            $this->controller->_beforeInsert($inputDataArray);
+            $primaryKey = $this->insert($inputDataArray);
+            if ($primaryKey === false) {
+                throw new \RuntimeException('No se pudo insertar el registro.');
+            }
+
+            $_POST[$this->primaryKey] = $primaryKey;
+            $this->insertedId         = $primaryKey;
+            $this->logAudit('INSERT', $primaryKey, ['new' => $inputDataArray]);
+            $this->controller->_afterInsert();
+
+            if (!$this->db->transCommit()) {
+                throw new \RuntimeException('No se pudo confirmar la inserción.');
+            }
+        } catch (\Throwable $e) {
+            $this->db->transRollback();
+            $this->insertedId = null;
+            log_message('error', '[CrudOperationsTrait::performInsert] ' . $e->getMessage());
+            $this->errors['general_error'] = $e->getMessage();
         }
     }
 
-    private function performUpdate()
+    private function performUpdate(): void
     {
-        if ($this->canUpdate) {
-            try {
-                $request        = request();
-                $inputDataArray = $this->createInputDataArray();
-                if (sizeof($inputDataArray) > 0) {
-                    $this->controller->_beforeUpdate($inputDataArray);
+        if (!$this->canUpdate) {
+            $this->errors['general_error'] = 'No tiene permisos para actualizar registros.';
+            return;
+        }
 
-                    $id = getInputValue($this->primaryKey);
+        try {
+            $request        = request();
+            $inputDataArray = $this->createInputDataArray();
+            if (sizeof($inputDataArray) > 0) {
+                $this->db->transBegin();
+                $this->controller->_beforeUpdate($inputDataArray);
 
-                    $pkKeyAnt = 'Ragnos_value_ant_' . $this->primaryKey;
-                    if (getInputValue($pkKeyAnt) !== null && fieldHasChanged($this->primaryKey)) {
-                        $id                                = oldValue($this->primaryKey);
-                        $inputDataArray[$this->primaryKey] = newValue($this->primaryKey);
-                    }
-
-                    $this->update($id, $inputDataArray);
-
-                    $datosQueCambian = [];
-                    foreach ($inputDataArray as $fieldName => $newValue) {
-                        $oldValue = oldValue($fieldName);
-                        if ($oldValue != $newValue) {
-                            $datosQueCambian[$fieldName] = [
-                                'old' => $oldValue,
-                                'new' => $newValue
-                            ];
-                        }
-                    }
-
-                    if ($this->enableAudit) {
-                        $this->logAudit('UPDATE', $id, $datosQueCambian);
-                    }
-
-                    $this->controller->_afterUpdate();
+                $id = getInputValue($this->primaryKey);
+                if ($id === null || $id === '') {
+                    throw new \InvalidArgumentException('ID del registro a actualizar no proporcionado.');
                 }
-            } catch (\Exception $e) {
-                log_message('error', '[CrudOperationsTrait::performUpdate] ' . $e->getMessage());
-                $this->errors['general_error'] = $e->getMessage();
+
+                $pkKeyAnt = 'Ragnos_value_ant_' . $this->primaryKey;
+                if (getInputValue($pkKeyAnt) !== null && fieldHasChanged($this->primaryKey)) {
+                    $id                                = oldValue($this->primaryKey);
+                    $inputDataArray[$this->primaryKey] = newValue($this->primaryKey);
+                }
+
+                if (!$this->update($id, $inputDataArray)) {
+                    throw new \RuntimeException('No se pudo actualizar el registro.');
+                }
+
+                $datosQueCambian = [];
+                foreach ($inputDataArray as $fieldName => $newValue) {
+                    $oldValue = oldValue($fieldName);
+                    if ($oldValue != $newValue) {
+                        $datosQueCambian[$fieldName] = [
+                            'old' => $oldValue,
+                            'new' => $newValue
+                        ];
+                    }
+                }
+
+                if ($this->enableAudit) {
+                    $this->logAudit('UPDATE', $id, $datosQueCambian);
+                }
+
+                $this->controller->_afterUpdate();
+
+                if (!$this->db->transCommit()) {
+                    throw new \RuntimeException('No se pudo confirmar la actualización.');
+                }
             }
+        } catch (\Throwable $e) {
+            $this->db->transRollback();
+            log_message('error', '[CrudOperationsTrait::performUpdate] ' . $e->getMessage());
+            $this->errors['general_error'] = $e->getMessage();
         }
     }
 
@@ -75,47 +104,45 @@ trait CrudOperationsTrait
         $band = false;
         if ($this->canDelete) {
             try {
-                $request        = request();
-                $inputDataArray = $this->createInputDataArray();
-                if (sizeof($inputDataArray) > 0) {
-                    // Resolver el ID antes del callback para poder pre-cargar el registro
-                    $id = getInputValue('id');
-                    if (!$id) {
-                        $id = $pid;
-                    }
-                    if (!$id) {
-                        throw new \Exception("ID del registro a eliminar no proporcionado.");
-                    }
-
-                    // Pre-cargar registro desde DB si no hay campos Ragnos_value_ant_ (modo API)
-                    if (getInputValue('Ragnos_value_ant_' . $this->primaryKey) === null) {
-                        $currentRecord = $this->find($id);
-                        if ($currentRecord) {
-                            setOldRecordCache($currentRecord);
-                        }
-                    }
-
-                    $this->controller->_beforeDelete($inputDataArray);
-                    if ($this->enableAudit) {
-                        $datosaEliminar = $this->where($this->primaryKey, $id)->first();
-                        if (!$datosaEliminar) {
-                            throw new \Exception("El registro con ID {$id} no existe.");
-                        }
-                        $this->logAudit('DELETE', $id, ['deleted_data' => $datosaEliminar]);
-                    }
-                    $band = $this->where($this->primaryKey, $id)->delete();
-                    $this->controller->_afterDelete();
-
+                $id = getInputValue('id') ?? $pid;
+                if ($id === null || $id === '') {
+                    throw new \InvalidArgumentException('ID del registro a eliminar no proporcionado.');
                 }
-            } catch (\Exception $e) {
+
+                $currentRecord = $this->find($id);
+                if (!$currentRecord) {
+                    throw new \RuntimeException("El registro con ID {$id} no existe.");
+                }
+                setOldRecordCache($currentRecord);
+
+                $this->db->transBegin();
+                $this->controller->_beforeDelete();
+                if ($this->enableAudit) {
+                    $this->logAudit('DELETE', $id, ['deleted_data' => $currentRecord]);
+                }
+
+                $band = $this->where($this->primaryKey, $id)->delete();
+                if (!$band) {
+                    throw new \RuntimeException('No se pudo eliminar el registro.');
+                }
+
+                $this->controller->_afterDelete();
+                if (!$this->db->transCommit()) {
+                    throw new \RuntimeException('No se pudo confirmar la eliminación.');
+                }
+            } catch (\Throwable $e) {
+                $this->db->transRollback();
+                $band = false;
                 log_message('error', '[CrudOperationsTrait::performDelete] ' . $e->getMessage());
                 $this->errors['general_error'] = $e->getMessage();
             }
+        } else {
+            $this->errors['general_error'] = 'No tiene permisos para eliminar registros.';
         }
         return $band;
     }
 
-    function createInputDataArray()
+    function createInputDataArray(): array
     {
         $responseArray = [];
         $request       = request();
@@ -253,14 +280,27 @@ trait CrudOperationsTrait
         }
     }
 
-    function processFormAction()
+    function processFormAction(): void
     {
-        $request = request();
-        if (getInputValue($this->primaryKey)) {
+        if ($this->isUpdateRequest()) {
             $this->performUpdate();
         } else {
             $this->performInsert();
         }
+    }
+
+    private function isUpdateRequest(): bool
+    {
+        $action = strtolower((string) getInputValue('Ragnos_action', ''));
+        if ($action !== '') {
+            return $action === 'update';
+        }
+
+        if (getInputValue('Ragnos_value_ant_' . $this->primaryKey) !== null) {
+            return true;
+        }
+
+        return in_array(strtoupper(request()->getMethod()), ['PUT', 'PATCH'], true);
     }
 
     private function checkForDefaultValues()

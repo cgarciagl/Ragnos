@@ -114,6 +114,7 @@ class CrudOperationsTraitTest extends RagnosTestCase
         $this->model->completeFieldList();
         $this->setPost([
             'id'                      => (string) $insertId,
+            'Ragnos_action'           => 'update',
             'nombre'                  => 'Despues',
             'Ragnos_value_ant_nombre' => 'Antes',
             'Ragnos_value_ant_precio' => '1',
@@ -167,6 +168,7 @@ class CrudOperationsTraitTest extends RagnosTestCase
         // performDelete sale temprano si canDelete=false (sin tocar BD).
         $result = $this->model->performDelete(1);
         $this->assertFalse($result);
+        $this->assertSame('No tiene permisos para eliminar registros.', $this->model->errors['general_error']);
     }
 
     public function testInsertBloqueadoCuandoCanInsertFalso(): void
@@ -178,5 +180,58 @@ class CrudOperationsTraitTest extends RagnosTestCase
         $this->model->processFormInput();
         $this->assertTableCount('productos_crud', 0);
         $this->assertNull($this->model->insertedId);
+        $this->assertSame('No tiene permisos para crear registros.', $this->model->errors['general_error']);
+    }
+
+    public function testInsertaLlavePrimariaNaturalCuandoNoEsAutoincremental(): void
+    {
+        $this->dropTestTable('productos_crud');
+        $this->db->query('CREATE TABLE productos_crud (codigo TEXT PRIMARY KEY, nombre TEXT NOT NULL)');
+
+        $this->model->table      = 'productos_crud';
+        $this->model->primaryKey = 'codigo';
+        $this->model->setAutoIncrement(false);
+        $this->model->tablefields = ['codigo', 'nombre'];
+        $this->model->ofieldlist  = [];
+        $this->model->completeFieldList();
+        $this->setPost([
+            'Ragnos_action' => 'insert',
+            'codigo'        => 'PRD-001',
+            'nombre'        => 'Producto natural',
+        ]);
+
+        $this->model->processFormInput();
+
+        $row = $this->getTableRecord('productos_crud', ['codigo' => 'PRD-001']);
+        $this->assertSame('PRODUCTO NATURAL', $row['nombre']);
+        $this->assertSame('PRD-001', $this->model->insertedId);
+    }
+
+    public function testInsertHaceRollbackSiFallaHookPosterior(): void
+    {
+        $this->controller->onAfterInsert = static function (): void {
+            throw new \RuntimeException('Fallo posterior');
+        };
+        $this->model->completeFieldList();
+        $this->setPost(['Ragnos_action' => 'insert', 'nombre' => 'No persistir']);
+
+        $this->model->processFormInput();
+
+        $this->assertTableCount('productos_crud', 0);
+        $this->assertNull($this->model->insertedId);
+        $this->assertSame('Fallo posterior', $this->model->errors['general_error']);
+    }
+
+    public function testPerformDeleteAceptaIdSinDatosDeFormulario(): void
+    {
+        $this->db->table('productos_crud')->insert(['nombre' => 'Borrado API']);
+        $id = $this->db->insertID();
+        $this->model->completeFieldList();
+        $this->setPost([]);
+
+        $result = $this->model->performDelete($id);
+
+        $this->assertTrue($result);
+        $this->assertTableCount('productos_crud', 0);
     }
 }

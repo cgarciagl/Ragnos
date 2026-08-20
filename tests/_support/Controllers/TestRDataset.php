@@ -34,6 +34,9 @@ class TestRDataset extends RDataset
      */
     public $onBeforeUpdate = null;
 
+    /** @var callable|null */
+    public $onAfterInsert = null;
+
     /**
      * Callable opcional para personalizar _beforeDelete.
      *
@@ -55,6 +58,9 @@ class TestRDataset extends RDataset
     public function _afterInsert(): void
     {
         $this->afterInsertCalls[] = true;
+        if ($this->onAfterInsert !== null) {
+            ($this->onAfterInsert)();
+        }
     }
 
     public function _beforeUpdate(&$dataArray): void
