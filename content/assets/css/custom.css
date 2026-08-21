@@ -427,6 +427,22 @@
   color: #93c5fd !important;
 }
 
+/* Input Groups & Addons en Modo Oscuro */
+[data-bs-theme="dark"] .input-group > .input-group-text {
+  background-color: var(--bs-body-secondary) !important;
+  border-color: var(--bs-border-color) !important;
+  color: var(--bs-body-color) !important;
+}
+
+[data-bs-theme="dark"] .input-group-text .bi-cash-coin,
+[data-bs-theme="dark"] .input-group-text .bi-currency-dollar {
+  color: #4ade80 !important;
+}
+
+[data-bs-theme="dark"] .input-group-text .bi-calendar-event {
+  color: #60a5fa !important;
+}
+
 /* Animaciones suaves */
 @keyframes fadeInDown {
   from {
