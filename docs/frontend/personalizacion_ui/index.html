@@ -197,7 +197,7 @@
             
             <li class="nav-item" data-bs-level="1"><a href="#personalizacion-de-la-interfaz-ui" class="nav-link">Personalización de la Interfaz (UI)</a>
               <ul class="nav flex-column">
-            <li class="nav-item" data-bs-level="2"><a href="#menu-lateral-sidebar" class="nav-link">Menú Lateral (Sidebar)</a>
+            <li class="nav-item" data-bs-level="2"><a href="#barra-superior-topbar-y-navegacion-global" class="nav-link">Barra Superior (Topbar) y Navegación Global</a>
               <ul class="nav flex-column">
               </ul>
             </li>
@@ -205,7 +205,7 @@
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#barra-superior-topbar" class="nav-link">Barra Superior (Topbar)</a>
+            <li class="nav-item" data-bs-level="2"><a href="#modo-oscuro-modo-claro-darklight-theme" class="nav-link">Modo Oscuro / Modo Claro (Dark/Light Theme)</a>
               <ul class="nav flex-column">
               </ul>
             </li>
@@ -217,104 +217,158 @@
                     <div class="col-md-9" role="main">
 
 <h1 id="personalizacion-de-la-interfaz-ui">Personalización de la Interfaz (UI)</h1>
-<p>Ragnos utiliza <strong>AdminLTE 3</strong> como base para su interfaz, integrado con el sistema de vistas de CodeIgniter 4. Aquí te explicamos cómo personalizar los elementos comunes como el menú lateral, el logotipo y la barra superior.</p>
-<h2 id="menu-lateral-sidebar">Menú Lateral (Sidebar)</h2>
-<p>El menú lateral se encuentra en:
-📂 <code>app/Views/template/sidebar.php</code></p>
-<p>Al igual que la barra superior, el menú lateral está centralizado en la clase <code>MenuBuilder</code>.</p>
-<h3 id="configuracion-del-menu-lateral">Configuración del Menú Lateral</h3>
+<p>Ragnos utiliza <strong>AdminLTE 4</strong> (basado en <strong>Bootstrap 5</strong>) con un esquema moderno de <strong>Navegación Superior (<em>Top Navigation Layout</em>)</strong>, integrado con el sistema de vistas de CodeIgniter 4. Aquí te explicamos cómo personalizar los elementos comunes como la navegación, el logotipo y la barra superior.</p>
+<h2 id="barra-superior-topbar-y-navegacion-global">Barra Superior (Topbar) y Navegación Global</h2>
+<p>La barra superior se encuentra en:
+📂 <code>app/Views/template/topbar.php</code></p>
+<p>Toda la navegación del sistema está centralizada en la barra superior y configurada mediante la clase <code>MenuBuilder</code> para facilitar el mantenimiento y control dinámico de accesos.</p>
+<h3 id="configuracion-del-menu-de-navegacion">Configuración del Menú de Navegación</h3>
 <p>El menú se define en la clase:
 📂 <code>app/Libraries/MenuBuilder.php</code></p>
-<p>Esta clase contiene el método <code>getSidebarMenu()</code> que devuelve un array con la estructura del menú lateral, permitiendo inyectar lógica de permisos basada en el servicio <code>Admin_aut</code>.</p>
+<p>Esta clase contiene el método <code>getTopMenu()</code> que devuelve un array con la estructura del menú. Cada elemento puede ser un enlace simple o un menú desplegable con hijos (<code>children</code>), con soporte para validaciones de grupos y permisos mediante <code>Admin_aut</code>.</p>
 <p><strong>Ejemplo de estructura en <code>MenuBuilder</code>:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="x">public function getSidebarMenu(): array</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="x">public function getTopMenu(): array</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="x">{</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="x">    $auth = service('Admin_aut');</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="x">    $menu = [];</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="x">    if ($auth-&gt;isUserInGroup('administrador')) {</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="x">        $menu[] = [</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="x">            'title'    =&gt; 'Usuarios',</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="x">            'icon'     =&gt; 'bi-people',</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="x">            'children' =&gt; [</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="x">                [</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="x">                    'title' =&gt; 'Usuarios',</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="x">                    'url'   =&gt; site_url('usuarios'),</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="x">                    'icon'  =&gt; 'bi-person-circle',</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="x">                ],</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="x">            ],</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="x">        ];</span>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="x">    }</span>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="x">    return $menu;</span>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="x">}</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="x">    // Enlace simple</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="x">    $menu[] = [</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="x">        'title' =&gt; 'Inicio',</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="x">        'url'   =&gt; site_url('admin'),</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="x">        'icon'  =&gt; 'bi-house-door',</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="x">    ];</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="x">    // Menú desplegable</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="x">    $menu[] = [</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="x">        'title'    =&gt; 'Catálogos',</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="x">        'icon'     =&gt; 'bi-file-spreadsheet-fill',</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="x">        'children' =&gt; [</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="x">            [</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="x">                'title' =&gt; 'Oficinas',</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="x">                'url'   =&gt; site_url('tienda/oficinas'),</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="x">                'icon'  =&gt; 'bi-building',</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="x">            ],</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="x">            ['divider' =&gt; true],</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="x">            [</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="x">                'title' =&gt; 'Pagos',</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="x">                'url'   =&gt; site_url('tienda/pagos'),</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="x">                'icon'  =&gt; 'bi-cash',</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="x">            ],</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="x">        ],</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="x">    ];</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a><span class="x">    // Sección con control de permisos</span>
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a><span class="x">    if ($auth-&gt;isUserInGroup('administrador')) {</span>
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a><span class="x">        $menu[] = [</span>
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a><span class="x">            'title'    =&gt; 'Administración',</span>
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a><span class="x">            'icon'     =&gt; 'bi-shield-lock',</span>
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a><span class="x">            'children' =&gt; [</span>
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a><span class="x">                [</span>
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a><span class="x">                    'title' =&gt; 'Usuarios',</span>
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a><span class="x">                    'url'   =&gt; site_url('usuarios'),</span>
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a><span class="x">                    'icon'  =&gt; 'bi-person-circle',</span>
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a><span class="x">                ],</span>
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a><span class="x">                [</span>
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a><span class="x">                    'title' =&gt; 'Grupos de Usuarios',</span>
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a><span class="x">                    'url'   =&gt; site_url('gruposdeusuarios'),</span>
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a><span class="x">                    'icon'  =&gt; 'bi-people',</span>
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a><span class="x">                ],</span>
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a><span class="x">                ['divider' =&gt; true],</span>
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a><span class="x">                [</span>
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a><span class="x">                    'title' =&gt; 'Perfil de Usuario',</span>
+<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a><span class="x">                    'url'   =&gt; site_url('admin/perfil'),</span>
+<a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a><span class="x">                    'icon'  =&gt; 'bi-person-badge-fill',</span>
+<a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a><span class="x">                ],</span>
+<a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a><span class="x">            ],</span>
+<a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a><span class="x">        ];</span>
+<a id="__codelineno-0-56" name="__codelineno-0-56" href="#__codelineno-0-56"></a><span class="x">    }</span>
+<a id="__codelineno-0-57" name="__codelineno-0-57" href="#__codelineno-0-57"></a>
+<a id="__codelineno-0-58" name="__codelineno-0-58" href="#__codelineno-0-58"></a><span class="x">    return $menu;</span>
+<a id="__codelineno-0-59" name="__codelineno-0-59" href="#__codelineno-0-59"></a><span class="x">}</span>
 </code></pre></div>
-<h3 id="uso-en-la-vista">Uso en la Vista</h3>
-<p>El archivo <code>sidebar.php</code> utiliza el servicio <code>menu</code> para iterar sobre los elementos:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="cp">&lt;?php</span> <span class="k">foreach</span> <span class="p">(</span><span class="nx">service</span><span class="p">(</span><span class="s1">'menu'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">getSidebarMenu</span><span class="p">()</span> <span class="k">as</span> <span class="nv">$item</span><span class="p">)</span><span class="o">:</span> <span class="cp">?&gt;</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="x">    &lt;!-- Lógica de renderizado del sidebar --&gt;</span>
+<h3 id="uso-en-la-vista-superior">Uso en la Vista Superior</h3>
+<p>Para renderizar el menú, la vista <code>topbar.php</code> utiliza el servicio <code>menu</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="cp">&lt;?php</span> <span class="k">foreach</span> <span class="p">(</span><span class="nx">service</span><span class="p">(</span><span class="s1">'menu'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">getTopMenu</span><span class="p">()</span> <span class="k">as</span> <span class="nv">$item</span><span class="p">)</span><span class="o">:</span> <span class="cp">?&gt;</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="x">    &lt;!-- Lógica de renderizado de enlaces y desplegables --&gt;</span>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="cp">&lt;?php</span> <span class="k">endforeach</span><span class="p">;</span> <span class="cp">?&gt;</span>
 </code></pre></div>
-<p>Esto centraliza toda la navegación de la aplicación en un solo lugar, facilitando el control de accesos y la organización del código.</p>
+<p>Esto permite agregar nuevas opciones de navegación simplemente editando <code>MenuBuilder</code> sin necesidad de modificar el HTML de la plantilla.</p>
 <h2 id="personalizacion-del-logotipo-y-titulo">Personalización del Logotipo y Título</h2>
 <h3 id="titulo-de-la-aplicacion">Título de la Aplicación</h3>
-<p>El nombre que aparece junto al logo se configura globalmente en <code>app/Config/RagnosConfig.php</code>:</p>
+<p>El nombre que aparece en la barra superior y en el encabezado se configura globalmente en <code>app/Config/RagnosConfig.php</code>:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="x">public $Ragnos_application_title = 'Mi Empresa';</span>
 </code></pre></div>
-<h3 id="logotipo">Logotipo</h3>
-<p>El logo se imprime en la parte superior del archivo <code>sidebar.php</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="x">&lt;div class="sidebar-brand"&gt;</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="x">    &lt;a href="</span><span class="cp">&lt;?</span><span class="o">=</span> <span class="nx">site_url</span><span class="p">()</span> <span class="cp">?&gt;</span><span class="x">" class="brand-link"&gt;</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="x">        &lt;!-- Puedes cambiar este span por una etiqueta img --&gt;</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="x">        &lt;span class="brand-text font-weight-light"&gt;</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="x">            </span><span class="cp">&lt;?</span><span class="o">=</span> <span class="nx">Ragnos</span><span class="o">::</span><span class="na">config</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">Ragnos_application_title</span><span class="p">;</span> <span class="cp">?&gt;</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="x">        &lt;/span&gt;</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="x">    &lt;/a&gt;</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="x">&lt;/div&gt;</span>
+<h3 id="logotipo-de-marca">Logotipo de Marca</h3>
+<p>El logotipo se ubica a la izquierda de la barra superior en <code>topbar.php</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">&lt;</span><span class="nt">a</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  <span class="na">class</span><span class="o">=</span><span class="s">"navbar-brand d-flex align-items-center gap-2"</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  <span class="na">href</span><span class="o">=</span><span class="s">"&lt;?= site_url('admin') ?&gt;"</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="p">&gt;</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  <span class="p">&lt;</span><span class="nt">img</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="na">src</span><span class="o">=</span><span class="s">"&lt;?= base_url('img/favicon.webp') ?&gt;"</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="na">alt</span><span class="o">=</span><span class="s">"Logo"</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="na">class</span><span class="o">=</span><span class="s">"brand-image rounded"</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    <span class="na">style</span><span class="o">=</span><span class="s">"width: 28px; height: 28px;"</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>  <span class="p">/&gt;</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>  <span class="p">&lt;</span><span class="nt">span</span> <span class="na">class</span><span class="o">=</span><span class="s">"brand-text fw-bold fs-5"</span><span class="p">&gt;</span><span class="cp">&lt;?= $appTitle ?&gt;</span><span class="p">&lt;/</span><span class="nt">span</span><span class="p">&gt;</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
 </code></pre></div>
-<p>Para usar una imagen:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="x">&lt;img src="</span><span class="cp">&lt;?</span><span class="o">=</span> <span class="nx">base_url</span><span class="p">(</span><span class="s1">'content/img/mi-logo.png'</span><span class="p">)</span> <span class="cp">?&gt;</span><span class="x">" alt="Logo" class="brand-image img-circle elevation-3" style="opacity: .8"&gt;</span>
-</code></pre></div>
-<h2 id="barra-superior-topbar">Barra Superior (Topbar)</h2>
-<p>La barra superior se encuentra en:
-📂 <code>app/Views/template/topbar.php</code></p>
-<p>A diferencia del menú lateral, el menú principal de la barra superior está centralizado en una clase para facilitar su mantenimiento y permitir una configuración más dinámica.</p>
-<h3 id="configuracion-del-menu-de-navegacion">Configuración del Menú de Navegación</h3>
-<p>El menú se define en la clase:
-📂 <code>app/Libraries/MenuBuilder.php</code></p>
-<p>Esta clase contiene el método <code>getTopMenu()</code> que devuelve un array con la estructura del menú. Cada elemento puede ser un enlace simple o un desplegable con hijos (<code>children</code>).</p>
-<p><strong>Ejemplo de estructura en <code>MenuBuilder</code>:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="x">public function getTopMenu(): array</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="x">{</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="x">    return [</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="x">        [</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="x">            'title' =&gt; 'Inicio',</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="x">            'url'   =&gt; site_url(),</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="x">            'icon'  =&gt; 'bi-house-door',</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="x">        ],</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="x">        [</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="x">            'title'    =&gt; 'Catálogos',</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="x">            'icon'     =&gt; 'bi-file-spreadsheet-fill',</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="x">            'children' =&gt; [</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="x">                [</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="x">                    'title' =&gt; 'Oficinas',</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="x">                    'url'   =&gt; site_url('tienda/oficinas'),</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="x">                    'icon'  =&gt; 'bi-building',</span>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="x">                ],</span>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="x">                ['divider' =&gt; true],</span>
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="x">                // ... más hijos</span>
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="x">            ],</span>
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="x">        ],</span>
-<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="x">    ];</span>
-<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="x">}</span>
-</code></pre></div>
-<h3 id="uso-en-la-vista-superior">Uso en la Vista superior</h3>
-<p>Para renderizar el menú, se utiliza el servicio <code>menu</code> inyectado en la vista:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="cp">&lt;?php</span> <span class="k">foreach</span> <span class="p">(</span><span class="nx">service</span><span class="p">(</span><span class="s1">'menu'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">getTopMenu</span><span class="p">()</span> <span class="k">as</span> <span class="nv">$item</span><span class="p">)</span><span class="o">:</span> <span class="cp">?&gt;</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="x">    &lt;!-- Lógica de renderizado --&gt;</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="cp">&lt;?php</span> <span class="k">endforeach</span><span class="p">;</span> <span class="cp">?&gt;</span>
-</code></pre></div>
-<p>Esto permite agregar nuevas opciones de menú simplemente editando la clase <code>MenuBuilder</code> sin necesidad de modificar el HTML de la barra superior.</p></div>
+<h2 id="modo-oscuro-modo-claro-darklight-theme">Modo Oscuro / Modo Claro (Dark/Light Theme)</h2>
+<p>La plantilla base incorpora un selector rápido de tema claro/oscuro en la barra superior con persistencia en <code>localStorage</code> y soporte nativo de Bootstrap 5 (<code>data-bs-theme</code>), permitiendo una experiencia visual fluida sin parpadeos de carga (<em>anti-flicker</em>).</p>
+<h3 id="estandares-de-clases-y-colores-para-compatibilidad-de-tema">Estándares de Clases y Colores para Compatibilidad de Tema</h3>
+<p>Al crear vistas y componentes en Ragnos, se deben utilizar las clases semánticas de Bootstrap 5 en lugar de colores fijos:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Elemento</th>
+<th style="text-align: left;">❌ Evitar (Color Fijo)</th>
+<th style="text-align: left;">✅ Usar (Semántico)</th>
+<th style="text-align: left;">Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Texto principal</strong></td>
+<td style="text-align: left;"><code>text-dark</code>, <code>text-black</code></td>
+<td style="text-align: left;"><code>text-body</code></td>
+<td style="text-align: left;">Se adapta automáticamente al color de texto según el tema.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Texto secundario</strong></td>
+<td style="text-align: left;"><code>text-muted</code> con hex fijos</td>
+<td style="text-align: left;"><code>text-body-secondary</code>, <code>text-muted</code></td>
+<td style="text-align: left;">Mantiene legibilidad y contraste adecuado.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Fondos de tarjeta/bloques</strong></td>
+<td style="text-align: left;"><code>bg-white</code></td>
+<td style="text-align: left;"><code>bg-body</code>, <code>bg-body-tertiary</code></td>
+<td style="text-align: left;">Permite que las tarjetas y contenedores alternen fondo oscuro/claro.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Fondos secundarios</strong></td>
+<td style="text-align: left;"><code>bg-light</code></td>
+<td style="text-align: left;"><code>bg-body-secondary</code></td>
+<td style="text-align: left;">Proporciona contraste suave en ambos temas.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Bordes</strong></td>
+<td style="text-align: left;"><code>border-white</code>, <code>border-dark</code></td>
+<td style="text-align: left;"><code>border</code>, <code>border-secondary-subtle</code></td>
+<td style="text-align: left;">Evita bordes rígidos o invisibles.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="reglas-css-contextuales">Reglas CSS Contextuales</h3>
+<p>Para estilos personalizados o componentes externos (DataTables, ECharts, Select2), se utiliza el selector <code>[data-bs-theme="dark"]</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c">/* Ejemplo de estilos contextuales para Modo Oscuro */</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="o">[</span><span class="nt">data-bs-theme</span><span class="o">=</span><span class="s2">"dark"</span><span class="o">]</span><span class="w"> </span><span class="p">.</span><span class="nc">mi-componente</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="k">background-color</span><span class="p">:</span><span class="w"> </span><span class="nf">var</span><span class="p">(</span><span class="nv">--bs-body-bg</span><span class="p">);</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="k">border-color</span><span class="p">:</span><span class="w"> </span><span class="nf">var</span><span class="p">(</span><span class="nv">--bs-border-color</span><span class="p">);</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span><span class="k">color</span><span class="p">:</span><span class="w"> </span><span class="nf">var</span><span class="p">(</span><span class="nv">--bs-body-color</span><span class="p">);</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="p">}</span>
+</code></pre></div></div>
             </div>
         </div>
 
