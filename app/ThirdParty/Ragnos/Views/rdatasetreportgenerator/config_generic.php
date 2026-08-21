@@ -425,13 +425,19 @@
 
     .card-footer.sticky-bottom {
         z-index: 1020;
-        backdrop-filter: blur(8px);
-        background-color: rgba(255, 255, 255, 0.9) !important;
+        backdrop-filter: blur(12px);
+        background-color: var(--bs-body-bg) !important;
+        border-top: 1px solid var(--bs-border-color) !important;
+    }
+
+    [data-bs-theme="dark"] .card-footer.sticky-bottom {
+        background-color: var(--bs-body-bg) !important;
+        border-top-color: var(--bs-border-color) !important;
     }
 
     .filter-card.sortable-ghost {
         opacity: 0.4;
-        background-color: var(--bs-light) !important;
+        background-color: var(--bs-body-secondary) !important;
     }
 
     .filter-error {
