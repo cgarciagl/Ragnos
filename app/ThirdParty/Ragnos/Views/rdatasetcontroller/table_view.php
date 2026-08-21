@@ -8,14 +8,14 @@ $clase              = mapClassToURL($controller_class);
     data-preselect="">
 
     <?php if ($title): ?>
-        <div class="card-header text-center">
-            <h3 class="card-title">
-                <?= $title; ?>
-            </h3>
-            <div class="card-tools"> <button type="button" class="btn btn-tool" data-lte-toggle="card-maximize"> <i
-                        data-lte-icon="maximize" class="bi bi-fullscreen"></i> <i data-lte-icon="minimize"
-                        class="bi bi-fullscreen-exit"></i> </button> </div>
-        </div>
+            <div class="card-header text-center">
+                <h3 class="card-title">
+                    <?= $title; ?>
+                </h3>
+                <div class="card-tools"> <button type="button" class="btn btn-tool" data-lte-toggle="card-maximize"> <i
+                            data-lte-icon="maximize" class="bi bi-fullscreen"></i> <i data-lte-icon="minimize"
+                            class="bi bi-fullscreen-exit"></i> </button> </div>
+            </div>
     <?php endif; ?>
 
     <div id="<?= $controllerUniqueID ?>tabs" class="card-body">
@@ -41,10 +41,10 @@ $clase              = mapClassToURL($controller_class);
             <div id="<?= $controllerUniqueID ?>_Tablediv" class="tablediv tab-pane show active p-3" role="tabpanel">
                 <!-- Toolbar & Filters -->
                 <div
-                    class="d-flex flex-wrap justify-content-between align-items-center mb-4 p-3 bg-light rounded border-start border-4 border-primary shadow-sm">
+                    class="d-flex flex-wrap justify-content-between align-items-center mb-3 p-2 px-3 bg-body-secondary rounded-3 border shadow-sm">
                     <div id="<?= $controllerUniqueID ?>_combo" class="d-flex align-items-center gap-2 mb-2 mb-lg-0">
                         <span class="fw-bold text-secondary text-uppercase small">
-                            <?= lang('Ragnos.Ragnos_in') ?>:
+                            <i class="bi bi-funnel me-1"></i><?= lang('Ragnos.Ragnos_in') ?>:
                         </span>
                         <div style="min-width: 200px;">
                             <?php
@@ -72,37 +72,34 @@ $clase              = mapClassToURL($controller_class);
                                 null,                         // No hay valor preseleccionado
                                 [
                                     'id'    => $controllerUniqueID . '_sel',
-                                    'class' => 'form-select shadow-sm'
+                                    'class' => 'form-select form-select-sm shadow-sm'
                                 ]
                             );
                             ?>
                         </div>
-                        <i class="bi bi-filter"></i>
                     </div>
 
                     <div class="d-flex align-items-center gap-2">
                         <?php if ($modelo->canInsert): ?>
-                            <button id="btn_<?= $controllerUniqueID ?>_New" class="toolbtn btn btn-primary btn-lg shadow-sm"
+                            <button id="btn_<?= $controllerUniqueID ?>_New" class="toolbtn btn btn-primary shadow-sm"
                                 title="<?= lang('Ragnos.Ragnos_new_record_tooltip') ?>">
-                                <i class="bi bi-plus-lg me-1"></i>
+                                <i class="bi bi-plus-lg"></i>
                             </button>
                         <?php endif; ?>
 
                         <button id="btn_<?= $controllerUniqueID ?>_Refresh"
-                            class="toolbtn btn btn-outline-secondary btn-lg bg-white shadow-sm"
+                            class="toolbtn btn btn-outline-secondary shadow-sm"
                             title="<?= lang('Ragnos.Ragnos_refresh_data_tooltip') ?>">
                             <i class="bi bi-arrow-clockwise"></i>
                         </button>
 
                         <a href="<?= site_url($clase . '/genericAdvancedReport') ?>"
-                            class="toolbtn btn btn-outline-secondary btn-lg bg-white shadow-sm"
+                            class="toolbtn btn btn-outline-secondary shadow-sm"
                             title="<?= lang('Ragnos.Ragnos_advanced_report_tooltip') ?>">
                             <i class="bi bi-printer"></i>
                         </a>
 
-                        <span
-                            class="px-3 py-2 border rounded bg-white text-danger fw-bold shadow-sm Ragnos-searchingtitle align-items-center"
-                            id="<?= $controllerUniqueID ?>_searching_title"></span>
+                        <span class="Ragnos-searchingtitle" id="<?= $controllerUniqueID ?>_searching_title"></span>
                     </div>
                 </div>
 
@@ -110,12 +107,12 @@ $clase              = mapClassToURL($controller_class);
                 <div class="table-responsive shadow-sm rounded border">
                     <table class="Ragnos_table table table-hover table-striped mb-0 align-middle"
                         id="<?= $controllerUniqueID ?>_table">
-                        <thead class="bg-light">
+                        <thead class="bg-body-secondary">
                             <tr>
                                 <?php foreach ($tablefields as $fieldItem): ?>
-                                    <th class="text-secondary text-uppercase small py-3 fw-bold border-bottom-0">
-                                        <?= $fieldlist[$fieldItem]->getLabel(); ?>
-                                    </th>
+                                        <th class="text-secondary text-uppercase small py-3 fw-bold border-bottom-0">
+                                            <?= $fieldlist[$fieldItem]->getLabel(); ?>
+                                        </th>
                                 <?php endforeach; ?>
                                 <th width="30px" class="border-bottom-0"></th>
                             </tr>

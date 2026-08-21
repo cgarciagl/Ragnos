@@ -174,8 +174,7 @@
 
     $('#<?= $controllerUniqueID ?>_Tablediv .dt-search').append($('#<?= $controllerUniqueID ?>_combo'));
 
-    $('#<?= $controllerUniqueID ?>_Tablediv .dt-search').addClass('d-flex flex-wrap justify-content-between align-items-center ps-4 bg-light rounded border-start border-4 border-primary shadow-sm');
-
+    $('#<?= $controllerUniqueID ?>_Tablediv .dt-search').addClass('d-flex flex-wrap justify-content-between align-items-center ps-4 bg-body-secondary rounded border-start border-4 border-primary shadow-sm');
     // 1. Definimos la lógica de lo que debe pasar (para reutilizarla)
     function <?= $controllerUniqueID ?>_ejecutarAccionDobleClick($row) {
         var lastCell = $row.find("td").last();
@@ -241,8 +240,8 @@
             $.extend(obj, Ragnos_csrf);
             getObject('<?= $clase . '/getRecordByAjax' ?>', obj, function (j) {
                 <?php foreach ($fieldlist as $fieldItem): ?>
-                    obj.Ragnos_value_ant_<?= $fieldItem->getFieldName(); ?> = j.<?= $fieldItem->getFieldName(); ?>;
-                <?php endforeach; ?>
+                        obj.Ragnos_value_ant_<?= $fieldItem->getFieldName(); ?> = j.<?= $fieldItem->getFieldName(); ?>;
+             <?php endforeach; ?>
 
                 getObject('<?= $clase . '/ajaxdelete' ?>', obj, function (obj) {
                     if (obj.result != 'ok') {
@@ -320,8 +319,8 @@
         }
 
         <?php if ($master): ?>
-            data.Ragnos_master = <?= json_encode((string) $master, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
-        <?php endif; ?>
+                data.Ragnos_master = <?= json_encode((string) $master, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
+      <?php endif; ?>
 
         const sourceUrl = '<?= site_url($clase . '/getAjaxGridData'); ?>';
         getObject(sourceUrl, data, function (response) {
@@ -335,11 +334,11 @@
                     lastCell.attr('idr', recordId);
 
                     <?php if ($modelo->canDelete): ?>
-                        lastCell.html('<i class="bi bi-trash ybtndelete"></i>');
+                            lastCell.html('<i class="bi bi-trash ybtndelete"></i>');
                         lastCell.addClass('<?= $controllerUniqueID ?>deleteme');
-                    <?php else: ?>
-                        lastCell.html('');
-                    <?php endif; ?>
+                   <?php else: ?>
+                            lastCell.html('');
+                <?php endif; ?>
                 });
             }
 

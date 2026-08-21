@@ -1,11 +1,11 @@
 <div class="divfield col-sm-3 mb-2">
     <label class="form-label" for="<?= $name ?>"><?= $label ?></label>
     <div class="position-relative" id='group_<?= $name ?>'>
-        <div class="p-2 text-center border rounded bg-light d-flex justify-content-center align-items-center"
-            style="border: 2px dashed #ccc !important; min-height: 200px; position: relative; overflow: hidden;"
-            ondragover="this.style.borderColor='#0d6efd'; this.style.backgroundColor='#e9ecef'; event.preventDefault();"
-            ondragleave="this.style.borderColor='#ccc'; this.style.backgroundColor='#f8f9fa';"
-            ondrop="this.style.borderColor='#ccc'; this.style.backgroundColor='#f8f9fa';">
+        <div class="p-2 text-center border rounded bg-body-secondary d-flex justify-content-center align-items-center"
+            style="border: 2px dashed var(--bs-border-color, #ccc) !important; min-height: 200px; position: relative; overflow: hidden;"
+            ondragover="this.style.borderColor='var(--bs-primary, #0d6efd)'; event.preventDefault();"
+            ondragleave="this.style.borderColor='var(--bs-border-color, #ccc)';"
+            ondrop="this.style.borderColor='var(--bs-border-color, #ccc)';">
 
             <input type="file" class="position-absolute top-0 start-0 w-100 h-100 opacity-0"
                 style="cursor: pointer; z-index: 5;" id="<?= $name ?>" name="<?= $name ?>" accept="image/*"

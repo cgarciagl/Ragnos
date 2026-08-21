@@ -7,7 +7,7 @@
 
         <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
             <!-- Header Premium -->
-            <div class="card-header bg-white py-2 px-4 border-bottom">
+            <div class="card-header bg-body py-2 px-4 border-bottom">
                 <div class="d-flex align-items-center w-100">
                     <div class="me-3">
                         <a href="javascript:history.back()" class="btn btn-outline-secondary btn-sm rounded-pill px-3">
@@ -19,7 +19,7 @@
                         <i class="bi bi-file-earmark-bar-graph-fill text-primary fs-5"></i>
                     </div>
                     <div class="flex-grow-1">
-                        <h5 class="fw-bold mb-0 text-dark" style="font-size: 1.15rem; line-height: 1.2;">
+                        <h5 class="fw-bold mb-0 text-body" style="font-size: 1.15rem; line-height: 1.2;">
                             <?= esc($title) ?>
                         </h5>
                         <div class="text-muted small"><?= lang('Ragnos.Ragnos_report_config_help') ?></div>
@@ -33,17 +33,17 @@
 
                     <div class="row g-0">
                         <!-- COLUMNA IZQUIERDA: Área de Filtros (Con fondo sutil) -->
-                        <div class="col-lg-8 border-end bg-light bg-opacity-10">
+                        <div class="col-lg-8 border-end bg-body-secondary bg-opacity-10">
                             <div class="p-3 p-lg-4">
 
                                 <!-- Barra de herramientas de filtros -->
-                                <div class="bg-white p-3 rounded-3 shadow-sm border mb-3">
+                                <div class="bg-body p-3 rounded-3 shadow-sm border mb-3">
                                     <label
                                         class="form-label small fw-bold text-uppercase text-muted mb-2 tracking-wide">
                                         <i class="bi bi-plus-circle me-1"></i> <?= lang('Ragnos.Ragnos_add_filter') ?>
                                     </label>
                                     <div class="input-group">
-                                        <span class="input-group-text bg-light border-end-0 text-muted ps-3">
+                                        <span class="input-group-text bg-body-secondary border-end-0 text-muted ps-3">
                                             <i class="bi bi-funnel"></i>
                                         </span>
                                         <?php
@@ -67,7 +67,7 @@
                                         $filters = $orderedFilters;
                                         ?>
                                         <select id="filterSelector"
-                                            class="form-select border-start-0 border-end-0 bg-light fw-medium py-2"
+                                            class="form-select border-start-0 border-end-0 bg-body-secondary fw-medium py-2"
                                             style="box-shadow: none;">
                                             <?php foreach ($filters as $field => $config): ?>
                                                 <option value="<?= esc($field) ?>" data-type="<?= esc($config['type']) ?>">
@@ -83,10 +83,11 @@
 
                                 <!-- Contenedor de Filtros Activos -->
                                 <div class="d-flex align-items-center mb-3">
-                                    <h6 class="fw-bold text-dark mb-0">
+                                    <h6 class="fw-bold text-body mb-0">
                                         <i class="bi bi-list-check me-2"></i><?= lang('Ragnos.Ragnos_filters') ?>
                                     </h6>
-                                    <span class="badge bg-light text-dark border ms-2 rounded-pill px-2 py-1 small"
+                                    <span
+                                        class="badge bg-body-secondary text-body border ms-2 rounded-pill px-2 py-1 small"
                                         id="filterCountBadge" style="display:none">0</span>
                                 </div>
 
@@ -94,7 +95,7 @@
                                     <!-- Empty State Moderno -->
                                     <div id="noFiltersMessage" class="text-center py-5">
                                         <div class="mb-3">
-                                            <div class="d-inline-flex align-items-center justify-content-center bg-light rounded-circle text-muted"
+                                            <div class="d-inline-flex align-items-center justify-content-center bg-body-secondary rounded-circle text-muted"
                                                 style="width: 80px; height: 80px;">
                                                 <i class="bi bi-filter opacity-25" style="font-size: 2.5rem;"></i>
                                             </div>
@@ -111,11 +112,11 @@
                         </div>
 
                         <!-- COLUMNA DERECHA: Configuración Lateral -->
-                        <div class="col-lg-4 bg-light bg-opacity-25 border-start">
+                        <div class="col-lg-4 bg-body-secondary bg-opacity-25 border-start">
                             <div class="p-3 p-lg-4 h-100 sticky-sidebar">
                                 <?php if (!empty($groupingOpts)): ?>
                                     <h6
-                                        class="fw-bold text-dark mb-3 pb-2 border-bottom border-2 w-100 d-flex align-items-center">
+                                        class="fw-bold text-body mb-3 pb-2 border-bottom border-2 w-100 d-flex align-items-center">
                                         <i class="bi bi-sliders me-2"></i>
                                         <?= lang('Ragnos.Ragnos_grouping') ?>
                                         <i class="bi bi-info-circle text-muted ms-auto fs-6" data-bs-toggle="tooltip"
@@ -139,7 +140,7 @@
                                                     <?= lang('Ragnos.Ragnos_level') ?>         <?= $i ?>
                                                 </label>
                                                 <div class="input-group shadow-sm rounded-3 overflow-hidden">
-                                                    <span class="input-group-text bg-white border-end-0 ps-3 text-primary">
+                                                    <span class="input-group-text bg-body border-end-0 ps-3 text-primary">
                                                         <i class="bi bi-layers<?= $i > 1 ? '-half' : '-fill' ?>"></i>
                                                     </span>
                                                     <select name="grouping_<?= $i ?>"
@@ -164,7 +165,7 @@
 
                                 <!-- Resumen dinámico de filtros (Punto 4) -->
                                 <div id="filterSummarySidebar" class="mt-4 pt-3 border-top" style="display:none;">
-                                    <h6 class="fw-bold text-dark mb-2 small text-uppercase tracking-wider">
+                                    <h6 class="fw-bold text-body mb-2 small text-uppercase tracking-wider">
                                         <i
                                             class="bi bi-funnel-fill me-2 text-primary"></i><?= lang('Ragnos.Ragnos_filters_summary') ?>
                                     </h6>
@@ -177,7 +178,7 @@
                     </div>
 
                     <!-- Footer de acciones Pegajoso -->
-                    <div class="card-footer bg-white p-3 border-top text-end sticky-bottom shadow-lg">
+                    <div class="card-footer bg-body p-3 border-top text-end sticky-bottom shadow-lg">
                         <div class="container-fluid p-0">
                             <button type="button" id="btnClearReport"
                                 class="btn btn-outline-secondary me-2 rounded-pill px-4">
@@ -204,7 +205,7 @@
 
 <script type="text/template" id="tpl-text">
     <div class="filter-card card border-0 shadow-sm animate__animated animate__fadeInUp mb-0" data-field="{field}">
-        <div class="card-body p-3 border rounded-3 position-relative bg-white">
+        <div class="card-body p-3 border rounded-3 position-relative bg-body">
             <div class="position-absolute top-0 start-0 bottom-0 ms-0 rounded-start-3" style="width: 4px; background-color: var(--bs-primary);"></div>
             
             <div class="d-flex align-items-center mb-2 ps-2">
@@ -226,9 +227,9 @@
                 <div class="col-md-5">
                     <div class="btn-group w-100" role="group">
                         <input type="radio" class="btn-check" name="filters_data[{field}][{idx}][match_type]" id="m_p_{field}_{idx}" value="partial" checked>
-                        <label class="btn btn-outline-light text-dark border btn-sm small" for="m_p_{field}_{idx}"><?= lang('Ragnos.Ragnos_partial_match') ?></label>
+                        <label class="btn btn-outline-secondary border btn-sm small" for="m_p_{field}_{idx}"><?= lang('Ragnos.Ragnos_partial_match') ?></label>
                         <input type="radio" class="btn-check" name="filters_data[{field}][{idx}][match_type]" id="m_e_{field}_{idx}" value="exact">
-                        <label class="btn btn-outline-light text-dark border btn-sm small" for="m_e_{field}_{idx}"><?= lang('Ragnos.Ragnos_exact_match') ?></label>
+                        <label class="btn btn-outline-secondary border btn-sm small" for="m_e_{field}_{idx}"><?= lang('Ragnos.Ragnos_exact_match') ?></label>
                     </div>
                 </div>
             </div>
@@ -238,7 +239,7 @@
 
 <script type="text/template" id="tpl-select">
     <div class="filter-card card border-0 shadow-sm animate__animated animate__fadeInUp mb-0" data-field="{field}">
-        <div class="card-body p-3 border rounded-3 position-relative bg-white">
+        <div class="card-body p-3 border rounded-3 position-relative bg-body">
             <div class="position-absolute top-0 start-0 bottom-0 ms-0 rounded-start-3" style="width: 4px; background-color: var(--bs-success);"></div>
 
             <div class="d-flex align-items-center mb-2 ps-2">
@@ -265,7 +266,7 @@
 
 <script type="text/template" id="tpl-boolean">
     <div class="filter-card card border-0 shadow-sm animate__animated animate__fadeInUp mb-0" data-field="{field}">
-        <div class="card-body p-3 border rounded-3 position-relative bg-white">
+        <div class="card-body p-3 border rounded-3 position-relative bg-body">
             <div class="position-absolute top-0 start-0 bottom-0 ms-0 rounded-start-3" style="width: 4px; background-color: var(--bs-info);"></div>
 
             <div class="d-flex align-items-center mb-2 ps-2">
@@ -292,7 +293,7 @@
 
 <script type="text/template" id="tpl-date_range">
     <div class="filter-card card border-0 shadow-sm animate__animated animate__fadeInUp mb-0" data-field="{field}">
-        <div class="card-body p-3 border rounded-3 position-relative bg-white">
+        <div class="card-body p-3 border rounded-3 position-relative bg-body">
             <div class="position-absolute top-0 start-0 bottom-0 ms-0 rounded-start-3" style="width: 4px; background-color: var(--bs-warning);"></div>
 
             <div class="d-flex align-items-center mb-2 ps-2">
@@ -327,7 +328,7 @@
 
 <script type="text/template" id="tpl-numeric_range">
     <div class="filter-card card border-0 shadow-sm animate__animated animate__fadeInUp mb-0" data-field="{field}">
-        <div class="card-body p-3 border rounded-3 position-relative bg-white">
+        <div class="card-body p-3 border rounded-3 position-relative bg-body">
             <div class="position-absolute top-0 start-0 bottom-0 ms-0 rounded-start-3" style="width: 4px; background-color: var(--bs-secondary);"></div>
 
             <div class="d-flex align-items-center mb-2 ps-2">
@@ -345,13 +346,13 @@
             <div class="row g-2 ps-2">
                 <div class="col-6">
                     <div class="input-group">
-                        <span class="input-group-text bg-light text-muted small"><?= lang('Ragnos.Ragnos_minimum') ?></span>
+                        <span class="input-group-text bg-body-secondary text-muted small"><?= lang('Ragnos.Ragnos_minimum') ?></span>
                         <input type="number" step="any" name="filters_data[{field}][{idx}][min]" class="form-control" placeholder="0.00">
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="input-group">
-                        <span class="input-group-text bg-light text-muted small"><?= lang('Ragnos.Ragnos_maximum') ?></span>
+                        <span class="input-group-text bg-body-secondary text-muted small"><?= lang('Ragnos.Ragnos_maximum') ?></span>
                         <input type="number" step="any" name="filters_data[{field}][{idx}][max]" class="form-control" placeholder="inf">
                     </div>
                 </div>
@@ -362,14 +363,14 @@
 
 <script type="text/template" id="tpl-search">
     <div class="filter-card card border-0 shadow-sm animate__animated animate__fadeInUp mb-0" data-field="{field}">
-        <div class="card-body p-3 border rounded-3 position-relative bg-white">
-            <div class="position-absolute top-0 start-0 bottom-0 ms-0 rounded-start-3" style="width: 4px; background-color: var(--bs-dark);"></div>
+        <div class="card-body p-3 border rounded-3 position-relative bg-body">
+            <div class="position-absolute top-0 start-0 bottom-0 ms-0 rounded-start-3" style="width: 4px; background-color: var(--bs-secondary);"></div>
 
             <div class="d-flex align-items-center mb-2 ps-2">
                 <div class="drag-handle me-2 text-muted cursor-move" style="cursor: move;">
                     <i class="bi bi-grip-vertical fs-5"></i>
                 </div>
-                <span class="badge bg-dark bg-opacity-10 text-dark fw-bold f-label px-2 py-1">
+                <span class="badge bg-secondary bg-opacity-10 text-body fw-bold f-label px-2 py-1">
                     <i class="bi bi-search me-1"></i> {label}
                 </span>
                 <button type="button" class="btn btn-icon btn-sm text-muted ms-auto p-0 btn-remove-filter hover-danger" aria-label="Eliminar filtro">
@@ -379,7 +380,7 @@
             
             <div class="ps-2">
                  <div class="input-group input-group-sm">
-                    <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
+                    <span class="input-group-text bg-body border-end-0 text-muted"><i class="bi bi-search"></i></span>
                     <input type="text" class="form-control border-start-0 ragnos-search-field" 
                            id="disp_{field}_{idx}" 
                            data-display-input="true"

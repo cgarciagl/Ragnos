@@ -5,20 +5,27 @@
 
 /* --- Info Cards --- */
 .custom-info-card {
-  background-color: #fff;
-  border: 1px solid #e3e6f0;
-  border-radius: 0.5rem;
+  background-color: var(--bs-card-bg, var(--bs-body-bg, #fff)) !important;
+  color: var(--bs-body-color, #212529) !important;
+  border: 1px solid var(--bs-border-color, #e3e6f0) !important;
+  border-radius: 0.75rem;
   display: flex;
   align-items: center;
-  padding: 1rem;
-  box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.05);
+  padding: 1.25rem 1rem;
+  box-shadow: 0 0.15rem 1.75rem 0 rgba(0, 0, 0, 0.05);
   height: 100%;
   transition: all 0.3s ease;
 }
 
+[data-bs-theme="dark"] .custom-info-card {
+  background-color: #1e293b !important;
+  box-shadow: 0 0.15rem 1.75rem 0 rgba(0, 0, 0, 0.35) !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
 .custom-info-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 0.5rem 2rem 0 rgba(58, 59, 69, 0.15) !important;
+  box-shadow: 0 0.5rem 2rem 0 rgba(0, 0, 0, 0.15) !important;
 }
 
 .icon-container {
@@ -27,7 +34,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 0.25rem;
+  border-radius: 0.5rem;
   font-size: 2rem;
   color: #fff;
   margin-right: 1rem;
@@ -42,25 +49,59 @@
 .text-content h3 {
   margin-bottom: 0.1rem;
   font-weight: 700;
+  color: var(--bs-body-color);
 }
 
 .text-content p {
   margin: 0;
   font-size: 0.9rem;
-  color: #6c757d;
+  color: var(--bs-secondary-color);
 }
 
-/* --- Clickable Links in Tables --- */
-.btn-link {
+[data-bs-theme="dark"] .text-content h3 {
+  color: #f8fafc !important;
+}
+
+[data-bs-theme="dark"] .text-content p {
+  color: #94a3b8 !important;
+}
+
+/* --- Clickable Links in Tables and Cards --- */
+.btn-link,
+.card-tools a,
+.ligacliente,
+.ligaproducto {
   cursor: pointer;
-  color: blue;
+  color: var(--bs-primary);
   text-decoration: underline;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
 }
 
-.btn-link:hover {
-  color: #0056b3;
-  transform: translateX(3px);
+.btn-link:hover,
+.card-tools a:hover,
+.ligacliente:hover,
+.ligaproducto:hover {
+  color: var(--bs-primary-text-emphasis, #0a58ca);
+}
+
+[data-bs-theme="dark"] a:not(.btn):not(.dropdown-item):not(.nav-link),
+[data-bs-theme="dark"] .link-primary,
+[data-bs-theme="dark"] .btn-link,
+[data-bs-theme="dark"] .card-tools a,
+[data-bs-theme="dark"] .ligacliente,
+[data-bs-theme="dark"] .ligaproducto {
+  color: #60a5fa !important;
+  text-decoration-color: rgba(96, 165, 250, 0.4) !important;
+}
+
+[data-bs-theme="dark"] a:not(.btn):not(.dropdown-item):not(.nav-link):hover,
+[data-bs-theme="dark"] .link-primary:hover,
+[data-bs-theme="dark"] .btn-link:hover,
+[data-bs-theme="dark"] .card-tools a:hover,
+[data-bs-theme="dark"] .ligacliente:hover,
+[data-bs-theme="dark"] .ligaproducto:hover {
+  color: #93c5fd !important;
+  text-decoration-color: #93c5fd !important;
 }
 
 .card-title {

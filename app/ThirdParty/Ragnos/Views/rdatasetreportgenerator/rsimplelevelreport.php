@@ -3,7 +3,7 @@ $totalrecords = 0;
 $grouprecords = 0; ?>
 
 
-<div class="d-print-none bg-white p-3 rounded shadow-sm border mb-3" id="barradebotones">
+<div class="d-print-none bg-body p-3 rounded shadow-sm border mb-3" id="barradebotones">
     <div class="d-flex justify-content-between align-items-center">
         <div>
             <a href="javascript:history.back()" class="btn btn-outline-secondary">

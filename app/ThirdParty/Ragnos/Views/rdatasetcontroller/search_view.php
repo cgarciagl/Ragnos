@@ -20,10 +20,10 @@ $clase              = mapClassToURL($controller_class);
     <div id="<?= $controllerUniqueID ?>_Tablediv" class="tablediv card-body p-3">
         <!-- Toolbar & Filters -->
         <div
-            class="flex-wrap justify-content-between align-items-center bg-light rounded border-start border-4 border-primary shadow-sm mb-2">
+            class="d-flex flex-wrap justify-content-between align-items-center mb-3 p-2 px-3 bg-body-secondary rounded-3 border shadow-sm">
             <div id="<?= $controllerUniqueID ?>_combo" class="d-flex align-items-center gap-2 mb-2 mb-lg-0">
-                <span class="fw-bold text-secondary text-uppercase small ms-2">
-                    <?= lang('Ragnos.Ragnos_in') ?>:
+                <span class="fw-bold text-secondary text-uppercase small">
+                    <i class="bi bi-funnel me-1"></i><?= lang('Ragnos.Ragnos_in') ?>:
                 </span>
                 <div style="min-width: 200px;">
                     <?php
@@ -51,24 +51,21 @@ $clase              = mapClassToURL($controller_class);
                         null,                         // No hay valor preseleccionado
                         [
                             'id'    => $controllerUniqueID . '_sel',
-                            'class' => 'form-select shadow-sm'
+                            'class' => 'form-select form-select-sm shadow-sm'
                         ]
                     );
                     ?>
                 </div>
-                <i class="bi bi-filter"></i>
             </div>
 
-            <span
-                class="px-3 py-2 border rounded bg-white text-danger fw-bold shadow-sm Ragnos-searchingtitle align-items-center"
-                id="<?= $controllerUniqueID ?>_searching_title"></span>
+            <span class="Ragnos-searchingtitle" id="<?= $controllerUniqueID ?>_searching_title"></span>
         </div>
 
         <!-- Table -->
         <div class="table-responsive shadow-sm rounded border">
             <table class="Ragnos_table table table-hover table-striped mb-0 align-middle"
                 id="<?= $controllerUniqueID ?>_table">
-                <thead class="bg-light">
+                <thead class="bg-body-secondary">
                     <tr>
                         <?php foreach ($tablefields as $fieldItem): ?>
                             <th class="text-secondary text-uppercase small py-3 fw-bold border-bottom-0">

@@ -154,8 +154,8 @@ class RSimpleLevelReport
         }
 
         $html = $isGrandTotal
-            ? '<tfoot><tr class="bg-primary bg-opacity-10 text-dark fw-bold border-top border-primary">' // Totales generales destacados
-            : '</tbody><tfoot class="fw-bold text-dark bg-white border-top"><tr>'; // Subtotales limpios
+            ? '<tfoot><tr class="bg-primary bg-opacity-10 text-body fw-bold border-top border-primary">' // Totales generales destacados
+            : '</tbody><tfoot class="fw-bold text-body bg-body-tertiary border-top"><tr>'; // Subtotales limpios
 
         $totalsSource = $isGrandTotal ? $this->grandTotals : $this->groupTotals;
         $label        = $isGrandTotal ? 'RESUMEN GENERAL' : 'SUBTOTAL';
@@ -172,7 +172,7 @@ class RSimpleLevelReport
             if ($isFirstColumn) {
                 $countBadge = $isGrandTotal
                     ? ''
-                    : "<span class='badge bg-light text-secondary border fw-normal ms-2'>{$this->grouprecords} regs</span>";
+                    : "<span class='badge bg-body-secondary text-body border fw-normal ms-2'>{$this->grouprecords} regs</span>";
 
                 $content       = "<span class='text-uppercase small'>{$label}</span> $countBadge";
                 $isFirstColumn = false;
@@ -291,7 +291,7 @@ class RSimpleLevelReport
                         $headerHtml .= "<span class='badge bg-{$color} me-2 p-2 rounded-1'><i class='bi bi-layers-fill'></i></span>";
                         $headerHtml .= "<div>";
                         $headerHtml .= "<div class='text-uppercase text-muted' style='font-size: 0.65rem; letter-spacing: 1px;'>" . htmlspecialchars($label) . "</div>";
-                        $headerHtml .= "<div class='fs-4 fw-bold text-dark lh-1'>" . htmlspecialchars((string) $currentVal) . "</div>";
+                        $headerHtml .= "<div class='fs-4 fw-bold text-body lh-1'>" . htmlspecialchars((string) $currentVal) . "</div>";
                         $headerHtml .= "</div></div>";
                     } else {
                         // Indentación para subniveles
@@ -299,9 +299,9 @@ class RSimpleLevelReport
                         $label       = $groupConfig['label'] ?? $fieldKey;
                         $headerHtml .= "<div class='mt-3 mb-2 d-flex align-items-center' style='margin-left: {$indent}px;'>";
                         $headerHtml .= "<i class='bi bi-arrow-return-right text-muted me-2'></i>";
-                        $headerHtml .= "<div class='bg-light border rounded px-3 py-1 d-inline-flex align-items-center gap-2 shadow-sm'>";
+                        $headerHtml .= "<div class='bg-body-secondary border rounded px-3 py-1 d-inline-flex align-items-center gap-2 shadow-sm'>";
                         $headerHtml .= "<span class='text-secondary small fw-bold text-uppercase'>" . htmlspecialchars($label) . ":</span>";
-                        $headerHtml .= "<span class='fw-bold text-dark'>" . htmlspecialchars((string) $currentVal) . "</span>";
+                        $headerHtml .= "<span class='fw-bold text-body'>" . htmlspecialchars((string) $currentVal) . "</span>";
                         $headerHtml .= "</div></div>";
                     }
                 }
@@ -330,16 +330,16 @@ class RSimpleLevelReport
 
     public function generate(): string
     {
-        $output = '<div id="imprimible" class="ragnos-report-container p-4 bg-white shadow rounded mb-5">';
+        $output = '<div id="imprimible" class="ragnos-report-container p-4 bg-body shadow-sm border rounded mb-5">';
 
         // Header del reporte con fecha
         $output .= '<div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">';
         $output .= '<div class="w-100">';
-        $output .= '<h2 class="mb-0 fw-bold text-dark">' . htmlspecialchars($this->title) . '</h2>';
+        $output .= '<h2 class="mb-0 fw-bold text-body">' . htmlspecialchars($this->title) . '</h2>';
         if (!empty($this->descfilter)) {
-            $output .= '<div class="alert alert-light border border-secondary border-start-0 border-end-0 border-top-0 border-bottom-0 border-start border-5 border-primary shadow-sm mt-3 mb-0 d-flex align-items-center">';
+            $output .= '<div class="alert alert-light bg-body-tertiary border border-secondary border-start-0 border-end-0 border-top-0 border-bottom-0 border-start border-5 border-primary shadow-sm mt-3 mb-0 d-flex align-items-center">';
             $output .= '<div class="fs-4 text-primary me-3">&#9873;</div>'; // Icono Unicode de filtro/bandera o similar si no hay FA
-            $output .= '<div><span class="text-uppercase small fw-bold text-muted d-block">Filtros Activos</span><span class="fs-5 text-dark fw-medium">' . htmlspecialchars($this->descfilter) . '</span></div>';
+            $output .= '<div><span class="text-uppercase small fw-bold text-muted d-block">Filtros Activos</span><span class="fs-5 text-body fw-medium">' . htmlspecialchars($this->descfilter) . '</span></div>';
             $output .= '</div>';
         }
         $output .= '</div>';

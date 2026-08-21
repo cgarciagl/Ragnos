@@ -101,8 +101,8 @@
                 <div class="alert alert-warning d-flex align-items-center mb-0 alert-detail-form shadow-sm" style="border-bottom-left-radius: 0; border-bottom-right-radius: 0;">
                     <i class="bi bi-info-circle-fill fs-3 me-3"></i>
                     <div>
-                        <h5 class="mb-1 text-dark fw-bold"><?= lang('Ragnos.Ragnos_detail_form_alert_title') ?></h5>
-                        <p class="mb-0 text-dark"><?= lang('Ragnos.Ragnos_detail_form_alert_text') ?></p>
+                        <h5 class="mb-1 text-body fw-bold"><?= lang('Ragnos.Ragnos_detail_form_alert_title') ?></h5>
+                        <p class="mb-0 text-body"><?= lang('Ragnos.Ragnos_detail_form_alert_text') ?></p>
                     </div>
                 </div>`;
                 $formCard.prepend(htmlAlert);
@@ -126,7 +126,7 @@
     <div class="row clearfix" id="panel<?= $primaryKey ?>_<?php echo $primaryKeyValue; ?>">
         <div class="card shadow-sm border-secondary">
             <?php if (count($detailsControllers) == 1): ?>
-                <div class="card-header pt-3 bg-light">
+                <div class="card-header pt-3 bg-body-secondary">
                     <h5 class="card-title mb-0">
                         <strong><?= lang('Ragnos.details') ?></strong>
                     </h5>
@@ -135,7 +135,7 @@
                     <div id="detalle<?= $primaryKey ?>_<?php echo $primaryKeyValue; ?>_0"></div>
                 </div>
             <?php else: ?>
-                <div class="card-header pt-3 bg-light">
+                <div class="card-header pt-3 bg-body-secondary">
                     <ul class="nav nav-tabs card-header-tabs" id="detailsTab<?= $primaryKey ?>_<?= $primaryKeyValue ?>"
                         role="tablist">
                         <?php foreach ($detailsControllers as $index => $dc):

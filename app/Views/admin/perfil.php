@@ -15,13 +15,13 @@
 
             <div class="card-body box-profile profile-card-body pt-0">
                 <div class="text-center mb-3 position-relative">
-                    <div class="profile-avatar-frame d-inline-block p-1 bg-white rounded-circle shadow-sm">
-                        <img class="profile-user-img rounded-circle img-fluid border border-3 border-white shadow-sm hover-grow"
+                    <div class="profile-avatar-frame d-inline-block p-1 bg-body rounded-circle shadow-sm">
+                        <img class="profile-user-img rounded-circle img-fluid border border-3 border-body shadow-sm hover-grow"
                             src="./img/logomini.webp" id="fotoPerfil" alt="Foto de perfil" width="110" height="110">
                     </div>
                 </div>
 
-                <h4 class="profile-username text-center fw-bold text-dark mb-1">
+                <h4 class="profile-username text-center fw-bold text-body mb-1">
                     <?= $auth->name(); ?>
                 </h4>
 
@@ -33,17 +33,17 @@
 
                 <div class="row g-0 profile-stats text-center mb-4 rounded-3 py-3 mx-1">
                     <div class="col-4 border-end border-light-subtle">
-                        <h6 class="fw-bold text-dark mb-0">1,322</h6>
+                        <h6 class="fw-bold text-body mb-0">1,322</h6>
                         <small class="text-muted text-uppercase tracking-wider"
                             style="font-size: 0.65rem;">Seguidores</small>
                     </div>
                     <div class="col-4 border-end border-light-subtle">
-                        <h6 class="fw-bold text-dark mb-0">543</h6>
+                        <h6 class="fw-bold text-body mb-0">543</h6>
                         <small class="text-muted text-uppercase tracking-wider"
                             style="font-size: 0.65rem;">Siguiendo</small>
                     </div>
                     <div class="col-4">
-                        <h6 class="fw-bold text-dark mb-0">13K</h6>
+                        <h6 class="fw-bold text-body mb-0">13K</h6>
                         <small class="text-muted text-uppercase tracking-wider"
                             style="font-size: 0.65rem;">Amigos</small>
                     </div>
@@ -65,36 +65,36 @@
         <div class="card perfil-card profile-details mb-4 animate__animated animate__fadeInLeft"
             style="animation-delay: 0.1s;">
             <div class="card-header profile-section-header py-3">
-                <h6 class="card-title fw-bold text-dark mb-0">
+                <h6 class="card-title fw-bold text-body mb-0">
                     <i class="bi bi-info-circle-fill text-primary me-2"></i>Información Personal
                 </h6>
             </div>
             <div class="card-body profile-details-body pt-1">
                 <div class="d-flex align-items-start mb-4">
-                    <div class="bg-light rounded-3 p-2 me-3">
+                    <div class="bg-body-secondary rounded-3 p-2 me-3">
                         <i class="bi bi-book text-secondary"></i>
                     </div>
                     <div>
                         <small class="text-muted d-block text-uppercase fw-bold tracking-tighter"
                             style="font-size: 0.65rem;">Educación</small>
-                        <span class="text-dark small fw-medium">Maestría en Redes con Mención Honorífica</span>
+                        <span class="text-body small fw-medium">Maestría en Redes con Mención Honorífica</span>
                     </div>
                 </div>
 
                 <div class="d-flex align-items-start mb-4">
-                    <div class="bg-light rounded-3 p-2 me-3">
+                    <div class="bg-body-secondary rounded-3 p-2 me-3">
                         <i class="bi bi-geo-alt text-secondary"></i>
                     </div>
                     <div>
                         <small class="text-muted d-block text-uppercase fw-bold tracking-tighter"
                             style="font-size: 0.65rem;">Ubicación</small>
-                        <span class="text-dark small fw-medium">Xalapa, Veracruz, México</span>
+                        <span class="text-body small fw-medium">Xalapa, Veracruz, México</span>
                     </div>
                 </div>
 
                 <div class="mb-4">
                     <div class="d-flex align-items-center mb-2">
-                        <div class="bg-light rounded-3 p-2 me-3">
+                        <div class="bg-body-secondary rounded-3 p-2 me-3">
                             <i class="bi bi-pencil text-secondary"></i>
                         </div>
                         <small class="text-muted text-uppercase fw-bold tracking-tighter"
@@ -115,7 +115,7 @@
                 </div>
 
                 <div
-                    class="bg-light bg-opacity-50 rounded-3 p-3 mt-2 border-start border-3 border-primary border-opacity-25">
+                    class="bg-body-secondary rounded-3 p-3 mt-2 border-start border-3 border-primary border-opacity-25">
                     <small class="text-muted d-block mb-1 text-uppercase fw-bold" style="font-size: 0.6rem;">Biografía
                         Corta</small>
                     <p class="text-muted mb-0 small fst-italic lh-sm">
@@ -159,13 +159,13 @@
                     <div class="tab-pane fade show active" id="activity" role="tabpanel" aria-labelledby="activity-tab">
                         <!-- Post Estilizado -->
                         <div
-                            class="post-item bg-white border border-light-subtle rounded-4 p-4 mb-4 hover-shadow transition-all">
+                            class="post-item bg-body border border-light-subtle rounded-4 p-4 mb-4 hover-shadow transition-all">
                             <div class="d-flex align-items-center justify-content-between mb-4">
                                 <div class="d-flex align-items-center">
-                                    <img class="rounded-circle border border-2 border-white shadow-sm me-3"
+                                    <img class="rounded-circle border border-2 border-body shadow-sm me-3"
                                         src="./img/avatar.jpg" alt="User Image" style="width: 48px; height: 48px;">
                                     <div>
-                                        <h6 class="mb-0 fw-bold text-dark">Jahir Castillo</h6>
+                                        <h6 class="mb-0 fw-bold text-body">Jahir Castillo</h6>
                                         <small class="text-muted"><i class="bi bi-globe me-1"></i>Público • Hace 7:30
                                             PM</small>
                                     </div>
@@ -178,14 +178,14 @@
                                 </div>
                             </div>
 
-                            <p class="text-dark mb-4 lh-base fs-6 opacity-75">
+                            <p class="text-body mb-4 lh-base fs-6 opacity-75">
                                 Hemos completado la fase 1 del despliegue en la nueva infraestructura. Los tiempos de
                                 respuesta han mejorado significativamente y el equipo está listo para la siguiente
                                 etapa.
                             </p>
 
                             <div
-                                class="d-flex align-items-center justify-content-between bg-light bg-opacity-50 rounded-3 p-3 mb-4">
+                                class="d-flex align-items-center justify-content-between bg-body-secondary bg-opacity-50 rounded-3 p-3 mb-4">
                                 <div class="d-flex gap-3 text-muted small">
                                     <a href="#"
                                         class="text-decoration-none text-primary fw-bold transition-all hover-grow">
@@ -205,7 +205,7 @@
                                     style="width: 32px; height: 32px;">
                                 <div class="input-group">
                                     <input type="text"
-                                        class="form-control form-control-sm border-0 bg-light rounded-pill px-4"
+                                        class="form-control form-control-sm border-0 bg-body-secondary rounded-pill px-4"
                                         placeholder="Escribe un comentario amable..." aria-label="Comentario">
                                     <button type="button" class="btn btn-sm btn-link text-primary ms-1"
                                         aria-label="Enviar comentario"><i class="bi bi-cursor-fill"></i></button>
@@ -219,7 +219,7 @@
                                 <div class="bg-primary bg-opacity-10 p-2 rounded-circle me-3">
                                     <i class="bi bi-search text-primary fs-5"></i>
                                 </div>
-                                <h5 class="fw-bold text-dark mb-0">Ecosistema de Búsqueda Ragnos</h5>
+                                <h5 class="fw-bold text-body mb-0">Ecosistema de Búsqueda Ragnos</h5>
                             </div>
 
                             <div class="row g-4">
@@ -229,7 +229,7 @@
                                             <label for="editusuario"
                                                 class="form-label small fw-bold text-primary text-uppercase tracking-widest mb-3">Autocompleta
                                                 Rápido</label>
-                                            <div class="input-group shadow-sm rounded-pill bg-white">
+                                            <div class="input-group shadow-sm rounded-pill bg-body border">
                                                 <span class="input-group-text border-0 bg-transparent ps-4 text-muted">
                                                     <i class="bi bi-person-badge"></i>
                                                 </span>
@@ -250,12 +250,12 @@
                                 <div class="col-md-6">
                                     <div class="search-module h-100 hover-shadow transition-all">
                                         <div class="card-body p-4">
-                                            <h6 class="fw-bold text-dark mb-3">Catálogo con Lógica de Negocio</h6>
+                                            <h6 class="fw-bold text-body mb-3">Catálogo con Lógica de Negocio</h6>
                                             <div class="input-group shadow-sm rounded-3">
-                                                <span class="input-group-text border-0 bg-light text-success">
+                                                <span class="input-group-text border-0 bg-body-secondary text-success">
                                                     <i class="bi bi-funnel-fill"></i>
                                                 </span>
-                                                <input type="text" class="form-control bg-light py-2 border-0"
+                                                <input type="text" class="form-control bg-body-secondary py-2 border-0"
                                                     id="busquedausuario" placeholder="Buscar usuarios activos...">
                                             </div>
                                             <p class="mt-3 text-muted small mb-0">
@@ -269,12 +269,12 @@
                                 <div class="col-md-6">
                                     <div class="search-module h-100 hover-shadow transition-all">
                                         <div class="card-body p-4">
-                                            <h6 class="fw-bold text-dark mb-3">Búsqueda Nativa SQL</h6>
+                                            <h6 class="fw-bold text-body mb-3">Búsqueda Nativa SQL</h6>
                                             <div class="input-group shadow-sm rounded-3">
-                                                <span class="input-group-text border-0 bg-light text-warning">
+                                                <span class="input-group-text border-0 bg-body-secondary text-warning">
                                                     <i class="bi bi-database-fill-gear"></i>
                                                 </span>
-                                                <input type="text" class="form-control bg-light py-2 border-0"
+                                                <input type="text" class="form-control bg-body-secondary py-2 border-0"
                                                     id="busquedausuariosql" placeholder="Consultar grupo 3...">
                                             </div>
                                             <p class="mt-3 text-muted small mb-0">
@@ -306,7 +306,7 @@
                                     <div class="timeline-card animate__animated animate__fadeInUp">
                                         <div class="card-body p-4">
                                             <div class="d-flex justify-content-between mb-2">
-                                                <h6 class="fw-bold text-dark mb-0">Soporte Técnico Especializado</h6>
+                                                <h6 class="fw-bold text-body mb-0">Soporte Técnico Especializado</h6>
                                                 <small class="text-muted"><i class="bi bi-clock me-1"></i>12:05
                                                     PM</small>
                                             </div>
@@ -316,7 +316,7 @@
                                                 <button class="btn btn-primary btn-sm rounded-pill px-4">Ver
                                                     Detalle</button>
                                                 <button
-                                                    class="btn btn-light btn-sm rounded-pill px-4 text-danger">Archivar</button>
+                                                    class="btn btn-outline-secondary btn-sm rounded-pill px-4 text-danger">Archivar</button>
                                             </div>
                                         </div>
                                     </div>
@@ -333,7 +333,7 @@
                                                 <img src="./img/avatar.jpg" class="rounded-circle me-3"
                                                     style="width: 38px; height: 38px;">
                                                 <div class="flex-grow-1">
-                                                    <p class="mb-0 text-dark small"><span
+                                                    <p class="mb-0 text-body small"><span
                                                             class="fw-bold text-primary">Mariana Arcos</span> aceptó tu
                                                         invitación de colaboración.</p>
                                                     <small class="text-muted opacity-75">Hace 5 minutos</small>
@@ -351,12 +351,12 @@
                                         style="animation-delay: 0.2s;">
                                         <div class="card-body p-4">
                                             <div class="d-flex justify-content-between mb-3">
-                                                <h6 class="fw-bold text-dark mb-0">Nuevo comentario de <span
+                                                <h6 class="fw-bold text-body mb-0">Nuevo comentario de <span
                                                         class="text-warning">Ragueb Chain</span></h6>
                                                 <small class="text-muted">Hace 27 mins</small>
                                             </div>
                                             <p
-                                                class="bg-light p-3 rounded-3 text-muted small fst-italic mb-3 border-start border-3 border-warning">
+                                                class="bg-body-secondary p-3 rounded-3 text-muted small fst-italic mb-3 border-start border-3 border-warning">
                                                 "Excelente artículo sobre optimización de kernels, me ha servido mucho
                                                 para el proyecto actual."
                                             </p>
@@ -377,13 +377,13 @@
                             <div
                                 class="timeline-group border-start border-3 border-light ms-4 ps-4 mb-5 position-relative">
                                 <div class="timeline-entry mb-2 position-relative">
-                                    <div class="entry-icon position-absolute bg-dark text-white shadow">
+                                    <div class="entry-icon position-absolute bg-secondary text-white shadow">
                                         <i class="bi bi-camera-fill fs-6"></i>
                                     </div>
                                     <div class="timeline-card animate__animated animate__fadeInUp">
                                         <div class="card-body p-4">
                                             <div class="d-flex justify-content-between mb-3">
-                                                <h6 class="fw-bold text-dark mb-0"><span class="text-dark">Karla
+                                                <h6 class="fw-bold text-body mb-0"><span class="text-body">Karla
                                                         Ortiz</span> subió nuevas fotos</h6>
                                                 <small class="text-muted">Hace 2 días</small>
                                             </div>
@@ -407,7 +407,7 @@
                             </div>
 
                             <div class="timeline-end mt-4 ms-4 ps-1">
-                                <div class="bg-light rounded-circle shadow-sm d-inline-flex align-items-center justify-content-center"
+                                <div class="bg-body-secondary rounded-circle shadow-sm d-inline-flex align-items-center justify-content-center"
                                     style="width: 32px; height: 32px;">
                                     <i class="bi bi-clock text-muted"></i>
                                 </div>
@@ -423,7 +423,7 @@
             style="animation-delay: 0.3s;">
             <div class="card-header task-header py-4 px-4 d-flex align-items-center justify-content-between">
                 <div>
-                    <h5 class="fw-bold text-dark mb-1">Centro de Tareas y Pendientes</h5>
+                    <h5 class="fw-bold text-body mb-1">Centro de Tareas y Pendientes</h5>
                     <p class="text-muted small mb-0">Gestión de flujo de trabajo en tiempo real</p>
                 </div>
                 <div class="badge task-status rounded-pill px-4 py-2 fw-bold">
@@ -434,7 +434,7 @@
             <div class="card-body p-0 pb-3">
                 <div class="table-responsive">
                     <table class="table task-table table-hover align-middle mb-0">
-                        <thead class="bg-light bg-opacity-50">
+                        <thead class="bg-body-secondary">
                             <tr class="text-muted small">
                                 <th class="ps-4 border-0 py-3" style="width: 50px;">REF</th>
                                 <th class="border-0">DESCRIPCIÓN DE LA TAREA</th>
@@ -452,7 +452,7 @@
                                             <i class="bi bi-code-square text-danger fs-5"></i>
                                         </div>
                                         <div>
-                                            <span class="d-block fw-bold text-dark">Refactorización del Core de
+                                            <span class="d-block fw-bold text-body">Refactorización del Core de
                                                 Seguridad</span>
                                             <small class="text-muted">Prioridad Alta • Asignado por TI</small>
                                         </div>
@@ -460,7 +460,8 @@
                                 </td>
                                 <td>
                                     <div class="d-flex align-items-center">
-                                        <div class="progress flex-grow-1 rounded-pill bg-light" style="height: 8px;">
+                                        <div class="progress flex-grow-1 rounded-pill bg-body-secondary"
+                                            style="height: 8px;">
                                             <div class="progress-bar bg-danger rounded-pill shadow-sm"
                                                 style="width: 55%"></div>
                                         </div>
@@ -481,7 +482,7 @@
                                             <i class="bi bi-database-check text-warning-emphasis fs-5"></i>
                                         </div>
                                         <div>
-                                            <span class="d-block fw-bold text-dark">Depuración de Base de Datos
+                                            <span class="d-block fw-bold text-body">Depuración de Base de Datos
                                                 Legacy</span>
                                             <small class="text-muted">Mantenimiento Mensual</small>
                                         </div>
@@ -489,7 +490,8 @@
                                 </td>
                                 <td>
                                     <div class="d-flex align-items-center">
-                                        <div class="progress flex-grow-1 rounded-pill bg-light" style="height: 8px;">
+                                        <div class="progress flex-grow-1 rounded-pill bg-body-secondary"
+                                            style="height: 8px;">
                                             <div class="progress-bar bg-warning rounded-pill shadow-sm"
                                                 style="width: 70%"></div>
                                         </div>
@@ -511,7 +513,7 @@
                                             <i class="bi bi-clock-history text-primary fs-5"></i>
                                         </div>
                                         <div>
-                                            <span class="d-block fw-bold text-dark">Optimización de Cronjobs del
+                                            <span class="d-block fw-bold text-body">Optimización de Cronjobs del
                                                 Sistema</span>
                                             <small class="text-muted">Mejora de Rendimiento</small>
                                         </div>
@@ -519,7 +521,8 @@
                                 </td>
                                 <td>
                                     <div class="d-flex align-items-center">
-                                        <div class="progress flex-grow-1 rounded-pill bg-light" style="height: 8px;">
+                                        <div class="progress flex-grow-1 rounded-pill bg-body-secondary"
+                                            style="height: 8px;">
                                             <div class="progress-bar bg-primary rounded-pill shadow-sm"
                                                 style="width: 30%"></div>
                                         </div>
@@ -540,7 +543,7 @@
                                             <i class="bi bi-bug text-success fs-5"></i>
                                         </div>
                                         <div>
-                                            <span class="d-block fw-bold text-dark">Auditoría de Bugs y Soluciones
+                                            <span class="d-block fw-bold text-body">Auditoría de Bugs y Soluciones
                                                 UI</span>
                                             <small class="text-muted">Fase Final de QA</small>
                                         </div>
@@ -548,7 +551,8 @@
                                 </td>
                                 <td>
                                     <div class="d-flex align-items-center">
-                                        <div class="progress flex-grow-1 rounded-pill bg-light" style="height: 8px;">
+                                        <div class="progress flex-grow-1 rounded-pill bg-body-secondary"
+                                            style="height: 8px;">
                                             <div class="progress-bar bg-success rounded-pill shadow-sm"
                                                 style="width: 90%"></div>
                                         </div>
@@ -572,9 +576,11 @@
                                 href="#"><i class="bi bi-chevron-left"></i></a></li>
                         <li class="page-item active"><a
                                 class="page-link border-0 rounded-circle bg-primary text-white px-3" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link border-0 rounded-circle bg-light text-dark px-3"
+                        <li class="page-item"><a
+                                class="page-link border-0 rounded-circle bg-body-secondary text-body px-3"
                                 href="#">2</a></li>
-                        <li class="page-item"><a class="page-link border-0 rounded-circle bg-light text-dark px-3"
+                        <li class="page-item"><a
+                                class="page-link border-0 rounded-circle bg-body-secondary text-body px-3"
                                 href="#">3</a></li>
                         <li class="page-item"><a class="page-link border-0 rounded-circle text-primary" href="#"><i
                                     class="bi bi-chevron-right"></i></a></li>
@@ -596,11 +602,19 @@
         color: var(--perfil-ink);
     }
 
+    [data-bs-theme="dark"] .perfil-view {
+        --perfil-ink: #f3f4f6;
+        --perfil-muted: #9ca3af;
+        --perfil-line: rgba(255, 255, 255, 0.1);
+        --perfil-soft: rgba(255, 255, 255, 0.05);
+        --perfil-primary: #3b82f6;
+    }
+
     .perfil-view .perfil-card {
         border: 1px solid var(--perfil-line);
         border-radius: var(--perfil-radius);
-        background: #fff;
-        box-shadow: 0 8px 24px rgba(31, 41, 55, 0.06);
+        background: var(--bs-body-bg, #fff);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
     }
 
     .perfil-view .profile-cover {
@@ -614,7 +628,8 @@
     }
 
     .perfil-view .profile-avatar-frame {
-        box-shadow: 0 8px 18px rgba(31, 41, 55, 0.14) !important;
+        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.14) !important;
+        background: var(--bs-body-bg, #fff);
     }
 
     .perfil-view .profile-user-img {
@@ -632,7 +647,7 @@
     }
 
     .perfil-view .profile-username {
-        color: var(--perfil-ink) !important;
+        color: var(--bs-body-color, var(--perfil-ink)) !important;
         letter-spacing: -0.02em;
     }
 
@@ -641,6 +656,13 @@
         color: #0757c9;
         background: #eaf2ff;
         border: 1px solid #cfe0ff;
+    }
+
+    [data-bs-theme="dark"] .perfil-view .profile-role,
+    [data-bs-theme="dark"] .perfil-view .task-status {
+        color: #93c5fd;
+        background: rgba(13, 110, 253, 0.2);
+        border: 1px solid rgba(13, 110, 253, 0.4);
     }
 
     .perfil-view .profile-stats {
@@ -661,7 +683,7 @@
     .perfil-view .profile-tabs-header,
     .perfil-view .task-header,
     .perfil-view .task-footer {
-        background: #fff;
+        background: var(--bs-body-bg, #fff);
         border-color: var(--perfil-line) !important;
     }
 
@@ -686,13 +708,14 @@
     .perfil-view .post-item {
         border-color: var(--perfil-line) !important;
         border-radius: var(--perfil-radius) !important;
+        background: var(--bs-body-bg, #fff);
     }
 
     .perfil-view .search-feature,
     .perfil-view .search-module {
         border: 1px solid var(--perfil-line);
-        background: #fff;
-        box-shadow: 0 4px 14px rgba(31, 41, 55, 0.04);
+        background: var(--bs-body-bg, #fff);
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
     }
 
     .perfil-view .search-feature {
@@ -751,7 +774,7 @@
     .perfil-view .timeline-card {
         border: 1px solid var(--perfil-line);
         border-radius: var(--perfil-radius);
-        background: #fff;
+        background: var(--bs-body-bg, #fff);
     }
 
     .perfil-view .modern-timeline img[src="./img/sample.webp"] {
@@ -777,7 +800,7 @@
     }
 
     .perfil-view .task-table tbody tr:hover {
-        background: #f8fbff;
+        background: rgba(var(--bs-primary-rgb), 0.05);
     }
 
     .perfil-view .task-table .progress {
@@ -804,7 +827,7 @@
 
     .perfil-view .hover-shadow:hover {
         border-color: #bfd6fb !important;
-        box-shadow: 0 10px 22px rgba(31, 41, 55, 0.09) !important;
+        box-shadow: 0 10px 22px rgba(0, 0, 0, 0.12) !important;
     }
 
     .perfil-view .hover-grow:hover {

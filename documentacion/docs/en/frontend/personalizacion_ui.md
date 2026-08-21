@@ -1,38 +1,76 @@
 # UI Customization
 
-Ragnos uses **AdminLTE 3** as base for its interface, integrated with CodeIgniter 4 view system. Here we explain how to customize common elements like sidebar, logo and topbar.
+Ragnos uses **AdminLTE 4** (based on **Bootstrap 5**) with a modern **Top Navigation Layout**, integrated with CodeIgniter 4 view system. Here we explain how to customize common elements like navigation, logo, and topbar.
 
-## Sidebar
+## Topbar and Global Navigation
 
-Sidebar is located at:
-📂 `app/Views/template/sidebar.php`
+The topbar is located at:
+📂 `app/Views/template/topbar.php`
 
-Just like the topbar, the sidebar menu is centralized in the `MenuBuilder` class.
+All system navigation is centralized in the topbar and configured through the `MenuBuilder` class to simplify maintenance and dynamic access control.
 
-### Sidebar Menu Configuration
+### Navigation Menu Configuration
 
 The menu is defined in the class:
 📂 `app/Libraries/MenuBuilder.php`
 
-This class contains the `getSidebarMenu()` method which returns an array with the sidebar structure, allowing for permission logic based on the `Admin_aut` service.
+This class contains the `getTopMenu()` method which returns an array with the menu structure. Each item can be a simple link or a dropdown with children (`children`), with support for user group and permission validation via `Admin_aut`.
 
 **Example structure in `MenuBuilder`:**
 
 ```php
-public function getSidebarMenu(): array
+public function getTopMenu(): array
 {
     $auth = service('Admin_aut');
     $menu = [];
 
-    if ($auth->isUserInGroup('administrator')) {
+    // Simple link
+    $menu[] = [
+        'title' => 'Home',
+        'url'   => site_url('admin'),
+        'icon'  => 'bi-house-door',
+    ];
+
+    // Dropdown menu
+    $menu[] = [
+        'title'    => 'Catalogs',
+        'icon'     => 'bi-file-spreadsheet-fill',
+        'children' => [
+            [
+                'title' => 'Offices',
+                'url'   => site_url('tienda/oficinas'),
+                'icon'  => 'bi-building',
+            ],
+            ['divider' => true],
+            [
+                'title' => 'Payments',
+                'url'   => site_url('tienda/pagos'),
+                'icon'  => 'bi-cash',
+            ],
+        ],
+    ];
+
+    // Role-based permissions section
+    if ($auth->isUserInGroup('administrador')) {
         $menu[] = [
-            'title'    => 'Users',
-            'icon'     => 'bi-people',
+            'title'    => 'Administration',
+            'icon'     => 'bi-shield-lock',
             'children' => [
                 [
                     'title' => 'Users',
-                    'url'   => site_url('users'),
+                    'url'   => site_url('usuarios'),
                     'icon'  => 'bi-person-circle',
+                ],
+                [
+                    'title' => 'User Groups',
+                    'url'   => site_url('gruposdeusuarios'),
+                    'icon'  => 'bi-people',
+                ],
+                ['divider' => true],
+                [
+                    'title' => 'User Profile',
+                    'url'   => site_url('admin/perfil'),
+                    'icon'  => 'bi-person-badge-fill',
                 ],
             ],
         ];
@@ -42,99 +80,72 @@ public function getSidebarMenu(): array
 }
 ```
 
-### Usage in View
+### Usage in the Topbar View
 
-The `sidebar.php` file uses the `menu` service to iterate over items:
+To render the menu, the `topbar.php` view uses the `menu` service:
 
 ```php
-<?php foreach (service('menu')->getSidebarMenu() as $item): ?>
-    <!-- Sidebar rendering logic -->
+<?php foreach (service('menu')->getTopMenu() as $item): ?>
+    <!-- Rendering logic for links and dropdowns -->
 <?php endforeach; ?>
 ```
 
-This centralizes all application navigation in one place, making access control and code organization easier.
+This allows adding new navigation options simply by editing `MenuBuilder` without modifying the template HTML.
 
 ## Logo and Title Customization
 
 ### Application Title
 
-Name appearing next to logo is configured globally in `app/Config/RagnosConfig.php`:
+The application title appearing in the topbar and page header is configured globally in `app/Config/RagnosConfig.php`:
 
 ```php
 public $Ragnos_application_title = 'My Company';
 ```
 
-### Logo
+### Brand Logo
 
-Logo prints at top of `sidebar.php`:
+The brand logo is located on the left side of the topbar in `topbar.php`:
 
-```php
-<div class="sidebar-brand">
-    <a href="<?= site_url() ?>" class="brand-link">
-        <!-- You can change this span for an img tag -->
-        <span class="brand-text font-weight-light">
-            <?= Ragnos::config()->Ragnos_application_title; ?>
-        </span>
-    </a>
-</div>
+```html
+<a
+  class="navbar-brand d-flex align-items-center gap-2"
+  href="<?= site_url('admin') ?>"
+>
+  <img
+    src="<?= base_url('img/favicon.webp') ?>"
+    alt="Logo"
+    class="brand-image rounded"
+    style="width: 28px; height: 28px;"
+  />
+  <span class="brand-text fw-bold fs-5"><?= $appTitle ?></span>
+</a>
 ```
 
-To use an image:
+## Dark Mode / Light Mode Theme
 
-```php
-<img src="<?= base_url('content/img/my-logo.png') ?>" alt="Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-```
+The base template includes a fast theme switcher (dark/light) in the topbar with persistence in `localStorage` and native Bootstrap 5 (`data-bs-theme`) support, offering a smooth visual experience with anti-flicker loading.
 
-## Topbar
+### Class and Color Standards for Theme Compatibility
 
-Topbar is located at:
-📂 `app/Views/template/topbar.php`
+When creating views and components in Ragnos, Bootstrap 5 semantic classes should be used instead of hardcoded colors:
 
-Unlike the sidebar, the main menu in the topbar is centralized in a class to simplify maintenance and allow for a more dynamic configuration.
+| Element                    | ❌ Avoid (Hardcoded Color)    | ✅ Use (Semantic)                   | Description                                                   |
+| :------------------------- | :---------------------------- | :---------------------------------- | :------------------------------------------------------------ |
+| **Main text**              | `text-dark`, `text-black`     | `text-body`                         | Automatically adapts text color to active theme.              |
+| **Secondary text**         | `text-muted` with fixed hex   | `text-body-secondary`, `text-muted` | Ensures readability and proper contrast.                      |
+| **Card/Block Backgrounds** | `bg-white`                    | `bg-body`, `bg-body-tertiary`       | Allows cards and containers to toggle dark/light backgrounds. |
+| **Secondary Backgrounds**  | `bg-light`                    | `bg-body-secondary`                 | Provides soft contrast in both themes.                        |
+| **Borders**                | `border-white`, `border-dark` | `border`, `border-secondary-subtle` | Avoids rigid or invisible borders.                            |
 
-### Navigation Menu Configuration
+### Contextual CSS Rules
 
-The menu is defined in the class:
-📂 `app/Libraries/MenuBuilder.php`
+For custom styles or external components (DataTables, ECharts, Select2), use the `[data-bs-theme="dark"]` selector:
 
-This class contains the `getTopMenu()` method which returns an array with the menu structure. Each element can be a simple link or a dropdown with children (`children`).
-
-**Example structure in `MenuBuilder`:**
-
-```php
-public function getTopMenu(): array
-{
-    return [
-        [
-            'title' => 'Home',
-            'url'   => site_url(),
-            'icon'  => 'bi-house-door',
-        ],
-        [
-            'title'    => 'Catalogs',
-            'icon'     => 'bi-file-spreadsheet-fill',
-            'children' => [
-                [
-                    'title' => 'Offices',
-                    'url'   => site_url('store/offices'),
-                    'icon'  => 'bi-building',
-                ],
-                ['divider' => true],
-                // ... more children
-            ],
-        ],
-    ];
+```css
+/* Example of contextual Dark Mode styles */
+[data-bs-theme="dark"] .my-component {
+  background-color: var(--bs-body-bg);
+  border-color: var(--bs-border-color);
+  color: var(--bs-body-color);
 }
 ```
-
-### Usage in top View
-
-To render the menu, the `menu` service is used in the view:
-
-```php
-<?php foreach (service('menu')->getTopMenu() as $item): ?>
-    <!-- Rendering logic -->
-<?php endforeach; ?>
-```
-
-This allows adding new menu options simply by editing the `MenuBuilder` class without needing to modify the topbar HTML.

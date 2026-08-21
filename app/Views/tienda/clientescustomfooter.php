@@ -3,7 +3,7 @@
     <?php if (empty($historial)): ?>
         <div class="row justify-content-center">
             <div class="col-md-8 col-lg-6">
-                <div class="card border-0 shadow-sm rounded-4 bg-light py-5">
+                <div class="card border-0 shadow-sm rounded-4 bg-body-secondary py-5">
                     <div class="card-body text-center">
                         <div class="mb-3">
                             <i class="bi bi-basket2 h1 text-muted opacity-25" style="font-size: 4rem;"></i>
@@ -15,10 +15,10 @@
             </div>
         </div>
     <?php else: ?>
-            <?php
-            $ultimasOrdenes = array_slice($historial, 0, 5);
-            $ventas         = array_reverse($historial);
-            ?>
+        <?php
+        $ultimasOrdenes = array_slice($historial, 0, 5);
+        $ventas         = array_reverse($historial);
+        ?>
         <div class="row g-4 match-height">
             <!-- Left Column: Recent Orders -->
             <div class="col-lg-6">
@@ -26,7 +26,7 @@
                     <div
                         class="card-header bg-transparent border-0 pt-4 px-4 d-flex justify-content-between align-items-center">
                         <div>
-                            <h5 class="fw-bold text-dark mb-0"><i class="bi bi-clock-history me-2 text-primary"></i>Últimas
+                            <h5 class="fw-bold text-body mb-0"><i class="bi bi-clock-history me-2 text-primary"></i>Últimas
                                 Órdenes</h5>
                             <small class="text-muted">Resumen de actividad reciente</small>
                         </div>
@@ -59,7 +59,7 @@
                                         ?>
                                         <tr class="position-relative">
                                             <td class="ps-0 py-3 border-bottom-0">
-                                                <span class="fw-bold text-dark">#<?= $orden['orderNumber'] ?></span>
+                                                <span class="fw-bold text-body">#<?= $orden['orderNumber'] ?></span>
                                             </td>
                                             <td class="py-3 border-bottom-0">
                                                 <div class="d-flex align-items-center text-muted small">
@@ -69,7 +69,7 @@
                                             </td>
                                             <td class="py-3 border-bottom-0">
                                                 <span
-                                                    class="badge rounded-pill <?= $badgeBg ?> bg-opacity-10 text-dark border border-opacity-10 d-inline-flex align-items-center px-2 py-1">
+                                                    class="badge rounded-pill <?= $badgeBg ?> bg-opacity-10 text-body border border-opacity-10 d-inline-flex align-items-center px-2 py-1">
                                                     <i
                                                         class="bi <?= $statusConfig['icon'] ?> me-1 <?= str_replace('bg-', 'text-', $badgeBg) ?>"></i>
                                                     <?= $orderStatuses[$orden['status']] ?? $orden['status'] ?>
@@ -77,7 +77,7 @@
                                             </td>
                                             <td class="text-end pe-0 py-3 border-bottom-0">
                                                 <span
-                                                    class="fw-bold text-dark lead fs-6">$<?= number_format($orden['TotalVenta'], 2) ?></span>
+                                                    class="fw-bold text-body lead fs-6">$<?= number_format($orden['TotalVenta'], 2) ?></span>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
@@ -92,7 +92,7 @@
             <div class="col-lg-6">
                 <div class="card border-0 shadow-sm rounded-4 h-100">
                     <div class="card-header bg-transparent border-0 pt-4 px-4">
-                        <h5 class="fw-bold text-dark mb-0"><i class="bi bi-graph-up-arrow me-2 text-success"></i>Tendencia
+                        <h5 class="fw-bold text-body mb-0"><i class="bi bi-graph-up-arrow me-2 text-success"></i>Tendencia
                             de Ventas</h5>
                         <small class="text-muted">Desempeño histórico</small>
                     </div>
@@ -119,16 +119,18 @@
                 var fechas = rawData.map(item => item.orderDate);
                 var montos = rawData.map(item => item.TotalVenta);
 
-                var myChart = echarts.init(chartDom);
+                var isDark = document.documentElement.getAttribute('data-bs-theme') === 'dark';
+                var myChart = echarts.init(chartDom, isDark ? 'dark' : null);
 
                 var option = {
+                    backgroundColor: 'transparent',
                     tooltip: {
                         trigger: 'axis',
-                        backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                        borderColor: '#e9ecef',
+                        backgroundColor: isDark ? 'rgba(33, 37, 41, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+                        borderColor: isDark ? '#374151' : '#e9ecef',
                         borderWidth: 1,
-                        textStyle: { color: '#495057' },
-                        extraCssText: 'box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); border-radius: 8px;',
+                        textStyle: { color: isDark ? '#f8fafc' : '#495057' },
+                        extraCssText: 'box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); border-radius: 8px;',
                         formatter: function (params) {
                             var item = params[0];
                             if (!item) return '';
@@ -137,7 +139,7 @@
                             var valor = typeof moneyFormat === 'function' ? moneyFormat(rawItem.TotalVenta) : '$' + rawItem.TotalVenta;
                             return `<div class="p-1">
                                 <div class="small text-muted mb-1">${rawItem.orderDate}</div>
-                                <div class="fw-bold text-dark mb-1">Orden #${rawItem.orderNumber}</div>
+                                <div class="fw-bold mb-1">Orden #${rawItem.orderNumber}</div>
                                 <div class="text-primary fw-bold fs-6">${valor}</div>
                             </div>`;
                         }
