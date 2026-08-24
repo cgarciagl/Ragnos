@@ -125,11 +125,11 @@ Método estático para configurar una búsqueda sencilla en un input existente. 
 
 #### Parámetros
 
-- **`elemento`** (jQuery Selector | DOM Element): El input donde se habilitará la búsqueda.
+- **`elemento`** (string | DOM Element): El selector CSS o input donde se habilitará la búsqueda.
 - **`ruta`** (string): La URL del servidor (Controlador/Método) que procesará la búsqueda.
 - **`params`** (object): Configuración adicional.
   - `canSetToNull` (boolean): Define si se muestra el botón "X" para limpiar el campo (Default: `true`).
-- **`callback`** (function): Función a ejecutar tras una búsqueda exitosa. Recibe el objeto jQuery del input como argumento `e`.
+- **`callback`** (function): Función a ejecutar tras una búsqueda exitosa. Recibe el elemento DOM del input como argumento `e`.
 
 #### Retorno
 
@@ -139,18 +139,18 @@ No retorna valor. Modifica el DOM del input.
 
 ```javascript
 RagnosSearch.setupSimpleSearch(
-  $("#miInput"),
+  document.querySelector("#miInput"),
   "admin/usuarios/buscar",
   {},
   function (e) {
-    // Los datos del resultado se adjuntan al objeto jQuery en 'searchdata'
-    let resultado = e.data("searchdata");
+    // Los datos del resultado se adjuntan al elemento DOM
+    const resultado = e.ragnosSearchData;
 
     if (resultado) {
       console.log("ID seleccionado:", resultado.id);
       console.log("Nombre:", resultado.nombre);
       // Asignar valor al input visible
-      e.val(resultado.nombre);
+      e.value = resultado.nombre;
     }
   },
 );
@@ -158,9 +158,9 @@ RagnosSearch.setupSimpleSearch(
 
 ---
 
-### `$(selector).RagnosSearch(params)`
+### `new RagnosSearch(elemento, params)`
 
-Plugin de jQuery que instancia la clase `RagnosSearch`. Está diseñado para búsquedas más complejas, típicamente vinculadas a un controlador estándar del sistema (`RagnosController`) que implementa `searchByAjax` y soporta filtros estructurados.
+Clase nativa para búsquedas más complejas, típicamente vinculadas a un controlador estándar del sistema (`RagnosController`) que implementa `searchByAjax` y soporta filtros estructurados.
 
 #### Parámetros (`params`)
 
@@ -175,7 +175,7 @@ Objeto de configuración con:
 #### Ejemplo de uso
 
 ```javascript
-$("#inputBusquedaAvanzada").RagnosSearch({
+new RagnosSearch(document.querySelector("#inputBusquedaAvanzada"), {
   controller: "usuarios", // Busca en: usuarios/searchByAjax
 
   // Filtro: Usuarios activos (usu_activo = 'S') y del grupo 2
@@ -187,7 +187,7 @@ $("#inputBusquedaAvanzada").RagnosSearch({
   ),
 
   callback: function (e) {
-    let datos = e.data("searchdata");
+    const datos = e.ragnosSearchData;
     console.log("Datos recibidos:", datos);
 
     if (datos && datos.id) {
@@ -212,7 +212,7 @@ El sistema detecta automáticamente funciones globales con patrones específicos
 Se ejecutan automáticamente después de que un control `RagnosSearch` completa una selección.
 
 - **Patrón:** `_{id_del_input}OnSearch`
-- **Parámetro:** Recibe el objeto jQuery del control (input).
+- **Parámetro:** Recibe el elemento DOM del control (input).
 - **Uso:** Ideal para rellenar otros campos del formulario basándose en el resultado de la búsqueda.
 
 **Ejemplo del sistema (`_productCodeOnSearch`):**
@@ -222,11 +222,11 @@ Cuando se selecciona un producto en el input `productCode`, esta función busca 
 // Se activa al seleccionar algo en <input id="productCode" ...>
 function _productCodeOnSearch(control) {
   // 'control' es el input del código de producto
-  // Accedemos a los datos devueltos por la búsqueda con .data("searchdata")
-  let datos = control.data("searchdata");
+  // Accedemos a los datos devueltos por la búsqueda
+  const datos = control.ragnosSearchData;
 
   // Actualizamos otro campo (Precio Unitario) con el valor MSRP del producto
-  $('#detalleorden input[name="priceEach"]').val(datos.MSRP);
+  document.querySelector('#detalleorden input[name="priceEach"]').value = datos.MSRP;
 }
 ```
 
@@ -245,12 +245,12 @@ Cada vez que cambia algo en la tabla de detalles de órdenes (`Ordenesdetalles`)
 // Se activa al modificar la tabla <table id="Ordenesdetalles" ...>
 function _OrdenesdetallesOnChange(tabla) {
   // Obtenemos el ID de la orden actual
-  let orden = $("input[name='orderNumber']").val();
+  const orden = document.querySelector("input[name='orderNumber']").value;
 
   // Llamamos al servidor para recalcular el total
   getObject("tienda/ordenes/calculatotal", { orden: orden }, function (data) {
     // Actualizamos el campo visual de Total
-    $('input[name="total"]').val(data.total);
+    document.querySelector('input[name="total"]').value = data.total;
   });
 }
 ```
@@ -264,12 +264,12 @@ Una función simple diseñada para ser pasada como parámetro `callback` en `Rag
 
 ```javascript
 function pruebaBusquedaOffice(e) {
-  let datos = e.data("searchdata");
+  const datos = e.ragnosSearchData;
   console.log("Los datos de la busqueda por oficina", datos);
 }
 
 // Uso:
-// $('#oficina').RagnosSearch({ ..., callback: pruebaBusquedaOffice });
+// new RagnosSearch('#oficina', { ..., callback: pruebaBusquedaOffice });
 ```
 
 ---
@@ -280,7 +280,7 @@ Carga de forma asíncrona la tabla generada por un controlador en un elemento es
 
 ### Parámetros
 
-- **`selector`** (string): Selector de jQuery (ej. `'#mi_tabla_detalle'`) donde se inyectará el contenido HTML.
+- **`selector`** (string | DOM Element): Selector CSS (ej. `'#mi_tabla_detalle'`) o elemento donde se inyectará el contenido HTML.
 - **`controller`** (string): Nombre del controlador (o ruta URL) que responderá la petición. Internamente llama al método `tableByAjax` del controlador.
 - **`master`** (string, opcional): El ID del registro maestro. Si se proporciona, se asocia al objeto global de seguridad `Ragnos_csrf` para filtrar los resultados por este ID padre.
 
@@ -304,7 +304,7 @@ Similar a `showControllerTableIn`, pero diseñada específicamente para cargar v
 
 ### Parámetros
 
-- **`selector`** (string): Selector de jQuery donde se inyectará el reporte.
+- **`selector`** (string | DOM Element): Selector CSS o elemento donde se inyectará el reporte.
 - **`controller`** (string): Nombre del controlador. Internamente llama al método `reportByAjax` del controlador.
 
 ### Ejemplo de uso

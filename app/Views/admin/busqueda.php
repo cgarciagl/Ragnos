@@ -10,37 +10,40 @@
     <div id="respuestabusqueda" class="tablediv card boxshadowround Ragnos-widget Ragnos-search-widget d-none"></div>
 </div>
 <script>
-    $(function () {
+    onReady(() => {
+        const input = document.getElementById('buscando');
+        const results = document.getElementById('respuestabusqueda');
 
-        $('#buscando').on('input', function () {
-            debounce(function () { buscar() }, 400);
+        input.addEventListener('input', () => {
+            debounce(buscar, 400, input);
         });
 
         function buscar() {
-            let buscando = $('#buscando').val();
+            const buscando = input.value;
             getObject('<?= @$ruta ?>', {
                 searchTerm: buscando
             }, function (data) {
 
                 let res = muestraResultado(data);
-                $('#respuestabusqueda').hide().html(res).removeClass('d-none').show();
+                destroyDataTable(results.querySelector('table'));
+                results.innerHTML = res;
+                results.classList.remove('d-none');
                 if (data.resultado == 'NO') {
-                    $('#respuestabusqueda').shake();
+                    shakeElement(results);
                 }
 
-                let tabla = $('#respuestabusqueda table');
-                tabla.addClass('table table-striped table-bordered table-hover table-sm');
-                tabla.on('click', 'td', function () {
-                    let fila = $(this).parent('tr').index();
-                    let ResultData = data.datos[fila];
-                    cerrarModal(ResultData);
-                    return;
+                const table = results.querySelector('table');
+                table?.classList.add('table', 'table-striped', 'table-bordered', 'table-hover', 'table-sm');
+                table?.addEventListener('click', (event) => {
+                    const row = event.target.closest('tr');
+                    if (!row || !row.parentElement.matches('tbody')) return;
+                    cerrarModal(data.datos[Array.from(row.parentElement.rows).indexOf(row)]);
                 });
 
-                ponTablaPaginada(tabla, { ordering: false });
+                if (table) ponTablaPaginada(table, { ordering: false });
 
                 setTimeout(function () {
-                    $('#buscando').focus();
+                    input.focus();
                 }, 500);
             });
         }
@@ -49,24 +52,20 @@
             let s = '';
             if (data.resultado == 'NO') {
                 s = data.mensaje;
-                $('#respuestabusqueda').addClass('alert-danger');
+                results.classList.add('alert-danger');
             }
             if (data.resultado == 'SI') {
-                r = data.datos;
-                s = convertToTable(r);
-                $('#respuestabusqueda').removeClass('alert-danger');
+                s = convertToTable(data.datos);
+                results.classList.remove('alert-danger');
             }
             return s;
         }
 
         function cerrarModal(ResultData) {
-            mimodal = $('#busquedaModal')
-            mimodal.data('ResultData', ResultData);
-            try {
-                if (mimodal.length == 1) {
-                    mimodal.modal('hide')
-                }
-            } catch (error) { }
+            const modal = document.getElementById('busquedaModal');
+            if (!modal) return;
+            modal.ragnosResultData = ResultData;
+            bootstrap.Modal.getOrCreateInstance(modal).hide();
         }
 
         buscar();

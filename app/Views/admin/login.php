@@ -42,7 +42,7 @@
                     </div>
 
                     <script>
-                        $(function () {
+                        onReady(() => {
                             shakeElement(document.getElementById('formlogin'));
                         });
                     </script>
@@ -65,8 +65,8 @@
 
 
 <script>
-    $(function () {
-        $("input[name='usuario']").focus();
+    onReady(() => {
+        document.querySelector("input[name='usuario']").focus();
     });
 </script>
 

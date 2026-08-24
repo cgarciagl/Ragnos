@@ -21,29 +21,19 @@ $grouprecords = 0; ?>
     </div>
 </div>
 
-<div class="report-wrapper animate__animated animate__fadeIn">
+<div class="report-wrapper animate__animated animate__fadeIn" id="imprimible">
     <?php echo $yo->generate(); ?>
 </div>
 
 
 
-<script src="<?= base_url(); ?>/assets/js/printThis.min.js" type="text/javascript"></script>
-
 <script>
-    $(document).ready(function () {
-        $('#imprimirbtn').click(function () {
-            $('#imprimible').printThis({
-                debug: false,
-                importCSS: true,
-                importStyle: false,
-                printContainer: false,
-                removeInline: true,
-                loadCSS: "<?= base_url(); ?>/assets/css/forprint.min.css",
-                pageTitle: "<?= $yo->getTitle() ?> <?= uniqid() ?>"
-            });
+    onReady(() => {
+        document.getElementById('imprimirbtn').addEventListener('click', () => {
+            printElement('#imprimible', <?= json_encode($yo->getTitle() . ' ' . uniqid()) ?>);
         });
 
-        $('#exporttoexcel').click(function () {
+        document.getElementById('exporttoexcel').addEventListener('click', (event) => {
             var dt = new Date();
             var day = dt.getDate();
             var month = dt.getMonth() + 1;
@@ -51,8 +41,8 @@ $grouprecords = 0; ?>
             var hour = dt.getHours();
             var mins = dt.getMinutes();
             var postfix = day + "." + month + "." + year + "_" + hour + "." + mins;
-            exportToExcel('exportado_' + postfix, $('#imprimible').html());
-            e.preventDefault();
+            exportToExcel('exportado_' + postfix, document.getElementById('imprimible').innerHTML);
+            event.preventDefault();
         });
     });
 </script>

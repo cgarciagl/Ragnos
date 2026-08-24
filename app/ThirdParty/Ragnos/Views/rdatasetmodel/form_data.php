@@ -81,22 +81,22 @@
     </div>
 </div>
 <script>
-    $(function () {
+    onReady(() => {
         <?php use App\ThirdParty\Ragnos\Controllers\Ragnos; ?>
         let currency = '<?= Ragnos::config()->currency ?? 'USD' ?>';
-        $('input[money]').each(function () {
-            $(this).val(moneyFormat($(this).val(), currency));
+        document.querySelectorAll('input[money]').forEach((input) => {
+            input.value = moneyFormat(input.value, currency);
         });
 
         // Detectar si este formulario está dentro de una sección de "Detalles"
-        let $formCard = $('#<?= $formCardId ?>');
-        if ($formCard.parents('[id^="detalle"]').length > 0) {
+        const formCard = document.getElementById('<?= $formCardId ?>');
+        if (formCard.closest('[id^="detalle"]')) {
             // Añadir estilos para destacar la tarjeta
-            $formCard.removeClass('border-0 shadow-sm');
-            $formCard.addClass('border-warning border-3 shadow');
+            formCard.classList.remove('border-0', 'shadow-sm');
+            formCard.classList.add('border-warning', 'border-3', 'shadow');
 
             // Agregar alerta solo si no se ha agregado antes
-            if ($formCard.find('.alert-detail-form').length === 0) {
+            if (!formCard.querySelector('.alert-detail-form')) {
                 let htmlAlert = `
                 <div class="alert alert-warning d-flex align-items-center mb-0 alert-detail-form shadow-sm" style="border-bottom-left-radius: 0; border-bottom-right-radius: 0;">
                     <i class="bi bi-info-circle-fill fs-3 me-3"></i>
@@ -105,14 +105,14 @@
                         <p class="mb-0 text-body"><?= lang('Ragnos.Ragnos_detail_form_alert_text') ?></p>
                     </div>
                 </div>`;
-                $formCard.prepend(htmlAlert);
+                formCard.insertAdjacentHTML('afterbegin', htmlAlert);
 
                 // Resaltar el botón de Aceptar propio de esta pestaña
-                let $footer = $formCard.closest('.tab-pane').find('.card-footer');
-                let $btnOk = $footer.find('.btn-success');
-                if ($btnOk.length) {
-                    $btnOk.removeClass('btn-success').addClass('btn-warning fw-bold text-dark border-dark');
-                    $btnOk.html('<i class="bi bi-check-lg"></i>&nbsp; <?= lang('Ragnos.Ragnos_accept_and_save_detail') ?>');
+                const button = formCard.closest('.tab-pane')?.querySelector('.card-footer .btn-success');
+                if (button) {
+                    button.classList.remove('btn-success');
+                    button.classList.add('btn-warning', 'fw-bold', 'text-dark', 'border-dark');
+                    button.innerHTML = '<i class="bi bi-check-lg"></i>&nbsp; <?= lang('Ragnos.Ragnos_accept_and_save_detail') ?>';
                 }
             }
         }
@@ -176,10 +176,10 @@
     </div>
 
     <script>
-        $(document).ready(function () {
+        onReady(() => {
             let primaryKeyValue = '<?php echo $primaryKeyValue; ?>';
             if (primaryKeyValue == '') {
-                $("#panel<?= $primaryKey ?>_<?php echo $primaryKeyValue; ?>").remove();
+                document.getElementById("panel<?= $primaryKey ?>_<?php echo $primaryKeyValue; ?>")?.remove();
             } else {
                 <?php foreach ($detailsControllers as $index => $dc): ?>
                     <?php $urlCont = controllerNameToURL($dc); ?>

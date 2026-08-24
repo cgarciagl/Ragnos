@@ -1,5 +1,5 @@
 // Set base_url if not defined
-if (!base_url || typeof base_url !== "string") {
+if (typeof globalThis.base_url !== "string" || !globalThis.base_url) {
   try {
     const url = new URL(window.location.href);
     const pathSegments = url.pathname
@@ -7,7 +7,7 @@ if (!base_url || typeof base_url !== "string") {
       .split("/")
       .filter(Boolean);
 
-    base_url = `${url.protocol}//${url.host}/${encodeURIComponent(
+    globalThis.base_url = `${url.protocol}//${url.host}/${encodeURIComponent(
       pathSegments[0] || "",
     )}/`;
   } catch (error) {
@@ -15,44 +15,115 @@ if (!base_url || typeof base_url !== "string") {
       "Error al establecer base_url. Usando raíz como fallback:",
       error,
     );
-    base_url = "/";
+    globalThis.base_url = "/";
   }
 }
 
-// Variable para almacenar el ID del temporizador
-let debounceTimer;
+const debounceTimers = new Map();
+
+function onReady(callback) {
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", callback, { once: true });
+    return;
+  }
+
+  callback();
+}
+
+function getElement(target, root = document) {
+  if (target instanceof Element || target === document || target === window) {
+    return target;
+  }
+
+  return typeof target === "string" ? root.querySelector(target) : null;
+}
+
+function getElements(target, root = document) {
+  if (typeof target === "string") {
+    return Array.from(root.querySelectorAll(target));
+  }
+
+  if (target instanceof Element) {
+    return [target];
+  }
+
+  return Array.from(target || []);
+}
+
+function destroyDataTable(table) {
+  const element = getElement(table);
+  if (!element?.ragnosDataTable) return;
+
+  try {
+    element.ragnosDataTable.destroy();
+  } catch (error) {
+    console.warn("Unable to destroy DataTable cleanly:", error);
+  } finally {
+    delete element.ragnosDataTable;
+  }
+}
+
+function setHtml(target, html) {
+  const element = getElement(target);
+  if (!element) return null;
+
+  element
+    .querySelectorAll("table")
+    .forEach((table) => destroyDataTable(table));
+  element
+    .querySelectorAll("select")
+    .forEach((select) => select.tomselect?.destroy());
+  if (typeof RagnosSearch !== "undefined") {
+    RagnosSearch.destroyWithin(element);
+  }
+  element.innerHTML = html ?? "";
+  element.querySelectorAll("script").forEach((script) => {
+    const executableScript = document.createElement("script");
+    Array.from(script.attributes).forEach(({ name, value }) => {
+      executableScript.setAttribute(name, value);
+    });
+    executableScript.textContent = script.textContent;
+    script.replaceWith(executableScript);
+  });
+
+  return element;
+}
+
+function dispatchInputEvents(element) {
+  element.dispatchEvent(new Event("input", { bubbles: true }));
+  element.dispatchEvent(new Event("change", { bubbles: true }));
+}
 
 /**
  * Función de Debounce para retrasar la ejecución de una función.
  * @param {Function} func - La función a ejecutar después del retraso.
  * @param {number} delay - El tiempo de espera en milisegundos.
  */
-function debounce(func, delay) {
-  // 1. Limpia cualquier temporizador anterior
-  clearTimeout(debounceTimer);
-
-  // 2. Establece un nuevo temporizador
-  debounceTimer = setTimeout(() => {
-    // 3. Ejecuta la función después del retraso
-    func();
-  }, delay);
+function debounce(func, delay, key = "default") {
+  clearTimeout(debounceTimers.get(key));
+  debounceTimers.set(
+    key,
+    setTimeout(() => {
+      debounceTimers.delete(key);
+      func();
+    }, delay),
+  );
 }
 
 function aplicarDebounceABusqueda(datatableInstance, delay = 500) {
   // Selector para el input de búsqueda global de DataTables
-  const searchInput = $("div.dt-search input");
+  const table = datatableInstance.table().node();
+  const wrapper = table.closest(".dt-container") || table.parentElement;
+  const searchInput = wrapper?.querySelector(".dt-search input");
+  if (!searchInput || searchInput.dataset.ragnosDebounced === "true") return;
 
-  // Adjuntar el evento 'input' y aplicar el debounce
-  // Usamos .off().on() para asegurar un solo listener
-  searchInput.off("input.dt").on("input.dt", function () {
-    const searchTerm = this.value;
-
-    // Ejecuta la búsqueda de DataTables DESPUÉS del retraso
-    debounce(() => {
-      // Establece el nuevo término y fuerza un redibujado,
-      // lo que dispara la nueva solicitud AJAX (si serverSide es true)
-      datatableInstance.search(searchTerm).draw();
-    }, delay);
+  searchInput.dataset.ragnosDebounced = "true";
+  searchInput.addEventListener("input", () => {
+    debounce(
+      () => datatableInstance.search(searchInput.value).draw(),
+      delay,
+      searchInput,
+    );
   });
 }
 
@@ -200,31 +271,71 @@ function refreshPage() {
   location.reload();
 }
 
+function printElement(target, title = document.title) {
+  const element = getElement(target);
+  if (!element) return false;
+
+  const printable = element.cloneNode(true);
+  const sourceControls = element.querySelectorAll("input, textarea, select");
+  printable.querySelectorAll("input, textarea, select").forEach((control, index) => {
+    const source = sourceControls[index];
+    if (!source) return;
+    if (control instanceof HTMLInputElement) {
+      control.value = source.value;
+      control.toggleAttribute("checked", source.checked);
+    } else if (control instanceof HTMLTextAreaElement) {
+      control.textContent = source.value;
+    } else if (control instanceof HTMLSelectElement) {
+      Array.from(control.options).forEach((option, optionIndex) => {
+        option.selected = source.options[optionIndex]?.selected || false;
+      });
+    }
+  });
+  printable.querySelectorAll("script, iframe, object, embed").forEach((node) => node.remove());
+  [printable, ...printable.querySelectorAll("*")].forEach((node) => {
+    Array.from(node.attributes).forEach((attribute) => {
+      if (attribute.name.toLowerCase().startsWith("on")) {
+        node.removeAttribute(attribute.name);
+      }
+    });
+  });
+
+  const frame = document.createElement("iframe");
+  frame.hidden = true;
+  frame.title = "Print preview";
+  document.body.append(frame);
+  const styles = Array.from(document.querySelectorAll('link[rel="stylesheet"], style'))
+    .map((node) => node.outerHTML)
+    .join("");
+  frame.srcdoc = `<!doctype html><html><head><title>${escapeHtml(title)}</title>${styles}</head><body>${printable.outerHTML}</body></html>`;
+  frame.addEventListener(
+    "load",
+    () => {
+      frame.contentWindow.focus();
+      frame.contentWindow.print();
+      setTimeout(() => frame.remove(), 1000);
+    },
+    { once: true },
+  );
+  return true;
+}
+
 function serializeForm(formElement) {
   if (!(formElement instanceof HTMLFormElement)) return {};
   return Object.fromEntries(new FormData(formElement));
 }
 
 function shakeElement(el) {
-  if (el instanceof jQuery) {
-    el = el[0];
-  }
+  el = getElement(el);
+  if (!el) return;
   el.classList.add("shake");
   setTimeout(() => el.classList.remove("shake"), 400);
 }
 
-$(document)
-  .ajaxStart(function () {
-    mostrarCargando();
-  })
-  .ajaxStop(function () {
-    ocultarCargando();
-  });
-
 /**
  * Adds totals to a table either in the final row, final column, or both.
  *
- * @param {jQuery} targetTable - The jQuery object representing the table to modify.
+ * @param {HTMLTableElement|string} targetTable - The table to modify.
  * @param {boolean} [enRenglonFinal=false] - If true, adds a total row at the end of the table.
  * @param {boolean} [enColumnaFinal=true] - If true, adds a total column at the end of each row.
  */
@@ -235,16 +346,13 @@ function ponTotalesEnTabla(
 ) {
   if (
     !targetTable ||
-    (!(targetTable instanceof HTMLTableElement) &&
-      !(targetTable instanceof jQuery))
+    !(getElement(targetTable) instanceof HTMLTableElement)
   ) {
     console.error("Invalid table element");
     return;
   }
 
-  if (targetTable instanceof jQuery) {
-    targetTable = targetTable[0]; // Convert jQuery object to native HTMLTableElement
-  }
+  targetTable = getElement(targetTable);
   const tbody = targetTable.querySelector("tbody");
   const rows = Array.from(tbody.querySelectorAll("tr"));
   let columnCount = rows[0] ? rows[0].querySelectorAll("td").length : 0;
@@ -261,8 +369,8 @@ function ponTotalesEnTabla(
 /**
  * Agrega un renglón con totales al final de la tabla.
  *
- * @param {jQuery} $tbody - Cuerpo de la tabla donde se agregará el renglón.
- * @param {jQuery} $rows - Filas de la tabla usadas para calcular los totales.
+ * @param {HTMLTableSectionElement} tbody - Cuerpo de la tabla.
+ * @param {HTMLTableRowElement[]} rows - Filas usadas para calcular los totales.
  * @param {number} columnCount - Número de columnas en la tabla.
  */
 function agregarRenglonTotal(tbody, rows, columnCount) {
@@ -281,8 +389,8 @@ function agregarRenglonTotal(tbody, rows, columnCount) {
 /**
  * Agrega una columna con totales al final de cada fila.
  *
- * @param {jQuery} targetTable - Tabla a la que se agregará la columna de totales.
- * @param {jQuery} $rows - Filas de la tabla usadas para calcular los totales.
+ * @param {HTMLTableElement} targetTable - Tabla a la que se agregará la columna de totales.
+ * @param {HTMLTableRowElement[]} rows - Filas usadas para calcular los totales.
  * @param {number} columnCount - Número de columnas en la tabla.
  */
 function agregarColumnaTotal(table, rows, columnCount) {
@@ -311,7 +419,7 @@ function agregarColumnaTotal(table, rows, columnCount) {
 /**
  * Calcula el total de una columna específica en las filas dadas.
  *
- * @param {jQuery} $rows - Las filas de la tabla.
+ * @param {HTMLTableRowElement[]} rows - Las filas de la tabla.
  * @param {number} colIndex - Índice de la columna a calcular.
  * @returns {string|number} El total de la columna, formateado si aplica.
  */
@@ -331,7 +439,7 @@ function calcularColumnaTotal(rows, colIndex) {
 /**
  * Calcula el total de una fila específica.
  *
- * @param {jQuery} $row - La fila a calcular.
+ * @param {HTMLTableRowElement} row - La fila a calcular.
  * @param {number} columnCount - Número de columnas en la tabla.
  * @returns {string|number} El total de la fila, formateado si aplica.
  */
@@ -370,16 +478,13 @@ function formatearTotal(totalAmount, isCurrency) {
  * Busca el renglón de total de una tabla (asumiendo que es el último renglón del cuerpo)
  * y elimina el contenido de la celda correspondiente a la columna indicada.
  *
- * @param {jQuery|HTMLTableElement} targetTable - La tabla objetivo.
+ * @param {HTMLTableElement|string} targetTable - La tabla objetivo.
  * @param {number|number[]} colIndex - El índice o índices de la columna a limpiar (base 0).
  */
 function quitaTotaldeColumna(targetTable, colIndex) {
   if (!targetTable) return;
 
-  // Manejar objeto jQuery
-  if (targetTable instanceof jQuery) {
-    targetTable = targetTable[0];
-  }
+  targetTable = getElement(targetTable);
 
   // Validar que sea una tabla HTML
   if (!(targetTable instanceof HTMLTableElement)) {
@@ -414,16 +519,13 @@ function quitaTotaldeColumna(targetTable, colIndex) {
  * Busca un renglón específico de una tabla y elimina el contenido de la última celda
  * (asumiendo que es la celda de totales agregada por ponTotalesEnTabla).
  *
- * @param {jQuery|HTMLTableElement} targetTable - La tabla objetivo.
+ * @param {HTMLTableElement|string} targetTable - La tabla objetivo.
  * @param {number|number[]} rowIndex - El índice o índicesdel renglón a limpiar (base 0).
  */
 function quitaTotaldeRenglon(targetTable, rowIndex) {
   if (!targetTable) return;
 
-  // Manejar objeto jQuery
-  if (targetTable instanceof jQuery) {
-    targetTable = targetTable[0];
-  }
+  targetTable = getElement(targetTable);
 
   // Validar que sea una tabla HTML
   if (!(targetTable instanceof HTMLTableElement)) {
@@ -539,13 +641,12 @@ function exportToExcel(fileName, htmlContent) {
  */
 function tablaCompleta(tableElement) {
   try {
-    // Validate input
-    if (!tableElement || !$(tableElement).length) {
+    const table = getElement(tableElement);
+    if (!(table instanceof HTMLTableElement)) {
       throw new Error("Invalid table element");
     }
 
-    // Get DataTable instance
-    const dataTableInstance = $(tableElement).DataTable();
+    const dataTableInstance = new DataTable.Api(table);
     if (!dataTableInstance) {
       throw new Error("DataTable not initialized");
     }
@@ -553,7 +654,7 @@ function tablaCompleta(tableElement) {
     // Get table data and headers
     const extractedRows = dataTableInstance.rows().data().toArray();
     const columnHeaders = dataTableInstance.columns().header().toArray();
-    const fieldNames = columnHeaders.map((header) => $(header).text().trim());
+    const fieldNames = columnHeaders.map((header) => header.textContent.trim());
 
     // Build table HTML with template literals
     let tableHtml = '<table border="1">';
@@ -616,50 +717,39 @@ function exportaTablaCompletaAExcel(fileName, tablae) {
  * @param {Object} [optionsextra={}] - Additional options to extend the default DataTables configuration.
  * @param {string} [optionsextra.pagingType="numbers"] - The type of pagination to use.
  * @param {Array} [optionsextra.order=[]] - The initial order of the table.
- * @param {Object} [optionsextra.oLanguage] - Language options for DataTables.
- * @param {string} [optionsextra.oLanguage.sProcessing="Procesando..."] - Text displayed while processing.
- * @param {string} [optionsextra.oLanguage.sLengthMenu="Mostrar _MENU_ registros"] - Text for the length menu.
- * @param {string} [optionsextra.oLanguage.sZeroRecords="No se encontraron registros"] - Text when no records are found.
- * @param {string} [optionsextra.oLanguage.sInfo="Mostrando desde _START_ hasta _END_ de _TOTAL_ registros"] - Info text.
- * @param {string} [optionsextra.oLanguage.sInfoEmpty="Mostrando desde 0 hasta 0 de 0 registros"] - Info text when empty.
- * @param {string} [optionsextra.oLanguage.sInfoFiltered=""] - Info text for filtered results.
- * @param {string} [optionsextra.oLanguage.sInfoPostFix=""] - Postfix for info text.
- * @param {string} [optionsextra.oLanguage.sSearch="Buscar:"] - Text for the search input.
- * @param {string} [optionsextra.oLanguage.sUrl=""] - URL for language file.
- * @param {Object} [optionsextra.oLanguage.oPaginate] - Pagination text options.
- * @param {string} [optionsextra.oLanguage.oPaginate.sFirst="Primero"] - Text for the "First" button.
- * @param {string} [optionsextra.oLanguage.oPaginate.sPrevious="Anterior"] - Text for the "Previous" button.
- * @param {string} [optionsextra.oLanguage.oPaginate.sNext="Siguiente"] - Text for the "Next" button.
- * @param {string} [optionsextra.oLanguage.oPaginate.sLast="Último"] - Text for the "Last" button.
+ * @param {Object} [optionsextra.language] - Language options for DataTables.
  */
 function ponTablaPaginada(tableSelector, optionsextra = {}) {
   // Opciones de configuración de DataTables
   let options = {
     pagingType: "numbers",
     order: [],
-    oLanguage: {
-      sProcessing: "Procesando...",
-      sLengthMenu: "Mostrar _MENU_ registros",
-      sZeroRecords: "No se encontraron registros",
-      sInfo: "Mostrando desde _START_ hasta _END_ de _TOTAL_ registros",
-      sInfoEmpty: "Mostrando desde 0 hasta 0 de 0 registros",
-      sInfoFiltered: "",
-      sInfoPostFix: "",
-      sSearch: "Buscar:",
-      sUrl: "",
-      oPaginate: {
-        sFirst: "Primero",
-        sPrevious: "Anterior",
-        sNext: "Siguiente",
-        sLast: "Último",
+    language: {
+      processing: "Procesando...",
+      lengthMenu: "Mostrar _MENU_ registros",
+      zeroRecords: "No se encontraron registros",
+      info: "Mostrando desde _START_ hasta _END_ de _TOTAL_ registros",
+      infoEmpty: "Mostrando desde 0 hasta 0 de 0 registros",
+      infoFiltered: "",
+      search: "Buscar:",
+      paginate: {
+        first: "Primero",
+        previous: "Anterior",
+        next: "Siguiente",
+        last: "Último",
       },
     },
   };
 
-  $.extend(options, optionsextra);
+  const table = getElement(tableSelector);
+  if (!(table instanceof HTMLTableElement)) {
+    throw new TypeError("ponTablaPaginada requires a table element");
+  }
 
-  // Aplicar configuración de DataTables a la tabla
-  $(tableSelector).DataTable(options);
+  options = { ...options, ...optionsextra };
+  const dataTable = new DataTable(table, options);
+  table.ragnosDataTable = dataTable;
+  return dataTable;
 }
 
 const Toast = Swal.mixin({
@@ -719,16 +809,16 @@ function showToastDown(mensaje = "", tipo = "info", timer = 3000) {
 /**
  * Displays a modal with the specified HTML content and header.
  *
- * @param {string|jQuery} html - The HTML content to display inside the modal. Can be a string or a jQuery object.
+ * @param {string|HTMLElement} html - The HTML content to display inside the modal.
  * @param {string} [encabezado=""] - The header text for the modal. Defaults to an empty string.
  * @param {string} [id="miModal"] - The ID for the modal. Defaults to "miModal".
  * @param {Function} [onClose=null] - A callback function to execute when the modal is closed. Defaults to null.
- * @returns {jQuery|null} - The jQuery object representing the modal, or null if an error occurred.
+ * @returns {HTMLElement|null} - The modal element, or null if an error occurred.
  */
 function showModal(html, encabezado = "", id = "miModal", onClose = null) {
   try {
     // Input validation
-    if (typeof html !== "string" && !(html instanceof jQuery)) {
+    if (typeof html !== "string" && !(html instanceof HTMLElement)) {
       throw new Error("Invalid HTML content");
     }
     if (typeof id !== "string" || !id.trim()) {
@@ -737,9 +827,9 @@ function showModal(html, encabezado = "", id = "miModal", onClose = null) {
 
     // Create modal if it doesn't exist
     const modalId = id.trim();
-    const $existingModal = $(`#${modalId}`);
+    let modalElement = document.getElementById(modalId);
 
-    if (!$existingModal.length) {
+    if (!modalElement) {
       const modalTemplate = `
         <div id="${modalId}" class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="${modalId}Label">
           <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
@@ -756,20 +846,24 @@ function showModal(html, encabezado = "", id = "miModal", onClose = null) {
           </div>
         </div>`;
 
-      $("body").append(modalTemplate);
+      document.body.insertAdjacentHTML("beforeend", modalTemplate);
+      modalElement = document.getElementById(modalId);
     }
 
-    // Update modal content
-    const $modal = $(`#${modalId}`);
-    const $content = $(`#${modalId}-modalescondido`);
-    const $title = $(`#${modalId}-modaltitle`);
+    const content = document.getElementById(`${modalId}-modalescondido`);
+    const title = document.getElementById(`${modalId}-modaltitle`);
+    if (html instanceof HTMLElement) {
+      content.replaceChildren(html);
+    } else {
+      setHtml(content, html);
+    }
+    title.textContent = encabezado || "";
 
-    $content.html(html);
-
-    $title.text(encabezado || "");
-
-    // Handle modal events
-    $modal.off("hidden.bs.modal").on("hidden.bs.modal", function () {
+    if (modalElement.ragnosCloseHandler) {
+      modalElement.removeEventListener("hidden.bs.modal", modalElement.ragnosCloseHandler);
+    }
+    modalElement.ragnosCloseHandler = () => {
+      modalElement.ragnosCloseHandler = null;
       if (typeof onClose === "function") {
         try {
           onClose();
@@ -777,13 +871,13 @@ function showModal(html, encabezado = "", id = "miModal", onClose = null) {
           console.error("Error in modal close callback:", error);
         }
       }
-      $modal.off("hidden.bs.modal");
+    };
+    modalElement.addEventListener("hidden.bs.modal", modalElement.ragnosCloseHandler, {
+      once: true,
     });
 
-    // Show modal
-    $modal.modal("show");
-
-    return $modal;
+    bootstrap.Modal.getOrCreateInstance(modalElement).show();
+    return modalElement;
   } catch (error) {
     console.error("Error showing modal:", error);
     showToast("Error al mostrar la ventana modal", "error");
@@ -797,23 +891,26 @@ function showModal(html, encabezado = "", id = "miModal", onClose = null) {
  * @param {string} modalId - The ID of the modal to close.
  */
 function cierraModal(modalId) {
-  const $modal = $(`#${modalId}`);
-
-  if (!$modal.length) {
+  const modalElement = document.getElementById(modalId);
+  if (!modalElement) {
     console.warn(`Modal with ID "${modalId}" does not exist.`);
     return;
   }
 
-  const hideModal = () => {
-    if ($modal.hasClass("show")) {
-      $modal.modal("hide");
-      $modal.remove();
-    } else {
-      setTimeout(hideModal, 10); // Retry after 10ms if not visible yet
-    }
-  };
+  const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
+  if (!modalElement.classList.contains("show")) {
+    modal.dispose();
+    modalElement.remove();
+    return;
+  }
 
-  hideModal();
+  modalElement.addEventListener("hidden.bs.modal", () => {
+    modal.dispose();
+    modalElement.remove();
+  }, {
+    once: true,
+  });
+  modal.hide();
 }
 
 /**
@@ -945,18 +1042,24 @@ function limitText(limitField, limitNum) {
 /**
  * Updates a select element with a new option and sets it as selected.
  *
- * @param {jQuery} elemento - The jQuery object representing the select element.
+ * @param {HTMLSelectElement|string} elemento - The select element.
  * @param {string|number} id - The value of the new option to be added and selected.
  * @param {string} texto - The text content of the new option to be added.
  */
 function ponValorEnSelect(elemento, id, texto) {
-  elemento.find(`option[value='${id}']`).remove();
-  elemento.find("option").prop("selected", false).removeAttr("selected");
-  let newOption = $("<option></option>")
-    .val(id)
-    .text(texto)
-    .attr("selected", "selected");
-  elemento.append(newOption).val(id).trigger("change");
+  const select = getElement(elemento);
+  if (!(select instanceof HTMLSelectElement)) return;
+
+  Array.from(select.options).forEach((option) => {
+    if (String(option.value) === String(id)) option.remove();
+    else option.selected = false;
+  });
+  select.add(new Option(texto, id, true, true));
+  if (select.tomselect) {
+    select.tomselect.sync();
+    select.tomselect.setValue(String(id));
+  }
+  dispatchInputEvents(select);
 }
 
 function limpia(cadena) {
@@ -1011,7 +1114,7 @@ async function getValue(url, params = {}, callback) {
   delete cleanParams.retryDelay;
 
   // Convierte a x-www-form-urlencoded
-  const body = serializeParams(params);
+  const body = serializeParams(cleanParams);
 
   const makeRequest = async () => {
     let attempts = 0;

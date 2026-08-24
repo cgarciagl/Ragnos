@@ -443,38 +443,43 @@
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 
 <script>
-    $(document).ready(function () {
+    onReady(() => {
         const filtersConfig = <?= json_encode($filters) ?>;
         let filterIndex = 0;
 
         // Inicializar Tooltips
-        $('[data-bs-toggle="tooltip"]').tooltip();
+        document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach((element) => {
+            bootstrap.Tooltip.getOrCreateInstance(element);
+        });
 
         function updNoMatchMsg() {
-            var $container = $('#activeFiltersContainer');
-            var count = $container.find('.filter-card').length;
+            const container = document.getElementById('activeFiltersContainer');
+            const cards = Array.from(container.querySelectorAll('.filter-card'));
+            const count = cards.length;
 
             if (count > 0) {
-                $('#noFiltersMessage').hide();
-                $('#filterCountBadge').text(count).show();
-                $('#filterSummarySidebar').fadeIn();
+                document.getElementById('noFiltersMessage').hidden = true;
+                const badge = document.getElementById('filterCountBadge');
+                badge.textContent = count;
+                badge.hidden = false;
+                document.getElementById('filterSummarySidebar').hidden = false;
 
                 // Actualizar resumen (Punto 4)
                 let summaryHtml = '';
-                $container.find('.filter-card').each(function () {
-                    let label = $(this).find('.f-label').text().trim();
-                    let colorClass = $(this).find('.badge').attr('class').match(/text-\w+/)[0];
+                cards.forEach((card) => {
+                    const label = card.querySelector('.f-label').textContent.trim();
+                    const colorClass = card.querySelector('.badge').className.match(/text-\w+/)?.[0] || '';
                     summaryHtml += `
                         <div class="d-flex align-items-center">
                             <i class="bi bi-check2-circle me-2 ${colorClass}"></i>
                             <span class="text-truncate text-muted" style="max-width: 180px;">${label}</span>
                         </div>`;
                 });
-                $('#summaryContent').html(summaryHtml);
+                document.getElementById('summaryContent').innerHTML = summaryHtml;
             } else {
-                $('#noFiltersMessage').show();
-                $('#filterCountBadge').hide();
-                $('#filterSummarySidebar').fadeOut();
+                document.getElementById('noFiltersMessage').hidden = false;
+                document.getElementById('filterCountBadge').hidden = true;
+                document.getElementById('filterSummarySidebar').hidden = true;
             }
         }
 
@@ -503,7 +508,7 @@
             else if (config.type === 'date_range') tplId = '#tpl-date_range';
             else if (config.type === 'numeric_range') tplId = '#tpl-numeric_range';
 
-            let html = $(tplId).html();
+            let html = document.querySelector(tplId).innerHTML;
             html = html.replace(/{field}/g, field)
                 .replace(/{idx}/g, filterIndex++)
                 .replace(/{label}/g, config.label);
@@ -511,8 +516,8 @@
             // Inyectar opciones si es select
             if (config.type === 'select' && config.options) {
                 let optsHtml = '';
-                $.each(config.options, function (v, l) {
-                    optsHtml += `<option value="${v}">${l}</option>`;
+                Object.entries(config.options).forEach(([value, label]) => {
+                    optsHtml += `<option value="${escapeHtml(String(value))}">${escapeHtml(String(label))}</option>`;
                 });
                 html = html.replace(/{options}/g, optsHtml);
             }
@@ -522,91 +527,79 @@
                 html = html.replace(/{controller}/g, config.search_controller);
             }
 
-            const $filter = $(html);
-            $filter.addClass('filter-card-new'); // Añadir animación de resaltado
-            $('#activeFiltersContainer').append($filter);
+            const template = document.createElement('template');
+            template.innerHTML = html.trim();
+            const filter = template.content.firstElementChild;
+            filter.classList.add('filter-card-new');
+            document.getElementById('activeFiltersContainer').append(filter);
 
             // Auto-scroll al nuevo filtro si es necesario
             if (!initialData) {
-                $('html, body').animate({
-                    scrollTop: $filter.offset().top - 200
-                }, 400);
+                filter.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
 
             // Repoblar valores si hay data inicial
             if (initialData) {
-                $.each(initialData, function (key, val) {
-                    const $input = $filter.find(`[name*="[${key}]"]`);
-                    if ($input.length) {
-                        if ($input.is(':radio')) {
-                            $filter.find(`[name*="[${key}]"][value="${val}"]`).prop('checked', true);
+                Object.entries(initialData).forEach(([key, value]) => {
+                    const input = filter.querySelector(`[name*="[${CSS.escape(key)}]"]`);
+                    if (input) {
+                        if (input.matches('input[type="radio"]')) {
+                            const radio = filter.querySelector(`[name*="[${CSS.escape(key)}]"][value="${CSS.escape(String(value))}"]`);
+                            if (radio) radio.checked = true;
                         } else {
-                            $input.val(val);
+                            input.value = value;
                         }
                     }
 
                     // Caso especial para el input visible de búsqueda
                     if (config.search_controller && key === 'display_text') {
-                        $filter.find('.ragnos-search-field').val(val);
+                        filter.querySelector('.ragnos-search-field').value = value;
                     }
                 });
             }
 
             updNoMatchMsg();
 
-            // Inicializar Autocomplete usando el plugin jQuery .RagnosSearch()
             if (config.search_controller) {
-                const $searchel = $filter.find('.ragnos-search-field');
-
-                if ($.fn.RagnosSearch) {
-                    $searchel.RagnosSearch({
-                        controller: config.search_controller,
-                        callback: function (e) {
-                            let datos = e.data('searchdata');
-                            if (datos) {
-                                if (datos.y_id) {
-                                    $filter.find('input[name*="[value]"]').val(datos.y_id);
-                                }
-                                let visibleText = datos.y_text || $searchel.val();
-                                if (visibleText) {
-                                    $filter.find('input[name*="[display_text]"]').val(visibleText);
-                                }
-                            } else {
-                                if ($searchel.val() === '') {
-                                    $filter.find('input[name*="[value]"]').val('');
-                                    $filter.find('input[name*="[display_text]"]').val('');
-                                }
-                            }
+                const searchElement = filter.querySelector('.ragnos-search-field');
+                new RagnosSearch(searchElement, {
+                    controller: config.search_controller,
+                    callback: (element) => {
+                        const data = element.ragnosSearchData;
+                        const valueInput = filter.querySelector('input[name*="[value]"]');
+                        const displayInput = filter.querySelector('input[name*="[display_text]"]');
+                        if (data) {
+                            if (data.y_id) valueInput.value = data.y_id;
+                            const visibleText = data.y_text || searchElement.value;
+                            if (visibleText) displayInput.value = visibleText;
+                        } else if (searchElement.value === '') {
+                            valueInput.value = '';
+                            displayInput.value = '';
                         }
-                    });
-                }
+                    }
+                });
             }
 
             // Auto-agrupamiento para campos de búsqueda (solo cuando el usuario añade el filtro manualmente)
             if (config.search_controller && !initialData) {
-                const $groupSelects = $('.grouping-select');
-                let alreadyGrouped = false;
-
-                $groupSelects.each(function () {
-                    const val = $(this).val();
-                    if (val && val.indexOf('::' + field) !== -1) alreadyGrouped = true;
-                });
+                const groupSelects = Array.from(document.querySelectorAll('.grouping-select'));
+                const alreadyGrouped = groupSelects.some((select) => select.value.includes(`::${field}`));
 
                 if (!alreadyGrouped) {
-                    const $emptySelect = $groupSelects.filter(function () { return $(this).val() === ""; }).first();
-                    if ($emptySelect.length) {
-                        // Buscar el valor exacto de la opción que termina en ::field
-                        const targetVal = $emptySelect.find(`option[value$="::${field}"]`).first().val();
-                        if (targetVal) {
-                            $emptySelect.val(targetVal).trigger('change');
+                    const emptySelect = groupSelects.find((select) => select.value === '');
+                    if (emptySelect) {
+                        const target = Array.from(emptySelect.options).find((option) => option.value.endsWith(`::${field}`));
+                        if (target) {
+                            emptySelect.value = target.value;
+                            emptySelect.dispatchEvent(new Event('change', { bubbles: true }));
                         }
                     }
                 }
             }
         }
 
-        $('#btnAddFilter').on('click', function () {
-            const field = $('#filterSelector').val();
+        document.getElementById('btnAddFilter').addEventListener('click', () => {
+            const field = document.getElementById('filterSelector').value;
             addFilterUI(field);
         });
 
@@ -636,11 +629,12 @@
         <?php endif; ?>
 
 
-        $(document).on('click', '.btn-remove-filter', function () {
-            // Animacion de salida
-            $(this).closest('.filter-card').addClass('animate__fadeOutRight');
-            var card = $(this).closest('.filter-card');
-            setTimeout(function () {
+        document.addEventListener('click', (event) => {
+            const removeButton = event.target.closest('.btn-remove-filter');
+            if (!removeButton) return;
+            const card = removeButton.closest('.filter-card');
+            card.classList.add('animate__fadeOutRight');
+            setTimeout(() => {
                 card.remove();
                 updNoMatchMsg();
             }, 300);
@@ -648,23 +642,20 @@
 
 
         // Lógica para deshabilitar opciones ya seleccionadas en agrupamiento
-        $('.grouping-select').on('change', function () {
-            const selectedValues = $('.grouping-select').map(function () { return $(this).val(); }).get();
-            $('.grouping-select').each(function () {
-                const $select = $(this);
-                const currentVal = $select.val();
-                $select.find('option').each(function () {
-                    if ($(this).val() !== "" && selectedValues.includes($(this).val()) && $(this).val() !== currentVal) {
-                        $(this).prop('disabled', true);
-                    } else {
-                        $(this).prop('disabled', false);
-                    }
+        const groupingSelects = Array.from(document.querySelectorAll('.grouping-select'));
+        groupingSelects.forEach((changedSelect) => changedSelect.addEventListener('change', () => {
+            const selectedValues = groupingSelects.map((select) => select.value);
+            groupingSelects.forEach((select) => {
+                Array.from(select.options).forEach((option) => {
+                    option.disabled = option.value !== ''
+                        && selectedValues.includes(option.value)
+                        && option.value !== select.value;
                 });
             });
-        });
+        }));
 
         // Botón de limpiar dinámico (AJAX con SweetAlert2)
-        $('#btnClearReport').on('click', function () {
+        document.getElementById('btnClearReport').addEventListener('click', (event) => {
             Swal.fire({
                 title: '<?= lang('Ragnos.Ragnos_wait') ?>',
                 text: '<?= lang('Ragnos.Ragnos_clear_confirm') ?>',
@@ -676,10 +667,10 @@
                 cancelButtonText: '<?= lang('Ragnos.Ragnos_cancel') ?>'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    const $btn = $(this);
-                    const originalHtml = $btn.html();
-
-                    $btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-1"></span> <?= lang('Ragnos.Ragnos_clearing') ?>');
+                    const button = event.currentTarget;
+                    const originalHtml = button.innerHTML;
+                    button.disabled = true;
+                    button.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> <?= lang('Ragnos.Ragnos_clearing') ?>';
 
                     getObject(window.location.href, {
                         clear_ragnos_session: 1,
@@ -687,12 +678,16 @@
                     }, function (response, error) {
                         if (response) {
                             // Limpiar UI sin recargar
-                            $('#activeFiltersContainer .filter-card').remove();
-                            $('.grouping-select').val('').trigger('change');
+                            document.querySelectorAll('#activeFiltersContainer .filter-card').forEach((card) => card.remove());
+                            groupingSelects.forEach((select) => {
+                                select.value = '';
+                                select.dispatchEvent(new Event('change', { bubbles: true }));
+                            });
                             updNoMatchMsg();
 
                             // Restaurar botón
-                            $btn.prop('disabled', false).html(originalHtml);
+                            button.disabled = false;
+                            button.innerHTML = originalHtml;
 
                             Swal.fire({
                                 icon: 'success',
@@ -707,7 +702,8 @@
                                 title: '<?= lang('Ragnos.Ragnos_error') ?>',
                                 text: '<?= lang('Ragnos.Ragnos_server_error') ?>'
                             });
-                            $btn.prop('disabled', false).html(originalHtml);
+                            button.disabled = false;
+                            button.innerHTML = originalHtml;
                         }
                     });
                 }
@@ -715,32 +711,27 @@
         });
 
         // Validación y Estado de carga en el envío del formulario (Punto 1)
-        $('#reportConfigForm').on('submit', function (e) {
+        document.getElementById('reportConfigForm').addEventListener('submit', (event) => {
             let hasError = false;
             let firstError = null;
 
-            $('.filter-card').removeClass('filter-error');
+            const cards = Array.from(document.querySelectorAll('.filter-card'));
+            cards.forEach((card) => card.classList.remove('filter-error'));
 
-            $('.filter-card').each(function () {
-                let $card = $(this);
-                let isEmpty = true;
-
-                // Revisar todos los inputs relevantes en la tarjeta
-                $card.find('input[type="text"], input[type="number"], input[type="date"], select').each(function () {
-                    // Ignorar match_type radios
-                    if ($(this).attr('name') && $(this).attr('name').indexOf('[match_type]') !== -1) return;
-                    if ($(this).val() !== '') isEmpty = false;
-                });
+            cards.forEach((card) => {
+                const controls = Array.from(card.querySelectorAll('input[type="text"], input[type="number"], input[type="date"], select'))
+                    .filter((control) => !control.name?.includes('[match_type]'));
+                const isEmpty = controls.every((control) => control.value === '');
 
                 if (isEmpty) {
-                    $card.addClass('filter-error');
+                    card.classList.add('filter-error');
                     hasError = true;
-                    if (!firstError) firstError = $card;
+                    if (!firstError) firstError = card;
                 }
             });
 
             if (hasError) {
-                e.preventDefault();
+                event.preventDefault();
                 Swal.fire({
                     icon: 'warning',
                     title: '<?= lang('Ragnos.Ragnos_filters_incomplete') ?>',
@@ -748,18 +739,15 @@
                     confirmButtonText: '<?= lang('Ragnos.Ragnos_understood') ?>'
                 });
                 if (firstError) {
-                    $('html, body').animate({
-                        scrollTop: firstError.offset().top - 150
-                    }, 500);
+                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }
                 return false;
             }
 
-            const $btn = $('#btnSubmitReport');
-            const $btnText = $btn.find('.btn-text');
-
-            $btn.prop('disabled', true).removeClass('animate__pulse animate__infinite');
-            $btnText.html('<span class="spinner-border spinner-border-sm me-2"></span> <?= lang('Ragnos.Ragnos_generating_report') ?>');
+            const button = document.getElementById('btnSubmitReport');
+            button.disabled = true;
+            button.classList.remove('animate__pulse', 'animate__infinite');
+            button.querySelector('.btn-text').innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> <?= lang('Ragnos.Ragnos_generating_report') ?>';
         });
     });
 </script>

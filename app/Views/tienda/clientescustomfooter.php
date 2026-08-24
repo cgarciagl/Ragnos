@@ -183,12 +183,14 @@
                 });
             }
 
-            $(function () {
-                var urlEcharts = "<?= base_url(); ?>/assets/js/echarts/echarts.min.js";
+            onReady(() => {
+                const urlEcharts = "<?= base_url(); ?>/assets/js/echarts/echarts.min.js";
                 if (typeof echarts === 'undefined') {
-                    $.getScript(urlEcharts)
-                        .done(function () { initChartVentas(); })
-                        .fail(function (jqxhr, settings, exception) { console.error("Error charging ECharts: " + exception); });
+                    const script = document.createElement('script');
+                    script.src = urlEcharts;
+                    script.addEventListener('load', initChartVentas, { once: true });
+                    script.addEventListener('error', () => console.error('Error loading ECharts.'), { once: true });
+                    document.head.append(script);
                 } else {
                     initChartVentas();
                 }

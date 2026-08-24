@@ -42,7 +42,7 @@ $lang         = explode('_', $ragnosConfig->locale)[0];
             themeColor: '<?= $ragnosConfig->Ragnos_theme_color ?>'
         };
     </script>
-    <script src="assets/js/custom.js"></script>
+    <script src="assets/js/custom.js?v=<?= filemtime(FCPATH . 'assets/js/custom.js') ?>"></script>
 </head>
 
 <body class="layout-top-nav bg-body-tertiary min-vh-100 d-flex flex-column">

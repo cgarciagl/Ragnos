@@ -97,13 +97,13 @@ $this->addField('productDescription', [
 ]);
 ```
 
-- **Variante HTML:** Si necesitas un editor básico, usa `type => 'htmltextarea'`.
+- **Variante HTML:** Usa `type => 'htmltextarea'` para activar el editor de texto enriquecido nativo. Incluye estilos de párrafo, listas, alineación, sangría, tablas, enlaces, vista de código y pantalla completa. El contenido pegado o editado se sanea antes de enviarse para conservar únicamente HTML de formato seguro.
 
 ---
 
 ## 4. Campo de Fecha y Hora
 
-Ragnos maneja automáticamente la selección de fechas.
+Ragnos maneja automáticamente la selección de fechas mediante los controles nativos del navegador, sin plugins ni dependencias adicionales.
 
 ```php
 $this->addField('orderDate', [

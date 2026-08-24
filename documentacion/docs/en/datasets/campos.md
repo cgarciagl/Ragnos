@@ -97,13 +97,13 @@ $this->addField('productDescription', [
 ]);
 ```
 
-- **HTML Variant:** Use `type => 'htmltextarea'` for a basic rich text editor.
+- **HTML Variant:** Use `type => 'htmltextarea'` to enable the native rich text editor. It includes paragraph styles, lists, alignment, indentation, tables, links, source view, and fullscreen mode. Pasted or edited content is sanitized before submission so that only safe formatting HTML is retained.
 
 ---
 
 ## 4. Date and Time Field
 
-Ragnos automatically handles date selection.
+Ragnos automatically handles date selection through native browser controls, without plugins or additional dependencies.
 
 ```php
 $this->addField('orderDate', [

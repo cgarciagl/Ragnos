@@ -169,13 +169,13 @@
                     <div id="chartEmpleadosRanking" style="height: 300px;"></div>
 
                     <script>
-                        $(function () {
-                            $('.ligaempleado').on('click', function () {
-                                let empleado = $(this).text().trim();
+                        onReady(() => {
+                            document.querySelectorAll('.ligaempleado').forEach((link) => link.addEventListener('click', () => {
+                                const empleado = link.textContent.trim();
                                 redirectByPost('<?= site_url('/tienda/empleados') ?>', {
                                     sSearch: empleado
                                 }, false);
-                            });
+                            }));
                         });
                     </script>
 
@@ -222,11 +222,11 @@
                 <div id="chartMargenDona" style="height: 400px;"></div>
 
                 <script>
-                    $(function () {
-                        $('.ligalinea').on('click', function () {
-                            let linea = $(this).text().trim();
+                    onReady(() => {
+                        document.querySelectorAll('.ligalinea').forEach((link) => link.addEventListener('click', () => {
+                            const linea = link.textContent.trim();
                             redirectByPost('<?= site_url('/tienda/lineas') ?>', { sSearch: linea }, false);
-                        });
+                        }));
                     });
                 </script>
             </div>
@@ -288,11 +288,11 @@
                 </div>
                 <div id="chartParetoDeuda" style="height: 400px;"></div>
                 <script>
-                    $(function () {
-                        $('.ligacliente').on('click', function () {
-                            let cliente = $(this).text().trim();
+                    onReady(() => {
+                        document.querySelectorAll('.ligacliente').forEach((link) => link.addEventListener('click', () => {
+                            const cliente = link.textContent.trim();
                             redirectByPost('<?= site_url('/tienda/clientes') ?>', { sSearch: cliente }, false);
-                        });
+                        }));
                     });
                 </script>
 
@@ -343,11 +343,11 @@
                     </table>
                 </div>
                 <script>
-                    $(function () {
-                        $('.ligaproducto').on('click', function () {
-                            let codigo = $(this).text().trim();
+                    onReady(() => {
+                        document.querySelectorAll('.ligaproducto').forEach((link) => link.addEventListener('click', () => {
+                            const codigo = link.textContent.trim();
                             redirectByPost('<?= site_url('/tienda/productos') ?>', { sSearch: codigo }, false);
-                        });
+                        }));
                     });
                 </script>
 
@@ -364,16 +364,16 @@
         // --- 1. CONFIGURACIÓN GENERAL Y UTILIDADES ---
 
         // Ejecutar funciones de tablas existentes (Totales y limpieza)
-        $(function () {
-            ponTotalesEnTabla($('#tableclientescondeuda'));
-            quitaTotaldeColumna($('#tableclientescondeuda'), [1, 2, 4]);
+        onReady(() => {
+            ponTotalesEnTabla('#tableclientescondeuda');
+            quitaTotaldeColumna('#tableclientescondeuda', [1, 2, 4]);
 
-            ponTotalesEnTabla($('#tableEmpleadosMasVentas'));
-            quitaTotaldeColumna($('#tableEmpleadosMasVentas'), [1, 2]);
-            ponTotalesEnTabla($('#tableProductosMenorRotacion'));
-            quitaTotaldeColumna($('#tableProductosMenorRotacion'), [1, 2]);
-            ponTotalesEnTabla($('#tableMargenPorLinea'));
-            quitaTotaldeColumna($('#tableMargenPorLinea'), 2);
+            ponTotalesEnTabla('#tableEmpleadosMasVentas');
+            quitaTotaldeColumna('#tableEmpleadosMasVentas', [1, 2]);
+            ponTotalesEnTabla('#tableProductosMenorRotacion');
+            quitaTotaldeColumna('#tableProductosMenorRotacion', [1, 2]);
+            ponTotalesEnTabla('#tableMargenPorLinea');
+            quitaTotaldeColumna('#tableMargenPorLinea', 2);
         });
 
         // Obtención de datos desde PHP
@@ -913,7 +913,7 @@
         });
 
         // --- BOTÓN REPORTE ---
-        $('#btnVerReporteDeVentas').on('click', (e) => {
+        document.getElementById('btnVerReporteDeVentas')?.addEventListener('click', (e) => {
             e.preventDefault();
             let tabla = convertToTable(ventasultimos12meses);
             tabla = tabla.replace(/<td>([^<]+)<\/td>/g, (match, p1) => {

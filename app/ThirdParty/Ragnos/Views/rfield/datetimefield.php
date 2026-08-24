@@ -1,27 +1,16 @@
-<script src="<?= base_url(); ?>/assets/js/moment-with-locales.js" type="text/javascript"></script>
-<script src="<?= base_url(); ?>/assets/js/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
-<link href="<?= base_url(); ?>/assets/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
-
 <div class="divfield col-sm-3 mb-2">
     <div id='group_<?= $name ?>'>
         <label class="form-label">
             <?= $label; ?> :
         </label>
 
-        <div class='input-group date' id='<?= $name ?>datetimepicker'>
-            <input name="<?= $name; ?>" type='text' class="form-control" value="<?= esc($value) ?>"
+        <div class='input-group' id='<?= $name ?>datetimepicker'>
+            <input name="<?= $name; ?>" type='datetime-local' step="1" class="form-control"
+                value="<?= esc(str_replace(' ', 'T', (string) $value)) ?>"
                 data-valueant="<?= esc($value) ?>" <?= $extra_attributes; ?> />
             <span class="input-group-text">
                 <i class="bi bi-calendar-event"></i>
             </span>
         </div>
     </div>
-    <script>
-        $(document).ready(function () {
-            $('#<?= $name ?>datetimepicker').datetimepicker({
-                format: 'YYYY-MM-DD HH:mm:SS',
-                locale: 'es'
-            }).data("DateTimePicker");
-        });
-    </script>
 </div>

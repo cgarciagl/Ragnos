@@ -25,7 +25,7 @@
 
 ## 💡 What is Ragnos?
 
-**Ragnos** is a modern, lightweight PHP framework that revolutionizes web application development through declarative programming. Built on the solid foundation of **CodeIgniter 4**, it integrates battle-tested technologies like **jQuery**, **DataTables**, and **AdminLTE 3** to deliver a complete, efficient development experience.
+**Ragnos** is a modern, lightweight PHP framework that revolutionizes web application development through declarative programming. Built on the solid foundation of **CodeIgniter 4**, it integrates **Vanilla JavaScript**, jQuery-free **DataTables 3**, and **AdminLTE 4** to deliver a complete, efficient development experience.
 
 ### Core Philosophy
 
@@ -40,7 +40,7 @@ Instead of writing boilerplate code, you define your data structure and business
 | **🛡️ Enterprise Security**      | RBAC, immutable audit logs, and automatic OWASP Top 10 mitigation out of the box              |
 | **⚡ Zero Configuration**       | Works instantly with smart defaults; customize only what you need                             |
 | **📊 Advanced Data Tables**     | Built-in search, filtering, pagination, and sorting with DataTables integration               |
-| **🎨 Beautiful UI**             | AdminLTE 3 provides a modern, fully responsive interface ready for production                 |
+| **🎨 Beautiful UI**             | AdminLTE 4 provides a modern, fully responsive interface ready for production                 |
 | **🚀 Native REST API**          | Expose your data to mobile apps and SPAs with integrated token-based security                 |
 | **📱 Responsive Design**        | Mobile-first approach ensuring perfect display on all devices                                 |
 
@@ -49,8 +49,8 @@ Instead of writing boilerplate code, you define your data structure and business
 **Ragnos leverages industry-standard technologies:**
 
 - **CodeIgniter 4** — Ultra-lightweight PHP framework with minimal learning curve
-- **AdminLTE 3** — Battle-tested dashboard UI, fully customizable and responsive
-- **jQuery & DataTables** — Robust client-side data manipulation without build complexity
+- **AdminLTE 4** — Modern dashboard UI built on Bootstrap 5, fully customizable and responsive
+- **Vanilla JavaScript & DataTables 3** — Robust client-side data manipulation without jQuery or build complexity
 - **Bootstrap** — Responsive design framework for consistent, professional appearance
 - **MariaDB/MySQL** — Powerful relational database support with advanced querying
 

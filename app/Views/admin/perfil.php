@@ -918,38 +918,38 @@
 </style>
 
 <script>
-    $(function () {
+    onReady(() => {
         // Inicializar Scripts de Búsqueda Ragnos Originales
-        RagnosSearch.setupSimpleSearch($('#editusuario'), 'admin/testusuarios', {}, function (e) {
-            let datos = e.data('searchdata');
+        RagnosSearch.setupSimpleSearch('#editusuario', 'admin/testusuarios', {}, function (e) {
+            const datos = e.ragnosSearchData;
             if (datos && datos.Nombre) {
-                e.val(datos.Nombre);
-                e.data('usu_id', datos.usu_id || null);
+                e.value = datos.Nombre;
+                e.dataset.usuId = datos.usu_id || '';
                 showToast('Usuario encontrado: ' + datos.Nombre, 'info');
             }
         });
 
-        $('#busquedausuario').RagnosSearch({
+        new RagnosSearch('#busquedausuario', {
             controller: 'usuarios',
             filter: btoa(JSON.stringify([
                 { "field": "usu_activo", "op": "=", "value": "S" },
                 { "field": "usu_grupo", "op": "=", "value": 1 }
             ])),
             callback: function (e) {
-                let datos = e.data('searchdata');
+                const datos = e.ragnosSearchData;
                 if (datos && datos.y_id) {
                     console.log('usu_id', (datos.y_id));
                 }
             }
         });
 
-        $('#busquedausuariosql').RagnosSearch({
+        new RagnosSearch('#busquedausuariosql', {
             controller: 'searchusuarios',
             filter: btoa(JSON.stringify([
                 { "field": "usu_grupo", "op": "=", "value": 3 }
             ])),
             callback: function (e) {
-                let datos = e.data('searchdata');
+                const datos = e.ragnosSearchData;
                 if (datos && datos.y_id) {
                     console.log('usu_id', (datos.y_id));
                 }
@@ -957,9 +957,9 @@
         });
 
         // Eventos Premium
-        $('#btnSeguir').click(function (e) {
+        document.getElementById('btnSeguir').addEventListener('click', function (e) {
             e.preventDefault();
-            const $btn = $(this);
+            const button = this;
             Swal.fire({
                 title: '¿Seguir a este usuario?',
                 text: "Recibirás notificaciones sobre sus actividades.",
@@ -975,13 +975,15 @@
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
-                    $btn.html('<i class="bi bi-check-lg me-1"></i> Siguiendo').removeClass('btn-primary').addClass('btn-success');
+                    button.innerHTML = '<i class="bi bi-check-lg me-1"></i> Siguiendo';
+                    button.classList.remove('btn-primary');
+                    button.classList.add('btn-success');
                     showToast('Ahora sigues a este usuario.', 'success');
                 }
             });
         });
 
-        $('#fotoPerfil').click(function () {
+        document.getElementById('fotoPerfil').addEventListener('click', () => {
             Swal.fire({
                 title: 'Cambiar de Avatar',
                 text: "Próximamente podrás personalizar tu imagen de perfil.",

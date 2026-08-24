@@ -40,10 +40,9 @@ $controller = str_replace('\\', '/', $controller);
     </style>
 
     <script type="text/javascript">
-        $(document).ready(function () {
-            var $input = $('#<?= $name ?>');
-
-            $input.RagnosSearch({
+        onReady(() => {
+            const input = document.getElementById('<?= $name ?>');
+            new RagnosSearch(input, {
                 controller: '<?= $controller ?>',
                 filter: '<?= base64_encode($filter) ?>',
                 <?php if ($callback != '') {
@@ -55,23 +54,9 @@ $controller = str_replace('\\', '/', $controller);
                     echo "canSetToNull: true,";
                 } ?>
             });
-            $('#Ragnos_id_<?= $name ?>').val('<?= $idvalue ?>').attr('data-valueant', '<?= $idvalue ?>');
-
-            // FIX: Si RagnosSearch insertó el botón dentro del .form-floating, moverlo al .input-group
-            // Esto corrige el problema de "botón fuera de control" o mal alineado
-            var $floatingDiv = $input.closest('.form-floating');
-            var $searchBtn = $floatingDiv.contents().filter(function () {
-                // Filtramos elementos que no sean el input original ni el label
-                return this.id !== '<?= $name ?>' && this.tagName !== 'LABEL' && this.nodeType === 1;
-            });
-
-            if ($searchBtn.length > 0) {
-                $searchBtn.appendTo($('#inputgroup_<?= $name ?>'));
-                // Asegurar clase btn-outline-secondary o input-group-text si le falta estilo
-                if (!$searchBtn.hasClass('btn') && !$searchBtn.hasClass('input-group-text')) {
-                    $searchBtn.addClass('btn btn-outline-secondary');
-                }
-            }
+            const hidden = document.getElementById('Ragnos_id_<?= $name ?>');
+            hidden.value = <?= json_encode((string) $idvalue) ?>;
+            hidden.dataset.valueant = <?= json_encode((string) $idvalue) ?>;
         });
     </script>
 </div>

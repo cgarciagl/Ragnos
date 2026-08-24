@@ -219,79 +219,93 @@ th {
   margin-bottom: 0.5rem;
 }
 
-/* Select2 en Modo Oscuro (Single, Multiple, Tags / Pillbox) */
-[data-bs-theme="dark"] .select2-container .select2-selection,
-[data-bs-theme="dark"] .select2-container--bootstrap-5 .select2-selection,
-[data-bs-theme="dark"] .select2-container--default .select2-selection--single,
-[data-bs-theme="dark"] .select2-container--default .select2-selection--multiple,
-[data-bs-theme="dark"]
-  .select2-container--bootstrap-5
-  .select2-selection--multiple,
-[data-bs-theme="dark"]
-  .select2-container--bootstrap-5
-  .select2-selection--single {
+/* Tom Select en modo oscuro */
+[data-bs-theme="dark"] .ts-control,
+[data-bs-theme="dark"] .ts-dropdown {
   background-color: var(--bs-body-bg) !important;
   border-color: var(--bs-border-color) !important;
   color: var(--bs-body-color) !important;
 }
 
-[data-bs-theme="dark"]
-  .select2-container--bootstrap-5
-  .select2-selection--single {
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23adb5bd' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e") !important;
-}
-
-[data-bs-theme="dark"]
-  .select2-container
-  .select2-selection--single
-  .select2-selection__rendered,
-[data-bs-theme="dark"]
-  .select2-container--bootstrap-5
-  .select2-selection--single
-  .select2-selection__rendered,
-[data-bs-theme="dark"]
-  .select2-container
-  .select2-selection--multiple
-  .select2-selection__rendered,
-[data-bs-theme="dark"]
-  .select2-container--bootstrap-5
-  .select2-selection--multiple
-  .select2-selection__rendered {
+[data-bs-theme="dark"] .ts-control input,
+[data-bs-theme="dark"] .ts-dropdown .option {
   color: var(--bs-body-color) !important;
 }
 
-[data-bs-theme="dark"]
-  .select2-container--bootstrap-5
-  .select2-selection--single
-  .select2-selection__placeholder,
-[data-bs-theme="dark"] .select2-container .select2-selection__placeholder {
-  color: var(--bs-secondary-color) !important;
-}
-
-[data-bs-theme="dark"]
-  .select2-container
-  .select2-selection--multiple
-  .select2-selection__choice,
-[data-bs-theme="dark"]
-  .select2-container--bootstrap-5
-  .select2-selection--multiple
-  .select2-selection__choice,
-[data-bs-theme="dark"]
-  .select2-container--default
-  .select2-selection--multiple
-  .select2-selection__choice {
+[data-bs-theme="dark"] .ts-wrapper.multi .ts-control > div {
   background-color: var(--bs-body-secondary, #334155) !important;
   border-color: var(--bs-border-color, rgba(255, 255, 255, 0.2)) !important;
   color: var(--bs-body-color, #f8fafc) !important;
   border-radius: 0.375rem;
 }
 
-[data-bs-theme="dark"] .select2-dropdown,
-[data-bs-theme="dark"] .select2-container--bootstrap-5 .select2-dropdown,
-[data-bs-theme="dark"] .select2-container--default .select2-dropdown {
-  background-color: var(--bs-body-bg) !important;
-  border-color: var(--bs-border-color) !important;
-  color: var(--bs-body-color) !important;
+[data-bs-theme="dark"] .ts-dropdown .active {
+  background-color: var(--bs-primary) !important;
+  color: #fff !important;
+}
+
+.form-floating > .ts-wrapper {
+  min-height: calc(3.5rem + var(--bs-border-width) * 2);
+}
+
+.form-floating > .ts-wrapper .ts-control {
+  min-height: 3.5rem;
+  padding: 1.625rem 2.25rem 0.625rem 0.75rem !important;
+}
+
+.form-floating > .ts-wrapper.multi .ts-control {
+  align-content: center;
+  padding-top: 1.625rem !important;
+}
+
+.form-floating > .ts-wrapper ~ label {
+  transform: scale(0.85) translateY(-0.5rem) translateX(0.15rem);
+  opacity: 0.65;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.ragnos-rich-text__content {
+  min-height: 200px;
+  overflow: auto;
+}
+
+.ragnos-rich-text__toolbar {
+  align-items: center;
+  background-color: var(--bs-tertiary-bg);
+  padding-top: 1.6rem !important;
+}
+
+.ragnos-rich-text__style {
+  width: auto;
+  max-width: 9rem;
+}
+
+.ragnos-rich-text--code .ragnos-rich-text__content {
+  font-family: var(--bs-font-monospace);
+  white-space: pre-wrap;
+}
+
+.ragnos-rich-text--fullscreen {
+  position: fixed;
+  inset: 0;
+  z-index: 1090;
+  background: var(--bs-body-bg);
+  display: flex;
+  flex-direction: column;
+}
+
+.ragnos-rich-text--fullscreen .ragnos-rich-text__content {
+  flex: 1;
+}
+
+.ragnos-rich-text + label,
+.ragnos-rich-text ~ label {
+  transform: scale(0.85) translateY(-0.5rem) translateX(0.15rem) !important;
+  opacity: 0.65;
+  width: auto;
+  height: auto;
+  z-index: 2;
 }
 
 /* Input Groups & Addons en Modo Oscuro */

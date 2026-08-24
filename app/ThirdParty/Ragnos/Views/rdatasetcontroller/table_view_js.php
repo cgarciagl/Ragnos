@@ -1,164 +1,128 @@
 <script type="text/javascript">
-
-    function <?= $controllerUniqueID ?>refreshAjax() {
-        const oTable = $("#<?= $controllerUniqueID ?>_table").DataTable();
-        const selectedRowIndex = $('#<?= $controllerUniqueID ?> .Ragnos_selected_row').index();
-        $("#<?= $controllerUniqueID ?>").data('preselect', selectedRowIndex);
-        oTable.ajax.reload(null, false);
-
-        if (typeof window['_<?= $controller_name ?>OnChange'] === 'function') {
-            window['_<?= $controller_name ?>OnChange'](oTable);
-        }
+    function <?= $controllerUniqueID ?>getDataTable() {
+        const table = document.getElementById('<?= $controllerUniqueID ?>_table');
+        return table.ragnosDataTable || new DataTable.Api(table);
     }
 
-    $("#<?= $controllerUniqueID ?>btn_cancel").on('click', function (e) {
-        e.preventDefault();
-        $('#tab_<?= $controllerUniqueID ?>_Table').click();
-            <?= $controllerUniqueID ?>refreshAjax();
+    function <?= $controllerUniqueID ?>refreshAjax() {
+        const widget = document.getElementById('<?= $controllerUniqueID ?>');
+        const table = document.getElementById('<?= $controllerUniqueID ?>_table');
+        const rows = Array.from(table.tBodies[0]?.rows || []);
+        widget.dataset.preselect = rows.indexOf(table.tBodies[0]?.querySelector('.Ragnos_selected_row'));
+        const dataTable = <?= $controllerUniqueID ?>getDataTable();
+        dataTable.ajax.reload(null, false);
+
+        const onChange = window['_<?= $tableController ?>OnChange'];
+        if (typeof onChange === 'function') onChange(dataTable);
+    }
+
+    document.getElementById('<?= $controllerUniqueID ?>btn_cancel').addEventListener('click', (event) => {
+        event.preventDefault();
+        document.getElementById('tab_<?= $controllerUniqueID ?>_Table').click();
+        <?= $controllerUniqueID ?>refreshAjax();
     });
 
-    $("#<?= $controllerUniqueID ?>btn_ok").click(function (e) {
-        e.preventDefault();
+    document.getElementById('<?= $controllerUniqueID ?>btn_ok').addEventListener('click', (event) => {
+        event.preventDefault();
+        const widget = document.getElementById('<?= $controllerUniqueID ?>');
+        const form = widget.querySelector('#<?= $controllerUniqueID ?>_FormContent form');
+        if (!form) return;
 
-        const form = $('#<?= $controllerUniqueID ?>_FormContent form');
-        const formElement = document.querySelector('#<?= $controllerUniqueID ?>_FormContent form');
-
-        // Use FormData to support file uploads
-        const formData = new FormData(formElement);
-
-        // Convert money values manually as FormData just reads inputs
-        form.find('input[money]').each(function () {
-            const name = $(this).attr('name');
-            const rawValue = $(this).val();
-            if (rawValue !== '') {
-                formData.set(name, moneyToNumber(rawValue));
-            }
+        const formData = new FormData(form);
+        form.querySelectorAll('input[type="datetime-local"]').forEach((input) => {
+            if (input.name && input.value) formData.set(input.name, input.value.replace('T', ' '));
         });
-
-        // Add previous values for controls
-        form.find('[data-valueant]').each(function () {
-            const fieldName = $(this).attr('name');
-            formData.append(`Ragnos_value_ant_${fieldName}`, $(this).attr('data-valueant'));
+        form.querySelectorAll('input[money]').forEach((input) => {
+            if (input.value !== '') formData.set(input.name, moneyToNumber(input.value));
         });
+        form.querySelectorAll('[data-valueant]').forEach((control) => {
+            if (control.name) formData.append(`Ragnos_value_ant_${control.name}`, control.dataset.valueant || '');
+        });
+        Object.entries(globalThis.Ragnos_csrf || {}).forEach(([key, value]) => formData.append(key, value));
 
-        // Add CSRF token
-        if (typeof Ragnos_csrf !== 'undefined') {
-            for (const key in Ragnos_csrf) {
-                if (Object.hasOwnProperty.call(Ragnos_csrf, key)) {
-                    formData.append(key, Ragnos_csrf[key]);
-                }
-            }
-        }
+        form.querySelectorAll('.ui-state-error').forEach((error) => error.remove());
+        widget.querySelectorAll('.has-error').forEach((group) => group.classList.remove('has-error'));
 
-        // Clear previous errors
-        form.find('.ui-state-error').remove();
-        $('#<?= $controllerUniqueID ?> .has-error').removeClass('has-error');
-
-        // Submit form data using uploadObject which handles FormData correctly
-        uploadObject('<?= $clase ?>/formProcess', formData, function (response, error) {
+        uploadObject('<?= $clase ?>/formProcess', formData, (response, error) => {
             if (error) {
                 console.error('Error submitting form:', error);
-                Swal.fire({
-                    icon: 'error',
-                    text: 'Error saving data. See console for details.',
-                });
+                Swal.fire({ icon: 'error', text: 'Error saving data. See console for details.' });
                 return;
             }
 
             if (response.result !== 'ok') {
-                // Handle validation errors
-                $.each(response.errors, function (field, errorMessage) {
-                    const group = $(`#group_${field}`);
-                    group.append(`<span class="ui-state-error badge text-bg-danger">${errorMessage}</span>`);
-
-                    // Logic to switch tab if field is inside one
+                Object.entries(response.errors || {}).forEach(([field, errorMessage]) => {
+                    if (field === 'general_error') return;
+                    const group = document.getElementById(`group_${field}`);
+                    if (!group) return;
+                    group.insertAdjacentHTML('beforeend', `<span class="ui-state-error badge text-bg-danger">${escapeHtml(String(errorMessage))}</span>`);
                     const tabPane = group.closest('.tab-pane');
-                    if (tabPane.length > 0) {
-                        const tabId = tabPane.attr('id');
-                        const tabButton = $(`button[data-bs-target="#${tabId}"]`);
-                        if (tabButton.length > 0) {
-                            if (typeof bootstrap !== 'undefined') {
-                                const tab = bootstrap.Tab.getOrCreateInstance(tabButton[0]);
-                                tab.show();
-                            } else {
-                                tabButton.click();
-                            }
-                        }
-                    }
-
-                    $(`#${field}`).focus();
-                    group.addClass('has-error');
-
-                    // Shake elements with errors
-                    try {
-                        document.querySelectorAll('#<?= $controllerUniqueID ?> .has-error').forEach(el => {
-                            if (typeof shakeElement === 'function') shakeElement(el);
-                        });
-                    } catch (err) { }
+                    const tabButton = tabPane ? document.querySelector(`button[data-bs-target="#${CSS.escape(tabPane.id)}"]`) : null;
+                    if (tabButton) bootstrap.Tab.getOrCreateInstance(tabButton).show();
+                    document.getElementById(field)?.focus();
+                    group.classList.add('has-error');
+                    shakeElement(group);
                 });
-
-                // Show general error message
-                if (response.errors['general_error']) {
-                    Swal.fire({
-                        icon: 'error',
-                        text: response.errors['general_error'],
-                    });
+                if (response.errors?.general_error) {
+                    Swal.fire({ icon: 'error', text: response.errors.general_error });
                 }
-            } else {
-                // Handle successful form submission
-                <?php if ($hasdetails): ?>
-                    if (response.insertedid) {
-                        ;<?= $controllerUniqueID ?>getform(response.insertedid);
-                    } else {
-                        $('#tab_<?= $controllerUniqueID ?>_Table').click();
-                        ;<?= $controllerUniqueID ?>refreshAjax();
-                    }
-                <?php else: ?>
-                    $('#tab_<?= $controllerUniqueID ?>_Table').click();
-                    ;<?= $controllerUniqueID ?>refreshAjax();
-                <?php endif; ?>
-
-                // Show success message
-                const successMessage = response.insertedid
-                    ? '<?= lang('Ragnos.Ragnos_record_inserted') ?>'
-                    : '<?= lang('Ragnos.Ragnos_record_updated') ?>';
-                showToast(successMessage, 'success');
+                return;
             }
+
+            <?php if ($hasdetails): ?>
+                if (response.insertedid) {
+                    <?= $controllerUniqueID ?>getform(response.insertedid);
+                } else {
+                    document.getElementById('tab_<?= $controllerUniqueID ?>_Table').click();
+                    <?= $controllerUniqueID ?>refreshAjax();
+                }
+            <?php else: ?>
+                document.getElementById('tab_<?= $controllerUniqueID ?>_Table').click();
+                <?= $controllerUniqueID ?>refreshAjax();
+            <?php endif; ?>
+
+            showToast(
+                response.insertedid
+                    ? '<?= lang('Ragnos.Ragnos_record_inserted') ?>'
+                    : '<?= lang('Ragnos.Ragnos_record_updated') ?>',
+                'success'
+            );
         });
     });
 
     function <?= $controllerUniqueID ?>getform(id) {
-        const formContent = $("#<?= $controllerUniqueID ?>_FormContent");
-        formContent.html('').hide();
+        const formContent = document.getElementById('<?= $controllerUniqueID ?>_FormContent');
+        formContent.replaceChildren();
+        formContent.hidden = true;
 
         <?php if ($master): ?>
             Ragnos_csrf.Ragnos_master = <?= json_encode((string) $master, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
         <?php endif; ?>
 
-        getValue(`<?= $clase ?>/getFormData/${id}`, Ragnos_csrf, function (response) {
-            formContent.html(response).show();
-            formContent.find('[readonly]').addClass('text-bg-info');
+        getValue(`<?= $clase ?>/getFormData/${id}`, Ragnos_csrf, (response, error) => {
+            if (error || response === null) {
+                formContent.hidden = false;
+                console.error('Unable to load form:', error);
+                Swal.fire({ icon: 'error', text: '<?= lang('Ragnos.Ragnos_server_error') ?>' });
+                return;
+            }
+            setHtml(formContent, response);
+            formContent.hidden = false;
+            formContent.querySelectorAll('[readonly]').forEach((control) => control.classList.add('text-bg-info'));
         });
     }
 
-    $('#<?= $controllerUniqueID ?> button[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
-        const targetTab = $(e.target).attr('data-bs-target');
-        const formTab = "#<?= $controllerUniqueID ?>_Form";
-
-        if (targetTab === formTab) {
-            let activeId = $("#<?= $controllerUniqueID ?>").data('idactivo');
-
+    document.querySelectorAll('#<?= $controllerUniqueID ?> button[data-bs-toggle="tab"]').forEach((button) => {
+        button.addEventListener('shown.bs.tab', (event) => {
+            if (event.target.dataset.bsTarget !== '#<?= $controllerUniqueID ?>_Form') return;
+            const widget = document.getElementById('<?= $controllerUniqueID ?>');
+            let activeId = widget.dataset.idactivo || '';
             if (!activeId) {
-                const firstRow = $("#<?= $controllerUniqueID ?>_table tbody tr").first();
-                const lastCell = firstRow.find('td').last();
-                const recordId = lastCell.attr('idr');
-
-                activeId = recordId ? recordId : '';
-                $("#<?= $controllerUniqueID ?>").data('idactivo', activeId);
+                activeId = widget.querySelector('tbody tr td:last-child')?.dataset.idr || '';
+                widget.dataset.idactivo = activeId;
             }
-
             <?= $controllerUniqueID ?>getform(activeId);
-        }
+        });
     });
 
     <?= view(
@@ -172,195 +136,162 @@
         ]
     ); ?>
 
-    $('#<?= $controllerUniqueID ?>_Tablediv .dt-search').append($('#<?= $controllerUniqueID ?>_combo'));
+    (() => {
+        const widget = document.getElementById('<?= $controllerUniqueID ?>');
+        const table = document.getElementById('<?= $controllerUniqueID ?>_table');
+        const tbody = table.tBodies[0];
+        const search = document.querySelector('#<?= $controllerUniqueID ?>_Tablediv .dt-search');
+        const combo = document.getElementById('<?= $controllerUniqueID ?>_combo');
+        search?.append(combo);
+        search?.classList.add('d-flex', 'flex-wrap', 'justify-content-between', 'align-items-center', 'ps-4', 'bg-body-secondary', 'rounded', 'border-start', 'border-4', 'border-primary', 'shadow-sm');
 
-    $('#<?= $controllerUniqueID ?>_Tablediv .dt-search').addClass('d-flex flex-wrap justify-content-between align-items-center ps-4 bg-body-secondary rounded border-start border-4 border-primary shadow-sm');
-    // 1. Definimos la lógica de lo que debe pasar (para reutilizarla)
-    function <?= $controllerUniqueID ?>_ejecutarAccionDobleClick($row) {
-        var lastCell = $row.find("td").last();
-        var recordId = lastCell.attr('idr') || '';
-        $("#<?= $controllerUniqueID ?>").data('idactivo', recordId);
-
-        if (!lastCell.hasClass('dt-empty')) {
-            $('#tab_<?= $controllerUniqueID ?>_Form').click();
-        }
-    }
-
-    // Variable para controlar el tiempo del toque en móviles
-    var <?= $controllerUniqueID ?>_lastTapTime = 0;
-
-    // 2. Asignamos los eventos al selector
-    $("#<?= $controllerUniqueID ?>_table tbody")
-        .on('dblclick', 'tr', function (e) {
-            // Esto maneja el doble click en PC
-            <?= $controllerUniqueID ?>_ejecutarAccionDobleClick($(this));
-        })
-        .on('touchend', 'tr', function (e) {
-            // Esto maneja el "Doble Tap" en Móviles
-            var currentTime = new Date().getTime();
-            var tapLength = currentTime - <?= $controllerUniqueID ?>_lastTapTime;
-
-            // Si el tiempo entre toques es menor a 500ms y mayor a 0, es un doble tap
-            if (tapLength < 500 && tapLength > 0) {
-                // Evitamos que el navegador haga zoom u otras acciones nativas
-                e.preventDefault();
-                <?= $controllerUniqueID ?>_ejecutarAccionDobleClick($(this));
-
-                // Reiniciamos para evitar falsos positivos triples
-                <?= $controllerUniqueID ?>_lastTapTime = 0;
-            } else {
-                // Si no, actualizamos el tiempo del último toque
-                <?= $controllerUniqueID ?>_lastTapTime = currentTime;
-            }
-        });
-
-    $("#<?= $controllerUniqueID ?>_table tbody").on('mousedown', 'tr', function () {
-        var lastCell = $(this).find("td").last();
-        var recordId = lastCell.attr('idr') || '';
-        $("#<?= $controllerUniqueID ?>").data('idactivo', recordId);
-
-        $("#<?= $controllerUniqueID ?>_table tbody tr").removeClass('Ragnos_selected_row');
-        $(this).addClass('Ragnos_selected_row');
-    });
-
-    let myModalAlternative<?= $controllerUniqueID ?>;
-
-    $("#<?= $controllerUniqueID ?>_table tbody").on('click', '.<?= $controllerUniqueID ?>deleteme', function (ev) {
-        const row = $(this).closest('tr');
-        const recordId = $(this).attr('idr');
-        row.addClass('Ragnostodelete');
-
-        function deleteAction() {
-            var y = $(' #<?= $controllerUniqueID ?>_table').find('.Ragnostodelete').first();
-            var todelete = y.find('td').last().attr('idr');
-            y.removeClass('Ragnostodelete');
-            obj = {
-                id: todelete
-            };
-            $.extend(obj, Ragnos_csrf);
-            getObject('<?= $clase . '/getRecordByAjax' ?>', obj, function (j) {
-                <?php foreach ($fieldlist as $fieldItem): ?>
-                        obj.Ragnos_value_ant_<?= $fieldItem->getFieldName(); ?> = j.<?= $fieldItem->getFieldName(); ?>;
-             <?php endforeach; ?>
-
-                getObject('<?= $clase . '/ajaxdelete' ?>', obj, function (obj) {
-                    if (obj.result != 'ok') {
-                        Swal.fire({
-                            icon: 'error',
-                            text: obj.errors['general_error'],
-                        });
-                    } else {
-                        ;<?= $controllerUniqueID ?>refreshAjax();
-                        if (myModalAlternative<?= $controllerUniqueID ?>) {
-                            myModalAlternative<?= $controllerUniqueID ?>.hide();
-                        }
-                        showToast('<?= lang('Ragnos.Ragnos_record_deleted') ?>', 'success');
-                    }
-                });
+        const selectRow = (row) => {
+            tbody.querySelectorAll('tr').forEach((item) => {
+                item.classList.remove('Ragnos_selected_row');
+                item.setAttribute('aria-selected', 'false');
             });
+            row.classList.add('Ragnos_selected_row');
+            row.setAttribute('aria-selected', 'true');
+            widget.dataset.idactivo = row.querySelector('td:last-child')?.dataset.idr || '';
+        };
+        const openRow = (row) => {
+            selectRow(row);
+            if (!row.querySelector('td:last-child')?.classList.contains('dt-empty')) {
+                document.getElementById('tab_<?= $controllerUniqueID ?>_Form').click();
+            }
         };
 
-        Swal.fire({
-            text: '<?= lang('Ragnos.Ragnos_delete_message') ?>',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: '<?= lang('Ragnos.Ragnos_yes') ?>',
-            cancelButtonText: '<?= lang('Ragnos.Ragnos_no') ?>'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                deleteAction();
+        let lastTapTime = 0;
+        tbody.addEventListener('dblclick', (event) => {
+            const row = event.target.closest('tr');
+            if (row) openRow(row);
+        });
+        tbody.addEventListener('touchend', (event) => {
+            const now = Date.now();
+            if (now - lastTapTime < 500 && now - lastTapTime > 0) {
+                event.preventDefault();
+                const row = event.target.closest('tr');
+                if (row) openRow(row);
+                lastTapTime = 0;
             } else {
-                row.removeClass('Ragnostodelete');
+                lastTapTime = now;
             }
-            $('#<?= $controllerUniqueID ?>_table').find('.Ragnostodelete').removeClass('Ragnostodelete');
+        });
+        tbody.addEventListener('mousedown', (event) => {
+            const row = event.target.closest('tr');
+            if (row) selectRow(row);
         });
 
-        return false;
-    });
+        tbody.addEventListener('click', (event) => {
+            const deleteCell = event.target.closest('.<?= $controllerUniqueID ?>deleteme');
+            if (!deleteCell) return;
+            event.preventDefault();
+            event.stopPropagation();
+            const row = deleteCell.closest('tr');
+            row.classList.add('Ragnostodelete');
 
-
-    $('#btn_<?= $controllerUniqueID ?>_New').click(
-        function (e) {
-            e.preventDefault();
-            $("#<?= $controllerUniqueID ?>").data('idactivo', 'new');
-            $('#tab_<?= $controllerUniqueID ?>_Form').click();
-        });
-
-    $('#btn_<?= $controllerUniqueID ?>_Refresh').click(
-        function (e) {
-            e.preventDefault();
-            $("#<?= $controllerUniqueID ?>_table").DataTable().draw();
-        });
-
-    $('#btn_<?= $controllerUniqueID ?>_Print').click(
-        function (e) {
-            e.preventDefault();
-            var widget = $(this).closest('.Ragnos-widget').first();
-            var widget_container = widget.parent();
-            widget.hide();
-            getValue('<?= $clase ?>/reportByAjax', Ragnos_csrf,
-                function (r) {
-                    $(r).appendTo(widget_container).show('slide');
-                });
-        });
-
-    $('#<?= $controllerUniqueID ?>_sel').change(
-        function () {
-            $('#btn_<?= $controllerUniqueID ?>_Refresh').click();
-        });
-
-
-    function fnData2<?= $controllerUniqueID ?>(data, fnCallback, settings) {
-        var selectedField = $('#<?= $controllerUniqueID ?>_sel').val();
-        if (selectedField) {
-            data.sOnlyField = selectedField;
-        }
-
-        <?php if ($master): ?>
-                data.Ragnos_master = <?= json_encode((string) $master, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
-      <?php endif; ?>
-
-        const sourceUrl = '<?= site_url($clase . '/getAjaxGridData'); ?>';
-        getObject(sourceUrl, data, function (response) {
-            fnCallback(response);
-            $("#<?= $controllerUniqueID ?>").data('idactivo', '');
-
-            if (response.data.length > 0) {
-                $("#<?= $controllerUniqueID ?>_table tbody tr").each(function () {
-                    var lastCell = $(this).find("td").last();
-                    var recordId = lastCell.text();
-                    lastCell.attr('idr', recordId);
-
-                    <?php if ($modelo->canDelete): ?>
-                            lastCell.html('<i class="bi bi-trash ybtndelete"></i>');
-                        lastCell.addClass('<?= $controllerUniqueID ?>deleteme');
-                   <?php else: ?>
-                            lastCell.html('');
-                <?php endif; ?>
-                });
-            }
-
-            if (response.sSearch.value) {
-                $("#<?= $controllerUniqueID ?>_searching_title")
-                    .text(`<?= lang('Ragnos.Ragnos_searching') ?> (${response.sSearch.value})...`)
-                    .show();
-            } else {
-                $("#<?= $controllerUniqueID ?>_searching_title").text("").hide();
-            }
-
-            var preselectedIndex = $("#<?= $controllerUniqueID ?>").data('preselect');
-            if (preselectedIndex > 0) {
-                var preselectedRow = $("#<?= $controllerUniqueID ?>_table tbody tr").get(preselectedIndex);
-                if (preselectedRow) {
-                    var lastCell = $(preselectedRow).find("td").last();
-                    var preselectedId = lastCell.attr('idr') || '';
-                    $("#<?= $controllerUniqueID ?>").data('idactivo', preselectedId);
-                    $(preselectedRow).addClass('Ragnos_selected_row');
+            Swal.fire({
+                text: '<?= lang('Ragnos.Ragnos_delete_message') ?>',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: '<?= lang('Ragnos.Ragnos_yes') ?>',
+                cancelButtonText: '<?= lang('Ragnos.Ragnos_no') ?>'
+            }).then((result) => {
+                if (!result.isConfirmed) {
+                    row.classList.remove('Ragnostodelete');
+                    return;
                 }
-            } else {
-                $("#<?= $controllerUniqueID ?>_table tbody tr").first().addClass('Ragnos_selected_row');
+
+                const request = { id: deleteCell.dataset.idr, ...(globalThis.Ragnos_csrf || {}) };
+                getObject('<?= $clase . '/getRecordByAjax' ?>', request, (record, fetchError) => {
+                    if (fetchError || !record) {
+                        row.classList.remove('Ragnostodelete');
+                        console.error('Unable to load record before deletion:', fetchError);
+                        Swal.fire({ icon: 'error', text: '<?= lang('Ragnos.Ragnos_server_error') ?>' });
+                        return;
+                    }
+                    <?php foreach ($fieldlist as $fieldItem): ?>
+                        request.Ragnos_value_ant_<?= $fieldItem->getFieldName(); ?> = record.<?= $fieldItem->getFieldName(); ?>;
+                    <?php endforeach; ?>
+                    getObject('<?= $clase . '/ajaxdelete' ?>', request, (response, deleteError) => {
+                        row.classList.remove('Ragnostodelete');
+                        if (deleteError || !response) {
+                            console.error('Unable to delete record:', deleteError);
+                            Swal.fire({ icon: 'error', text: '<?= lang('Ragnos.Ragnos_server_error') ?>' });
+                            return;
+                        }
+                        if (response.result !== 'ok') {
+                            Swal.fire({ icon: 'error', text: response.errors?.general_error || '<?= lang('Ragnos.Ragnos_server_error') ?>' });
+                            return;
+                        }
+                        <?= $controllerUniqueID ?>refreshAjax();
+                        showToast('<?= lang('Ragnos.Ragnos_record_deleted') ?>', 'success');
+                    });
+                });
+            });
+        });
+
+        document.getElementById('btn_<?= $controllerUniqueID ?>_New')?.addEventListener('click', (event) => {
+            event.preventDefault();
+            widget.dataset.idactivo = 'new';
+            document.getElementById('tab_<?= $controllerUniqueID ?>_Form').click();
+        });
+        document.getElementById('btn_<?= $controllerUniqueID ?>_Refresh')?.addEventListener('click', (event) => {
+            event.preventDefault();
+            <?= $controllerUniqueID ?>getDataTable().draw();
+        });
+        document.getElementById('<?= $controllerUniqueID ?>_sel')?.addEventListener('change', () => {
+            document.getElementById('btn_<?= $controllerUniqueID ?>_Refresh').click();
+        });
+    })();
+
+    function fnData2<?= $controllerUniqueID ?>(data, callback) {
+        const widget = document.getElementById('<?= $controllerUniqueID ?>');
+        const selectedField = document.getElementById('<?= $controllerUniqueID ?>_sel').value;
+        if (selectedField) data.sOnlyField = selectedField;
+        <?php if ($master): ?>
+            data.Ragnos_master = <?= json_encode((string) $master, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
+        <?php endif; ?>
+
+        getObject('<?= site_url($clase . '/getAjaxGridData'); ?>', data, (response, error) => {
+            if (error || !response) {
+                console.error('Unable to load table data:', error);
+                callback({ draw: data.draw, data: [], recordsTotal: 0, recordsFiltered: 0 });
+                return;
+            }
+            callback(response);
+            widget.dataset.idactivo = '';
+            document.querySelectorAll('#<?= $controllerUniqueID ?>_table tbody tr').forEach((row) => {
+                const lastCell = row.querySelector('td:last-child');
+                const recordId = lastCell.textContent;
+                lastCell.dataset.idr = recordId;
+                <?php if ($modelo->canDelete): ?>
+                    const deleteButton = document.createElement('button');
+                    deleteButton.type = 'button';
+                    deleteButton.className = 'btn btn-sm btn-link p-0 ybtndelete';
+                    deleteButton.ariaLabel = <?= json_encode(lang('Ragnos.Ragnos_delete_message')) ?>;
+                    deleteButton.innerHTML = '<i class="bi bi-trash" aria-hidden="true"></i>';
+                    lastCell.replaceChildren(deleteButton);
+                    lastCell.classList.add('<?= $controllerUniqueID ?>deleteme');
+                <?php else: ?>
+                    lastCell.replaceChildren();
+                <?php endif; ?>
+            });
+
+            const searchTitle = document.getElementById('<?= $controllerUniqueID ?>_searching_title');
+            const searchValue = response.sSearch?.value || '';
+            searchTitle.textContent = searchValue ? `<?= lang('Ragnos.Ragnos_searching') ?> (${searchValue})...` : '';
+            searchTitle.hidden = !searchValue;
+
+            const rows = document.querySelectorAll('#<?= $controllerUniqueID ?>_table tbody tr');
+            const preselectedIndex = Number(widget.dataset.preselect || 0);
+            const selectedRow = rows[preselectedIndex] || rows[0];
+            if (selectedRow) {
+                selectedRow.classList.add('Ragnos_selected_row');
+                selectedRow.setAttribute('aria-selected', 'true');
+                widget.dataset.idactivo = selectedRow.querySelector('td:last-child')?.dataset.idr || '';
             }
         });
     }

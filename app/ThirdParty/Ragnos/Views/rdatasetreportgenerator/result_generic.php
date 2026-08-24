@@ -46,23 +46,13 @@
     }
 </style>
 
-<script src="<?= base_url(); ?>/assets/js/printThis.min.js" type="text/javascript"></script>
-
 <script>
-    $(document).ready(function () {
-        $('#imprimirbtn').click(function () {
-            $('#imprimible').printThis({
-                debug: false,
-                importCSS: true,
-                importStyle: false,
-                printContainer: false,
-                removeInline: true,
-                loadCSS: "<?= base_url(); ?>/assets/css/forprint.min.css",
-                pageTitle: "Reporte <?= uniqid() ?>"
-            });
+    onReady(() => {
+        document.getElementById('imprimirbtn').addEventListener('click', () => {
+            printElement('#imprimible', 'Reporte <?= uniqid() ?>');
         });
 
-        $('#exporttoexcel').click(function () {
+        document.getElementById('exporttoexcel').addEventListener('click', () => {
             var dt = new Date();
             var day = dt.getDate();
             var month = dt.getMonth() + 1;
@@ -70,7 +60,7 @@
             var hour = dt.getHours();
             var mins = dt.getMinutes();
             var postfix = day + "." + month + "." + year + "_" + hour + "." + mins;
-            exportToExcel('exportado_' + postfix, $('#imprimible').html());
+            exportToExcel('exportado_' + postfix, document.getElementById('imprimible').innerHTML);
         });
     });
 </script>

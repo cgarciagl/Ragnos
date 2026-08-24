@@ -15,33 +15,24 @@
             <?= $extra_attributes; ?> />
     </div>
     <script>
-        $(document).ready(function () {
-            var $m = $('select[name="<?= $name ?>_Ragnostemp"]').multiselect({
-                buttonClass: 'btn btn-danger',
-                nonSelectedText: 'Seleccione:',
-                allSelectedText: 'Se ha seleccionado todo ...',
-                nSelectedText: ' - ha seleccionado varios ...',
-                onChange: function (option, checked, select) {
-                    var s = '';
-                    var $opciones = $('select[name="<?= $name ?>_Ragnostemp"] option:selected');
-                    $opciones.each(function (index, value) {
-                        if (s != '') {
-                            s = s + ',';
-                        }
-                        s = s + $(this).attr('value');
-                    });
-                    $('input[name="<?= $name ?>"]').attr('value', s);
-                }
+        onReady(() => {
+            const select = document.querySelector('select[name="<?= $name ?>_Ragnostemp"]');
+            const hidden = document.querySelector('input[name="<?= $name ?>"]');
+            const values = hidden.value ? hidden.value.split(',') : [];
+            values.forEach((value) => {
+                const option = Array.from(select.options).find((item) => item.value === value);
+                if (option) option.selected = true;
             });
 
-            var s = $('input[name="<?= $name ?>"]').attr('value');
-            var $b = s.split(',');
-            $('select[name="<?= $name ?>_Ragnostemp"]').multiselect('select', $b, true);
-
-            var p = $('input[name="<?= $name ?>"]');
-            if (p.is('[readonly]')) {
-                $('select[name="<?= $name ?>_Ragnostemp"]').multiselect('disable');
-            }
+            const control = new TomSelect(select, {
+                plugins: ['remove_button'],
+                placeholder: 'Seleccione:'
+            });
+            control.on('change', () => {
+                hidden.value = control.items.join(',');
+                dispatchInputEvents(hidden);
+            });
+            if (hidden.hasAttribute('readonly')) control.disable();
         });
     </script>
 </div>

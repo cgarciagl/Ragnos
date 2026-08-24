@@ -107,9 +107,9 @@ The following function has been added to the custom.js file:
 // with every change in the order details table
 // recalculate the order total
 function _OrderDetailsOnChange(table) {
-  let order = $("input[name='orderNumber']").val();
+  const order = document.querySelector("input[name='orderNumber']").value;
   getObject("store/orders/calculatetotal", { order: order }, function (data) {
-    $('input[name="total"]').val(data.total);
+    document.querySelector('input[name="total"]').value = data.total;
   });
 }
 ```

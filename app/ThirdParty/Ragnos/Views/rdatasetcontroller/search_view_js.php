@@ -1,228 +1,183 @@
 <script type="text/javascript">
+    (() => {
+        const widget = document.getElementById('<?= $controllerUniqueID ?>');
+        const table = document.getElementById('<?= $controllerUniqueID ?>_table');
+        const tbody = table.tBodies[0];
+        const adminDiv = document.getElementById('<?= $controllerUniqueID ?>admin_div');
+        adminDiv.hidden = true;
 
-    // Ocultar el div de administración al cargar
-    $("#<?= $controllerUniqueID ?>admin_div").hide();
-
-    // Refrescar la tabla mediante Ajax
-    function <?= $controllerUniqueID ?>refreshAjax() {
-        const oTable = $("#<?= $controllerUniqueID ?>_table").DataTable();
-        const sel = $('.Ragnos_selected_row').index();
-        $("#<?= $controllerUniqueID ?>").data('preselect', sel);
-        oTable.ajax.reload(null, false);
-    }
-
-    // Botón para buscar en administración
-    $("#<?= $controllerUniqueID ?>btn_search_admin").click(function (e) {
-        e.preventDefault();
-        $("#<?= $controllerUniqueID ?>").hide('slide');
-        getValue('<?= $clase ?>/tableByAjax/', Ragnos_csrf, function (s) {
-            $("#<?= $controllerUniqueID ?>admin_div").hide();
-            $("#<?= $controllerUniqueID ?>admin_container").html(s);
-            $("#<?= $controllerUniqueID ?>admin_div").show('slide');
-        });
-    });
-
-    // Botón para regresar de la búsqueda en administración
-    $("#<?= $controllerUniqueID ?>btn_search_admin_back").click(function (e) {
-        e.preventDefault();
-        $("#<?= $controllerUniqueID ?>").show('slide');
-        $("#<?= $controllerUniqueID ?>admin_div").hide('slide');
-        <?= $controllerUniqueID ?>refreshAjax();
-    });
-
-    // Botón para confirmar la selección
-    $("#<?= $controllerUniqueID ?>btn_ok_search").click(function (e) {
-        e.preventDefault();
-        const tds = $("#<?= $controllerUniqueID ?>_table tbody tr.Ragnos_selected_row").first().find("td");
-        let fid = tds.last().attr('idr');
-        let fname = tds.first().text();
-
-        if (tds.first().hasClass('dt-empty')) {
-            fid = '';
-            fname = '';
+        function getDataTable() {
+            return table.ragnosDataTable || new DataTable.Api(table);
         }
 
-        const ResultData = { id: fid || '', name: fname || '' };
-
-        $(this).closest('.Ragnos-widget').first().remove();
-        const t = RagnosSearch.searchStack.pop();
-
-        if (t) {
-            t.val(ResultData.name);
-            t.data('id', ResultData.id);
-            t.data('name', ResultData.name);
-            t.closest(".input-group").next('input[type=hidden]').val(ResultData.id);
-
-            const tableFields = <?= json_encode($tablefields) ?>;
-            const primaryKey = '<?= $primaryKey ?>';
-
-            // Convertir las celdas seleccionadas en un objeto
-            const obj = { y_id: ResultData.id, y_name: ResultData.name };
-            obj[primaryKey] = ResultData.id;
-            tds.each(function () {
-                obj[tableFields[$(this).index()]] = $(this).text();
-            });
-            t.data('searchdata', obj);
-
-            // Ejecutar callback si existe
-            const callbackFunction = `_${t.attr('id')}OnSearch`;
-            if (typeof window[callbackFunction] === 'function') {
-                window[callbackFunction](t);
-            }
+        function removeSearchWidget() {
+            destroyDataTable(table);
+            widget.remove();
         }
 
-        cierraModal('YSearchModal');
-        t.closest('.divfield').nextAll('.divfield').first().find('input, textarea, select').first().focus();
-    });
+        window['<?= $controllerUniqueID ?>refreshAjax'] = () => {
+            const rows = Array.from(tbody.rows);
+            widget.dataset.preselect = rows.indexOf(tbody.querySelector('.Ragnos_selected_row'));
+            getDataTable().ajax.reload(null, false);
+        };
 
-    // Botón para cancelar la búsqueda
-    $("#<?= $controllerUniqueID ?>btn_cancel_search").click(function (e) {
-        e.preventDefault();
-        $(this).closest('.Ragnos-widget').first().remove();
-        const t = RagnosSearch.searchStack.pop();
-        if (t.data('name')) {
-            t.val(t.data('name'));
-        }
-        cierraModal('YSearchModal');
-    });
-
-    // Inicializar DataTable
-    <?= view('App\ThirdParty\Ragnos\Views\rdatasetcontroller/datatable_init', ['controllerUniqueID' => $controllerUniqueID, 'tableController' => $tableController]); ?>
-
-    // Configurar búsqueda en DataTable
-    $('#<?= $controllerUniqueID ?>_Tablediv .dt-search').append($('#<?= $controllerUniqueID ?>_combo'));
-
-    $('#<?= $controllerUniqueID ?>_Tablediv .dt-search').addClass('d-flex flex-wrap justify-content-between align-items-center ps-4 bg-body-secondary rounded border-start border-4 border-primary shadow-sm');
-
-    // Configurar eventos de teclado en el modal
-    $("#<?= $controllerUniqueID ?>_table tbody").closest('.modal').removeAttr('data-bs-keyboard').removeClass('fade').on('keydown', function (event) {
-        if (['ArrowDown', 'ArrowUp', ' ', 'Enter'].includes(event.key)) {
+        document.getElementById('<?= $controllerUniqueID ?>btn_search_admin')?.addEventListener('click', async (event) => {
             event.preventDefault();
-            const trSelected = $("#<?= $controllerUniqueID ?>_table tbody").find('.Ragnos_selected_row');
-            if (trSelected.length > 0) {
-                const actions = {
-                    'ArrowDown': () => trSelected.next('tr').addClass('Ragnos_selected_row').siblings().removeClass('Ragnos_selected_row'),
-                    'ArrowUp': () => trSelected.prev('tr').addClass('Ragnos_selected_row').siblings().removeClass('Ragnos_selected_row'),
-                    ' ': () => trSelected.trigger('dblclick'),
-                    'Enter': () => {
-                        const searchInput = $('#<?= $controllerUniqueID ?>_Tablediv .dt-search input');
-                        if (searchInput.val() === '') {
-                            if (!$(document.activeElement).is('input')) {
-                                trSelected.trigger('dblclick');
-                            }
-                        }
-                    }
-                };
-                actions[event.key]?.();
-            }
-            return false;
-        }
-    });
-
-    // Doble clic en una fila
-    // 1. Definimos la lógica central (para no repetirla)
-    function <?= $controllerUniqueID ?>_procesarSeleccion($row) {
-        const op = $row.find("td").last();
-        $("#<?= $controllerUniqueID ?>").data('idactivo', op.attr('idr') || '');
-
-        if (!op.hasClass('dt-empty')) {
-            $("#<?= $controllerUniqueID ?>btn_ok_search").trigger('click');
-        }
-    }
-
-    // Variable para controlar el tiempo entre toques en móvil
-    var <?= $controllerUniqueID ?>_lastTapTime = 0;
-
-    // 2. Asignamos los eventos
-    $("#<?= $controllerUniqueID ?>_table tbody")
-        .on('dblclick', 'tr', function (ev) {
-            // --- Lógica para PC ---
-            ev.preventDefault();
-        <?= $controllerUniqueID ?>_procesarSeleccion($(this));
-            return false;
-        })
-        .on('touchend', 'tr', function (ev) {
-            // --- Lógica para Móvil (Simulador Doble Tap) ---
-            var currentTime = new Date().getTime();
-            var tapLength = currentTime - <?= $controllerUniqueID ?>_lastTapTime;
-
-            // Detectar si el segundo toque fue rápido (menos de 500ms)
-            if (tapLength < 500 && tapLength > 0) {
-                ev.preventDefault(); // Evita zoom o clicks fantasmas
-            <?= $controllerUniqueID ?>_procesarSeleccion($(this));
-
-                <?= $controllerUniqueID ?>_lastTapTime = 0; // Reiniciar contador
-                return false;
-            } else {
-                // Si es el primer toque, guardamos el tiempo
-                <?= $controllerUniqueID ?>_lastTapTime = currentTime;
+            try {
+                const content = await getValue('<?= $clase ?>/tableByAjax/', Ragnos_csrf);
+                widget.hidden = true;
+                setHtml(document.getElementById('<?= $controllerUniqueID ?>admin_container'), content);
+                adminDiv.hidden = false;
+            } catch (error) {
+                console.error('Unable to load administration table:', error);
+                Swal.fire({ icon: 'error', text: '<?= lang('Ragnos.Ragnos_server_error') ?>' });
             }
         });
 
-    // Selección de fila con clic
-    $("#<?= $controllerUniqueID ?>_table tbody").on('mousedown', 'tr', function (ev) {
-        ev.preventDefault();
-        const op = $(this).find("td").last();
-        $("#<?= $controllerUniqueID ?>").data('idactivo', op.attr('idr') || '');
-        $("#<?= $controllerUniqueID ?>_table tbody").find('tr').removeClass('Ragnos_selected_row');
-        $(this).addClass('Ragnos_selected_row');
-    });
+        document.getElementById('<?= $controllerUniqueID ?>btn_search_admin_back')?.addEventListener('click', (event) => {
+            event.preventDefault();
+            widget.hidden = false;
+            adminDiv.hidden = true;
+            window['<?= $controllerUniqueID ?>refreshAjax']();
+        });
 
-    // Función para agregar datos extra a la petición Ajax
-    function fnData2<?= $controllerUniqueID ?>(data, fnCallback) {
-        const onlyField = $('#<?= $controllerUniqueID ?>_sel').val();
-        if (onlyField) {
-            data.sOnlyField = onlyField;
-        }
+        document.getElementById('<?= $controllerUniqueID ?>btn_ok_search').addEventListener('click', (event) => {
+            event.preventDefault();
+            const selectedRow = tbody.querySelector('tr.Ragnos_selected_row');
+            const cells = Array.from(selectedRow?.cells || []);
+            const lastCell = cells.at(-1);
+            const isEmpty = cells[0]?.classList.contains('dt-empty');
+            const result = {
+                id: isEmpty ? '' : lastCell?.dataset.idr || '',
+                name: isEmpty ? '' : cells[0]?.textContent || ''
+            };
 
-        const sourceUrl = '<?= site_url($clase . '/getAjaxGridData'); ?>';
-        const searchValue = "<?= $sSearch ?>";
-        const filterValue = "<?= $sFilter ?>";
+            removeSearchWidget();
+            const target = RagnosSearch.searchStack.pop();
+            if (target) {
+                target.value = result.name;
+                target.dataset.id = result.id;
+                target.dataset.name = result.name;
+                const hidden = target.closest('.input-group')?.nextElementSibling;
+                if (hidden?.matches('input[type=hidden]')) hidden.value = result.id;
 
-        if (searchValue && !data.search.value) {
-            data.search.value = searchValue;
-        }
-        if (filterValue) {
-            data.sFilter = filterValue;
-        }
-
-        getObject(sourceUrl, data, function (json) {
-            fnCallback(json);
-            $("#<?= $controllerUniqueID ?>").data('idactivo', '');
-            if (json.data.length > 0) {
-                $("#<?= $controllerUniqueID ?>_table tbody tr").each(function () {
-                    const op = $(this).find("td").last();
-                    const id = op.text();
-                    op.attr('idr', id).html('');
+                const tableFields = <?= json_encode($tablefields) ?>;
+                const searchData = { y_id: result.id, y_name: result.name, <?= json_encode($primaryKey) ?>: result.id };
+                cells.forEach((cell, index) => {
+                    if (tableFields[index]) searchData[tableFields[index]] = cell.textContent;
                 });
-            }
-            const searchTitle = $("#<?= $controllerUniqueID ?>_searching_title");
-            if (json.sSearch.value) {
-                searchTitle.text(`<?= lang('Ragnos.Ragnos_searching') ?> (${json.sSearch.value})...`).show();
-            } else {
-                searchTitle.text("").hide();
+                target.ragnosSearchData = searchData;
+                const callback = window[`_${target.id}OnSearch`];
+                if (typeof callback === 'function') callback(target);
             }
 
-            const firstRow = $("#<?= $controllerUniqueID ?>_table tbody tr").first();
-            firstRow.addClass('Ragnos_selected_row');
+            cierraModal('YSearchModal');
+            target?.closest('.divfield')?.nextElementSibling?.querySelector('input, textarea, select')?.focus();
+        });
 
-            if (json.data.length === 1 && json.recordsTotal === 1 && json.sSearch.value) {
-                $("#<?= $controllerUniqueID ?>btn_ok_search").trigger('click');
+        document.getElementById('<?= $controllerUniqueID ?>btn_cancel_search').addEventListener('click', (event) => {
+            event.preventDefault();
+            removeSearchWidget();
+            const target = RagnosSearch.searchStack.pop();
+            if (target?.dataset.name) target.value = target.dataset.name;
+            cierraModal('YSearchModal');
+        });
+
+        <?= view('App\ThirdParty\Ragnos\Views\rdatasetcontroller/datatable_init', ['controllerUniqueID' => $controllerUniqueID, 'tableController' => $tableController]); ?>
+
+        const search = document.querySelector('#<?= $controllerUniqueID ?>_Tablediv .dt-search');
+        search?.append(document.getElementById('<?= $controllerUniqueID ?>_combo'));
+        search?.classList.add('d-flex', 'flex-wrap', 'justify-content-between', 'align-items-center', 'ps-4', 'bg-body-secondary', 'rounded', 'border-start', 'border-4', 'border-primary', 'shadow-sm');
+
+        const selectRow = (row) => {
+            tbody.querySelectorAll('tr').forEach((item) => {
+                item.classList.remove('Ragnos_selected_row');
+                item.setAttribute('aria-selected', 'false');
+            });
+            row.classList.add('Ragnos_selected_row');
+            row.setAttribute('aria-selected', 'true');
+            widget.dataset.idactivo = row.querySelector('td:last-child')?.dataset.idr || '';
+        };
+        const confirmRow = (row) => {
+            selectRow(row);
+            if (!row.querySelector('td:last-child')?.classList.contains('dt-empty')) {
+                document.getElementById('<?= $controllerUniqueID ?>btn_ok_search').click();
+            }
+        };
+
+        const modal = tbody.closest('.modal');
+        modal?.classList.remove('fade');
+        modal?.removeAttribute('data-bs-keyboard');
+        modal?.addEventListener('keydown', (event) => {
+            const isEditing = event.target.matches('input, textarea, select, [contenteditable="true"]');
+            if (isEditing && event.key !== 'Escape') return;
+            const selected = tbody.querySelector('.Ragnos_selected_row');
+            if (!selected) return;
+            if (event.key === 'ArrowDown' && selected.nextElementSibling) selectRow(selected.nextElementSibling);
+            else if (event.key === 'ArrowUp' && selected.previousElementSibling) selectRow(selected.previousElementSibling);
+            else if (event.key === ' ' || event.key === 'Enter') confirmRow(selected);
+            else if (event.key === 'Escape') document.getElementById('<?= $controllerUniqueID ?>btn_cancel_search').click();
+            else return;
+            event.preventDefault();
+        });
+
+        let lastTapTime = 0;
+        tbody.addEventListener('dblclick', (event) => {
+            const row = event.target.closest('tr');
+            if (row) confirmRow(row);
+        });
+        tbody.addEventListener('touchend', (event) => {
+            const now = Date.now();
+            if (now - lastTapTime < 500 && now - lastTapTime > 0) {
+                event.preventDefault();
+                const row = event.target.closest('tr');
+                if (row) confirmRow(row);
+                lastTapTime = 0;
+            } else lastTapTime = now;
+        });
+        tbody.addEventListener('mousedown', (event) => {
+            const row = event.target.closest('tr');
+            if (row) selectRow(row);
+        });
+    })();
+
+    function fnData2<?= $controllerUniqueID ?>(data, callback) {
+        const onlyField = document.getElementById('<?= $controllerUniqueID ?>_sel').value;
+        if (onlyField) data.sOnlyField = onlyField;
+
+        const searchValue = <?= json_encode((string) $sSearch) ?>;
+        const filterValue = <?= json_encode((string) $sFilter) ?>;
+        if (searchValue && !data.search.value) data.search.value = searchValue;
+        if (filterValue) data.sFilter = filterValue;
+
+        getObject('<?= site_url($clase . '/getAjaxGridData'); ?>', data, (response, error) => {
+            if (error || !response) {
+                console.error('Unable to load search data:', error);
+                callback({ draw: data.draw, data: [], recordsTotal: 0, recordsFiltered: 0 });
+                return;
+            }
+            callback(response);
+            const widget = document.getElementById('<?= $controllerUniqueID ?>');
+            widget.dataset.idactivo = '';
+            document.querySelectorAll('#<?= $controllerUniqueID ?>_table tbody tr').forEach((row) => {
+                const lastCell = row.querySelector('td:last-child');
+                lastCell.dataset.idr = lastCell.textContent;
+                lastCell.replaceChildren();
+            });
+
+            const searchTitle = document.getElementById('<?= $controllerUniqueID ?>_searching_title');
+            const actualSearch = response.sSearch?.value || '';
+            searchTitle.textContent = actualSearch ? `<?= lang('Ragnos.Ragnos_searching') ?> (${actualSearch})...` : '';
+            searchTitle.hidden = !actualSearch;
+
+            const firstRow = document.querySelector('#<?= $controllerUniqueID ?>_table tbody tr');
+            if (firstRow) {
+                firstRow.classList.add('Ragnos_selected_row');
+                firstRow.setAttribute('aria-selected', 'true');
+            }
+            if (response.data.length === 1 && response.recordsTotal === 1 && actualSearch) {
+                document.getElementById('<?= $controllerUniqueID ?>btn_ok_search').click();
             }
         });
     }
-
-    // Eventos de teclado en la tabla
-    $('#<?= $controllerUniqueID ?>_table').on('keydown', function (event) {
-        if (event.key === 'Enter') {
-            event.preventDefault();
-            $("#<?= $controllerUniqueID ?>btn_ok_search").trigger('click');
-            return false;
-        }
-        if (event.key === 'Escape') {
-            event.preventDefault();
-            $("#<?= $controllerUniqueID ?>btn_cancel_search").trigger('click');
-            return false;
-        }
-    });
 </script>
