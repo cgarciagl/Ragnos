@@ -328,35 +328,35 @@
 <p>Método estático para configurar una búsqueda sencilla en un input existente. Transforma el input agregando botones de búsqueda y limpieza.</p>
 <h4 id="parametros_2">Parámetros</h4>
 <ul>
-<li><strong><code>elemento</code></strong> (jQuery Selector | DOM Element): El input donde se habilitará la búsqueda.</li>
+<li><strong><code>elemento</code></strong> (string | DOM Element): El selector CSS o input donde se habilitará la búsqueda.</li>
 <li><strong><code>ruta</code></strong> (string): La URL del servidor (Controlador/Método) que procesará la búsqueda.</li>
 <li><strong><code>params</code></strong> (object): Configuración adicional.</li>
 <li><code>canSetToNull</code> (boolean): Define si se muestra el botón "X" para limpiar el campo (Default: <code>true</code>).</li>
-<li><strong><code>callback</code></strong> (function): Función a ejecutar tras una búsqueda exitosa. Recibe el objeto jQuery del input como argumento <code>e</code>.</li>
+<li><strong><code>callback</code></strong> (function): Función a ejecutar tras una búsqueda exitosa. Recibe el elemento DOM del input como argumento <code>e</code>.</li>
 </ul>
 <h4 id="retorno_2">Retorno</h4>
 <p>No retorna valor. Modifica el DOM del input.</p>
 <h4 id="ejemplo-de-uso">Ejemplo de uso</h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nx">RagnosSearch</span><span class="p">.</span><span class="nx">setupSimpleSearch</span><span class="p">(</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nx">$</span><span class="p">(</span><span class="s2">"#miInput"</span><span class="p">),</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">"#miInput"</span><span class="p">),</span>
 <a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="s2">"admin/usuarios/buscar"</span><span class="p">,</span>
 <a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="p">{},</span>
 <a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span><span class="kd">function</span><span class="w"> </span><span class="p">(</span><span class="nx">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span><span class="c1">// Los datos del resultado se adjuntan al objeto jQuery en 'searchdata'</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">resultado</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">e</span><span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="s2">"searchdata"</span><span class="p">);</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span><span class="c1">// Los datos del resultado se adjuntan al elemento DOM</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">resultado</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">e</span><span class="p">.</span><span class="nx">ragnosSearchData</span><span class="p">;</span>
 <a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
 <a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">resultado</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">      </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"ID seleccionado:"</span><span class="p">,</span><span class="w"> </span><span class="nx">resultado</span><span class="p">.</span><span class="nx">id</span><span class="p">);</span>
 <a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">      </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"Nombre:"</span><span class="p">,</span><span class="w"> </span><span class="nx">resultado</span><span class="p">.</span><span class="nx">nombre</span><span class="p">);</span>
 <a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">      </span><span class="c1">// Asignar valor al input visible</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">      </span><span class="nx">e</span><span class="p">.</span><span class="nx">val</span><span class="p">(</span><span class="nx">resultado</span><span class="p">.</span><span class="nx">nombre</span><span class="p">);</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">      </span><span class="nx">e</span><span class="p">.</span><span class="nx">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">resultado</span><span class="p">.</span><span class="nx">nombre</span><span class="p">;</span>
 <a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">    </span><span class="p">}</span>
 <a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">  </span><span class="p">},</span>
 <a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="p">);</span>
 </code></pre></div>
 <hr />
-<h3 id="selectorragnossearchparams"><code>$(selector).RagnosSearch(params)</code></h3>
-<p>Plugin de jQuery que instancia la clase <code>RagnosSearch</code>. Está diseñado para búsquedas más complejas, típicamente vinculadas a un controlador estándar del sistema (<code>RagnosController</code>) que implementa <code>searchByAjax</code> y soporta filtros estructurados.</p>
+<h3 id="new-ragnossearchelemento-params"><code>new RagnosSearch(elemento, params)</code></h3>
+<p>Clase nativa para búsquedas más complejas, típicamente vinculadas a un controlador estándar del sistema (<code>RagnosController</code>) que implementa <code>searchByAjax</code> y soporta filtros estructurados.</p>
 <h4 id="parametros-params">Parámetros (<code>params</code>)</h4>
 <p>Objeto de configuración con:</p>
 <ul>
@@ -367,7 +367,7 @@
 <li><strong><code>canSetToNull</code></strong> (boolean): (Opcional) Permite limpiar el campo.</li>
 </ul>
 <h4 id="ejemplo-de-uso_1">Ejemplo de uso</h4>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nx">$</span><span class="p">(</span><span class="s2">"#inputBusquedaAvanzada"</span><span class="p">).</span><span class="nx">RagnosSearch</span><span class="p">({</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="ow">new</span><span class="w"> </span><span class="nx">RagnosSearch</span><span class="p">(</span><span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">"#inputBusquedaAvanzada"</span><span class="p">),</span><span class="w"> </span><span class="p">{</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="nx">controller</span><span class="o">:</span><span class="w"> </span><span class="s2">"usuarios"</span><span class="p">,</span><span class="w"> </span><span class="c1">// Busca en: usuarios/searchByAjax</span>
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
 <a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="c1">// Filtro: Usuarios activos (usu_activo = 'S') y del grupo 2</span>
@@ -379,7 +379,7 @@
 <a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">  </span><span class="p">),</span>
 <a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
 <a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">  </span><span class="nx">callback</span><span class="o">:</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="p">(</span><span class="nx">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">datos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">e</span><span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="s2">"searchdata"</span><span class="p">);</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">datos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">e</span><span class="p">.</span><span class="nx">ragnosSearchData</span><span class="p">;</span>
 <a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"Datos recibidos:"</span><span class="p">,</span><span class="w"> </span><span class="nx">datos</span><span class="p">);</span>
 <a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>
 <a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">datos</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">datos</span><span class="p">.</span><span class="nx">id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
@@ -397,7 +397,7 @@
 <p>Se ejecutan automáticamente después de que un control <code>RagnosSearch</code> completa una selección.</p>
 <ul>
 <li><strong>Patrón:</strong> <code>_{id_del_input}OnSearch</code></li>
-<li><strong>Parámetro:</strong> Recibe el objeto jQuery del control (input).</li>
+<li><strong>Parámetro:</strong> Recibe el elemento DOM del control (input).</li>
 <li><strong>Uso:</strong> Ideal para rellenar otros campos del formulario basándose en el resultado de la búsqueda.</li>
 </ul>
 <p><strong>Ejemplo del sistema (<code>_productCodeOnSearch</code>):</strong>
@@ -405,11 +405,11 @@ Cuando se selecciona un producto en el input <code>productCode</code>, esta func
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1">// Se activa al seleccionar algo en &lt;input id="productCode" ...&gt;</span>
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="kd">function</span><span class="w"> </span><span class="nx">_productCodeOnSearch</span><span class="p">(</span><span class="nx">control</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="c1">// 'control' es el input del código de producto</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span><span class="c1">// Accedemos a los datos devueltos por la búsqueda con .data("searchdata")</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span><span class="kd">let</span><span class="w"> </span><span class="nx">datos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">control</span><span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="s2">"searchdata"</span><span class="p">);</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span><span class="c1">// Accedemos a los datos devueltos por la búsqueda</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">datos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">control</span><span class="p">.</span><span class="nx">ragnosSearchData</span><span class="p">;</span>
 <a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
 <a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span><span class="c1">// Actualizamos otro campo (Precio Unitario) con el valor MSRP del producto</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">  </span><span class="nx">$</span><span class="p">(</span><span class="s1">'#detalleorden input[name="priceEach"]'</span><span class="p">).</span><span class="nx">val</span><span class="p">(</span><span class="nx">datos</span><span class="p">.</span><span class="nx">MSRP</span><span class="p">);</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">  </span><span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s1">'#detalleorden input[name="priceEach"]'</span><span class="p">).</span><span class="nx">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">datos</span><span class="p">.</span><span class="nx">MSRP</span><span class="p">;</span>
 <a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="p">}</span>
 </code></pre></div>
 <h4 id="2-hooks-de-cambio-en-tabla-_nombretablaonchange">2. Hooks de Cambio en Tabla (<code>_NombreTablaOnChange</code>)</h4>
@@ -424,12 +424,12 @@ Cada vez que cambia algo en la tabla de detalles de órdenes (<code>Ordenesdetal
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1">// Se activa al modificar la tabla &lt;table id="Ordenesdetalles" ...&gt;</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="kd">function</span><span class="w"> </span><span class="nx">_OrdenesdetallesOnChange</span><span class="p">(</span><span class="nx">tabla</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="c1">// Obtenemos el ID de la orden actual</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="kd">let</span><span class="w"> </span><span class="nx">orden</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">$</span><span class="p">(</span><span class="s2">"input[name='orderNumber']"</span><span class="p">).</span><span class="nx">val</span><span class="p">();</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">orden</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">"input[name='orderNumber']"</span><span class="p">).</span><span class="nx">value</span><span class="p">;</span>
 <a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
 <a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span><span class="c1">// Llamamos al servidor para recalcular el total</span>
 <a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span><span class="nx">getObject</span><span class="p">(</span><span class="s2">"tienda/ordenes/calculatotal"</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">orden</span><span class="o">:</span><span class="w"> </span><span class="nx">orden</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="p">(</span><span class="nx">data</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">    </span><span class="c1">// Actualizamos el campo visual de Total</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">    </span><span class="nx">$</span><span class="p">(</span><span class="s1">'input[name="total"]'</span><span class="p">).</span><span class="nx">val</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">total</span><span class="p">);</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">    </span><span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s1">'input[name="total"]'</span><span class="p">).</span><span class="nx">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">data</span><span class="p">.</span><span class="nx">total</span><span class="p">;</span>
 <a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">  </span><span class="p">});</span>
 <a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="p">}</span>
 </code></pre></div>
@@ -438,19 +438,19 @@ Cada vez que cambia algo en la tabla de detalles de órdenes (<code>Ordenesdetal
 <p><strong>Ejemplo (<code>pruebaBusquedaOffice</code>):</strong>
 Una función simple diseñada para ser pasada como parámetro <code>callback</code> en <code>RagnosSearch</code>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kd">function</span><span class="w"> </span><span class="nx">pruebaBusquedaOffice</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="kd">let</span><span class="w"> </span><span class="nx">datos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">e</span><span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="s2">"searchdata"</span><span class="p">);</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">datos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">e</span><span class="p">.</span><span class="nx">ragnosSearchData</span><span class="p">;</span>
 <a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"Los datos de la busqueda por oficina"</span><span class="p">,</span><span class="w"> </span><span class="nx">datos</span><span class="p">);</span>
 <a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="p">}</span>
 <a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
 <a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c1">// Uso:</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1">// $('#oficina').RagnosSearch({ ..., callback: pruebaBusquedaOffice });</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1">// new RagnosSearch('#oficina', { ..., callback: pruebaBusquedaOffice });</span>
 </code></pre></div>
 <hr />
 <h2 id="ragnosutilsshowcontrollertableinselector-controller-master"><code>RagnosUtils.showControllerTableIn(selector, controller, master)</code></h2>
 <p>Carga de forma asíncrona la tabla generada por un controlador en un elemento específico del DOM. Esta función es fundamental cuando se manejan relaciones de "Detalle" o cuando se quiere incrustar una vista de tabla de forma dinámica.</p>
 <h3 id="parametros_3">Parámetros</h3>
 <ul>
-<li><strong><code>selector</code></strong> (string): Selector de jQuery (ej. <code>'#mi_tabla_detalle'</code>) donde se inyectará el contenido HTML.</li>
+<li><strong><code>selector</code></strong> (string | DOM Element): Selector CSS (ej. <code>'#mi_tabla_detalle'</code>) o elemento donde se inyectará el contenido HTML.</li>
 <li><strong><code>controller</code></strong> (string): Nombre del controlador (o ruta URL) que responderá la petición. Internamente llama al método <code>tableByAjax</code> del controlador.</li>
 <li><strong><code>master</code></strong> (string, opcional): El ID del registro maestro. Si se proporciona, se asocia al objeto global de seguridad <code>Ragnos_csrf</code> para filtrar los resultados por este ID padre.</li>
 </ul>
@@ -468,7 +468,7 @@ Una función simple diseñada para ser pasada como parámetro <code>callback</co
 <p>Similar a <code>showControllerTableIn</code>, pero diseñada específicamente para cargar vistas de reportes generadas por el controlador.</p>
 <h3 id="parametros_4">Parámetros</h3>
 <ul>
-<li><strong><code>selector</code></strong> (string): Selector de jQuery donde se inyectará el reporte.</li>
+<li><strong><code>selector</code></strong> (string | DOM Element): Selector CSS o elemento donde se inyectará el reporte.</li>
 <li><strong><code>controller</code></strong> (string): Nombre del controlador. Internamente llama al método <code>reportByAjax</code> del controlador.</li>
 </ul>
 <h3 id="ejemplo-de-uso_3">Ejemplo de uso</h3>

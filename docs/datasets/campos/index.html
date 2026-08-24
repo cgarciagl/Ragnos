@@ -378,11 +378,11 @@ Simplemente agrega la clave <code>tab</code> al array de configuracion del campo
 <a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="x">]);</span>
 </code></pre></div>
 <ul>
-<li><strong>Variante HTML:</strong> Si necesitas un editor básico, usa <code>type =&gt; 'htmltextarea'</code>.</li>
+<li><strong>Variante HTML:</strong> Usa <code>type =&gt; 'htmltextarea'</code> para activar el editor de texto enriquecido nativo. Incluye estilos de párrafo, listas, alineación, sangría, tablas, enlaces, vista de código y pantalla completa. El contenido pegado o editado se sanea antes de enviarse para conservar únicamente HTML de formato seguro.</li>
 </ul>
 <hr />
 <h2 id="4-campo-de-fecha-y-hora">4. Campo de Fecha y Hora</h2>
-<p>Ragnos maneja automáticamente la selección de fechas.</p>
+<p>Ragnos maneja automáticamente la selección de fechas mediante los controles nativos del navegador, sin plugins ni dependencias adicionales.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="x">$this-&gt;addField('orderDate', [</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="x">    'label' =&gt; 'Fecha de Orden',</span>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="x">    'type'  =&gt; 'datetime', // o 'date'</span>

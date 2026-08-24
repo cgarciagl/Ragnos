@@ -378,11 +378,11 @@ Simply add the <code>tab</code> key to the field configuration array with the de
 <a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="x">]);</span>
 </code></pre></div>
 <ul>
-<li><strong>HTML Variant:</strong> Use <code>type =&gt; 'htmltextarea'</code> for a basic rich text editor.</li>
+<li><strong>HTML Variant:</strong> Use <code>type =&gt; 'htmltextarea'</code> to enable the native rich text editor. It includes paragraph styles, lists, alignment, indentation, tables, links, source view, and fullscreen mode. Pasted or edited content is sanitized before submission so that only safe formatting HTML is retained.</li>
 </ul>
 <hr />
 <h2 id="4-date-and-time-field">4. Date and Time Field</h2>
-<p>Ragnos automatically handles date selection.</p>
+<p>Ragnos automatically handles date selection through native browser controls, without plugins or additional dependencies.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="x">$this-&gt;addField('orderDate', [</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="x">    'label' =&gt; 'Order Date',</span>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="x">    'type'  =&gt; 'datetime', // or 'date'</span>
