@@ -225,6 +225,10 @@
               <ul class="nav flex-column">
               </ul>
             </li>
+            <li class="nav-item" data-bs-level="2"><a href="#documentacion-openapi" class="nav-link">Documentación OpenAPI</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
               </ul>
             </li>
         </ul>
@@ -512,6 +516,32 @@
 </code></pre></div>
 <h3 id="curl-terminal">cURL (Terminal)</h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span>https://tusitio.com/tienda/productos<span class="w">   </span>-H<span class="w"> </span><span class="s2">"Accept: application/json"</span><span class="w">   </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer TU_API_TOKEN"</span>
+</code></pre></div>
+<h2 id="documentacion-openapi">Documentación OpenAPI</h2>
+<p>Ragnos genera una especificación OpenAPI 3.1 desde los controladores registrados en <code>RagnosConfig</code>:</p>
+<ul>
+<li>JSON: <code>GET /api/openapi.json</code></li>
+<li>YAML: <code>GET /api/openapi.yaml</code></li>
+<li>Swagger UI local: <code>GET /api/docs</code></li>
+</ul>
+<p>En desarrollo la documentación es pública por defecto. En producción requiere una sesión del grupo administrador, salvo que <code>Ragnos_openapi_public</code> se habilite explícitamente. Los endpoints de negocio continúan requiriendo <code>Authorization: Bearer TU_API_TOKEN</code>.</p>
+<p>Para incluir un controlador, añádelo a <code>Ragnos_openapi_controllers</code> con su clase, ruta y etiqueta. Los campos, reglas, tipos, operaciones CRUD y parámetros de paginación se infieren automáticamente. Las excepciones pueden añadirse desde el controlador:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="x">public function getOpenApiDefinition(): array</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="x">{</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="x">    return [</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="x">        'paths' =&gt; [</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="x">            '/tienda/productos' =&gt; [</span>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="x">                'get' =&gt; [</span>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="x">                    'description' =&gt; 'Listado de productos disponibles.',</span>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="x">                ],</span>
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a><span class="x">            ],</span>
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a><span class="x">        ],</span>
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a><span class="x">    ];</span>
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a><span class="x">}</span>
+</code></pre></div>
+<p>También puedes validar o exportar la especificación desde CLI:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>php<span class="w"> </span>spark<span class="w"> </span>ragnos:openapi<span class="w"> </span>--format<span class="w"> </span>json<span class="w"> </span>--output<span class="w"> </span>writable/openapi.json
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>php<span class="w"> </span>spark<span class="w"> </span>ragnos:openapi<span class="w"> </span>--format<span class="w"> </span>yaml<span class="w"> </span>--output<span class="w"> </span>writable/openapi.yaml
 </code></pre></div></div>
             </div>
         </div>
