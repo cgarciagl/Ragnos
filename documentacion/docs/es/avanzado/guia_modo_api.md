@@ -340,3 +340,37 @@ fetch("https://tusitio.com/tienda/productos/save", {
 ```bash
 curl -X GET https://tusitio.com/tienda/productos   -H "Accept: application/json"   -H "Authorization: Bearer TU_API_TOKEN"
 ```
+
+## Documentación OpenAPI
+
+Ragnos genera una especificación OpenAPI 3.1 desde los controladores registrados en `RagnosConfig`:
+
+- JSON: `GET /api/openapi.json`
+- YAML: `GET /api/openapi.yaml`
+- Swagger UI local: `GET /api/docs`
+
+En desarrollo la documentación es pública por defecto. En producción requiere una sesión del grupo administrador, salvo que `Ragnos_openapi_public` se habilite explícitamente. Los endpoints de negocio continúan requiriendo `Authorization: Bearer TU_API_TOKEN`.
+
+Para incluir un controlador, añádelo a `Ragnos_openapi_controllers` con su clase, ruta y etiqueta. Los campos, reglas, tipos, operaciones CRUD y parámetros de paginación se infieren automáticamente. Las excepciones pueden añadirse desde el controlador:
+
+```php
+public function getOpenApiDefinition(): array
+{
+    return [
+        'paths' => [
+            '/tienda/productos' => [
+                'get' => [
+                    'description' => 'Listado de productos disponibles.',
+                ],
+            ],
+        ],
+    ];
+}
+```
+
+También puedes validar o exportar la especificación desde CLI:
+
+```bash
+php spark ragnos:openapi --format json --output writable/openapi.json
+php spark ragnos:openapi --format yaml --output writable/openapi.yaml
+```

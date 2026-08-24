@@ -432,7 +432,14 @@ function pagosModule() {
             this.formErrors = {};
             const token = Alpine.store('app').token;
 
-            const body = { ...this.form };
+            // The Ragnos CRUD pipeline distinguishes inserts and updates through
+            // Ragnos_action when the request uses POST (the API's save endpoint).
+            // Sending only the primary key is not enough: without this marker a
+            // POST update is interpreted as an insert by the model.
+            const body = {
+                ...this.form,
+                Ragnos_action: this.formMode === 'edit' ? 'update' : 'insert'
+            };
 
             // For updates, include the ID
             if (this.formMode === 'edit' && this.editingId) {
@@ -453,7 +460,7 @@ function pagosModule() {
                 const msg = this.formMode === 'create' ? 'Pago creado exitosamente' : 'Pago actualizado exitosamente';
                 if (root) root.addToast(msg, 'success');
                 this.loadData();
-            } else if (result.status === 400 && result.data?.messages) {
+            } else if ((result.status === 400 || result.status === 422) && result.data?.messages) {
                 // Validation errors
                 this.formErrors = result.data.messages;
             } else if (result.status === 401) {

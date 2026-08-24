@@ -17,6 +17,11 @@ abstract class RDatasetController extends RDataset
 
     use ResponseTrait;
 
+    public function getOpenApiDefinition(): array
+    {
+        return [];
+    }
+
     /**
      * Constructor de la clase
      */

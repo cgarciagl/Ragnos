@@ -18,7 +18,19 @@ class MenuBuilderTest extends CIUnitTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->menuBuilder = new MenuBuilder();
+        $this->menuBuilder = new MenuBuilder($this->authorization(false));
+    }
+
+    private function authorization(bool $administrator): object
+    {
+        return new class ($administrator) {
+            public function __construct(private bool $administrator) {}
+
+            public function isUserInGroup(string $group): bool
+            {
+                return $this->administrator && strtolower($group) === 'administrador';
+            }
+        };
     }
 
     public function testGetTopMenuDevuelveArray(): void
@@ -35,11 +47,12 @@ class MenuBuilderTest extends CIUnitTestCase
         $this->assertContains('Inicio', $titulos);
     }
 
-    public function testMenuTieneElementoMiPerfil(): void
+    public function testElMenuBuilderNoDuplicaElPerfilDelTopbar(): void
     {
         $menu    = $this->menuBuilder->getTopMenu();
         $titulos = array_column($menu, 'title');
-        $this->assertContains('Mi perfil', $titulos);
+        $this->assertNotContains('Mi perfil', $titulos);
+        $this->assertNotContains('Perfil de Usuario', $titulos);
     }
 
     public function testCatalogosTieneSubmenu(): void
@@ -102,9 +115,27 @@ class MenuBuilderTest extends CIUnitTestCase
         }
     }
 
-    public function testMenuTieneEstructuraCompleta(): void
+    public function testMenuTieneEstructuraCompletaParaUsuarioNormal(): void
     {
         $menu = $this->menuBuilder->getTopMenu();
-        $this->assertCount(4, $menu, 'El menú principal debe tener 4 secciones: Inicio, Mi perfil, Catálogos, Reportes');
+        $this->assertCount(4, $menu, 'El menú normal debe tener Inicio, Catálogos, Reportes y Procesos');
+        $this->assertNotContains('Administración', array_column($menu, 'title'));
+    }
+
+    public function testMenuAdministradorIncluyeAdministracion(): void
+    {
+        $menu = (new MenuBuilder($this->authorization(true)))->getTopMenu();
+        $titulos = array_column($menu, 'title');
+
+        $this->assertCount(5, $menu);
+        $this->assertContains('Administración', $titulos);
+
+        $administracion = array_values(array_filter(
+            $menu,
+            static fn(array $item): bool => ($item['title'] ?? '') === 'Administración',
+        ))[0];
+        $adminChildren = array_column($administracion['children'], 'title');
+        $this->assertContains('Usuarios', $adminChildren);
+        $this->assertContains('Grupos de Usuarios', $adminChildren);
     }
 }

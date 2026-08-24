@@ -14,7 +14,8 @@
     "ext-intl": "*",
     "ext-mbstring": "*",
     "laminas/laminas-escaper": "^2.13",
-    "psr/log": "^3.0"
+    "psr/log": "^3.0",
+    "symfony/yaml": "^6.4"
   },
   "require-dev": {
     "codeigniter/coding-standard": "^1.7",

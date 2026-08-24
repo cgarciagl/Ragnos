@@ -4,6 +4,7 @@ namespace App\Commands;
 
 use CodeIgniter\CLI\BaseCommand;
 use CodeIgniter\CLI\CLI;
+use App\ThirdParty\Ragnos\Generators\ControllerGenerator;
 
 class MakeDataset extends BaseCommand
 {
@@ -35,6 +36,8 @@ class MakeDataset extends BaseCommand
 
     public function run(array $params)
     {
+        $generator = new ControllerGenerator();
+
         // 1. Obtener nombre del controlador
         $controllerName = array_shift($params);
 
@@ -79,26 +82,26 @@ class MakeDataset extends BaseCommand
                 continue; // Generalmente no agregamos la PK como campo editable, saltar
             }
 
-            // Generar configuración del campo
-            $config = $this->mapFieldType($field);
-
-            // Construir el string del array PHP
-            $fieldBody = "[\n";
-            foreach ($config as $key => $val) {
-                $fieldBody .= "            '$key' => '$val',\n";
-            }
-            $fieldBody .= "        ]";
-
-            $generatedFields[] = "\$this->addField('{$field->name}', $fieldBody);";
+            $generatedFields[] = [
+                'name'   => $field->name,
+                'config' => $generator->mapDatasetField($field),
+            ];
 
             // Agregar a la grilla por defecto (limitar a los primeros 5 para no saturar)
             if (count($gridFields) < 5) {
-                $gridFields[] = "'{$field->name}'";
+                $gridFields[] = $field->name;
             }
         }
 
         // 5. Generar el contenido del archivo
-        $template = $this->getTemplate($namespace, $className, $tableName, $primaryKey, $generatedFields, $gridFields);
+        $template = $this->generateControllerSource(
+            $namespace,
+            $className,
+            $tableName,
+            $primaryKey,
+            $generatedFields,
+            $gridFields,
+        );
 
         // 6. Guardar archivo
         $savePath = APPPATH . 'Controllers/' . ($namespaceSuffix ? $namespaceSuffix . '/' : '');
@@ -124,100 +127,22 @@ class MakeDataset extends BaseCommand
         }
     }
 
-    /**
-     * Mapea tipos de SQL a Tipos/Reglas de Ragnos
-     */
-    private function mapFieldType($field)
-    {
-        $config = [
-            'label' => ucfirst(str_replace('_', ' ', $field->name)), // snake_case a Texto Legible
-            'type'  => 'text', // Default
-            'rules' => 'required' // Default safe
-        ];
-
-        // Detección de tipos
-        $type = strtolower($field->type);
-
-        // 1. Numéricos
-        if (in_array($type, ['int', 'tinyint', 'smallint', 'mediumint', 'bigint', 'integer'])) {
-            $config['type']   = 'number';
-            $config['rules'] .= '|integer';
-        } elseif (in_array($type, ['decimal', 'float', 'double', 'numeric'])) {
-            $config['type']   = 'money'; // Asumimos dinero para decimales, seguro de cambiar
-            $config['rules'] .= '|decimal';
-        }
-
-        // 2. Fechas
-        elseif (in_array($type, ['date'])) {
-            $config['type'] = 'date';
-        } elseif (in_array($type, ['datetime', 'timestamp'])) {
-            $config['type'] = 'datetime';
-        }
-
-        // 3. Textos Largos
-        elseif (in_array($type, ['text', 'mediumtext', 'longtext'])) {
-            $config['type'] = 'textarea';
-        }
-
-        // 4. Booleanos (Tinyint 1 a menudo es bool)
-        elseif ($type === 'tinyint' && $field->max_length == 1) {
-            $config['type']  = 'checkbox';
-            $config['rules'] = 'permit_empty'; // Checkbox no marcado no envía valor a veces
-        }
-
-        // Ajustar max_length para varchars
-        if ($type === 'varchar' || $type === 'char') {
-            if ($field->max_length > 0) {
-                $config['rules'] .= "|max_length[{$field->max_length}]";
-            }
-        }
-
-        // Detectar posibles campos de imagen/archivo por nombre
-        if (strpos($field->name, 'image') !== false || strpos($field->name, 'foto') !== false) {
-            $config['type']  = 'image';
-            $config['rules'] = 'permit_empty'; // Uploads suelen ser opcionales en update
-        }
-
-        return $config;
+    public function generateControllerSource(
+        string $namespace,
+        string $className,
+        string $tableName,
+        string $primaryKey,
+        array $fields,
+        array $gridFields,
+    ): string {
+        return (new ControllerGenerator())->renderDatasetController(
+            $namespace,
+            $className,
+            $tableName,
+            $primaryKey,
+            $fields,
+            $gridFields,
+        );
     }
 
-    /**
-     * Plantilla del archivo PHP
-     */
-    private function getTemplate($ns, $class, $table, $pk, $fields, $grid)
-    {
-        $fieldsBlock = implode("\n\n        ", $fields);
-        $gridBlock   = implode(", ", $grid);
-
-        return <<<EOT
-<?php
-
-namespace {$ns};
-
-use App\ThirdParty\Ragnos\Controllers\RDatasetController;
-
-class {$class} extends RDatasetController
-{
-    public function __construct()
-    {
-        parent::__construct();
-
-        // Configuración General
-        \$this->checkLogin();
-        \$this->setTitle('{$class}'); // TODO: Ajustar título
-        
-        // Configuración de Base de Datos
-        \$this->setTableName('{$table}');
-        \$this->setIdField('{$pk}');
-        // \$this->setAutoIncrement(true); // Descomentar si la PK es AI
-
-        // Definición de Campos (Generado Automáticamente)
-        {$fieldsBlock}
-
-        // Configuración de la Grilla (DataTables)
-        \$this->setTableFields([{$gridBlock}]);
-    }
-}
-EOT;
-    }
 }

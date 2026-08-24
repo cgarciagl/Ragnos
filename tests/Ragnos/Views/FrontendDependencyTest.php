@@ -14,6 +14,9 @@ final class FrontendDependencyTest extends CIUnitTestCase
         $this->assertStringNotContainsString('jquery.min.js', strtolower($scripts));
         $this->assertStringContainsString('/assets/js/datatables.min.js?v=3.0.2', $scripts);
         $this->assertStringContainsString('/assets/js/tom-select.complete.min.js?v=2.6.2', $scripts);
+        $this->assertFileExists(HOMEPATH . 'content/assets/js/swagger-ui-bundle.js');
+        $this->assertFileExists(HOMEPATH . 'content/assets/js/swagger-ui-standalone-preset.js');
+        $this->assertFileExists(HOMEPATH . 'content/assets/css/swagger-ui.css');
     }
 
     public function testLocalVendorFilesMatchDeclaredVersions(): void
@@ -87,7 +90,7 @@ final class FrontendDependencyTest extends CIUnitTestCase
                 if (!$file->isFile() || !in_array($file->getExtension(), ['js', 'php'], true)) {
                     continue;
                 }
-                if (str_ends_with($file->getFilename(), '.min.js')) {
+                if (str_ends_with($file->getFilename(), '.min.js') || str_starts_with($file->getFilename(), 'swagger-ui-')) {
                     continue;
                 }
 

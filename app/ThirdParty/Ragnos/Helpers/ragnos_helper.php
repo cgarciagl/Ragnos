@@ -21,6 +21,10 @@ function getInputValue($key, $default = null)
 {
     $request = request();
 
+    if (!method_exists($request, 'getVar')) {
+        return $default;
+    }
+
     // 1. Verificamos si el Content-Type indica que es JSON
     $contentType = $request->getHeaderLine('Content-Type');
 

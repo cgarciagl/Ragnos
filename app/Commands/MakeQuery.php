@@ -4,6 +4,7 @@ namespace App\Commands;
 
 use CodeIgniter\CLI\BaseCommand;
 use CodeIgniter\CLI\CLI;
+use App\ThirdParty\Ragnos\Generators\ControllerGenerator;
 
 class MakeQuery extends BaseCommand
 {
@@ -35,6 +36,8 @@ class MakeQuery extends BaseCommand
 
     public function run(array $params)
     {
+        $generator = new ControllerGenerator();
+
         // 1. Obtener nombre del controlador
         $controllerName = array_shift($params);
 
@@ -59,7 +62,7 @@ class MakeQuery extends BaseCommand
 
         try {
             // Ejecutamos con limite 0 para no traer datos pero si el esquema
-            $queryResult = $db->query($sql . " LIMIT 0");
+            $queryResult = $db->query($generator->normalizeMetadataQuery($sql));
             $fields      = $queryResult->getFieldData();
         } catch (\Throwable $th) {
             CLI::error("Error ejecutando la consulta: " . $th->getMessage());
@@ -81,26 +84,26 @@ class MakeQuery extends BaseCommand
                 $primaryKey = $field->name;
             }
 
-            // Generar configuración del campo
-            $config = $this->mapFieldType($field);
-
-            // Construir el string del array PHP
-            $fieldBody = "[\n";
-            foreach ($config as $key => $val) {
-                $fieldBody .= "            '$key' => '$val',\n";
-            }
-            $fieldBody .= "        ]";
-
-            $generatedFields[] = "\$this->addField('{$field->name}', $fieldBody);";
+            $generatedFields[] = [
+                'name'   => $field->name,
+                'config' => $generator->mapQueryField($field),
+            ];
 
             // Agregar a la grilla por defecto (los primeros 5)
             if (count($gridFields) < 5) {
-                $gridFields[] = "'{$field->name}'";
+                $gridFields[] = $field->name;
             }
         }
 
         // 5. Generar el contenido del archivo
-        $template = $this->getTemplate($namespace, $className, $sql, $primaryKey, $generatedFields, $gridFields);
+        $template = $this->generateControllerSource(
+            $namespace,
+            $className,
+            $sql,
+            $primaryKey,
+            $generatedFields,
+            $gridFields,
+        );
 
         // 6. Guardar archivo
         $savePath = APPPATH . 'Controllers/' . ($namespaceSuffix ? $namespaceSuffix . '/' : '');
@@ -126,71 +129,22 @@ class MakeQuery extends BaseCommand
         }
     }
 
-    /**
-     * Mapea tipos de SQL a Tipos/Reglas de Ragnos (Reutilizado de MakeDataset)
-     */
-    private function mapFieldType($field)
-    {
-        $config = [
-            'label' => ucfirst(str_replace('_', ' ', $field->name)),
-            'type'  => 'text',
-        ];
-
-        // Detección de tipos
-        $type = strtolower($field->type ?? 'varchar');
-
-        if (in_array($type, ['int', 'tinyint', 'smallint', 'mediumint', 'bigint', 'integer'])) {
-            $config['type'] = 'number';
-        } elseif (in_array($type, ['decimal', 'float', 'double', 'numeric', 'real'])) {
-            $config['type'] = 'money';
-        } elseif (in_array($type, ['date'])) {
-            $config['type'] = 'date';
-        } elseif (in_array($type, ['datetime', 'timestamp'])) {
-            $config['type'] = 'datetime';
-        } elseif (in_array($type, ['text', 'mediumtext', 'longtext'])) {
-            $config['type'] = 'textarea';
-        }
-
-        return $config;
+    public function generateControllerSource(
+        string $namespace,
+        string $className,
+        string $query,
+        string $primaryKey,
+        array $fields,
+        array $gridFields,
+    ): string {
+        return (new ControllerGenerator())->renderQueryController(
+            $namespace,
+            $className,
+            $query,
+            $primaryKey,
+            $fields,
+            $gridFields,
+        );
     }
 
-    /**
-     * Plantilla del archivo PHP para RQueryController
-     */
-    private function getTemplate($ns, $class, $sql, $pk, $fields, $grid)
-    {
-        $fieldsBlock = implode("\n\n        ", $fields);
-        $gridBlock   = implode(", ", $grid);
-        $sqlSafe     = str_replace("'", "\'", $sql); // Escapar comillas simples para el string PHP
-
-        return <<<EOT
-<?php
-
-namespace {$ns};
-
-use App\ThirdParty\Ragnos\Controllers\RQueryController;
-
-class {$class} extends RQueryController
-{
-    public function __construct()
-    {
-        parent::__construct();
-
-        // Configuración General
-        \$this->checkLogin();
-        \$this->setTitle('{$class}');
-        
-        // Configuración de Consulta
-        \$this->setQuery("{$sqlSafe}");
-        \$this->setIdField('{$pk}');
-
-        // Definición de Campos (Generado Automáticamente)
-        {$fieldsBlock}
-
-        // Configuración de la Grilla (DataTables)
-        \$this->setTableFields([{$gridBlock}]);
-    }
-}
-EOT;
-    }
 }

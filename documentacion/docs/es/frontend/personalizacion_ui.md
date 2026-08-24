@@ -139,7 +139,7 @@ Al crear vistas y componentes en Ragnos, se deben utilizar las clases semántica
 
 ### Reglas CSS Contextuales
 
-Para estilos personalizados o componentes externos (DataTables, ECharts, Select2), se utiliza el selector `[data-bs-theme="dark"]`:
+Para estilos personalizados o componentes externos (DataTables, ECharts, Tom Select), se utiliza el selector `[data-bs-theme="dark"]`:
 
 ```css
 /* Ejemplo de estilos contextuales para Modo Oscuro */

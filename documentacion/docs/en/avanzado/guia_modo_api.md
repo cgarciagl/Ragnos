@@ -340,3 +340,37 @@ fetch("https://yoursite.com/store/products/save", {
 ```bash
 curl -X GET https://yoursite.com/store/products   -H "Accept: application/json"   -H "Authorization: Bearer YOUR_API_TOKEN"
 ```
+
+## OpenAPI documentation
+
+Ragnos generates an OpenAPI 3.1 specification from the controllers registered in `RagnosConfig`:
+
+- JSON: `GET /api/openapi.json`
+- YAML: `GET /api/openapi.yaml`
+- Local Swagger UI: `GET /api/docs`
+
+The documentation is public by default in development. In production it requires an administrator session unless `Ragnos_openapi_public` is explicitly enabled. Business endpoints continue to require `Authorization: Bearer YOUR_API_TOKEN`.
+
+To include a controller, add its class, path and tag to `Ragnos_openapi_controllers`. Fields, rules, types, CRUD operations and pagination parameters are inferred automatically. Exceptions can be added from the controller:
+
+```php
+public function getOpenApiDefinition(): array
+{
+    return [
+        'paths' => [
+            '/store/products' => [
+                'get' => [
+                    'description' => 'List of available products.',
+                ],
+            ],
+        ],
+    ];
+}
+```
+
+You can also validate or export the specification from the CLI:
+
+```bash
+php spark ragnos:openapi --format json --output writable/openapi.json
+php spark ragnos:openapi --format yaml --output writable/openapi.yaml
+```

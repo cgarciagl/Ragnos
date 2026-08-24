@@ -8,6 +8,7 @@ use CodeIgniter\HTTP\IncomingRequest;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
+use App\ThirdParty\Ragnos\OpenApi\OpenApiDiscovery;
 
 /**
  * Class BaseController
@@ -38,6 +39,9 @@ abstract class BaseController extends Controller
 
     protected $session;
 
+    /** @var object|null Database connection assigned during controller initialization. */
+    protected $db;
+
     /**
      * @return void
      */
@@ -54,6 +58,10 @@ abstract class BaseController extends Controller
 
     public function checkLogin()
     {
+        if (OpenApiDiscovery::isActive()) {
+            return;
+        }
+
         if (isApiCall()) {
             $token = $this->getAuthorizationToken();
             if (!$this->validarToken($token)) {
@@ -81,6 +89,10 @@ abstract class BaseController extends Controller
 
     public function checkUserInGroup(string|array $grupos): void
     {
+        if (OpenApiDiscovery::isActive()) {
+            return;
+        }
+
         if (isApiCall()) {
             $token = $this->getAuthorizationToken();
             $user  = $this->getApiUser($token);

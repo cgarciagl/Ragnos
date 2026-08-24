@@ -1,5 +1,6 @@
 parameters:
     level: 0
+    reportUnmatchedIgnoredErrors: false
     paths:
         - app
         - tests
@@ -26,9 +27,3 @@ parameters:
         - '/Function currency not found/'
         - '/Function getCachedData not found/'
         - '/Function character_limiter not found/'
-    scan:
-        paths:
-            - app/ThirdParty/Ragnos/Helpers
-            - app/Helpers
-    dynamicReturnTypeExtension:
-        - NexusPhpArray\DynamicReturnTypeExtension

@@ -139,7 +139,7 @@ When creating views and components in Ragnos, Bootstrap 5 semantic classes shoul
 
 ### Contextual CSS Rules
 
-For custom styles or external components (DataTables, ECharts, Select2), use the `[data-bs-theme="dark"]` selector:
+For custom styles or external components (DataTables, ECharts, Tom Select), use the `[data-bs-theme="dark"]` selector:
 
 ```css
 /* Example of contextual Dark Mode styles */

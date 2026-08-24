@@ -4,13 +4,20 @@ namespace App\Libraries;
 
 class MenuBuilder
 {
+    private ?object $authorization;
+
+    public function __construct(?object $authorization = null)
+    {
+        $this->authorization = $authorization;
+    }
+
     /**
      * Construye la lista de elementos de navegación principal para la barra superior (Topbar).
      * Incluye catálogos, reportes, procesos y opciones de administración según permisos.
      */
     public function getTopMenu(): array
     {
-        $auth = service('Admin_aut');
+        $auth = $this->authorization ?? service('Admin_aut');
         $menu = [];
 
         // 1. Inicio / Dashboard
