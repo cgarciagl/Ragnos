@@ -6,9 +6,15 @@
  */
 
 // ── Configuration ───────────────────────────────────────────────
-const API_BASE = '../content/index.php'; // Relative to apitest/
-
-const ITEMS_PER_PAGE = 10;
+const API_CONFIG = window.RAGNOS_API_CONFIG || {
+    apiBase: '../content/index.php',
+    openApiUrl: '../content/index.php/api/openapi.json',
+    pageSize: 10,
+    requestHistoryLimit: 20
+};
+const API_BASE = API_CONFIG.apiBase;
+const OPENAPI_URL = API_CONFIG.openApiUrl;
+const ITEMS_PER_PAGE = API_CONFIG.pageSize || 10;
 
 // ── Module config map (endpoint path, columns, id field) ────────
 const MODULE_CONFIG = {
@@ -56,6 +62,84 @@ const MODULE_CONFIG = {
     }
 };
 
+function humanizeResourceName(value) {
+    return String(value || '')
+        .split(/[-_/]/)
+        .filter(Boolean)
+        .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+        .join(' ');
+}
+
+function resourceIdFromPath(path) {
+    return String(path || '').split('/').filter(Boolean).pop() || 'resource';
+}
+
+function schemaNameFromOperation(operation) {
+    const ref = operation?.responses?.['200']?.content?.['application/json']?.schema
+        ?.properties?.data?.items?.$ref;
+    return ref ? ref.split('/').pop() : '';
+}
+
+function schemaFields(spec, operation) {
+    const schemaName = schemaNameFromOperation(operation);
+    const schema = schemaName ? spec?.components?.schemas?.[schemaName] : null;
+    return schema?.properties || {};
+}
+
+function resourceConfigFromOpenApi(spec, path, operation) {
+    const id = resourceIdFromPath(path);
+    const tag = operation?.tags?.[0] || humanizeResourceName(id);
+    const fields = schemaFields(spec, operation);
+    const columns = Object.keys(fields).filter(field => !fields[field]?.readOnly).slice(0, 8);
+    const idField = Object.keys(fields).find(field => fields[field]?.readOnly) || 'id';
+
+    return {
+        id,
+        path: path.replace(/^\//, ''),
+        title: tag,
+        icon: 'bi-braces',
+        columns,
+        fields,
+        idField,
+        required: spec?.components?.schemas?.[schemaNameFromOperation(operation)]?.required || [],
+        schemaName: schemaNameFromOperation(operation),
+        supportsCrud: Boolean(spec.paths[`${path}/save`]),
+        supportsDelete: Boolean(spec.paths[`${path}/delete/{id}`]),
+        supportsHistory: Boolean(spec.paths[`${path}/history/{id}`]),
+        generated: true
+    };
+}
+
+function discoverResources(spec) {
+    const resources = {};
+    Object.entries(spec?.paths || {}).forEach(([path, operations]) => {
+        if (!operations?.get || path.includes('{') || path.startsWith('/admin/')) return;
+        const config = resourceConfigFromOpenApi(spec, path, operations.get);
+        const existing = MODULE_CONFIG[config.id];
+        resources[config.id] = existing
+            ? { ...config, ...existing, fields: config.fields, generated: false }
+            : config;
+    });
+    Object.entries(MODULE_CONFIG).forEach(([id, config]) => {
+        resources[id] = resources[id] || { id, ...config, generated: false };
+    });
+    return resources;
+}
+
+function sanitiseInspectorValue(value) {
+    if (!value || typeof value !== 'object') return value;
+    const copy = Array.isArray(value) ? [...value] : { ...value };
+    ['token', 'pword', 'password', 'Authorization'].forEach(key => {
+        if (key in copy) copy[key] = '••••••••';
+    });
+    return copy;
+}
+
+function recordApiTraffic(entry) {
+    const root = document.body?._x_dataStack?.[0];
+    if (root?.recordRequest) root.recordRequest(entry);
+}
+
 // ── API Helper ──────────────────────────────────────────────────
 
 /**
@@ -66,6 +150,7 @@ const MODULE_CONFIG = {
  */
 async function apiCall(endpoint, options = {}) {
     const { method = 'GET', body = null, token = null, params = {} } = options;
+    const startedAt = performance.now();
 
     let url = `${API_BASE}/${endpoint}`;
 
@@ -116,8 +201,29 @@ async function apiCall(endpoint, options = {}) {
             ok = false;
         }
 
+        recordApiTraffic({
+            method,
+            url,
+            status,
+            ok,
+            duration: Math.round(performance.now() - startedAt),
+            requestBody: sanitiseInspectorValue(body),
+            responseBody: sanitiseInspectorValue(data),
+            headers: { ...headers, Authorization: token ? 'Bearer ••••••••' : undefined }
+        });
+
         return { ok, status, data };
     } catch (err) {
+        recordApiTraffic({
+            method,
+            url,
+            status: 0,
+            ok: false,
+            duration: Math.round(performance.now() - startedAt),
+            requestBody: sanitiseInspectorValue(body),
+            responseBody: { error: err.message },
+            headers: { ...headers, Authorization: token ? 'Bearer ••••••••' : undefined }
+        });
         return { ok: false, status: 0, data: { error: err.message } };
     }
 }
@@ -160,13 +266,22 @@ function app() {
         currentModule: 'dashboard',
         sidebarCollapsed: false,
         appTheme: 'dark',
+        resourceConfigs: { ...MODULE_CONFIG },
+        resourceCatalog: Object.entries(MODULE_CONFIG).map(([id, config]) => ({ id, ...config })),
+        openApiLoading: false,
+        openApiError: '',
+        openApiDocument: null,
+        openApiUiUrl: API_CONFIG.swaggerUrl || '#',
+        requestHistory: [],
+        selectedRequest: null,
+        inspectorOpen: false,
 
         // ── Toasts ──
         toasts: [],
 
         get moduleTitle() {
             if (this.currentModule === 'dashboard') return 'Dashboard';
-            return MODULE_CONFIG[this.currentModule]?.title || this.currentModule;
+            return this.resourceConfigs[this.currentModule]?.title || this.currentModule;
         },
 
         // ── Init ──
@@ -176,8 +291,9 @@ function app() {
             this.appTheme = savedTheme;
             document.documentElement.setAttribute('data-bs-theme', savedTheme);
 
-            // Restore session from localStorage
-            const saved = localStorage.getItem('ragnos_api_session');
+            // Migrate the old persistent session once, then keep tokens per tab.
+            const saved = sessionStorage.getItem('ragnos_api_session')
+                || localStorage.getItem('ragnos_api_session');
             if (saved) {
                 try {
                     const session = JSON.parse(saved);
@@ -186,17 +302,38 @@ function app() {
                     this.userName = session.userName || '';
                     this.userGroup = session.userGroup || '';
                     this.isAuthenticated = true;
+                    sessionStorage.setItem('ragnos_api_session', saved);
+                    localStorage.removeItem('ragnos_api_session');
                 } catch { /* skip */ }
             }
 
             // Create Alpine store accessible by child components
             Alpine.store('app', {
                 token: this.token,
-                currentModule: this.currentModule
+                currentModule: this.currentModule,
+                resources: this.resourceConfigs
             });
 
             this.$watch('token', val => Alpine.store('app').token = val);
             this.$watch('currentModule', val => Alpine.store('app').currentModule = val);
+            this.loadOpenApi();
+        },
+
+        async loadOpenApi() {
+            this.openApiLoading = true;
+            this.openApiError = '';
+            const result = await apiCall('api/openapi.json', { token: this.token });
+            this.openApiLoading = false;
+
+            if (!result.ok || !result.data?.openapi) {
+                this.openApiError = result.data?.error || 'No se pudo cargar la especificación OpenAPI';
+                return;
+            }
+
+            this.openApiDocument = result.data;
+            this.resourceConfigs = discoverResources(result.data);
+            this.resourceCatalog = Object.values(this.resourceConfigs);
+            Alpine.store('app').resources = this.resourceConfigs;
         },
 
         // ── Login ──
@@ -221,7 +358,7 @@ function app() {
                 this.userGroup = result.data.user_group || '';
                 this.isAuthenticated = true;
 
-                localStorage.setItem('ragnos_api_session', JSON.stringify({
+                sessionStorage.setItem('ragnos_api_session', JSON.stringify({
                     token: this.token,
                     userId: this.userId,
                     userName: this.userName,
@@ -229,6 +366,7 @@ function app() {
                 }));
 
                 Alpine.store('app').token = this.token;
+                this.loadOpenApi();
                 this.addToast('Sesión iniciada exitosamente', 'success');
             } else {
                 // Parse validation errors from Ragnos API response
@@ -248,6 +386,7 @@ function app() {
             this.userName = '';
             this.userGroup = '';
             this.currentModule = 'dashboard';
+            sessionStorage.removeItem('ragnos_api_session');
             localStorage.removeItem('ragnos_api_session');
             Alpine.store('app').token = '';
             this.loginForm = { usuario: '', pword: '' };
@@ -258,6 +397,52 @@ function app() {
             this.currentModule = mod;
             // On mobile, collapse sidebar
             if (window.innerWidth < 992) this.sidebarCollapsed = true;
+        },
+
+        selectResource(resourceId) {
+            if (this.resourceConfigs[resourceId]) this.switchModule(resourceId);
+        },
+
+        catalogResources() {
+            return this.resourceCatalog.filter(resource => resource.id !== 'pagos');
+        },
+
+        recordRequest(request) {
+            this.requestHistory = [request, ...this.requestHistory]
+                .slice(0, API_CONFIG.requestHistoryLimit || 20);
+            this.selectedRequest = this.requestHistory[0];
+        },
+
+        openInspector(request = this.selectedRequest || this.requestHistory[0]) {
+            this.selectedRequest = request || null;
+            this.inspectorOpen = true;
+        },
+
+        closeInspector() {
+            this.inspectorOpen = false;
+        },
+
+        clearRequestHistory() {
+            this.requestHistory = [];
+            this.selectedRequest = null;
+        },
+
+        requestAsCurl(request) {
+            if (!request) return '';
+            const headerLines = Object.entries(request.headers || {})
+                .filter(([, value]) => value)
+                .map(([key, value]) => `-H ${JSON.stringify(`${key}: ${value}`)}`)
+                .join(' ');
+            const body = request.requestBody
+                ? ` --data ${JSON.stringify(JSON.stringify(request.requestBody))}`
+                : '';
+            return `curl -X ${request.method} ${JSON.stringify(request.url)} ${headerLines}${body}`.trim();
+        },
+
+        async copyRequest(request = this.selectedRequest) {
+            if (!request || !navigator.clipboard) return;
+            await navigator.clipboard.writeText(this.requestAsCurl(request));
+            this.addToast('Comando curl copiado', 'success');
         },
 
         // ── Toasts ──
@@ -600,6 +785,14 @@ function catalogModule() {
         totalPages: 1,
         sortField: '',
         sortDir: 'asc',
+        editorOpen: false,
+        editorMode: 'create',
+        editorJson: '{}',
+        editorErrors: [],
+        editorSaving: false,
+        editorLoading: false,
+        deleteTarget: null,
+        deleting: false,
 
         get currentModule() {
             return Alpine.store('app').currentModule;
@@ -620,11 +813,138 @@ function catalogModule() {
         },
 
         getConfig() {
-            return MODULE_CONFIG[this.currentModule] || MODULE_CONFIG.clientes;
+            return Alpine.store('app').resources?.[this.currentModule]
+                || MODULE_CONFIG[this.currentModule]
+                || MODULE_CONFIG.clientes;
         },
 
         catalogTitle() { return this.getConfig().title; },
         catalogIcon() { return this.getConfig().icon; },
+
+        resourceFields() {
+            return this.getConfig().fields || {};
+        },
+
+        resourceIdField() {
+            return this.getConfig().idField || 'id';
+        },
+
+        resourceSupportsCrud() {
+            return Boolean(this.getConfig().supportsCrud);
+        },
+
+        async openEditor(row = null) {
+            this.editorMode = row ? 'edit' : 'create';
+            this.editorErrors = [];
+            this.editorJson = JSON.stringify(row || this.defaultRecord(), null, 2);
+            this.editorOpen = true;
+
+            if (!row) return;
+            const cfg = this.getConfig();
+            const id = row[cfg.idField || 'id'] || row.id;
+            if (id === undefined || id === null) return;
+
+            this.editorLoading = true;
+            const result = await apiCall(`${cfg.path}/getRecordByAjax`, {
+                token: Alpine.store('app').token,
+                params: { id }
+            });
+            this.editorLoading = false;
+            if (result.ok && result.data && typeof result.data === 'object') {
+                this.editorJson = JSON.stringify(result.data, null, 2);
+            }
+        },
+
+        closeEditor() {
+            if (!this.editorSaving) this.editorOpen = false;
+        },
+
+        defaultRecord() {
+            return Object.fromEntries(Object.entries(this.resourceFields())
+                .filter(([, schema]) => !schema.readOnly)
+                .map(([name, schema]) => [name, schema.type === 'boolean' ? false : '']));
+        },
+
+        parseEditorPayload() {
+            try {
+                const payload = JSON.parse(this.editorJson || '{}');
+                if (!payload || Array.isArray(payload) || typeof payload !== 'object') {
+                    throw new Error('El cuerpo debe ser un objeto JSON.');
+                }
+                return payload;
+            } catch (error) {
+                this.editorErrors = [error.message];
+                return null;
+            }
+        },
+
+        validateEditorPayload(payload) {
+            const required = this.getConfig().required || [];
+            this.editorErrors = required
+                .filter(field => payload[field] === undefined || payload[field] === '')
+                .map(field => `El campo ${field} es obligatorio.`);
+            return this.editorErrors.length === 0;
+        },
+
+        async saveEditor() {
+            const payload = this.parseEditorPayload();
+            if (!payload || !this.validateEditorPayload(payload)) return;
+
+            const cfg = this.getConfig();
+            this.editorSaving = true;
+            const result = await apiCall(`${cfg.path}/save`, {
+                method: 'POST',
+                token: Alpine.store('app').token,
+                body: { ...payload, Ragnos_action: this.editorMode === 'edit' ? 'update' : 'insert' }
+            });
+            this.editorSaving = false;
+
+            if (result.ok) {
+                this.editorOpen = false;
+                this.loadCatalog();
+                this.getRootApp()?.addToast('Registro guardado correctamente', 'success');
+            } else {
+                this.editorErrors = this.extractErrors(result);
+                if (result.status === 401) this.handleUnauthorized();
+            }
+        },
+
+        confirmDelete(row) {
+            this.deleteTarget = row;
+        },
+
+        cancelDelete() {
+            this.deleteTarget = null;
+        },
+
+        async deleteRecord() {
+            if (!this.deleteTarget) return;
+            const cfg = this.getConfig();
+            const id = this.deleteTarget[cfg.idField || 'id'] || this.deleteTarget.id;
+            if (id === undefined || id === null) return;
+
+            this.deleting = true;
+            const result = await apiCall(`${cfg.path}/delete/${encodeURIComponent(id)}`, {
+                method: 'POST',
+                token: Alpine.store('app').token
+            });
+            this.deleting = false;
+
+            if (result.ok) {
+                this.deleteTarget = null;
+                this.loadCatalog();
+                this.getRootApp()?.addToast('Registro eliminado correctamente', 'success');
+            } else {
+                this.getRootApp()?.addToast(this.extractErrors(result).join(' '), 'error');
+                if (result.status === 401) this.handleUnauthorized();
+            }
+        },
+
+        extractErrors(result) {
+            const errors = result.data?.messages || result.data?.errors;
+            if (errors && typeof errors === 'object') return Object.values(errors).flat();
+            return [result.data?.error || result.data?.message || 'Error en la operación.'];
+        },
 
         async loadCatalog() {
             this.loading = true;
@@ -690,6 +1010,10 @@ function catalogModule() {
                 root.addToast('Sesión expirada. Inicia sesión de nuevo.', 'error');
                 root.logout();
             }
+        },
+
+        getRootApp() {
+            return document.body?._x_dataStack?.[0] || null;
         }
     };
 }

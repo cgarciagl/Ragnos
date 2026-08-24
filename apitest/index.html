@@ -7,15 +7,9 @@
     <meta name="description" content="Ragnos API Test - SPA para verificar el modo API de controladores Ragnos">
     <title>Ragnos API Test</title>
 
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
-
-    <!-- Bootstrap 5 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <!-- Local UI dependencies (pinned and served with the demo) -->
+    <link href="vendor/css/bootstrap.min.css" rel="stylesheet">
+    <link href="vendor/css/bootstrap-icons.min.css" rel="stylesheet">
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="app.css">
@@ -109,31 +103,13 @@
                     </a>
 
                     <div class="nav-section-title" x-show="!sidebarCollapsed">CATÁLOGOS</div>
-                    <a href="#" class="nav-link-item" :class="{ 'active': currentModule === 'clientes' }"
-                        @click.prevent="switchModule('clientes')" id="nav-clientes">
-                        <i class="bi bi-people-fill"></i>
-                        <span x-show="!sidebarCollapsed">Clientes</span>
-                    </a>
-                    <a href="#" class="nav-link-item" :class="{ 'active': currentModule === 'productos' }"
-                        @click.prevent="switchModule('productos')" id="nav-productos">
-                        <i class="bi bi-box-seam-fill"></i>
-                        <span x-show="!sidebarCollapsed">Productos</span>
-                    </a>
-                    <a href="#" class="nav-link-item" :class="{ 'active': currentModule === 'empleados' }"
-                        @click.prevent="switchModule('empleados')" id="nav-empleados">
-                        <i class="bi bi-person-badge-fill"></i>
-                        <span x-show="!sidebarCollapsed">Empleados</span>
-                    </a>
-                    <a href="#" class="nav-link-item" :class="{ 'active': currentModule === 'oficinas' }"
-                        @click.prevent="switchModule('oficinas')" id="nav-oficinas">
-                        <i class="bi bi-building-fill"></i>
-                        <span x-show="!sidebarCollapsed">Oficinas</span>
-                    </a>
-                    <a href="#" class="nav-link-item" :class="{ 'active': currentModule === 'lineas' }"
-                        @click.prevent="switchModule('lineas')" id="nav-lineas">
-                        <i class="bi bi-tags-fill"></i>
-                        <span x-show="!sidebarCollapsed">Líneas</span>
-                    </a>
+                    <template x-for="resource in catalogResources()" :key="'nav-' + resource.id">
+                        <a href="#" class="nav-link-item" :class="{ 'active': currentModule === resource.id }"
+                            @click.prevent="selectResource(resource.id)" :id="'nav-' + resource.id">
+                            <i class="bi" :class="resource.icon || 'bi-braces'"></i>
+                            <span x-show="!sidebarCollapsed" x-text="resource.title"></span>
+                        </a>
+                    </template>
                 </nav>
 
                 <div class="sidebar-footer">
@@ -159,6 +135,12 @@
                         </nav>
                     </div>
                     <div class="topbar-right">
+                        <button class="btn btn-sm btn-ghost position-relative me-2" type="button"
+                            @click="openInspector()" title="Inspector de peticiones" aria-label="Inspector de peticiones">
+                            <i class="bi bi-activity"></i>
+                            <span x-show="requestHistory.length" x-text="requestHistory.length"
+                                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-info"></span>
+                        </button>
                         <div class="user-chip" id="user-chip">
                             <div class="user-avatar">
                                 <i class="bi bi-person-circle"></i>
@@ -187,6 +169,21 @@
                             <div class="module-header">
                                 <h2><i class="bi bi-grid-1x2-fill me-2"></i>Dashboard</h2>
                                 <p class="text-muted">Panel de control — Ragnos API Test SPA</p>
+                            </div>
+                            <div class="api-status-strip mb-4" :class="openApiError ? 'is-error' : 'is-ready'">
+                                <div class="d-flex align-items-center gap-3">
+                                    <span class="api-status-dot" aria-hidden="true"></span>
+                                    <div>
+                                        <strong x-text="openApiLoading ? 'Descubriendo recursos...' : (openApiError ? 'Especificación no disponible' : 'API conectada')"></strong>
+                                        <small class="d-block text-muted" x-text="openApiError || (resourceCatalog.length + ' recursos descubiertos desde OpenAPI 3.1')"></small>
+                                    </div>
+                                </div>
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-sm btn-outline-info" type="button" @click="loadOpenApi()"
+                                        :disabled="openApiLoading"><i class="bi bi-arrow-clockwise me-1"></i>Actualizar</button>
+                                    <a class="btn btn-sm btn-outline-secondary" :href="openApiUiUrl" target="_blank"
+                                        rel="noopener"><i class="bi bi-book me-1"></i>OpenAPI</a>
+                                </div>
                             </div>
                             <div class="row g-4 mb-4">
                                 <div class="col-md-6 col-xl-3">
@@ -228,6 +225,29 @@
                                         </div>
                                         <i class="bi bi-arrow-right stat-arrow"></i>
                                     </div>
+                                </div>
+                            </div>
+
+                            <div class="resource-overview mb-4">
+                                <div class="d-flex align-items-center justify-content-between mb-3">
+                                    <div>
+                                        <h5 class="mb-1">Recursos disponibles</h5>
+                                        <p class="text-muted small mb-0">Descubiertos desde la especificación publicada.</p>
+                                    </div>
+                                    <span class="badge text-bg-secondary" x-text="resourceCatalog.length + ' recursos'"></span>
+                                </div>
+                                <div class="resource-grid">
+                                    <template x-for="resource in resourceCatalog" :key="'resource-' + resource.id">
+                                        <button type="button" class="resource-item text-start" @click="selectResource(resource.id)">
+                                            <span class="resource-icon"><i class="bi" :class="resource.icon || 'bi-braces'"></i></span>
+                                            <span class="resource-copy"><strong x-text="resource.title"></strong><small x-text="'/' + resource.path"></small></span>
+                                            <span class="resource-capabilities">
+                                                <i class="bi bi-eye" title="Lectura"></i>
+                                                <i class="bi bi-pencil" x-show="resource.supportsCrud" title="CRUD"></i>
+                                                <i class="bi bi-trash3" x-show="resource.supportsDelete" title="Borrado"></i>
+                                            </span>
+                                        </button>
+                                    </template>
                                 </div>
                             </div>
 
@@ -284,7 +304,8 @@
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="bi bi-search"></i></span>
                                     <input type="text" class="form-control" placeholder="Buscar pagos..."
-                                        x-model="searchTerm" @input.debounce.400ms="loadData()" id="pagos-search">
+                                        x-model="searchTerm" @input.debounce.400ms="loadData()" id="pagos-search"
+                                        aria-label="Buscar pagos">
                                     <button class="btn btn-outline-secondary" @click="searchTerm=''; loadData()"
                                         x-show="searchTerm">
                                         <i class="bi bi-x-lg"></i>
@@ -616,8 +637,7 @@
                     </template>
 
                     <!-- ═══ GENERIC CATALOG MODULE ═══ -->
-                    <template
-                        x-if="['clientes','productos','empleados','oficinas','lineas'].includes(currentModule)">
+                    <template x-if="currentModule !== 'dashboard' && currentModule !== 'pagos'">
                         <div x-data="catalogModule()" x-init="init(); loadCatalog()" class="fade-in"
                             :key="'catalog-' + $store.app.currentModule">
                             <div
@@ -630,6 +650,16 @@
                                     <p class="text-muted mb-0" x-text="'Catálogo de ' + catalogTitle().toLowerCase()">
                                     </p>
                                 </div>
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-outline-info" type="button"
+                                        @click="getRootApp()?.openInspector()">
+                                        <i class="bi bi-activity me-1"></i>Inspector
+                                    </button>
+                                    <button class="btn btn-accent" type="button" x-show="resourceSupportsCrud()"
+                                        @click="openEditor()">
+                                        <i class="bi bi-plus-lg me-1"></i>Nuevo registro
+                                    </button>
+                                </div>
                             </div>
 
                             <!-- Search Bar -->
@@ -639,7 +669,7 @@
                                     <input type="text" class="form-control"
                                         :placeholder="'Buscar ' + catalogTitle().toLowerCase() + '...'"
                                         x-model="searchTerm" @input.debounce.400ms="loadCatalog()"
-                                        :id="currentModule + '-search'">
+                                        :id="currentModule + '-search'" aria-label="Buscar en el recurso">
                                     <button class="btn btn-outline-secondary"
                                         @click="searchTerm=''; loadCatalog()" x-show="searchTerm">
                                         <i class="bi bi-x-lg"></i>
@@ -679,6 +709,8 @@
                                                             </div>
                                                         </th>
                                                     </template>
+                                                    <th x-show="resourceSupportsCrud() || getConfig().supportsDelete"
+                                                        class="text-center">Acciones</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -688,11 +720,24 @@
                                                             :key="'cell-'+ri+'-'+col">
                                                             <td x-text="row[col] ?? ''"></td>
                                                         </template>
+                                                        <td x-show="resourceSupportsCrud() || getConfig().supportsDelete"
+                                                            class="text-center text-nowrap">
+                                                            <button class="btn btn-sm btn-outline-info me-1"
+                                                                x-show="resourceSupportsCrud()" @click="openEditor(row)"
+                                                                title="Editar">
+                                                                <i class="bi bi-pencil-square"></i>
+                                                            </button>
+                                                            <button class="btn btn-sm btn-outline-danger"
+                                                                x-show="getConfig().supportsDelete" @click="confirmDelete(row)"
+                                                                title="Eliminar">
+                                                                <i class="bi bi-trash3"></i>
+                                                            </button>
+                                                        </td>
                                                     </tr>
                                                 </template>
                                                 <template x-if="rows.length === 0">
                                                     <tr>
-                                                        <td :colspan="columns.length"
+                                        <td :colspan="columns.length + ((resourceSupportsCrud() || getConfig().supportsDelete) ? 1 : 0)"
                                                             class="text-center text-muted py-4">
                                                             <i class="bi bi-inbox fs-3 d-block mb-2"></i>
                                                             No se encontraron registros
@@ -738,6 +783,62 @@
                                             </ul>
                                         </nav>
                                     </div>
+
+                                    <!-- Generic JSON editor for resources discovered from OpenAPI -->
+                                    <div class="modal fade" :class="{ 'show d-block': editorOpen }"
+                                        x-show="editorOpen" tabindex="-1" role="dialog"
+                                        @keydown.escape.window="closeEditor()">
+                                        <div class="modal-dialog modal-lg modal-dialog-centered">
+                                            <div class="modal-content glass-card">
+                                                <div class="modal-header border-0">
+                                                    <h5 class="modal-title">
+                                                        <i class="bi bi-braces me-2"></i>
+                                                        <span x-text="editorMode === 'edit' ? 'Editar registro' : 'Nuevo registro'"></span>
+                                                    </h5>
+                                                    <button type="button" class="btn-close" @click="closeEditor()"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="alert alert-info small">
+                                                        Edita el cuerpo JSON que se enviará a <code x-text="getConfig().path + '/save'"></code>.
+                                                    </div>
+                                                    <template x-if="editorErrors.length">
+                                                        <div class="alert alert-danger">
+                                                            <ul class="mb-0"><template x-for="error in editorErrors" :key="error">
+                                                                <li x-text="error"></li>
+                                                            </template></ul>
+                                                        </div>
+                                                    </template>
+                                                    <textarea class="form-control font-monospace" rows="14"
+                                                        x-model="editorJson" spellcheck="false" :disabled="editorLoading"></textarea>
+                                                    <small class="text-muted mt-2 d-block" x-show="editorLoading">
+                                                        <span class="spinner-border spinner-border-sm me-1"></span>Cargando el registro original...
+                                                    </small>
+                                                </div>
+                                                <div class="modal-footer border-0">
+                                                    <button type="button" class="btn btn-outline-secondary"
+                                                        @click="closeEditor()">Cancelar</button>
+                                                    <button type="button" class="btn btn-accent" @click="saveEditor()"
+                                                        :disabled="editorSaving">
+                                                        <span x-show="!editorSaving"><i class="bi bi-check-lg me-1"></i>Guardar</span>
+                                                        <span x-show="editorSaving"><span class="spinner-border spinner-border-sm me-1"></span>Guardando...</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div x-show="editorOpen" class="modal-backdrop fade show"></div>
+
+                                    <template x-if="deleteTarget">
+                                        <div class="alert alert-warning d-flex align-items-center justify-content-between mt-3">
+                                            <span><i class="bi bi-exclamation-triangle me-2"></i>¿Eliminar este registro?</span>
+                                            <span class="d-flex gap-2">
+                                                <button class="btn btn-sm btn-outline-secondary" @click="cancelDelete()">Cancelar</button>
+                                                <button class="btn btn-sm btn-danger" @click="deleteRecord()" :disabled="deleting">
+                                                    <span x-show="!deleting">Eliminar</span><span x-show="deleting">Eliminando...</span>
+                                                </button>
+                                            </span>
+                                        </div>
+                                    </template>
                                 </div>
                             </template>
                         </div>
@@ -748,8 +849,69 @@
         </div>
     </template>
 
+    <!-- API REQUEST INSPECTOR -->
+    <div class="modal fade" :class="{ 'show d-block': inspectorOpen }" x-show="inspectorOpen"
+        tabindex="-1" role="dialog" @keydown.escape.window="closeInspector()">
+        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content glass-card">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title"><i class="bi bi-activity me-2"></i>Inspector de peticiones API</h5>
+                    <div class="d-flex align-items-center gap-2">
+                        <button type="button" class="btn btn-sm btn-outline-secondary" @click="clearRequestHistory()"
+                            :disabled="requestHistory.length === 0"><i class="bi bi-trash3 me-1"></i>Limpiar</button>
+                        <button type="button" class="btn-close" @click="closeInspector()"></button>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-lg-4">
+                            <div class="list-group">
+                                <template x-for="(request, index) in requestHistory" :key="'request-' + index">
+                                    <button type="button" class="list-group-item list-group-item-action text-start"
+                                        :class="{ active: selectedRequest === request }"
+                                        @click="selectedRequest = request">
+                                        <div class="d-flex justify-content-between">
+                                            <strong x-text="request.method"></strong>
+                                            <span :class="request.ok ? 'text-success' : 'text-danger'"
+                                                x-text="request.status || 'NETWORK'"></span>
+                                        </div>
+                                        <small class="text-truncate d-block" x-text="request.url"></small>
+                                        <small class="text-muted" x-text="request.duration + ' ms'"></small>
+                                    </button>
+                                </template>
+                                <div x-show="requestHistory.length === 0" class="text-muted small p-3">
+                                    Todavía no hay peticiones registradas.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-8" x-show="selectedRequest">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <code x-text="selectedRequest?.method + ' ' + selectedRequest?.url"></code>
+                                <button class="btn btn-sm btn-outline-info" @click="copyRequest()">
+                                    <i class="bi bi-clipboard me-1"></i>Copiar curl
+                                </button>
+                            </div>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <h6>Petición</h6>
+                                    <pre class="inspector-code" x-text="JSON.stringify(selectedRequest?.requestBody, null, 2)"></pre>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6>Respuesta</h6>
+                                    <pre class="inspector-code" x-text="JSON.stringify(selectedRequest?.responseBody, null, 2)"></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div x-show="inspectorOpen" class="modal-backdrop fade show"></div>
+
     <!-- TOAST NOTIFICATIONS -->
-    <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toast-area">
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toast-area" aria-live="polite"
+        aria-atomic="true">
         <template x-for="(t, ti) in toasts" :key="'toast-'+ti">
             <div class="toast show glass-toast" :class="'toast-' + t.type" role="alert">
                 <div class="toast-body d-flex align-items-center gap-2">
@@ -767,8 +929,9 @@
     </div>
 
     <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js"></script>
+    <script src="vendor/js/bootstrap.bundle.min.js"></script>
+    <script defer src="vendor/js/alpinejs.min.js"></script>
+    <script src="config.js"></script>
     <script src="app.js"></script>
 </body>
 
