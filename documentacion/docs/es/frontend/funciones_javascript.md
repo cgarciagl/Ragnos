@@ -1,6 +1,18 @@
-# ⚡ Funciones JavaScript: `getValue` y `getObject`
+# ⚡ Funciones JavaScript y Espacio de Nombres `Ragnos`
 
-Este documento describe las funciones utilitarias `getValue` y `getObject`, utilizadas en el proyecto para realizar peticiones asíncronas al servidor. Estas funciones simplifican el uso de `fetch` y manejan la serialización de parámetros, tiempos de espera y reintentos.
+Este documento describe las funciones utilitarias `getValue` y `getObject`, así como la arquitectura del espacio de nombres unificado `window.Ragnos` utilizado en el proyecto para realizar peticiones asíncronas, manipulación de tablas y componentes de UI.
+
+!!! info "Espacio de Nombres Global `Ragnos.*`"
+
+    Todas las funciones utilitarias y componentes de JavaScript del cliente están organizados limpiamente dentro del espacio de nombres `window.Ragnos`:
+
+    - `Ragnos.Http`: Peticiones AJAX y redirecciones (`getValue`, `getObject`, `postFormData`, `fixUrl`, etc.).
+    - `Ragnos.UI`: Notificaciones Toast, Modales y feedback visual (`showToast`, `showModal`, `cierraModal`, `mostrarCargando`, etc.).
+    - `Ragnos.Table`: DataTables y exportación/totales en tablas (`destroyDataTable`, `ponTablaPaginada`, `exportToExcel`, etc.).
+    - `Ragnos.DOM`: Manipulación DOM y helpers (`onReady`, `getElement`, `debounce`, `moneyFormat`, etc.).
+    - `Ragnos.Search`, `Ragnos.Editor`, `Ragnos.Utils`, `Ragnos.Stack`: Componentes de `ragnos.js`.
+
+    Para mantener 100% de retrocompatibilidad, todas las funciones y clases continúan estando disponibles como alias globales directos (`getValue`, `showToast`, `RagnosSearch`, etc.).
 
 ## `getValue(url, params, callback)`
 

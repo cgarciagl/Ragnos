@@ -1,9 +1,12 @@
+// Initialize Ragnos namespace
+window.Ragnos = window.Ragnos || {};
+
 // Set base_url if not defined
 if (typeof globalThis.base_url !== "string" || !globalThis.base_url) {
   try {
     const url = new URL(window.location.href);
     const pathSegments = url.pathname
-      .replace(/^\/|\/$/g, "") // Quitar barras al inicio y al final
+      .replace(/^\/|\/$/g, "")
       .split("/")
       .filter(Boolean);
 
@@ -21,737 +24,855 @@ if (typeof globalThis.base_url !== "string" || !globalThis.base_url) {
 
 const debounceTimers = new Map();
 
-function onReady(callback) {
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", callback, { once: true });
-    return;
-  }
+/* ==========================================================================
+   1. Ragnos.DOM: Helper functions for DOM manipulation and timing
+   ========================================================================== */
+Ragnos.DOM = {
+  onReady(callback) {
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", callback, { once: true });
+      return;
+    }
+    callback();
+  },
 
-  callback();
-}
+  getElement(target, root = document) {
+    if (target instanceof Element || target === document || target === window) {
+      return target;
+    }
+    return typeof target === "string" ? root.querySelector(target) : null;
+  },
 
-function getElement(target, root = document) {
-  if (target instanceof Element || target === document || target === window) {
-    return target;
-  }
+  getElements(target, root = document) {
+    if (typeof target === "string") {
+      return Array.from(root.querySelectorAll(target));
+    }
+    if (target instanceof Element) {
+      return [target];
+    }
+    return Array.from(target || []);
+  },
 
-  return typeof target === "string" ? root.querySelector(target) : null;
-}
+  setHtml(target, html) {
+    const element = Ragnos.DOM.getElement(target);
+    if (!element) return null;
 
-function getElements(target, root = document) {
-  if (typeof target === "string") {
-    return Array.from(root.querySelectorAll(target));
-  }
-
-  if (target instanceof Element) {
-    return [target];
-  }
-
-  return Array.from(target || []);
-}
-
-function destroyDataTable(table) {
-  const element = getElement(table);
-  if (!element?.ragnosDataTable) return;
-
-  try {
-    element.ragnosDataTable.destroy();
-  } catch (error) {
-    console.warn("Unable to destroy DataTable cleanly:", error);
-  } finally {
-    delete element.ragnosDataTable;
-  }
-}
-
-function setHtml(target, html) {
-  const element = getElement(target);
-  if (!element) return null;
-
-  element
-    .querySelectorAll("table")
-    .forEach((table) => destroyDataTable(table));
-  element
-    .querySelectorAll("select")
-    .forEach((select) => select.tomselect?.destroy());
-  if (typeof RagnosSearch !== "undefined") {
-    RagnosSearch.destroyWithin(element);
-  }
-  element.innerHTML = html ?? "";
-  element.querySelectorAll("script").forEach((script) => {
-    const executableScript = document.createElement("script");
-    Array.from(script.attributes).forEach(({ name, value }) => {
-      executableScript.setAttribute(name, value);
+    element
+      .querySelectorAll("table")
+      .forEach((table) => Ragnos.Table.destroyDataTable(table));
+    element
+      .querySelectorAll("select")
+      .forEach((select) => select.tomselect?.destroy());
+    if (typeof RagnosSearch !== "undefined") {
+      RagnosSearch.destroyWithin(element);
+    }
+    element.innerHTML = html ?? "";
+    element.querySelectorAll("script").forEach((script) => {
+      const executableScript = document.createElement("script");
+      Array.from(script.attributes).forEach(({ name, value }) => {
+        executableScript.setAttribute(name, value);
+      });
+      executableScript.textContent = script.textContent;
+      script.replaceWith(executableScript);
     });
-    executableScript.textContent = script.textContent;
-    script.replaceWith(executableScript);
-  });
 
-  return element;
-}
+    return element;
+  },
 
-function dispatchInputEvents(element) {
-  element.dispatchEvent(new Event("input", { bubbles: true }));
-  element.dispatchEvent(new Event("change", { bubbles: true }));
-}
+  dispatchInputEvents(element) {
+    element.dispatchEvent(new Event("input", { bubbles: true }));
+    element.dispatchEvent(new Event("change", { bubbles: true }));
+  },
 
-/**
- * Función de Debounce para retrasar la ejecución de una función.
- * @param {Function} func - La función a ejecutar después del retraso.
- * @param {number} delay - El tiempo de espera en milisegundos.
- */
-function debounce(func, delay, key = "default") {
-  clearTimeout(debounceTimers.get(key));
-  debounceTimers.set(
-    key,
-    setTimeout(() => {
-      debounceTimers.delete(key);
-      func();
-    }, delay),
-  );
-}
-
-function aplicarDebounceABusqueda(datatableInstance, delay = 500) {
-  // Selector para el input de búsqueda global de DataTables
-  const table = datatableInstance.table().node();
-  const wrapper = table.closest(".dt-container") || table.parentElement;
-  const searchInput = wrapper?.querySelector(".dt-search input");
-  if (!searchInput || searchInput.dataset.ragnosDebounced === "true") return;
-
-  searchInput.dataset.ragnosDebounced = "true";
-  searchInput.addEventListener("input", () => {
-    debounce(
-      () => datatableInstance.search(searchInput.value).draw(),
-      delay,
-      searchInput,
+  debounce(func, delay, key = "default") {
+    clearTimeout(debounceTimers.get(key));
+    debounceTimers.set(
+      key,
+      setTimeout(() => {
+        debounceTimers.delete(key);
+        func();
+      }, delay),
     );
-  });
-}
+  },
 
-/**
- * Ajusta una URL para que sea absoluta, combinándola con base_url si es necesario.
- *
- * @param {string} relativeUrl - La URL a procesar.
- * @returns {string} La URL completa y válida.
- */
-function fixUrl(relativeUrl) {
-  try {
-    // Validar que purl sea una cadena no vacía
-    if (typeof relativeUrl !== "string" || !relativeUrl.trim()) {
-      console.warn("fixUrl: purl es inválido o está vacío.");
+  escapeHtml(unsafe) {
+    return String(unsafe || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  },
+
+  limitText(limitField, limitNum) {
+    if (limitField.value.length > limitNum) {
+      limitField.value = limitField.value.slice(0, limitNum);
+    }
+  },
+
+  moneyToNumber(amt) {
+    if (amt === null || typeof amt === "undefined" || amt === "") {
+      return 0;
+    }
+    const strAmt = String(amt);
+    const cleanStr = strAmt.replace(/[^0-9.-]+/g, "");
+    if (cleanStr === "" || cleanStr === ".") {
+      return 0;
+    }
+    return parseFloat(cleanStr);
+  },
+
+  moneyFormat(amt, currency = "USD") {
+    let numAmt = Ragnos.DOM.moneyToNumber(amt);
+    if (isNaN(numAmt)) {
+      numAmt = 0;
+    }
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: currency,
+    }).format(numAmt);
+  },
+
+  serializeForm(formElement) {
+    if (!(formElement instanceof HTMLFormElement)) return {};
+    return Object.fromEntries(new FormData(formElement));
+  },
+
+  serializeParams(obj, prefix) {
+    let str = [];
+    for (let p in obj) {
+      if (!obj.hasOwnProperty(p)) continue;
+      let k = prefix ? `${prefix}[${p}]` : p,
+        v = obj[p];
+      if (v === null || v === undefined) v = "";
+      if (typeof v === "object" && !Array.isArray(v)) {
+        str.push(Ragnos.DOM.serializeParams(v, k));
+      } else if (Array.isArray(v)) {
+        v.forEach((val, idx) => {
+          if (val === null || val === undefined) val = "";
+          str.push(Ragnos.DOM.serializeParams(val, `${k}[${idx}]`));
+        });
+      } else {
+        str.push(`${encodeURIComponent(k)}=${encodeURIComponent(v)}`);
+      }
+    }
+    return str.join("&");
+  },
+
+  trim(inputString) {
+    return String(inputString || "").trim();
+  },
+
+  limpia(cadena) {
+    return String(cadena || "").replace("-", " ").replace(/\s+/g, " ").trim();
+  },
+
+  inArray(element, array) {
+    return Array.isArray(array) && array.includes(element);
+  },
+};
+
+/* ==========================================================================
+   2. Ragnos.Http: Networking, Ajax, URLs, and Redirects
+   ========================================================================== */
+Ragnos.Http = {
+  fixUrl(relativeUrl) {
+    try {
+      if (typeof relativeUrl !== "string" || !relativeUrl.trim()) {
+        console.warn("fixUrl: purl es inválido o está vacío.");
+        return "";
+      }
+      const isAbsolute = /^https?:\/\//i.test(relativeUrl);
+      if (isAbsolute || typeof base_url === "undefined") {
+        return relativeUrl;
+      }
+      if (typeof base_url !== "string" || !base_url.trim()) {
+        console.error("fixUrl: base_url no está definido o es inválido.");
+        return relativeUrl;
+      }
+      const normalizedBaseUrl = base_url.replace(/\/+$/, "");
+      const normalizedPath = relativeUrl.replace(/^\/+/, "");
+      return `${normalizedBaseUrl}/index.php/${normalizedPath}`;
+    } catch (error) {
+      console.error("fixUrl: Error procesando la URL:", error);
       return "";
     }
+  },
 
-    // Verificar si la URL ya es absoluta
-    const isAbsolute = /^https?:\/\//i.test(relativeUrl);
-    if (isAbsolute || typeof base_url === "undefined") {
-      return relativeUrl;
-    }
+  redirectTo(urlToRedirect) {
+    setTimeout(function () {
+      window.location.href = Ragnos.Http.fixUrl(urlToRedirect);
+    }, 0);
+  },
 
-    // Asegurar que base_url esté definido correctamente
-    if (typeof base_url !== "string" || !base_url.trim()) {
-      console.error("fixUrl: base_url no está definido o es inválido.");
-      return relativeUrl;
-    }
+  openInNew(urlToOpen) {
+    window.open(Ragnos.Http.fixUrl(urlToOpen), "_new");
+  },
 
-    // Normalizar base_url y purl para evitar duplicados de '/'
-    const normalizedBaseUrl = base_url.replace(/\/+$/, ""); // Remover '/' al final
-    const normalizedPath = relativeUrl.replace(/^\/+/, ""); // Remover '/' al inicio
-
-    // Combinar base_url y purl con el separador adecuado
-    return `${normalizedBaseUrl}/index.php/${normalizedPath}`;
-  } catch (error) {
-    console.error("fixUrl: Error procesando la URL:", error);
-    return "";
-  }
-}
-
-function redirectTo(urlToRedirect) {
-  setTimeout(function () {
-    window.location.href = fixUrl(urlToRedirect);
-  }, 0);
-}
-
-/**
- * Opens a given URL in a new browser window.
- *
- * @param {string} urlToOpen - The URL to be opened.
- */
-function openInNew(urlToOpen) {
-  window.open(fixUrl(urlToOpen), "_new");
-}
-
-/**
- * Redirige al navegador a una URL específica usando una solicitud POST con parámetros opcionales.
- *
- * @param {string} purl - La URL a la que se redirigirá.
- * @param {Object} [parameters={}] - Un objeto con los parámetros a enviar como POST.
- * @param {boolean} [inNewTab=true] - Si se debe abrir en una nueva pestaña.
- * @returns {boolean} - Devuelve true si la redirección fue exitosa, false si ocurrió un error.
- */
-function redirectByPost(purl, parameters = {}, inNewTab = true) {
-  try {
-    // Validar la URL
-    if (typeof purl !== "string" || !purl.trim()) {
-      console.error("redirectByPost: URL inválida.");
+  redirectByPost(purl, parameters = {}, inNewTab = true) {
+    try {
+      if (typeof purl !== "string" || !purl.trim()) {
+        console.error("redirectByPost: URL inválida.");
+        return false;
+      }
+      const url = Ragnos.Http.fixUrl(purl);
+      const form = document.createElement("form");
+      form.method = "post";
+      form.action = url;
+      if (inNewTab) form.target = "_blank";
+      if (typeof csrfToken !== "undefined") {
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = "csrf_token";
+        input.value = csrfToken;
+        form.appendChild(input);
+      }
+      Object.entries(parameters).forEach(([key, value]) => {
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = key;
+        input.value = String(value);
+        form.appendChild(input);
+      });
+      document.body.appendChild(form);
+      form.submit();
+      document.body.removeChild(form);
+      return true;
+    } catch (error) {
+      console.error("redirectByPost: Error durante la redirección.", error);
       return false;
     }
+  },
 
-    // Obtener URL procesada
-    const url = fixUrl(purl);
+  refreshPage() {
+    location.reload();
+  },
 
-    // Crear el formulario
-    const form = crearFormulario(url, parameters, inNewTab);
+  async getValue(url, params = {}, callback) {
+    const config = {
+      timeout: params.timeout || 12000,
+      retryAttempts: params.retryAttempts || 1,
+      retryDelay: params.retryDelay || 1000,
+    };
+    const cleanParams = { ...params };
+    delete cleanParams.timeout;
+    delete cleanParams.retryAttempts;
+    delete cleanParams.retryDelay;
 
-    // Enviar el formulario
-    document.body.appendChild(form);
-    form.submit();
-    document.body.removeChild(form);
+    const body = Ragnos.DOM.serializeParams(cleanParams);
 
-    return true;
-  } catch (error) {
-    console.error("redirectByPost: Error durante la redirección.", error);
-    return false;
-  }
-}
+    const makeRequest = async () => {
+      let attempts = 0;
+      let lastError = null;
 
-/**
- * Crea un formulario para realizar una solicitud POST.
- *
- * @param {string} url - La URL de destino.
- * @param {Object} parameters - Los parámetros a enviar como POST.
- * @param {boolean} inNewTab - Si el formulario debe abrirse en una nueva pestaña.
- * @returns {HTMLFormElement} - El formulario generado.
- */
-function crearFormulario(url, parameters, inNewTab) {
-  const form = document.createElement("form");
-  form.method = "post";
-  form.action = url;
+      while (attempts < config.retryAttempts) {
+        try {
+          const resPromise = fetch(Ragnos.Http.fixUrl(url), {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+              "X-Requested-With": "XMLHttpRequest",
+            },
+            body: body,
+          });
+          const response = await Promise.race([
+            resPromise,
+            new Promise((_, reject) =>
+              setTimeout(() => reject(new Error("Timeout")), config.timeout),
+            ),
+          ]);
+          const text = await response.text();
+          if (!response.ok) {
+            throw {
+              status: response.status,
+              statusText: response.statusText,
+              response: text,
+            };
+          }
+          return { response: text, error: null };
+        } catch (error) {
+          lastError = {
+            error: error.message || "Error desconocido",
+            status: error.status || 0,
+          };
+          Ragnos.Http.manejaError(error);
+          attempts++;
+          if (attempts < config.retryAttempts) {
+            await new Promise((res) => setTimeout(res, config.retryDelay));
+          }
+        }
+      }
+      return { response: null, error: lastError };
+    };
 
-  // Establecer el destino
-  if (inNewTab) {
-    form.target = "_blank";
-  }
+    if (typeof callback === "function") {
+      const result = await makeRequest();
+      callback(result.response, result.error);
+      return;
+    }
+    const result = await makeRequest();
+    if (result.error) throw result.error;
+    return result.response;
+  },
 
-  // Agregar token CSRF si está definido
-  if (typeof csrfToken !== "undefined") {
-    agregarCampoOculto(form, "csrf_token", csrfToken);
-  }
+  async getObject(purl, pparameters, callbackfunction) {
+    const processResponse = async (response) => {
+      try {
+        const obj = JSON.parse(response);
+        return { result: obj, error: null };
+      } catch (error) {
+        return { result: null, error };
+      }
+    };
 
-  // Agregar los parámetros al formulario
-  Object.entries(parameters).forEach(([key, value]) => {
-    agregarCampoOculto(form, key, String(value));
-  });
+    if (typeof callbackfunction !== "function") {
+      try {
+        const response = await Ragnos.Http.getValue(purl, pparameters);
+        const { result, error } = await processResponse(response);
+        if (error) throw error;
+        return result;
+      } catch (error) {
+        throw error;
+      }
+    }
 
-  return form;
-}
-
-/**
- * Agrega un campo oculto a un formulario.
- *
- * @param {HTMLFormElement} form - El formulario al que se agregará el campo.
- * @param {string} name - El nombre del campo.
- * @param {string} value - El valor del campo.
- */
-function agregarCampoOculto(form, name, value) {
-  const input = document.createElement("input");
-  input.type = "hidden";
-  input.name = name;
-  input.value = value;
-  form.appendChild(input);
-}
-
-function trim(inputString) {
-  return inputString.trim();
-}
-
-/**
- * Refreshes the current page by reloading it.
- */
-function refreshPage() {
-  location.reload();
-}
-
-function printElement(target, title = document.title) {
-  const element = getElement(target);
-  if (!element) return false;
-
-  const printable = element.cloneNode(true);
-  const sourceControls = element.querySelectorAll("input, textarea, select");
-  printable.querySelectorAll("input, textarea, select").forEach((control, index) => {
-    const source = sourceControls[index];
-    if (!source) return;
-    if (control instanceof HTMLInputElement) {
-      control.value = source.value;
-      control.toggleAttribute("checked", source.checked);
-    } else if (control instanceof HTMLTextAreaElement) {
-      control.textContent = source.value;
-    } else if (control instanceof HTMLSelectElement) {
-      Array.from(control.options).forEach((option, optionIndex) => {
-        option.selected = source.options[optionIndex]?.selected || false;
+    try {
+      await Ragnos.Http.getValue(purl, pparameters, async (response, errors) => {
+        if (errors) {
+          callbackfunction(null, errors);
+          return;
+        }
+        const { result, error } = await processResponse(response);
+        callbackfunction(result, error);
       });
+    } catch (error) {
+      callbackfunction(null, error);
     }
-  });
-  printable.querySelectorAll("script, iframe, object, embed").forEach((node) => node.remove());
-  [printable, ...printable.querySelectorAll("*")].forEach((node) => {
-    Array.from(node.attributes).forEach((attribute) => {
-      if (attribute.name.toLowerCase().startsWith("on")) {
-        node.removeAttribute(attribute.name);
+  },
+
+  async postFormData(url, formData, callback) {
+    const config = {
+      timeout: 0,
+      retryAttempts: 1,
+      retryDelay: 1000,
+    };
+
+    const makeRequest = async () => {
+      let attempts = 0;
+      let lastError = null;
+
+      while (attempts < config.retryAttempts) {
+        try {
+          const resPromise = fetch(Ragnos.Http.fixUrl(url), {
+            method: "POST",
+            headers: {
+              "X-Requested-With": "XMLHttpRequest",
+            },
+            body: formData,
+          });
+          const response = await resPromise;
+          const text = await response.text();
+          if (!response.ok) {
+            throw {
+              status: response.status,
+              statusText: response.statusText,
+              response: text,
+            };
+          }
+          return { response: text, error: null };
+        } catch (error) {
+          lastError = {
+            error: error.message || "Error desconocido",
+            status: error.status || 0,
+          };
+          Ragnos.Http.manejaError(lastError);
+          attempts++;
+          if (attempts < config.retryAttempts) {
+            await new Promise((res) => setTimeout(res, config.retryDelay));
+          }
+        }
       }
-    });
-  });
+      return { response: null, error: lastError };
+    };
 
-  const frame = document.createElement("iframe");
-  frame.hidden = true;
-  frame.title = "Print preview";
-  document.body.append(frame);
-  const styles = Array.from(document.querySelectorAll('link[rel="stylesheet"], style'))
-    .map((node) => node.outerHTML)
-    .join("");
-  frame.srcdoc = `<!doctype html><html><head><title>${escapeHtml(title)}</title>${styles}</head><body>${printable.outerHTML}</body></html>`;
-  frame.addEventListener(
-    "load",
-    () => {
-      frame.contentWindow.focus();
-      frame.contentWindow.print();
-      setTimeout(() => frame.remove(), 1000);
-    },
-    { once: true },
-  );
-  return true;
-}
-
-function serializeForm(formElement) {
-  if (!(formElement instanceof HTMLFormElement)) return {};
-  return Object.fromEntries(new FormData(formElement));
-}
-
-function shakeElement(el) {
-  el = getElement(el);
-  if (!el) return;
-  el.classList.add("shake");
-  setTimeout(() => el.classList.remove("shake"), 400);
-}
-
-/**
- * Adds totals to a table either in the final row, final column, or both.
- *
- * @param {HTMLTableElement|string} targetTable - The table to modify.
- * @param {boolean} [enRenglonFinal=false] - If true, adds a total row at the end of the table.
- * @param {boolean} [enColumnaFinal=true] - If true, adds a total column at the end of each row.
- */
-function ponTotalesEnTabla(
-  targetTable,
-  enRenglonFinal = true,
-  enColumnaFinal = false,
-) {
-  if (
-    !targetTable ||
-    !(getElement(targetTable) instanceof HTMLTableElement)
-  ) {
-    console.error("Invalid table element");
-    return;
-  }
-
-  targetTable = getElement(targetTable);
-  const tbody = targetTable.querySelector("tbody");
-  const rows = Array.from(tbody.querySelectorAll("tr"));
-  let columnCount = rows[0] ? rows[0].querySelectorAll("td").length : 0;
-
-  if (enColumnaFinal) {
-    agregarColumnaTotal(targetTable, rows, columnCount);
-    columnCount += 1;
-  }
-  if (enRenglonFinal) {
-    agregarRenglonTotal(tbody, rows, columnCount);
-  }
-}
-
-/**
- * Agrega un renglón con totales al final de la tabla.
- *
- * @param {HTMLTableSectionElement} tbody - Cuerpo de la tabla.
- * @param {HTMLTableRowElement[]} rows - Filas usadas para calcular los totales.
- * @param {number} columnCount - Número de columnas en la tabla.
- */
-function agregarRenglonTotal(tbody, rows, columnCount) {
-  if (rows.length < 1) return;
-  const totalRow = document.createElement("tr");
-  for (let i = 0; i < columnCount; i++) {
-    const td = document.createElement("td");
-    td.classList.add("total");
-    td.style.fontWeight = "bold";
-    td.textContent = i === 0 ? "Total" : calcularColumnaTotal(rows, i);
-    totalRow.appendChild(td);
-  }
-  tbody.appendChild(totalRow);
-}
-
-/**
- * Agrega una columna con totales al final de cada fila.
- *
- * @param {HTMLTableElement} targetTable - Tabla a la que se agregará la columna de totales.
- * @param {HTMLTableRowElement[]} rows - Filas usadas para calcular los totales.
- * @param {number} columnCount - Número de columnas en la tabla.
- */
-function agregarColumnaTotal(table, rows, columnCount) {
-  if (columnCount < 2) return;
-  // Agregar encabezado "Total"
-  const theadRow = table.querySelector("thead tr");
-  if (theadRow) {
-    const th = document.createElement("th");
-    th.classList.add("total");
-    th.style.fontWeight = "bold";
-    th.textContent = "Total";
-    theadRow.appendChild(th);
-  }
-  // Calcular y agregar el total por fila
-  rows.forEach((row) => {
-    const cells = row.querySelectorAll("td");
-    const total = calcularFilaTotal(row, columnCount);
-    const td = document.createElement("td");
-    td.classList.add("total");
-    td.style.fontWeight = "bold";
-    td.textContent = total;
-    row.appendChild(td);
-  });
-}
-
-/**
- * Calcula el total de una columna específica en las filas dadas.
- *
- * @param {HTMLTableRowElement[]} rows - Las filas de la tabla.
- * @param {number} colIndex - Índice de la columna a calcular.
- * @returns {string|number} El total de la columna, formateado si aplica.
- */
-function calcularColumnaTotal(rows, colIndex) {
-  let esDinero = false;
-  let sum = 0;
-  rows.forEach((row) => {
-    const cell = row.querySelectorAll("td")[colIndex];
-    if (!cell) return;
-    let valor = cell.textContent.trim();
-    if (valor.startsWith("$")) esDinero = true;
-    sum += moneyToNumber(valor) || 0;
-  });
-  return formatearTotal(sum, esDinero);
-}
-
-/**
- * Calcula el total de una fila específica.
- *
- * @param {HTMLTableRowElement} row - La fila a calcular.
- * @param {number} columnCount - Número de columnas en la tabla.
- * @returns {string|number} El total de la fila, formateado si aplica.
- */
-function calcularFilaTotal(row, columnCount) {
-  let esDinero = false;
-  let sum = 0;
-  const cells = Array.from(row.querySelectorAll("td")).slice(
-    1,
-    columnCount - 1,
-  ); // Ignora primera/última si aplica
-  cells.forEach((cell) => {
-    let valor = cell.textContent.trim();
-    if (valor.startsWith("$")) esDinero = true;
-    sum += moneyToNumber(valor) || 0;
-  });
-  return formatearTotal(sum, esDinero);
-}
-
-/**
- * Formatea un valor total como texto, manejando números y valores monetarios.
- *
- * @param {number} totalAmount - El valor total a formatear.
- * @param {boolean} isCurrency - Si el valor debe ser formateado como dinero.
- * @returns {string} El total formateado.
- */
-function formatearTotal(totalAmount, isCurrency) {
-  if (isCurrency) {
-    return moneyFormat(totalAmount);
-  }
-  return Number.isInteger(totalAmount)
-    ? totalAmount.toFixed(0)
-    : totalAmount.toFixed(2);
-}
-
-/**
- * Busca el renglón de total de una tabla (asumiendo que es el último renglón del cuerpo)
- * y elimina el contenido de la celda correspondiente a la columna indicada.
- *
- * @param {HTMLTableElement|string} targetTable - La tabla objetivo.
- * @param {number|number[]} colIndex - El índice o índices de la columna a limpiar (base 0).
- */
-function quitaTotaldeColumna(targetTable, colIndex) {
-  if (!targetTable) return;
-
-  targetTable = getElement(targetTable);
-
-  // Validar que sea una tabla HTML
-  if (!(targetTable instanceof HTMLTableElement)) {
-    console.error(
-      "quitaTotaldeColumna: El elemento proporcionado no es una tabla válida.",
-    );
-    return;
-  }
-
-  const tbody = targetTable.querySelector("tbody");
-  // Obtenemos las filas del cuerpo, o todas las filas si no hay tbody explícito
-  const rows = tbody ? tbody.rows : targetTable.rows;
-
-  if (rows.length === 0) return;
-
-  // El renglón de totales suele ser el último agregado por la función ponTotalesEnTabla
-  const totalRow = rows[rows.length - 1];
-
-  // Convertimos colIndex a un array si no lo es, para manejar ambos casos
-  const indexesToClear = Array.isArray(colIndex) ? colIndex : [colIndex];
-
-  indexesToClear.forEach((index) => {
-    // Verificar si la celda existe en ese índice y limpiar su contenido
-    if (totalRow.cells.length > index) {
-      totalRow.cells[index].textContent = "";
-      totalRow.cells[index].innerHTML = "";
+    if (typeof callback === "function") {
+      const result = await makeRequest();
+      callback(result.response, result.error);
+      return;
     }
-  });
-}
+    const result = await makeRequest();
+    if (result.error) throw result.error;
+    return result.response;
+  },
 
-/**
- * Busca un renglón específico de una tabla y elimina el contenido de la última celda
- * (asumiendo que es la celda de totales agregada por ponTotalesEnTabla).
- *
- * @param {HTMLTableElement|string} targetTable - La tabla objetivo.
- * @param {number|number[]} rowIndex - El índice o índicesdel renglón a limpiar (base 0).
- */
-function quitaTotaldeRenglon(targetTable, rowIndex) {
-  if (!targetTable) return;
+  async uploadObject(purl, formData, callbackfunction) {
+    const processResponse = async (response) => {
+      try {
+        const obj = JSON.parse(response);
+        return { result: obj, error: null };
+      } catch (error) {
+        return { result: null, error };
+      }
+    };
 
-  targetTable = getElement(targetTable);
-
-  // Validar que sea una tabla HTML
-  if (!(targetTable instanceof HTMLTableElement)) {
-    console.error(
-      "quitaTotaldeRenglon: El elemento proporcionado no es una tabla válida.",
-    );
-    return;
-  }
-
-  const tbody = targetTable.querySelector("tbody");
-  // Obtenemos las filas del cuerpo, o todas las filas si no hay tbody explícito
-  const rows = tbody ? tbody.rows : targetTable.rows;
-
-  // Normalizar rowIndex a un array para manejar ambos casos (número o array)
-  const indexesToClear = Array.isArray(rowIndex) ? rowIndex : [rowIndex];
-
-  indexesToClear.forEach((idx) => {
-    if (idx >= 0 && idx < rows.length) {
-      const targetRow = rows[idx];
-      // Verificar si la celda existe (última celda) y limpiar su contenido
-      if (targetRow.cells.length > 0) {
-        const lastCellIndex = targetRow.cells.length - 1;
-        targetRow.cells[lastCellIndex].textContent = "";
-        targetRow.cells[lastCellIndex].innerHTML = "";
+    if (typeof callbackfunction !== "function") {
+      try {
+        const response = await Ragnos.Http.postFormData(purl, formData);
+        const { result, error } = await processResponse(response);
+        if (error) throw error;
+        return result;
+      } catch (error) {
+        throw error;
       }
     }
-  });
-}
 
-/**
- * Exports HTML table content to an Excel file
- * @param {string} fileName - Name of the file to be downloaded (without extension)
- * @param {string} htmlContent - HTML table content to export
- * @returns {boolean} - True if export was successful, false otherwise
- */
-function exportToExcel(fileName, htmlContent) {
-  try {
-    // Input validation
-    if (!fileName || typeof fileName !== "string") {
-      throw new Error("Invalid file name");
+    try {
+      await Ragnos.Http.postFormData(purl, formData, async (response, errors) => {
+        if (errors) {
+          callbackfunction(null, errors);
+          return;
+        }
+        const { result, error } = await processResponse(response);
+        callbackfunction(result, error);
+      });
+    } catch (error) {
+      callbackfunction(null, error);
     }
-    if (!htmlContent || typeof htmlContent !== "string") {
-      throw new Error("Invalid HTML content");
+  },
+
+  async getSession() {
+    return await Ragnos.Http.getObject("admin/sess", {});
+  },
+
+  manejaError(responseOrError) {
+    const errorMessages = {
+      401: "Su sesión ha expirado, por favor inicie sesión nuevamente.",
+      403: "No tiene permiso para realizar esta acción.",
+      404: "No se encontró la página solicitada.",
+      500: "Error interno del servidor.",
+    };
+    let status = responseOrError && responseOrError.status;
+    let message = errorMessages[status] || "Error desconocido";
+
+    Ragnos.UI.showToast(message, "error");
+
+    if (status === 401) {
+      if (window.Swal) {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: errorMessages[401],
+          timer: 2000,
+          didClose: () => {
+            window.location.href = Ragnos.Http.fixUrl("admin/login");
+          },
+        });
+      } else {
+        alert(errorMessages[401]);
+        window.location.href = Ragnos.Http.fixUrl("admin/login");
+      }
     }
+  },
+};
 
-    // Constants
-    const EXCEL_URI = "data:application/vnd.ms-excel;charset=UTF-8;base64,";
-    const EXCEL_TEMPLATE = `
-      <html xmlns:o="urn:schemas-microsoft-com:office:office" 
-          xmlns:x="urn:schemas-microsoft-com:office:excel" 
-          xmlns="http://www.w3.org/TR/REC-html40">
-        <head>
-          <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-          <meta charset="utf-8" />
-          <!--[if gte mso 9]>
-          <xml>
-            <x:ExcelWorkbook>
-              <x:ExcelWorksheets>
-                <x:ExcelWorksheet>
-                  <x:Name>{worksheet}</x:Name>
-                  <x:WorksheetOptions>
-                    <x:DisplayGridlines/>
-                  </x:WorksheetOptions>
-                </x:ExcelWorksheet>
-              </x:ExcelWorksheets>
-            </x:ExcelWorkbook>
-          </xml>
-          <![endif]-->
-        </head>
-        <body>
-          <table>{table}</table>
-        </body>
-      </html>`;
+/* ==========================================================================
+   3. Ragnos.Table: DataTables and HTML Table Manipulations
+   ========================================================================== */
+Ragnos.Table = {
+  destroyDataTable(table) {
+    const element = Ragnos.DOM.getElement(table);
+    if (!element?.ragnosDataTable) return;
 
-    // Convert content to base64
-    const base64 = (s) => window.btoa(unescape(encodeURIComponent(s)));
+    try {
+      element.ragnosDataTable.destroy();
+    } catch (error) {
+      console.warn("Unable to destroy DataTable cleanly:", error);
+    } finally {
+      delete element.ragnosDataTable;
+    }
+  },
 
-    // Format template
-    const format = (template, context) =>
-      template.replace(/{(\w+)}/g, (match, key) => context[key] || "");
+  aplicarDebounceABusqueda(datatableInstance, delay = 500) {
+    const table = datatableInstance.table().node();
+    const wrapper = table.closest(".dt-container") || table.parentElement;
+    const searchInput = wrapper?.querySelector(".dt-search input");
+    if (!searchInput || searchInput.dataset.ragnosDebounced === "true") return;
 
-    // Create download link
-    const link = document.createElement("a");
-    link.download = `${fileName.trim()}.xls`;
-    link.href =
-      EXCEL_URI +
-      base64(
-        format(EXCEL_TEMPLATE, {
-          worksheet: "Worksheet",
-          table: htmlContent,
-        }),
+    searchInput.dataset.ragnosDebounced = "true";
+    searchInput.addEventListener("input", () => {
+      Ragnos.DOM.debounce(
+        () => datatableInstance.search(searchInput.value).draw(),
+        delay,
+        searchInput,
       );
-
-    // Trigger download
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-
-    return true;
-  } catch (error) {
-    console.error("Error exporting to Excel:", error);
-    showToast("Error al exportar a Excel", "error");
-    return false;
-  }
-}
-
-/**
- * Generates a complete HTML table from a DataTable instance.
- *
- * @param {string} tableElement - The selector for the table element.
- * @returns {string} The generated HTML table as a string.
- * @throws {Error} If the table element is invalid or the DataTable is not initialized.
- */
-function tablaCompleta(tableElement) {
-  try {
-    const table = getElement(tableElement);
-    if (!(table instanceof HTMLTableElement)) {
-      throw new Error("Invalid table element");
-    }
-
-    const dataTableInstance = new DataTable.Api(table);
-    if (!dataTableInstance) {
-      throw new Error("DataTable not initialized");
-    }
-
-    // Get table data and headers
-    const extractedRows = dataTableInstance.rows().data().toArray();
-    const columnHeaders = dataTableInstance.columns().header().toArray();
-    const fieldNames = columnHeaders.map((header) => header.textContent.trim());
-
-    // Build table HTML with template literals
-    let tableHtml = '<table border="1">';
-
-    // Add header row
-    tableHtml += "<thead><tr>";
-    fieldNames.slice(0, -1).forEach((fieldName) => {
-      tableHtml += `<th style="background-color: #f2f2f2; padding: 8px;">${escapeHtml(
-        fieldName,
-      )}</th>`;
     });
-    tableHtml += "</tr></thead>";
+  },
 
-    // Add data rows
-    tableHtml += "<tbody>";
-    extractedRows.forEach((row) => {
-      tableHtml += "<tr>";
-      Object.values(row).forEach((value) => {
-        tableHtml += `<td style="padding: 6px;">${escapeHtml(
-          String(value),
-        )}</td>`;
-      });
-      tableHtml += "</tr>";
-    });
-
-    tableHtml += "</tbody></table>";
-    return tableHtml;
-  } catch (error) {
-    console.error("Error in tablaCompleta:", error);
-    showToast("Error al generar la tabla", "error");
-    return "";
-  }
-}
-
-// Helper function to escape HTML special characters
-function escapeHtml(unsafe) {
-  return unsafe
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-}
-
-/**
- * Exports the complete table to an Excel file.
- *
- * @param {string} fileName - The name of the Excel file to be created.
- * @param {HTMLElement} tablae - The table element to be exported.
- */
-function exportaTablaCompletaAExcel(fileName, tablae) {
-  let tableHtml = tablaCompleta(tablae);
-  exportToExcel(fileName, tableHtml);
-}
-
-/**
- * Initializes a paginated DataTable with the specified options.
- *
- * @param {string} tableSelector - The selector for the table element to apply DataTables to.
- * @param {Object} [optionsextra={}] - Additional options to extend the default DataTables configuration.
- * @param {string} [optionsextra.pagingType="numbers"] - The type of pagination to use.
- * @param {Array} [optionsextra.order=[]] - The initial order of the table.
- * @param {Object} [optionsextra.language] - Language options for DataTables.
- */
-function ponTablaPaginada(tableSelector, optionsextra = {}) {
-  // Opciones de configuración de DataTables
-  let options = {
-    pagingType: "numbers",
-    order: [],
-    language: {
-      processing: "Procesando...",
-      lengthMenu: "Mostrar _MENU_ registros",
-      zeroRecords: "No se encontraron registros",
-      info: "Mostrando desde _START_ hasta _END_ de _TOTAL_ registros",
-      infoEmpty: "Mostrando desde 0 hasta 0 de 0 registros",
-      infoFiltered: "",
-      search: "Buscar:",
-      paginate: {
-        first: "Primero",
-        previous: "Anterior",
-        next: "Siguiente",
-        last: "Último",
+  ponTablaPaginada(tableSelector, optionsextra = {}) {
+    let options = {
+      pagingType: "numbers",
+      order: [],
+      language: {
+        processing: "Procesando...",
+        lengthMenu: "Mostrar _MENU_ registros",
+        zeroRecords: "No se encontraron registros",
+        info: "Mostrando desde _START_ hasta _END_ de _TOTAL_ registros",
+        infoEmpty: "Mostrando desde 0 hasta 0 de 0 registros",
+        infoFiltered: "",
+        search: "Buscar:",
+        paginate: {
+          first: "Primero",
+          previous: "Anterior",
+          next: "Siguiente",
+          last: "Último",
+        },
       },
-    },
-  };
+    };
 
-  const table = getElement(tableSelector);
-  if (!(table instanceof HTMLTableElement)) {
-    throw new TypeError("ponTablaPaginada requires a table element");
-  }
+    const table = Ragnos.DOM.getElement(tableSelector);
+    if (!(table instanceof HTMLTableElement)) {
+      throw new TypeError("ponTablaPaginada requires a table element");
+    }
 
-  options = { ...options, ...optionsextra };
-  const dataTable = new DataTable(table, options);
-  table.ragnosDataTable = dataTable;
-  return dataTable;
-}
+    options = { ...options, ...optionsextra };
+    const dataTable = new DataTable(table, options);
+    table.ragnosDataTable = dataTable;
+    return dataTable;
+  },
 
+  ponTotalesEnTabla(
+    targetTable,
+    enRenglonFinal = true,
+    enColumnaFinal = false,
+  ) {
+    if (
+      !targetTable ||
+      !(Ragnos.DOM.getElement(targetTable) instanceof HTMLTableElement)
+    ) {
+      console.error("Invalid table element");
+      return;
+    }
+
+    targetTable = Ragnos.DOM.getElement(targetTable);
+    const tbody = targetTable.querySelector("tbody");
+    const rows = Array.from(tbody.querySelectorAll("tr"));
+    let columnCount = rows[0] ? rows[0].querySelectorAll("td").length : 0;
+
+    if (enColumnaFinal) {
+      Ragnos.Table.agregarColumnaTotal(targetTable, rows, columnCount);
+      columnCount += 1;
+    }
+    if (enRenglonFinal) {
+      Ragnos.Table.agregarRenglonTotal(tbody, rows, columnCount);
+    }
+  },
+
+  agregarRenglonTotal(tbody, rows, columnCount) {
+    if (rows.length < 1) return;
+    const totalRow = document.createElement("tr");
+    for (let i = 0; i < columnCount; i++) {
+      const td = document.createElement("td");
+      td.classList.add("total");
+      td.style.fontWeight = "bold";
+      td.textContent = i === 0 ? "Total" : Ragnos.Table.calcularColumnaTotal(rows, i);
+      totalRow.appendChild(td);
+    }
+    tbody.appendChild(totalRow);
+  },
+
+  agregarColumnaTotal(table, rows, columnCount) {
+    if (columnCount < 2) return;
+    const theadRow = table.querySelector("thead tr");
+    if (theadRow) {
+      const th = document.createElement("th");
+      th.classList.add("total");
+      th.style.fontWeight = "bold";
+      th.textContent = "Total";
+      theadRow.appendChild(th);
+    }
+    rows.forEach((row) => {
+      const total = Ragnos.Table.calcularFilaTotal(row, columnCount);
+      const td = document.createElement("td");
+      td.classList.add("total");
+      td.style.fontWeight = "bold";
+      td.textContent = total;
+      row.appendChild(td);
+    });
+  },
+
+  calcularColumnaTotal(rows, colIndex) {
+    let esDinero = false;
+    let sum = 0;
+    rows.forEach((row) => {
+      const cell = row.querySelectorAll("td")[colIndex];
+      if (!cell) return;
+      let valor = cell.textContent.trim();
+      if (valor.startsWith("$")) esDinero = true;
+      sum += Ragnos.DOM.moneyToNumber(valor) || 0;
+    });
+    return Ragnos.Table.formatearTotal(sum, esDinero);
+  },
+
+  calcularFilaTotal(row, columnCount) {
+    let esDinero = false;
+    let sum = 0;
+    const cells = Array.from(row.querySelectorAll("td")).slice(
+      1,
+      columnCount - 1,
+    );
+    cells.forEach((cell) => {
+      let valor = cell.textContent.trim();
+      if (valor.startsWith("$")) esDinero = true;
+      sum += Ragnos.DOM.moneyToNumber(valor) || 0;
+    });
+    return Ragnos.Table.formatearTotal(sum, esDinero);
+  },
+
+  formatearTotal(totalAmount, isCurrency) {
+    if (isCurrency) {
+      return Ragnos.DOM.moneyFormat(totalAmount);
+    }
+    return Number.isInteger(totalAmount)
+      ? totalAmount.toFixed(0)
+      : totalAmount.toFixed(2);
+  },
+
+  quitaTotaldeColumna(targetTable, colIndex) {
+    if (!targetTable) return;
+    targetTable = Ragnos.DOM.getElement(targetTable);
+    if (!(targetTable instanceof HTMLTableElement)) return;
+    const tbody = targetTable.querySelector("tbody");
+    const rows = tbody ? tbody.rows : targetTable.rows;
+    if (rows.length === 0) return;
+    const totalRow = rows[rows.length - 1];
+    const indexesToClear = Array.isArray(colIndex) ? colIndex : [colIndex];
+    indexesToClear.forEach((index) => {
+      if (totalRow.cells.length > index) {
+        totalRow.cells[index].textContent = "";
+        totalRow.cells[index].innerHTML = "";
+      }
+    });
+  },
+
+  quitaTotaldeRenglon(targetTable, rowIndex) {
+    if (!targetTable) return;
+    targetTable = Ragnos.DOM.getElement(targetTable);
+    if (!(targetTable instanceof HTMLTableElement)) return;
+    const tbody = targetTable.querySelector("tbody");
+    const rows = tbody ? tbody.rows : targetTable.rows;
+    const indexesToClear = Array.isArray(rowIndex) ? rowIndex : [rowIndex];
+    indexesToClear.forEach((idx) => {
+      if (idx >= 0 && idx < rows.length) {
+        const targetRow = rows[idx];
+        if (targetRow.cells.length > 0) {
+          const lastCellIndex = targetRow.cells.length - 1;
+          targetRow.cells[lastCellIndex].textContent = "";
+          targetRow.cells[lastCellIndex].innerHTML = "";
+        }
+      }
+    });
+  },
+
+  exportToExcel(fileName, htmlContent) {
+    try {
+      if (!fileName || typeof fileName !== "string") {
+        throw new Error("Invalid file name");
+      }
+      if (!htmlContent || typeof htmlContent !== "string") {
+        throw new Error("Invalid HTML content");
+      }
+      const EXCEL_URI = "data:application/vnd.ms-excel;charset=UTF-8;base64,";
+      const EXCEL_TEMPLATE = `
+        <html xmlns:o="urn:schemas-microsoft-com:office:office" 
+            xmlns:x="urn:schemas-microsoft-com:office:excel" 
+            xmlns="http://www.w3.org/TR/REC-html40">
+          <head>
+            <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+            <meta charset="utf-8" />
+            <!--[if gte mso 9]>
+            <xml>
+              <x:ExcelWorkbook>
+                <x:ExcelWorksheets>
+                  <x:ExcelWorksheet>
+                    <x:Name>{worksheet}</x:Name>
+                    <x:WorksheetOptions>
+                      <x:DisplayGridlines/>
+                    </x:WorksheetOptions>
+                  </x:ExcelWorksheet>
+                </x:ExcelWorksheets>
+              </x:ExcelWorkbook>
+            </xml>
+            <![endif]-->
+          </head>
+          <body>
+            <table>{table}</table>
+          </body>
+        </html>`;
+
+      const base64 = (s) => window.btoa(unescape(encodeURIComponent(s)));
+      const format = (template, context) =>
+        template.replace(/{(\w+)}/g, (match, key) => context[key] || "");
+
+      const link = document.createElement("a");
+      link.download = `${fileName.trim()}.xls`;
+      link.href =
+        EXCEL_URI +
+        base64(
+          format(EXCEL_TEMPLATE, {
+            worksheet: "Worksheet",
+            table: htmlContent,
+          }),
+        );
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      return true;
+    } catch (error) {
+      console.error("Error exporting to Excel:", error);
+      Ragnos.UI.showToast("Error al exportar a Excel", "error");
+      return false;
+    }
+  },
+
+  tablaCompleta(tableElement) {
+    try {
+      const table = Ragnos.DOM.getElement(tableElement);
+      if (!(table instanceof HTMLTableElement)) {
+        throw new Error("Invalid table element");
+      }
+      const dataTableInstance = new DataTable.Api(table);
+      if (!dataTableInstance) {
+        throw new Error("DataTable not initialized");
+      }
+      const extractedRows = dataTableInstance.rows().data().toArray();
+      const columnHeaders = dataTableInstance.columns().header().toArray();
+      const fieldNames = columnHeaders.map((header) => header.textContent.trim());
+
+      let tableHtml = '<table border="1"><thead><tr>';
+      fieldNames.slice(0, -1).forEach((fieldName) => {
+        tableHtml += `<th style="background-color: #f2f2f2; padding: 8px;">${Ragnos.DOM.escapeHtml(
+          fieldName,
+        )}</th>`;
+      });
+      tableHtml += "</tr></thead><tbody>";
+      extractedRows.forEach((row) => {
+        tableHtml += "<tr>";
+        Object.values(row).forEach((value) => {
+          tableHtml += `<td style="padding: 6px;">${Ragnos.DOM.escapeHtml(
+            String(value),
+          )}</td>`;
+        });
+        tableHtml += "</tr>";
+      });
+      tableHtml += "</tbody></table>";
+      return tableHtml;
+    } catch (error) {
+      console.error("Error in tablaCompleta:", error);
+      Ragnos.UI.showToast("Error al generar la tabla", "error");
+      return "";
+    }
+  },
+
+  exportaTablaCompletaAExcel(fileName, tablae) {
+    let tableHtml = Ragnos.Table.tablaCompleta(tablae);
+    Ragnos.Table.exportToExcel(fileName, tableHtml);
+  },
+
+  convertToTable(dataInput, options = {}) {
+    if (!dataInput) return "";
+    const defaultOptions = {
+      tableClass: "table",
+      stripHtml: true,
+      maxCellLength: 100,
+      emptyText: "-",
+    };
+    const settings = { ...defaultOptions, ...options };
+    try {
+      return Array.isArray(dataInput)
+        ? Ragnos.Table.arrayToTable(dataInput, settings)
+        : Ragnos.Table.objectToTable(dataInput, settings);
+    } catch (error) {
+      console.error("Error converting data to table:", error);
+      return "";
+    }
+  },
+
+  objectToTable(obj, settings) {
+    const keys = Object.keys(obj);
+    if (keys.length === 0) return settings.emptyText;
+    return `
+      <table class="${Ragnos.DOM.escapeHtml(settings.tableClass)}">
+        <thead>${Ragnos.Table.createHeaderRow(keys, settings)}</thead>
+        <tbody>${Ragnos.Table.objectToRow(obj, keys, settings)}</tbody>
+      </table>
+    `;
+  },
+
+  arrayToTable(array, settings) {
+    if (!array.length) return settings.emptyText;
+    const keys = Object.keys(array[0]);
+    if (keys.length === 0) return settings.emptyText;
+    return `
+      <table class="${Ragnos.DOM.escapeHtml(settings.tableClass)}">
+        <thead>${Ragnos.Table.createHeaderRow(keys, settings)}</thead>
+        <tbody>${array.map((item) => Ragnos.Table.objectToRow(item, keys, settings)).join("")}</tbody>
+      </table>
+    `;
+  },
+
+  objectToRow(obj, keys, settings) {
+    return `
+      <tr>
+        ${keys
+          .map((key) => `<td>${Ragnos.Table.formatCellContent(obj[key], settings)}</td>`)
+          .join("")}
+      </tr>
+    `;
+  },
+
+  createHeaderRow(keys, settings) {
+    return `
+      <tr>
+        ${keys
+          .map((key) => `<th>${Ragnos.Table.formatCellContent(key, settings)}</th>`)
+          .join("")}
+      </tr>
+    `;
+  },
+
+  formatCellContent(content, settings) {
+    if (content === null || content === undefined) return settings.emptyText;
+    let formatted = String(content);
+    if (settings.maxCellLength && formatted.length > settings.maxCellLength) {
+      formatted = `${formatted.substring(0, settings.maxCellLength)}...`;
+    }
+    if (settings.stripHtml) {
+      const tempDiv = document.createElement("div");
+      tempDiv.innerHTML = formatted;
+      formatted = tempDiv.textContent || tempDiv.innerText || "";
+    }
+    return Ragnos.DOM.escapeHtml(formatted);
+  },
+
+  ponValorEnSelect(elemento, id, texto) {
+    const select = Ragnos.DOM.getElement(elemento);
+    if (!(select instanceof HTMLSelectElement)) return;
+    Array.from(select.options).forEach((option) => {
+      if (String(option.value) === String(id)) option.remove();
+      else option.selected = false;
+    });
+    select.add(new Option(texto, id, true, true));
+    if (select.tomselect) {
+      select.tomselect.sync();
+      select.tomselect.setValue(String(id));
+    }
+    Ragnos.DOM.dispatchInputEvents(select);
+  },
+};
+
+/* ==========================================================================
+   4. Ragnos.UI: Toasts, Modals, Loading, and User Feedback
+   ========================================================================== */
 const Toast = Swal.mixin({
   toast: true,
   position: "top-end",
@@ -776,681 +897,251 @@ const ToastBottom = Swal.mixin({
   },
 });
 
-/**
- * Displays a toast notification with the specified message, type, and duration.
- *
- * @param {string} [mensaje=""] - The message to display in the toast.
- * @param {string} [tipo="info"] - The type of the toast (e.g., "info", "success", "warning", "error").
- * @param {number} [timer=3000] - The duration the toast should be displayed in milliseconds.
- */
-function showToast(mensaje = "", tipo = "info", timer = 3000) {
-  Toast.fire({
-    icon: tipo,
-    title: mensaje,
-    timer: timer,
-  });
-}
+Ragnos.UI = {
+  showToast(mensaje = "", tipo = "info", timer = 3000) {
+    Toast.fire({
+      icon: tipo,
+      title: mensaje,
+      timer: timer,
+    });
+  },
 
-/**
- * Displays a toast notification at the bottom of the screen.
- *
- * @param {string} [mensaje=""] - The message to display in the toast.
- * @param {string} [tipo="info"] - The type of the toast (e.g., "success", "error", "warning", "info").
- * @param {number} [timer=3000] - The duration in milliseconds for which the toast should be visible.
- */
-function showToastDown(mensaje = "", tipo = "info", timer = 3000) {
-  ToastBottom.fire({
-    icon: tipo,
-    title: mensaje,
-    timer: timer,
-  });
-}
+  showToastDown(mensaje = "", tipo = "info", timer = 3000) {
+    ToastBottom.fire({
+      icon: tipo,
+      title: mensaje,
+      timer: timer,
+    });
+  },
 
-/**
- * Displays a modal with the specified HTML content and header.
- *
- * @param {string|HTMLElement} html - The HTML content to display inside the modal.
- * @param {string} [encabezado=""] - The header text for the modal. Defaults to an empty string.
- * @param {string} [id="miModal"] - The ID for the modal. Defaults to "miModal".
- * @param {Function} [onClose=null] - A callback function to execute when the modal is closed. Defaults to null.
- * @returns {HTMLElement|null} - The modal element, or null if an error occurred.
- */
-function showModal(html, encabezado = "", id = "miModal", onClose = null) {
-  try {
-    // Input validation
-    if (typeof html !== "string" && !(html instanceof HTMLElement)) {
-      throw new Error("Invalid HTML content");
-    }
-    if (typeof id !== "string" || !id.trim()) {
-      throw new Error("Invalid modal ID");
-    }
+  showModal(html, encabezado = "", id = "miModal", onClose = null) {
+    try {
+      if (typeof html !== "string" && !(html instanceof HTMLElement)) {
+        throw new Error("Invalid HTML content");
+      }
+      if (typeof id !== "string" || !id.trim()) {
+        throw new Error("Invalid modal ID");
+      }
+      const modalId = id.trim();
+      let modalElement = document.getElementById(modalId);
 
-    // Create modal if it doesn't exist
-    const modalId = id.trim();
-    let modalElement = document.getElementById(modalId);
-
-    if (!modalElement) {
-      const modalTemplate = `
-        <div id="${modalId}" class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="${modalId}Label">
-          <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="${modalId}-modaltitle"></h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      if (!modalElement) {
+        const modalTemplate = `
+          <div id="${modalId}" class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="${modalId}Label">
+            <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="${modalId}-modaltitle"></h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <div id="${modalId}-modalescondido"></div> 
+                </div>
+                <div class="modal-footer"></div>
               </div>
-              <div class="modal-body">
-                <div id="${modalId}-modalescondido"></div> 
-              </div>
-              <div class="modal-footer"></div>
             </div>
-          </div>
-        </div>`;
+          </div>`;
 
-      document.body.insertAdjacentHTML("beforeend", modalTemplate);
-      modalElement = document.getElementById(modalId);
-    }
-
-    const content = document.getElementById(`${modalId}-modalescondido`);
-    const title = document.getElementById(`${modalId}-modaltitle`);
-    if (html instanceof HTMLElement) {
-      content.replaceChildren(html);
-    } else {
-      setHtml(content, html);
-    }
-    title.textContent = encabezado || "";
-
-    if (modalElement.ragnosCloseHandler) {
-      modalElement.removeEventListener("hidden.bs.modal", modalElement.ragnosCloseHandler);
-    }
-    modalElement.ragnosCloseHandler = () => {
-      modalElement.ragnosCloseHandler = null;
-      if (typeof onClose === "function") {
-        try {
-          onClose();
-        } catch (error) {
-          console.error("Error in modal close callback:", error);
-        }
+        document.body.insertAdjacentHTML("beforeend", modalTemplate);
+        modalElement = document.getElementById(modalId);
       }
-    };
-    modalElement.addEventListener("hidden.bs.modal", modalElement.ragnosCloseHandler, {
-      once: true,
-    });
 
-    bootstrap.Modal.getOrCreateInstance(modalElement).show();
-    return modalElement;
-  } catch (error) {
-    console.error("Error showing modal:", error);
-    showToast("Error al mostrar la ventana modal", "error");
-    return null;
-  }
-}
+      const content = document.getElementById(`${modalId}-modalescondido`);
+      const title = document.getElementById(`${modalId}-modaltitle`);
+      if (html instanceof HTMLElement) {
+        content.replaceChildren(html);
+      } else {
+        Ragnos.DOM.setHtml(content, html);
+      }
+      title.textContent = encabezado || "";
 
-/**
- * Closes a Bootstrap modal with the given ID.
- *
- * @param {string} modalId - The ID of the modal to close.
- */
-function cierraModal(modalId) {
-  const modalElement = document.getElementById(modalId);
-  if (!modalElement) {
-    console.warn(`Modal with ID "${modalId}" does not exist.`);
-    return;
-  }
-
-  const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
-  if (!modalElement.classList.contains("show")) {
-    modal.dispose();
-    modalElement.remove();
-    return;
-  }
-
-  modalElement.addEventListener("hidden.bs.modal", () => {
-    modal.dispose();
-    modalElement.remove();
-  }, {
-    once: true,
-  });
-  modal.hide();
-}
-
-/**
- * Converts input data to an HTML table.
- *
- * @param {Array|Object} dataInput - The input data to be converted to a table. Can be an array or an object.
- * @param {Object} [options={}] - Optional settings for table conversion.
- * @param {string} [options.tableClass="table"] - CSS class to be applied to the table.
- * @param {boolean} [options.stripHtml=true] - Whether to strip HTML tags from the input data.
- * @param {number} [options.maxCellLength=100] - Maximum length of cell content. Longer content will be truncated.
- * @param {string} [options.emptyText="-"] - Text to display for empty cells.
- * @returns {string} The HTML string representing the table.
- */
-function convertToTable(dataInput, options = {}) {
-  // Input validation
-  if (!dataInput) {
-    console.error("Invalid input data");
-    return "";
-  }
-
-  // Default options
-  const defaultOptions = {
-    tableClass: "table",
-    stripHtml: true,
-    maxCellLength: 100,
-    emptyText: "-",
-  };
-
-  const settings = { ...defaultOptions, ...options };
-
-  try {
-    return Array.isArray(dataInput)
-      ? arrayToTable(dataInput, settings)
-      : objectToTable(dataInput, settings);
-  } catch (error) {
-    console.error("Error converting data to table:", error);
-    return "";
-  }
-}
-
-function objectToTable(obj, settings) {
-  const keys = Object.keys(obj);
-  if (keys.length === 0) return settings.emptyText;
-
-  return `
-    <table class="${escapeHtml(settings.tableClass)}">
-      <thead>
-        ${createHeaderRow(keys, settings)}
-      </thead>
-      <tbody>
-        ${objectToRow(obj, keys, settings)}
-      </tbody>
-    </table>
-  `;
-}
-
-function arrayToTable(array, settings) {
-  if (!array.length) return settings.emptyText;
-
-  const keys = Object.keys(array[0]);
-  if (keys.length === 0) return settings.emptyText;
-
-  return `
-    <table class="${escapeHtml(settings.tableClass)}">
-      <thead>
-        ${createHeaderRow(keys, settings)}
-      </thead>
-      <tbody>
-        ${array.map((item) => objectToRow(item, keys, settings)).join("")}
-      </tbody>
-    </table>
-  `;
-}
-
-function objectToRow(obj, keys, settings) {
-  return `
-    <tr>
-      ${keys
-        .map((key) => `<td>${formatCellContent(obj[key], settings)}</td>`)
-        .join("")}
-    </tr>
-  `;
-}
-
-function createHeaderRow(keys, settings) {
-  return `
-    <tr>
-      ${keys
-        .map((key) => `<th>${formatCellContent(key, settings)}</th>`)
-        .join("")}
-    </tr>
-  `;
-}
-
-function formatCellContent(content, settings) {
-  if (content === null || content === undefined) {
-    return settings.emptyText;
-  }
-
-  let formatted = String(content);
-
-  // Truncate long content
-  if (settings.maxCellLength && formatted.length > settings.maxCellLength) {
-    formatted = `${formatted.substring(0, settings.maxCellLength)}...`;
-  }
-
-  // Strip HTML if needed
-  if (settings.stripHtml) {
-    const tempDiv = document.createElement("div");
-    tempDiv.innerHTML = formatted;
-    formatted = tempDiv.textContent || tempDiv.innerText || "";
-  }
-
-  return escapeHtml(formatted);
-}
-
-/**
- * Limits the text input to a specified number of characters.
- *
- * @param {HTMLInputElement} limitField - The input field to limit.
- * @param {number} limitNum - The maximum number of characters allowed.
- */
-function limitText(limitField, limitNum) {
-  if (limitField.value.length > limitNum) {
-    limitField.value = limitField.value.slice(0, limitNum);
-  }
-}
-
-/**
- * Updates a select element with a new option and sets it as selected.
- *
- * @param {HTMLSelectElement|string} elemento - The select element.
- * @param {string|number} id - The value of the new option to be added and selected.
- * @param {string} texto - The text content of the new option to be added.
- */
-function ponValorEnSelect(elemento, id, texto) {
-  const select = getElement(elemento);
-  if (!(select instanceof HTMLSelectElement)) return;
-
-  Array.from(select.options).forEach((option) => {
-    if (String(option.value) === String(id)) option.remove();
-    else option.selected = false;
-  });
-  select.add(new Option(texto, id, true, true));
-  if (select.tomselect) {
-    select.tomselect.sync();
-    select.tomselect.setValue(String(id));
-  }
-  dispatchInputEvents(select);
-}
-
-function limpia(cadena) {
-  return cadena.replace("-", " ").replace(/\s+/g, " ").trim();
-}
-
-function inArray(element, array) {
-  return array.includes(element);
-}
-
-function serializeParams(obj, prefix) {
-  let str = [];
-  for (let p in obj) {
-    if (!obj.hasOwnProperty(p)) continue;
-    let k = prefix ? `${prefix}[${p}]` : p,
-      v = obj[p];
-    // Si el valor es null o undefined, lo fuerza a ""
-    if (v === null || v === undefined) v = "";
-    if (typeof v === "object" && !Array.isArray(v)) {
-      str.push(serializeParams(v, k));
-    } else if (Array.isArray(v)) {
-      v.forEach((val, idx) => {
-        if (val === null || val === undefined) val = "";
-        // Para arrays, usa [0], [1], etc.
-        str.push(serializeParams(val, `${k}[${idx}]`));
+      if (modalElement.ragnosCloseHandler) {
+        modalElement.removeEventListener("hidden.bs.modal", modalElement.ragnosCloseHandler);
+      }
+      modalElement.ragnosCloseHandler = () => {
+        modalElement.ragnosCloseHandler = null;
+        if (typeof onClose === "function") {
+          try {
+            onClose();
+          } catch (error) {
+            console.error("Error in modal close callback:", error);
+          }
+        }
+      };
+      modalElement.addEventListener("hidden.bs.modal", modalElement.ragnosCloseHandler, {
+        once: true,
       });
-    } else {
-      str.push(`${encodeURIComponent(k)}=${encodeURIComponent(v)}`);
+
+      bootstrap.Modal.getOrCreateInstance(modalElement).show();
+      return modalElement;
+    } catch (error) {
+      console.error("Error showing modal:", error);
+      Ragnos.UI.showToast("Error al mostrar la ventana modal", "error");
+      return null;
     }
-  }
-  return str.join("&");
-}
+  },
 
-/**
- * Realiza petición POST asíncrona utilizando fetch, con reintentos y timeout.
- * @param {string} url - URL destino.
- * @param {Object} params - Parámetros a enviar.
- * @param {function} [callback] - Si se pasa, modo callback.
- * @returns {Promise|string} - Si no se pasa callback, retorna una promesa.
- */
-async function getValue(url, params = {}, callback) {
-  const config = {
-    timeout: params.timeout || 12000,
-    retryAttempts: params.retryAttempts || 1,
-    retryDelay: params.retryDelay || 1000,
-  };
+  cierraModal(modalId) {
+    const modalElement = document.getElementById(modalId);
+    if (!modalElement) {
+      console.warn(`Modal with ID "${modalId}" does not exist.`);
+      return;
+    }
+    const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
+    if (!modalElement.classList.contains("show")) {
+      modal.dispose();
+      modalElement.remove();
+      return;
+    }
+    modalElement.addEventListener("hidden.bs.modal", () => {
+      modal.dispose();
+      modalElement.remove();
+    }, { once: true });
+    modal.hide();
+  },
 
-  // Clona los params, sin los especiales de control.
-  const cleanParams = { ...params };
-  delete cleanParams.timeout;
-  delete cleanParams.retryAttempts;
-  delete cleanParams.retryDelay;
+  mostrarCargando() {
+    let divLoading = document.querySelector(".loading-container");
+    if (!divLoading) {
+      let loadingContainer = document.createElement("div");
+      loadingContainer.classList.add("loading-container");
+      let loading = document.createElement("div");
+      loading.classList.add("loading");
+      loadingContainer.appendChild(loading);
 
-  // Convierte a x-www-form-urlencoded
-  const body = serializeParams(cleanParams);
+      loadingContainer.style.position = "fixed";
+      loadingContainer.style.top = "0";
+      loadingContainer.style.left = "0";
+      loadingContainer.style.width = "100%";
+      loadingContainer.style.height = "100%";
+      loadingContainer.style.backgroundColor = "rgba(255, 255, 255, 0.8)";
+      loadingContainer.style.display = "flex";
+      loadingContainer.style.alignItems = "center";
+      loadingContainer.style.justifyContent = "center";
+      loadingContainer.style.zIndex = "9999";
 
-  const makeRequest = async () => {
-    let attempts = 0;
-    let lastError = null;
+      loading.style.border = "5px solid #f3f3f3";
+      loading.style.borderTop = "5px solid #3498db";
+      loading.style.borderRadius = "50%";
+      loading.style.width = "50px";
+      loading.style.height = "50px";
+      loading.style.animation = "spin 2s linear infinite";
+      document.body.appendChild(loadingContainer);
+    }
+  },
 
-    while (attempts < config.retryAttempts) {
-      try {
-        const resPromise = fetch(fixUrl(url), {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-            "X-Requested-With": "XMLHttpRequest",
-          },
-          body: body,
+  ocultarCargando() {
+    let loadingContainer = document.querySelector(".loading-container");
+    if (loadingContainer) {
+      loadingContainer.remove();
+    }
+  },
+
+  shakeElement(el) {
+    el = Ragnos.DOM.getElement(el);
+    if (!el) return;
+    el.classList.add("shake");
+    setTimeout(() => el.classList.remove("shake"), 400);
+  },
+
+  printElement(target, title = document.title) {
+    const element = Ragnos.DOM.getElement(target);
+    if (!element) return false;
+
+    const printable = element.cloneNode(true);
+    const sourceControls = element.querySelectorAll("input, textarea, select");
+    printable.querySelectorAll("input, textarea, select").forEach((control, index) => {
+      const source = sourceControls[index];
+      if (!source) return;
+      if (control instanceof HTMLInputElement) {
+        control.value = source.value;
+        control.toggleAttribute("checked", source.checked);
+      } else if (control instanceof HTMLTextAreaElement) {
+        control.textContent = source.value;
+      } else if (control instanceof HTMLSelectElement) {
+        Array.from(control.options).forEach((option, optionIndex) => {
+          option.selected = source.options[optionIndex]?.selected || false;
         });
-        // Timeout usando Promise.race
-        const response = await Promise.race([
-          resPromise,
-          new Promise((_, reject) =>
-            setTimeout(() => reject(new Error("Timeout")), config.timeout),
-          ),
-        ]);
-        const text = await response.text();
-        if (!response.ok) {
-          throw {
-            status: response.status,
-            statusText: response.statusText,
-            response: text,
-          };
-        }
-
-        return { response: text, error: null };
-      } catch (error) {
-        lastError = {
-          error: error.message || "Error desconocido",
-          status: error.status || 0,
-        };
-        manejaError(error);
-        attempts++;
-        if (attempts < config.retryAttempts) {
-          await new Promise((res) => setTimeout(res, config.retryDelay));
-        }
       }
-    }
-    return { response: null, error: lastError };
-  };
-
-  if (typeof callback === "function") {
-    const result = await makeRequest();
-    callback(result.response, result.error);
-    return;
-  }
-  const result = await makeRequest();
-  if (result.error) throw result.error;
-  return result.response;
-}
-
-function manejaError(responseOrError) {
-  const errorMessages = {
-    401: "Su sesión ha expirado, por favor inicie sesión nuevamente.",
-    403: "No tiene permiso para realizar esta acción.",
-    404: "No se encontró la página solicitada.",
-    500: "Error interno del servidor.",
-  };
-  let status = responseOrError && responseOrError.status;
-  let message = errorMessages[status] || "Error desconocido";
-
-  // showToast es tu función propia (puedes cambiar por alert si haces debug)
-  showToast(message, "error");
-
-  if (status === 401) {
-    // Usando sweetalert2, si deseas reemplazar por confirm/alert, cambia aquí
-    if (window.Swal) {
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: errorMessages[401],
-        timer: 2000,
-        didClose: () => {
-          window.location.href = fixUrl("admin/login");
-        },
+    });
+    printable.querySelectorAll("script, iframe, object, embed").forEach((node) => node.remove());
+    [printable, ...printable.querySelectorAll("*")].forEach((node) => {
+      Array.from(node.attributes).forEach((attribute) => {
+        if (attribute.name.toLowerCase().startsWith("on")) {
+          node.removeAttribute(attribute.name);
+        }
       });
-    } else {
-      alert(errorMessages[401]);
-      window.location.href = fixUrl("admin/login");
-    }
-  }
-}
-
-/**
- * Asynchronously retrieves an object from a given URL with specified parameters.
- *
- * @param {string} purl - The URL to send the request to.
- * @param {Object} pparameters - The parameters to include in the request.
- * @param {function(Object|null, Error|null): void} callbackfunction - The callback function to handle the response.
- *        The callback receives two arguments:
- *        - The parsed object if the request is successful and the response is valid JSON, otherwise null.
- *        - An error object if there is an error during the request or parsing, otherwise null.
- * @returns {Promise<void>} A promise that resolves when the request is complete.
- */
-async function getObject(purl, pparameters, callbackfunction) {
-  // Función auxiliar para procesar la respuesta
-  const processResponse = async (response) => {
-    try {
-      const obj = JSON.parse(response);
-      return { result: obj, error: null };
-    } catch (error) {
-      return { result: null, error };
-    }
-  };
-
-  // Si no hay callback, usamos promesas
-  if (typeof callbackfunction !== "function") {
-    try {
-      const response = await getValue(purl, pparameters);
-      const { result, error } = await processResponse(response);
-      if (error) {
-        throw error;
-      }
-      return result;
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  // Si hay callback, mantenemos el comportamiento original
-  try {
-    await getValue(purl, pparameters, async (response, errors) => {
-      if (errors) {
-        callbackfunction(null, errors);
-        return;
-      }
-      const { result, error } = await processResponse(response);
-      callbackfunction(result, error);
     });
-  } catch (error) {
-    callbackfunction(null, error);
-  }
-}
 
-async function getSession() {
-  let o = await getObject("admin/sess", {});
-  return o;
-}
+    const frame = document.createElement("iframe");
+    frame.hidden = true;
+    frame.title = "Print preview";
+    document.body.append(frame);
+    const styles = Array.from(document.querySelectorAll('link[rel="stylesheet"], style'))
+      .map((node) => node.outerHTML)
+      .join("");
+    frame.srcdoc = `<!doctype html><html><head><title>${Ragnos.DOM.escapeHtml(title)}</title>${styles}</head><body>${printable.outerHTML}</body></html>`;
+    frame.addEventListener(
+      "load",
+      () => {
+        frame.contentWindow.focus();
+        frame.contentWindow.print();
+        setTimeout(() => frame.remove(), 1000);
+      },
+      { once: true },
+    );
+    return true;
+  },
+};
 
-function mostrarCargando() {
-  let divLoading = document.querySelector(".loading-container");
-  if (!divLoading) {
-    let loadingContainer = document.createElement("div");
-    loadingContainer.classList.add("loading-container");
-    // Crear el elemento de la animación de carga
-    let loading = document.createElement("div");
-    loading.classList.add("loading");
-    loadingContainer.appendChild(loading);
+/* ==========================================================================
+   5. Backward Compatibility Layer: Top-Level Global Aliases
+   ========================================================================== */
+window.onReady = Ragnos.DOM.onReady;
+window.getElement = Ragnos.DOM.getElement;
+window.getElements = Ragnos.DOM.getElements;
+window.setHtml = Ragnos.DOM.setHtml;
+window.dispatchInputEvents = Ragnos.DOM.dispatchInputEvents;
+window.debounce = Ragnos.DOM.debounce;
+window.escapeHtml = Ragnos.DOM.escapeHtml;
+window.limitText = Ragnos.DOM.limitText;
+window.moneyToNumber = Ragnos.DOM.moneyToNumber;
+window.moneyFormat = Ragnos.DOM.moneyFormat;
+window.serializeForm = Ragnos.DOM.serializeForm;
+window.serializeParams = Ragnos.DOM.serializeParams;
+window.trim = Ragnos.DOM.trim;
+window.limpia = Ragnos.DOM.limpia;
+window.inArray = Ragnos.DOM.inArray;
 
-    // Establecer estilos para el contenedor y la animación
-    loadingContainer.style.position = "fixed";
-    loadingContainer.style.top = "0";
-    loadingContainer.style.left = "0";
-    loadingContainer.style.width = "100%";
-    loadingContainer.style.height = "100%";
-    loadingContainer.style.backgroundColor = "rgba(255, 255, 255, 0.8)";
-    loadingContainer.style.display = "flex";
-    loadingContainer.style.alignItems = "center";
-    loadingContainer.style.justifyContent = "center";
-    loadingContainer.style.zIndex = "9999";
+window.fixUrl = Ragnos.Http.fixUrl;
+window.redirectTo = Ragnos.Http.redirectTo;
+window.openInNew = Ragnos.Http.openInNew;
+window.redirectByPost = Ragnos.Http.redirectByPost;
+window.refreshPage = Ragnos.Http.refreshPage;
+window.getValue = Ragnos.Http.getValue;
+window.getObject = Ragnos.Http.getObject;
+window.postFormData = Ragnos.Http.postFormData;
+window.uploadObject = Ragnos.Http.uploadObject;
+window.getSession = Ragnos.Http.getSession;
+window.manejaError = Ragnos.Http.manejaError;
 
-    loading.style.border = "5px solid #f3f3f3";
-    loading.style.borderTop = "5px solid #3498db";
-    loading.style.borderRadius = "50%";
-    loading.style.width = "50px";
-    loading.style.height = "50px";
-    loading.style.animation = "spin 2s linear infinite";
-    document.body.appendChild(loadingContainer);
-  }
-}
+window.destroyDataTable = Ragnos.Table.destroyDataTable;
+window.aplicarDebounceABusqueda = Ragnos.Table.aplicarDebounceABusqueda;
+window.ponTablaPaginada = Ragnos.Table.ponTablaPaginada;
+window.ponTotalesEnTabla = Ragnos.Table.ponTotalesEnTabla;
+window.exportToExcel = Ragnos.Table.exportToExcel;
+window.tablaCompleta = Ragnos.Table.tablaCompleta;
+window.exportaTablaCompletaAExcel = Ragnos.Table.exportaTablaCompletaAExcel;
+window.convertToTable = Ragnos.Table.convertToTable;
+window.ponValorEnSelect = Ragnos.Table.ponValorEnSelect;
+window.quitaTotaldeColumna = Ragnos.Table.quitaTotaldeColumna;
+window.quitaTotaldeRenglon = Ragnos.Table.quitaTotaldeRenglon;
 
-function ocultarCargando() {
-  let loadingContainer = document.querySelector(".loading-container");
-  if (loadingContainer) {
-    loadingContainer.remove();
-  }
-}
-
-/**
- * Convierte una cadena de dinero formateada a un número.
- *
- * @param {any} amt - El valor de dinero a convertir. Puede ser cadena, número, null, o undefined.
- * @returns {number} El valor numérico del dinero, o 0 si la entrada es nula o inválida.
- */
-function moneyToNumber(amt) {
-  // Paso 1: Manejar valores nulos o indefinidos inmediatamente.
-  if (amt === null || typeof amt === "undefined" || amt === "") {
-    return 0;
-  }
-
-  // Paso 2: Convertir forzadamente el valor a una cadena de texto.
-  // Esto resuelve el error "replace is not a function".
-  const strAmt = String(amt);
-
-  // Paso 3: Limpiar la cadena y convertir a número.
-  // Usamos un String() limpio para evitar errores de NaN si la entrada es "null" o "undefined".
-  const cleanStr = strAmt.replace(/[^0-9.-]+/g, "");
-
-  // Si la cadena resultante está vacía, devuelve 0 para evitar NaN
-  if (cleanStr === "" || cleanStr === ".") {
-    return 0;
-  }
-
-  return parseFloat(cleanStr);
-}
-
-/**
- * Formats a number as USD currency string
- * @param {number|string} amt - The amount to format
- * @returns {string} The formatted amount with USD currency symbol ($)
- * @example
- * moneyFormat(123.45) // Returns "$123.45"
- * moneyFormat("123.45") // Returns "$123.45"
- * moneyFormat("$123.45") // Returns "$123.45" (unchanged)
- */
-function moneyFormat(amt, currency = "USD") {
-  let numAmt = moneyToNumber(amt);
-  if (isNaN(numAmt)) {
-    numAmt = 0;
-  }
-
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: currency,
-  }).format(numAmt);
-}
-
-/**
- * Envía datos usando FormData (para subida de archivos)
- * Similar a getValue pero respeta el multipart/form-data
- */
-async function postFormData(url, formData, callback) {
-  const config = {
-    timeout: 0, // Las subidas pueden tardar
-    retryAttempts: 1,
-    retryDelay: 1000,
-  };
-
-  const makeRequest = async () => {
-    let attempts = 0;
-    let lastError = null;
-
-    while (attempts < config.retryAttempts) {
-      try {
-        const resPromise = fetch(fixUrl(url), {
-          method: "POST",
-          headers: {
-            "X-Requested-With": "XMLHttpRequest",
-            // IMPORTANTE: No definir Content-Type, fetch lo pone automáticamente
-            // junto con el boundary correcto para multipart/form-data
-          },
-          body: formData,
-        });
-
-        const response = await resPromise;
-        const text = await response.text();
-
-        if (!response.ok) {
-          throw {
-            status: response.status,
-            statusText: response.statusText,
-            response: text,
-          };
-        }
-
-        return { response: text, error: null };
-      } catch (error) {
-        lastError = {
-          error: error.message || "Error desconocido",
-          status: error.status || 0,
-        };
-        manejaError(lastError);
-        attempts++;
-        if (attempts < config.retryAttempts) {
-          await new Promise((res) => setTimeout(res, config.retryDelay));
-        }
-      }
-    }
-    return { response: null, error: lastError };
-  };
-
-  if (typeof callback === "function") {
-    const result = await makeRequest();
-    callback(result.response, result.error);
-    return;
-  }
-  const result = await makeRequest();
-  if (result.error) throw result.error;
-  return result.response;
-}
-
-/**
- * Wrapper de postFormData que parsea el resultado JSON automáticamente.
- * Equivalente a getObject pero para subir archivos.
- *
- * @param {string} purl - Url relativa
- * @param {FormData} formData - Objeto FormData con los archivos y campos
- * @param {function} callbackfunction - (Opcional) Callback
- */
-async function uploadObject(purl, formData, callbackfunction) {
-  const processResponse = async (response) => {
-    try {
-      const obj = JSON.parse(response);
-      return { result: obj, error: null };
-    } catch (error) {
-      return { result: null, error };
-    }
-  };
-
-  if (typeof callbackfunction !== "function") {
-    try {
-      const response = await postFormData(purl, formData);
-      const { result, error } = await processResponse(response);
-      if (error) throw error;
-      return result;
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  try {
-    await postFormData(purl, formData, async (response, errors) => {
-      if (errors) {
-        callbackfunction(null, errors);
-        return;
-      }
-      const { result, error } = await processResponse(response);
-      callbackfunction(result, error);
-    });
-  } catch (error) {
-    callbackfunction(null, error);
-  }
-}
+window.showToast = Ragnos.UI.showToast;
+window.showToastDown = Ragnos.UI.showToastDown;
+window.showModal = Ragnos.UI.showModal;
+window.cierraModal = Ragnos.UI.cierraModal;
+window.mostrarCargando = Ragnos.UI.mostrarCargando;
+window.ocultarCargando = Ragnos.UI.ocultarCargando;
+window.shakeElement = Ragnos.UI.shakeElement;
+window.printElement = Ragnos.UI.printElement;

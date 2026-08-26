@@ -1,3 +1,9 @@
+// Initialize Ragnos namespace
+window.Ragnos = window.Ragnos || {};
+
+/* ==========================================================================
+   1. Ragnos.Stack / RagnosStack
+   ========================================================================== */
 class RagnosStack {
   constructor() {
     this.items = [];
@@ -29,6 +35,9 @@ class RagnosStack {
   }
 }
 
+/* ==========================================================================
+   2. Ragnos.Search / RagnosSearch
+   ========================================================================== */
 class RagnosSearch {
   static searchStack = new RagnosStack();
   static instances = new Map();
@@ -307,6 +316,9 @@ class RagnosSearch {
   }
 }
 
+/* ==========================================================================
+   3. Ragnos.Editor / RagnosRichTextEditor
+   ========================================================================== */
 class RagnosRichTextEditor {
   static allowedTags = new Set([
     "A",
@@ -588,6 +600,9 @@ class RagnosRichTextEditor {
   }
 }
 
+/* ==========================================================================
+   4. Ragnos.Utils / RagnosUtils
+   ========================================================================== */
 class RagnosUtils {
   static async showControllerTableIn(selector, controller, master = "") {
     try {
@@ -616,3 +631,16 @@ class RagnosUtils {
     }
   }
 }
+
+/* ==========================================================================
+   5. Namespace Composition & Top-Level Global Aliases
+   ========================================================================== */
+Ragnos.Stack = RagnosStack;
+Ragnos.Search = RagnosSearch;
+Ragnos.Editor = RagnosRichTextEditor;
+Ragnos.Utils = RagnosUtils;
+
+window.RagnosStack = RagnosStack;
+window.RagnosSearch = RagnosSearch;
+window.RagnosRichTextEditor = RagnosRichTextEditor;
+window.RagnosUtils = RagnosUtils;
