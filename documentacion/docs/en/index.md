@@ -2,7 +2,7 @@
 
 ![Image](https://github.com/cgarciagl/Ragnos/blob/main/content/img/logo.webp?raw=true){ width="300" }
 
-Ragnos is a modern and lightweight framework for web application development. Its goal is to provide a solid and flexible foundation for building scalable and high-performance applications. It is based on **CodeIgniter 4**, ensuring a robust and time-tested core. Its interface uses **Vanilla JavaScript**, jQuery-free **DataTables 3**, and **AdminLTE** to offer a complete and efficient development experience.
+Ragnos is a modern and lightweight framework for web application development. Its goal is to provide a solid and flexible foundation for building scalable and high-performance applications. It is based on **CodeIgniter 4**, ensuring a robust and time-tested core. Its interface uses **Vanilla JavaScript**, **DataTables 3**, and **AdminLTE** to offer a complete and efficient development experience.
 
 !!! tip "Recommended Prerequisites"
 
@@ -15,13 +15,13 @@ Ragnos is a modern and lightweight framework for web application development. It
 - **Scalable**: Ideal for both small and large projects, with the capacity to grow according to needs.
 - **Easy to use**: Clear syntax and comprehensive documentation to facilitate development.
 - **Based on CodeIgniter 4**: Leverages the advantages of a modern PHP framework, with support for namespaces, controllers, models, and views.
-- **Vanilla JavaScript**: Handles DOM manipulation, asynchronous requests, and events without a jQuery dependency.
-- **DataTables 3 Usage**: Creates jQuery-free dynamic tables with global and per-field search, pagination, sorting, and single-row selection.
+- **Vanilla JavaScript**: Handles DOM manipulation, asynchronous requests, and events.
+- **DataTables 3 Usage**: Creates dynamic tables with global and per-field search, pagination, sorting, and single-row selection.
 - **AdminLTE Design**: Provides a modern and responsive user interface, ideal for admin panels and web applications.
 
 !!! check "Frontend Flexibility"
 
-    Ragnos does not require **jQuery**. Its frontend core uses standard browser APIs and can coexist with reactive libraries such as **Alpine.js**, **Vue.js**, or **React**. You can also build fully custom interfaces by consuming data through Ragnos's **API Mode**.
+    Its frontend core uses standard browser APIs and can coexist with reactive libraries such as **Alpine.js**, **Vue.js**, or **React**. You can also build fully custom interfaces by consuming data through Ragnos's **API Mode**.
 
 ## Functionalities and Benefits
 

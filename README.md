@@ -25,7 +25,7 @@
 
 ## 💡 What is Ragnos?
 
-**Ragnos** is a modern, lightweight PHP framework that revolutionizes web application development through declarative programming. Built on the solid foundation of **CodeIgniter 4**, it integrates **Vanilla JavaScript**, jQuery-free **DataTables 3**, and **AdminLTE 4** to deliver a complete, efficient development experience.
+**Ragnos** is a modern, lightweight PHP framework that revolutionizes web application development through declarative programming. Built on the solid foundation of **CodeIgniter 4**, it integrates **Vanilla JavaScript**, **DataTables 3**, and **AdminLTE 4** to deliver a complete, efficient development experience.
 
 ### Core Philosophy
 

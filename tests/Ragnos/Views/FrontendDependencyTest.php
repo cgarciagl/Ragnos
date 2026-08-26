@@ -6,7 +6,7 @@ use CodeIgniter\Test\CIUnitTestCase;
 
 final class FrontendDependencyTest extends CIUnitTestCase
 {
-    public function testFrontendLoadsLocalJqueryFreeDependencies(): void
+    public function testFrontendLoadsLocalDependencies(): void
     {
         $scripts = file_get_contents(HOMEPATH . 'app/ThirdParty/Ragnos/Views/ragnos/scriptfiles.php');
 
@@ -47,7 +47,7 @@ final class FrontendDependencyTest extends CIUnitTestCase
         $this->assertStringContainsString('aplicarDebounceABusqueda(dataTable, 400)', $template);
     }
 
-    public function testObsoleteJqueryAssetsWereRemoved(): void
+    public function testObsoleteFrontendAssetsWereRemoved(): void
     {
         $obsoleteAssets = [
             'content/assets/js/jquery.min.js',
@@ -76,7 +76,7 @@ final class FrontendDependencyTest extends CIUnitTestCase
         $this->assertStringNotContainsString('$sSearch = \'null\';', $template);
     }
 
-    public function testAuthoredFrontendCodeDoesNotUseJqueryApis(): void
+    public function testAuthoredFrontendCodeUsesStandardApis(): void
     {
         $directories = [
             HOMEPATH . 'app/Views',
