@@ -195,7 +195,7 @@
     <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
         <ul class="nav flex-column">
             
-            <li class="nav-item" data-bs-level="1"><a href="#javascript-functions-getvalue-and-getobject" class="nav-link">⚡ JavaScript Functions: getValue and getObject</a>
+            <li class="nav-item" data-bs-level="1"><a href="#javascript-functions-and-ragnos-namespace" class="nav-link">⚡ JavaScript Functions and Ragnos Namespace</a>
               <ul class="nav flex-column">
             <li class="nav-item" data-bs-level="2"><a href="#getvalueurl-params-callback" class="nav-link">getValue(url, params, callback)</a>
               <ul class="nav flex-column">
@@ -228,8 +228,20 @@
 </div></div>
                     <div class="col-md-9" role="main">
 
-<h1 id="javascript-functions-getvalue-and-getobject">⚡ JavaScript Functions: <code>getValue</code> and <code>getObject</code></h1>
-<p>This document describes the utility functions <code>getValue</code> and <code>getObject</code>, used in the project to perform asynchronous requests to the server. These functions simplify the use of <code>fetch</code> and handle parameter serialization, timeouts, and retries.</p>
+<h1 id="javascript-functions-and-ragnos-namespace">⚡ JavaScript Functions and <code>Ragnos</code> Namespace</h1>
+<p>This document describes the utility functions <code>getValue</code> and <code>getObject</code>, as well as the unified <code>window.Ragnos</code> namespace architecture used in the project for asynchronous requests, table manipulation, and UI components.</p>
+<div class="admonition info">
+<p class="admonition-title">Global <code>Ragnos.*</code> Namespace</p>
+<p>All client utility functions and JavaScript components are cleanly organized under the unified <code>window.Ragnos</code> namespace:</p>
+<ul>
+<li><code>Ragnos.Http</code>: AJAX requests and redirects (<code>getValue</code>, <code>getObject</code>, <code>postFormData</code>, <code>fixUrl</code>, etc.).</li>
+<li><code>Ragnos.UI</code>: Toast notifications, Modals, and visual feedback (<code>showToast</code>, <code>showModal</code>, <code>cierraModal</code>, <code>mostrarCargando</code>, etc.).</li>
+<li><code>Ragnos.Table</code>: DataTables and table export/totals (<code>destroyDataTable</code>, <code>ponTablaPaginada</code>, <code>exportToExcel</code>, etc.).</li>
+<li><code>Ragnos.DOM</code>: DOM manipulation and helpers (<code>onReady</code>, <code>getElement</code>, <code>debounce</code>, <code>moneyFormat</code>, etc.).</li>
+<li><code>Ragnos.Search</code>, <code>Ragnos.Editor</code>, <code>Ragnos.Utils</code>, <code>Ragnos.Stack</code>: Core <code>ragnos.js</code> components.</li>
+</ul>
+<p>For 100% backward compatibility, all functions and classes remain available as direct global aliases (<code>getValue</code>, <code>showToast</code>, <code>RagnosSearch</code>, etc.).</p>
+</div>
 <h2 id="getvalueurl-params-callback"><code>getValue(url, params, callback)</code></h2>
 <p>Performs a <code>POST</code> HTTP request to a specified URL and returns the response as plain text.</p>
 <h3 id="parameters">Parameters</h3>
