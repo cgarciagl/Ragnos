@@ -121,19 +121,26 @@ La clase `RagnosSearch` y sus métodos auxiliares proporcionan una interfaz esta
 
 ### `RagnosSearch.setupSimpleSearch(elemento, ruta, params, callback)`
 
-Método estático para configurar una búsqueda sencilla en un input existente. Transforma el input agregando botones de búsqueda y limpieza.
+Método estático para configurar una búsqueda sencilla en un input existente. Transforma el input agregando o reutilizando botones de búsqueda y limpieza en un grupo de entrada (`.input-group`), protegiendo la idempotencia mediante la marca `Ragnosffied`.
 
 #### Parámetros
 
-- **`elemento`** (string | DOM Element): El selector CSS o input donde se habilitará la búsqueda.
+- **`elemento`** (string | DOM Element): El selector CSS o elemento DOM input donde se habilitará la búsqueda.
 - **`ruta`** (string): La URL del servidor (Controlador/Método) que procesará la búsqueda.
 - **`params`** (object): Configuración adicional.
   - `canSetToNull` (boolean): Define si se muestra el botón "X" para limpiar el campo (Default: `true`).
-- **`callback`** (function): Función a ejecutar tras una búsqueda exitosa. Recibe el elemento DOM del input como argumento `e`.
+- **`callback`** (function, opcional): Función a ejecutar tras una búsqueda o limpieza exitosa. Recibe el elemento DOM del input como argumento `e`.
 
 #### Retorno
 
-No retorna valor. Modifica el DOM del input.
+- Devuelve el elemento `HTMLInputElement` configurado (o `null` si el elemento no es válido). Retorna tempranamente si el control ya fue marcado con `Ragnosffied`.
+
+#### Características Destacadas
+
+- **Idempotencia (`Ragnosffied`)**: Evita la duplicación de listeners y botones si la función se invoca múltiples veces sobre el mismo control.
+- **Búsqueda por Botón y Tecla `Enter`**: Al hacer clic en la lupa o presionar `Enter`, ejecuta la búsqueda enviando el valor actual del input (`input.value`) y previene el envío accidental del formulario.
+- **Sincronización de Estado y Campos Ocultos**: Al vaciar el input o pulsar el botón de limpieza "X", resetea `input.ragnosSearchData = null` y limpia cualquier campo `hidden` asociado.
+- **Soporte para Hooks por Convención**: Al completar una búsqueda o limpiar el campo, busca y ejecuta automáticamente la función global `_{id}OnSearch(control)` o `_{name}OnSearch(control)` si está definida en `custom.js`.
 
 #### Ejemplo de uso
 
@@ -226,7 +233,8 @@ function _productCodeOnSearch(control) {
   const datos = control.ragnosSearchData;
 
   // Actualizamos otro campo (Precio Unitario) con el valor MSRP del producto
-  document.querySelector('#detalleorden input[name="priceEach"]').value = datos.MSRP;
+  document.querySelector('#detalleorden input[name="priceEach"]').value =
+    datos.MSRP;
 }
 ```
 

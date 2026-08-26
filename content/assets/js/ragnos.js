@@ -46,23 +46,60 @@ class RagnosSearch {
     const input = getElement(control);
     if (!(input instanceof HTMLInputElement)) return null;
 
-    const wrapper = input.closest(".input-group") || this.wrapInInputGroup(input);
-    const searchButton = this.createButton("search", "Search");
-    wrapper.append(searchButton);
+    if (input.classList.contains("Ragnosffied")) return input;
+    input.classList.add("Ragnosffied");
 
-    if (params.canSetToNull !== false) {
-      const clearButton = this.createButton("x-lg", "Remove");
+    const wrapper =
+      input.closest(".input-group") || this.wrapInInputGroup(input);
+
+    let searchButton = wrapper.querySelector(".btn-ragnos-search");
+    if (!searchButton) {
+      searchButton = this.createButton("search", "Search");
+      searchButton.classList.add("btn-ragnos-search");
+      wrapper.append(searchButton);
+    }
+
+    let clearButton = wrapper.querySelector(".btn-ragnos-clear");
+    if (params.canSetToNull !== false && !clearButton) {
+      clearButton = this.createButton("x-lg", "Remove");
+      clearButton.classList.add("btn-ragnos-clear");
       wrapper.append(clearButton);
-      clearButton.addEventListener("click", () => {
-        input.value = "";
-        input.ragnosSearchData = null;
-        dispatchInputEvents(input);
+    }
+
+    const triggerHooks = (element) => {
+      if (typeof callback === "function") callback(element);
+      const hookId = element.id ? `_${element.id}OnSearch` : null;
+      const hookName = element.name ? `_${element.name}OnSearch` : null;
+      if (hookId && typeof window[hookId] === "function") {
+        window[hookId](element);
+      } else if (hookName && typeof window[hookName] === "function") {
+        window[hookName](element);
+      }
+    };
+
+    const clearField = () => {
+      input.value = "";
+      input.ragnosSearchData = null;
+      const hiddenInput = wrapper.nextElementSibling;
+      if (hiddenInput?.matches("input[type=hidden].searchhiddenfield")) {
+        hiddenInput.value = "";
+      }
+      dispatchInputEvents(input);
+      triggerHooks(input);
+    };
+
+    if (clearButton) {
+      clearButton.addEventListener("click", (event) => {
+        event.preventDefault();
+        clearField();
       });
     }
 
-    const executeSearch = async (searchValue = "") => {
+    const executeSearch = async (searchValue = input.value) => {
       try {
-        const cleanValue = searchValue.replace(/[^\p{L}\p{N} ]/gu, "").trim();
+        const cleanValue = String(searchValue || "")
+          .replace(/[^\p{L}\p{N} ]/gu, "")
+          .trim();
         const result = await getValue("admin/busqueda", {
           valorabuscar: cleanValue,
           ruta: route,
@@ -73,11 +110,17 @@ class RagnosSearch {
 
         showModal(result, "", "busquedaModal", () => {
           const modal = document.getElementById("busquedaModal");
-          input.ragnosSearchData = modal?.ragnosResultData || null;
+          if (
+            modal &&
+            modal.ragnosResultData !== undefined &&
+            modal.ragnosResultData !== null
+          ) {
+            input.ragnosSearchData = modal.ragnosResultData;
+          }
           modal
             ?.querySelectorAll("table")
             .forEach((table) => destroyDataTable(table));
-          if (typeof callback === "function") callback(input);
+          triggerHooks(input);
         });
       } catch (error) {
         console.error("Simple search error:", error);
@@ -86,12 +129,35 @@ class RagnosSearch {
     };
 
     input.autocomplete = "off";
-    input.addEventListener("input", () => {
-      if (input.value.trim()) {
-        debounce(() => executeSearch(input.value), 400, input);
-      }
-    });
-    searchButton.addEventListener("click", () => executeSearch());
+
+    if (!input.readOnly && !input.disabled) {
+      input.addEventListener("input", () => {
+        if (input.value.trim()) {
+          debounce(() => executeSearch(input.value), 400, input);
+        } else {
+          input.ragnosSearchData = null;
+          const hiddenInput = wrapper.nextElementSibling;
+          if (hiddenInput?.matches("input[type=hidden].searchhiddenfield")) {
+            hiddenInput.value = "";
+          }
+        }
+      });
+
+      input.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          if (input.value.trim()) {
+            executeSearch(input.value);
+          }
+        }
+      });
+
+      searchButton.addEventListener("click", (event) => {
+        event.preventDefault();
+        executeSearch(input.value);
+      });
+    }
+
     return input;
   }
 
@@ -148,8 +214,12 @@ class RagnosSearch {
       inputGroup.insertAdjacentElement("afterend", hiddenField);
     } else {
       this.control.insertAdjacentElement("afterend", searchButton);
-      if (removeButton) searchButton.insertAdjacentElement("afterend", removeButton);
-      (removeButton || searchButton).insertAdjacentElement("afterend", hiddenField);
+      if (removeButton)
+        searchButton.insertAdjacentElement("afterend", removeButton);
+      (removeButton || searchButton).insertAdjacentElement(
+        "afterend",
+        hiddenField,
+      );
     }
 
     this.control.classList.add("Ragnosffied");
@@ -204,7 +274,8 @@ class RagnosSearch {
 
   async search(searchText, forced) {
     const sanitizedText = this.sanitizeSearchText(searchText);
-    const hiddenInput = this.control.closest(".input-group")?.nextElementSibling;
+    const hiddenInput =
+      this.control.closest(".input-group")?.nextElementSibling;
 
     if (!sanitizedText && !forced) {
       if (hiddenInput?.matches("input[type=hidden]")) hiddenInput.value = "";
@@ -307,7 +378,8 @@ class RagnosRichTextEditor {
       Array.from(element.attributes).forEach((attribute) => {
         const name = attribute.name.toLowerCase();
         const commonAttributes = ["class", "colspan", "rowspan", "title"];
-        const linkAttributes = element.tagName === "A" ? ["href", "target", "rel"] : [];
+        const linkAttributes =
+          element.tagName === "A" ? ["href", "target", "rel"] : [];
         if (![...commonAttributes, ...linkAttributes, "style"].includes(name)) {
           element.removeAttribute(attribute.name);
         }
@@ -331,7 +403,9 @@ class RagnosRichTextEditor {
         const safeStyle = style
           .split(";")
           .map((rule) => rule.trim())
-          .filter((rule) => /^(?:text-align|margin-left|list-style-type)\s*:/i.test(rule))
+          .filter((rule) =>
+            /^(?:text-align|margin-left|list-style-type)\s*:/i.test(rule),
+          )
           .filter((rule) => !/(?:url|expression|javascript)/i.test(rule))
           .join("; ");
         if (safeStyle) element.setAttribute("style", safeStyle);
@@ -378,18 +452,24 @@ class RagnosRichTextEditor {
     this.content.innerHTML = RagnosRichTextEditor.sanitize(this.textarea.value);
     this.sync();
 
-    editor.querySelector(".ragnos-rich-text__toolbar").addEventListener("mousedown", (event) => {
-      if (event.target.closest("button")) event.preventDefault();
-    });
-    editor.querySelector(".ragnos-rich-text__toolbar").addEventListener("click", (event) => {
-      const button = event.target.closest("button");
-      if (button) this.runAction(button);
-    });
-    editor.querySelector('[data-action="formatBlock"]').addEventListener("change", (event) => {
-      this.restoreSelection();
-      document.execCommand("formatBlock", false, event.target.value);
-      this.sync();
-    });
+    editor
+      .querySelector(".ragnos-rich-text__toolbar")
+      .addEventListener("mousedown", (event) => {
+        if (event.target.closest("button")) event.preventDefault();
+      });
+    editor
+      .querySelector(".ragnos-rich-text__toolbar")
+      .addEventListener("click", (event) => {
+        const button = event.target.closest("button");
+        if (button) this.runAction(button);
+      });
+    editor
+      .querySelector('[data-action="formatBlock"]')
+      .addEventListener("change", (event) => {
+        this.restoreSelection();
+        document.execCommand("formatBlock", false, event.target.value);
+        this.sync();
+      });
     ["input", "keyup", "mouseup"].forEach((eventName) => {
       this.content.addEventListener(eventName, () => {
         this.saveSelection();
@@ -409,9 +489,13 @@ class RagnosRichTextEditor {
     if (button.dataset.action === "code") {
       const showingCode = this.content.dataset.code === "true";
       if (showingCode) {
-        this.content.innerHTML = RagnosRichTextEditor.sanitize(this.content.textContent);
+        this.content.innerHTML = RagnosRichTextEditor.sanitize(
+          this.content.textContent,
+        );
       } else {
-        this.content.textContent = RagnosRichTextEditor.sanitize(this.content.innerHTML);
+        this.content.textContent = RagnosRichTextEditor.sanitize(
+          this.content.innerHTML,
+        );
       }
       this.content.dataset.code = String(!showingCode);
       this.editor.classList.toggle("ragnos-rich-text--code", !showingCode);
@@ -429,7 +513,8 @@ class RagnosRichTextEditor {
 
     const command = button.dataset.command;
     const value = command === "createLink" ? prompt("URL") : null;
-    if (command !== "createLink" || value) document.execCommand(command, false, value);
+    if (command !== "createLink" || value)
+      document.execCommand(command, false, value);
     this.sync();
   }
 
@@ -468,8 +553,14 @@ class RagnosRichTextEditor {
     const requestedColumns = prompt("Columns", "2");
     if (requestedColumns === null) return;
 
-    const rows = Math.min(20, Math.max(1, Number.parseInt(requestedRows, 10) || 1));
-    const columns = Math.min(10, Math.max(1, Number.parseInt(requestedColumns, 10) || 1));
+    const rows = Math.min(
+      20,
+      Math.max(1, Number.parseInt(requestedRows, 10) || 1),
+    );
+    const columns = Math.min(
+      10,
+      Math.max(1, Number.parseInt(requestedColumns, 10) || 1),
+    );
 
     const cells = `<td><br></td>`.repeat(columns);
     const html = `<table class="table table-bordered"><tbody>${`<tr>${cells}</tr>`.repeat(rows)}</tbody></table><p><br></p>`;
@@ -478,7 +569,8 @@ class RagnosRichTextEditor {
   }
 
   showHelp() {
-    const message = "Select text and use the toolbar to apply styles, lists, alignment, links or tables. HTML source mode accepts only safe formatting markup.";
+    const message =
+      "Select text and use the toolbar to apply styles, lists, alignment, links or tables. HTML source mode accepts only safe formatting markup.";
     if (globalThis.Swal) {
       Swal.fire({ icon: "info", title: "Rich text editor", text: message });
     } else {
@@ -487,9 +579,10 @@ class RagnosRichTextEditor {
   }
 
   sync() {
-    const html = this.content.dataset.code === "true"
-      ? this.content.textContent
-      : this.content.innerHTML;
+    const html =
+      this.content.dataset.code === "true"
+        ? this.content.textContent
+        : this.content.innerHTML;
     this.textarea.value = RagnosRichTextEditor.sanitize(html);
     dispatchInputEvents(this.textarea);
   }
@@ -500,7 +593,10 @@ class RagnosUtils {
     try {
       const parameters = { ...(globalThis.Ragnos_csrf || {}) };
       if (master) parameters.Ragnos_master = master;
-      setHtml(selector, await getValue(`${controller}/tableByAjax`, parameters));
+      setHtml(
+        selector,
+        await getValue(`${controller}/tableByAjax`, parameters),
+      );
     } catch (error) {
       console.error("Error loading controller table:", error);
     }
@@ -510,7 +606,10 @@ class RagnosUtils {
     try {
       setHtml(
         selector,
-        await getValue(`${controller}/reportByAjax`, globalThis.Ragnos_csrf || {}),
+        await getValue(
+          `${controller}/reportByAjax`,
+          globalThis.Ragnos_csrf || {},
+        ),
       );
     } catch (error) {
       console.error("Error loading controller report:", error);

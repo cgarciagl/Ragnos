@@ -121,19 +121,26 @@ The `RagnosSearch` class and its helper methods provide a standardized interface
 
 ### `RagnosSearch.setupSimpleSearch(element, route, params, callback)`
 
-Static method to configure simple search on an existing input. Transforms input by adding search and clear buttons.
+Static method to configure simple search on an existing input. Transforms input by adding or reusing search and clear buttons within an `.input-group`, ensuring idempotency via the `Ragnosffied` class marker.
 
 #### Parameters
 
-- **`element`** (string | DOM Element): CSS selector or input where search will be enabled.
+- **`element`** (string | DOM Element): CSS selector or input DOM element where search will be enabled.
 - **`route`** (string): Server URL (Controller/Method) to process search.
 - **`params`** (object): Additional configuration.
   - `canSetToNull` (boolean): Defines if "X" button is shown to clear field (Default: `true`).
-- **`callback`** (function): Function to execute after a successful search. Receives the input DOM element as argument `e`.
+- **`callback`** (function, optional): Function executed after a search or field clear. Receives input DOM element as argument `e`.
 
 #### Return
 
-Returns nothing. Modifies input DOM.
+- Returns configured `HTMLInputElement` (or `null` if element is invalid). Returns early if control was already marked with `Ragnosffied`.
+
+#### Key Features
+
+- **Idempotency (`Ragnosffied`)**: Prevents duplicate event listeners and buttons if invoked multiple times on the same input.
+- **Search via Button and `Enter` Key**: Clicking the search icon or pressing `Enter` executes search with current value (`input.value`) and prevents unintended form submissions.
+- **State & Hidden Fields Synchronization**: Clearing input or clicking "X" button resets `input.ragnosSearchData = null` and wipes associated hidden input fields.
+- **Convention Hook Support**: Automatically looks up and triggers global `_{id}OnSearch(control)` or `_{name}OnSearch(control)` functions in `custom.js` when search or clear actions complete.
 
 #### Usage Example
 
@@ -226,7 +233,8 @@ function _productCodeOnSearch(control) {
   const data = control.ragnosSearchData;
 
   // Update another field (Unit Price) with product MSRP
-  document.querySelector('#orderdetail input[name="priceEach"]').value = data.MSRP;
+  document.querySelector('#orderdetail input[name="priceEach"]').value =
+    data.MSRP;
 }
 ```
 
