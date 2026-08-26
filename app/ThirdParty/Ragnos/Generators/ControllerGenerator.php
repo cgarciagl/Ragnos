@@ -11,37 +11,54 @@ final class ControllerGenerator
 {
     public function mapDatasetField(object $field): array
     {
-        $name = (string) ($field->name ?? 'field');
-        $type = strtolower((string) ($field->type ?? 'varchar'));
+        $name     = (string) ($field->name ?? 'field');
+        $rawType  = strtolower((string) ($field->type ?? 'varchar'));
+        $nullable = (bool) ($field->nullable ?? false);
+        $rules    = $nullable ? 'permit_empty' : 'required';
+
         $config = [
             'label' => ucfirst(str_replace('_', ' ', $name)),
             'type'  => 'text',
-            'rules' => 'required',
+            'rules' => $rules,
         ];
 
-        if ($type === 'tinyint' && (int) ($field->max_length ?? 0) === 1) {
-            $config['type'] = 'checkbox';
+        if (str_starts_with($rawType, 'enum')) {
+            $config['type'] = 'select';
+            preg_match_all("/'([^']+)'/", $rawType, $matches);
+            if (!empty($matches[1])) {
+                $options = [];
+                foreach ($matches[1] as $opt) {
+                    $options[$opt] = ucfirst($opt);
+                }
+                $config['options'] = $options;
+            }
+        } elseif ($rawType === 'tinyint' && (int) ($field->max_length ?? 0) === 1) {
+            $config['type']  = 'switch';
             $config['rules'] = 'permit_empty';
-        } elseif (in_array($type, ['int', 'smallint', 'mediumint', 'bigint', 'integer'], true)) {
-            $config['type'] = 'number';
-            $config['rules'] .= '|integer';
-        } elseif (in_array($type, ['decimal', 'float', 'double', 'numeric'], true)) {
-            $config['type'] = 'money';
+        } elseif (in_array($rawType, ['int', 'smallint', 'mediumint', 'bigint', 'integer'], true)) {
+            if ((preg_match('/^(.*)_id$/i', $name) || preg_match('/^id_(.*)$/i', $name)) && $name !== 'id') {
+                $config['type'] = 'search';
+            } else {
+                $config['type']   = 'number';
+                $config['rules'] .= '|integer';
+            }
+        } elseif (in_array($rawType, ['decimal', 'float', 'double', 'numeric'], true)) {
+            $config['type']   = 'money';
             $config['rules'] .= '|decimal';
-        } elseif ($type === 'date') {
+        } elseif ($rawType === 'date') {
             $config['type'] = 'date';
-        } elseif (in_array($type, ['datetime', 'timestamp'], true)) {
+        } elseif (in_array($rawType, ['datetime', 'timestamp'], true)) {
             $config['type'] = 'datetime';
-        } elseif (in_array($type, ['text', 'mediumtext', 'longtext'], true)) {
+        } elseif (in_array($rawType, ['text', 'mediumtext', 'longtext'], true)) {
             $config['type'] = 'textarea';
         }
 
-        if (in_array($type, ['varchar', 'char'], true) && (int) ($field->max_length ?? 0) > 0) {
+        if (in_array($rawType, ['varchar', 'char'], true) && (int) ($field->max_length ?? 0) > 0) {
             $config['rules'] .= '|max_length[' . (int) $field->max_length . ']';
         }
 
         if (str_contains(strtolower($name), 'image') || str_contains(strtolower($name), 'foto')) {
-            $config['type'] = 'image';
+            $config['type']  = 'image';
             $config['rules'] = 'permit_empty';
         }
 
@@ -50,7 +67,7 @@ final class ControllerGenerator
 
     public function mapQueryField(object $field): array
     {
-        $type = strtolower((string) ($field->type ?? 'varchar'));
+        $type   = strtolower((string) ($field->type ?? 'varchar'));
         $config = [
             'label' => ucfirst(str_replace('_', ' ', (string) ($field->name ?? 'field'))),
             'type'  => 'text',

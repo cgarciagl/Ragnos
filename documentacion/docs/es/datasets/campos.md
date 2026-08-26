@@ -1,4 +1,4 @@
-﻿# Tipos de campo soportados en Ragnos
+# Tipos de campo soportados en Ragnos
 
 En Ragnos, los campos de un dataset se definen mediante el método `addField()`. Este método es parte fundamental de la configuración de un [RDatasetController](datasets.md).
 Cada campo es una **descripción declarativa** de cómo un atributo del dominio:
@@ -32,6 +32,20 @@ $this->addField('nombreCampo', [
 | `type`    | Tipo de campo (opcional)               |
 | `query`   | Expresión SQL para campos calculados   |
 | `tab`     | Nombre de la pestaña (opcional)        |
+
+!!! tip "Uso del Enum `RFieldType` (PHP 8.1+)"
+
+    Además de utilizar cadenas de texto (ej. `'type' => 'select'`), Ragnos soporta el Enum respaldado `App\ThirdParty\Ragnos\Models\Fields\RFieldType` para asignación de tipos con autocompletado en IDEs:
+
+    ```php
+    use App\ThirdParty\Ragnos\Models\Fields\RFieldType;
+
+    $this->addField('status', [
+        'label'   => 'Estado',
+        'type'    => RFieldType::SELECT,
+        'options' => ['A' => 'Activo', 'I' => 'Inactivo']
+    ]);
+    ```
 
 !!! tip "Reglas de Validación"
 

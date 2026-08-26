@@ -33,6 +33,20 @@ $this->addField('fieldName', [
 | `query`   | SQL expression for calculated fields |
 | `tab`     | Tab name (optional)                  |
 
+!!! tip "Using the `RFieldType` Enum (PHP 8.1+)"
+
+    In addition to string type names (e.g. `'type' => 'select'`), Ragnos supports the backed Enum `App\ThirdParty\Ragnos\Models\Fields\RFieldType` for type assignments with full IDE autocompletion:
+
+    ```php
+    use App\ThirdParty\Ragnos\Models\Fields\RFieldType;
+
+    $this->addField('status', [
+        'label'   => 'Status',
+        'type'    => RFieldType::SELECT,
+        'options' => ['A' => 'Active', 'I' => 'Inactive']
+    ]);
+    ```
+
 !!! tip "Validation Rules"
 
     Ragnos adopts the powerful CodeIgniter 4 validation engine. You can use rules such as `required`, `is_unique`, `min_length`, `valid_email`, etc.

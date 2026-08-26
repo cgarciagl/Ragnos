@@ -80,6 +80,14 @@ class RFieldTest extends CIUnitTestCase
         $this->assertSame('dropdown', $field->getType());
     }
 
+    public function testSetTypeConRFieldTypeEnum(): void
+    {
+        $field = new RSimpleTextField('campo');
+        $field->setType(\App\ThirdParty\Ragnos\Models\Fields\RFieldType::SWITCH);
+        $this->assertSame('switch', $field->getType());
+        $this->assertSame(\App\ThirdParty\Ragnos\Models\Fields\RFieldType::SWITCH , $field->getFieldTypeEnum());
+    }
+
     public function testSetOptionsYGetOptions(): void
     {
         $field = new RSimpleTextField('estado');

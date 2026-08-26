@@ -108,14 +108,21 @@ abstract class RDatasetController extends RDataset
         $this->applyFilters();
 
         // Obtenemos y normalizamos los datos
-        $data = $this->getNormalizedTableData();
+        $data  = $this->getNormalizedTableData();
+        $items = $data['data'] ?? [];
+        $total = (int) ($data['countAll'] ?? count($items));
+        $count = count($items);
 
         return $this->respond([
             'status' => 200,
-            'data'   => $data['data'] ?? [],
-            'count'  => count($data['data'] ?? []),
-            'total'  => $data['countAll'] ?? 0,
-        ]);
+            'meta'   => [
+                'total' => $total,
+                'count' => $count,
+            ],
+            'data'   => $items,
+            'count'  => $count,
+            'total'  => $total,
+        ], 200);
     }
 
     /**
@@ -354,7 +361,7 @@ abstract class RDatasetController extends RDataset
         // 1. Obtener datos (Soporte híbrido JSON o POST)
         if (request()->getHeaderLine('Content-Type') === 'application/json') {
             $data = request()->getJSON(true);
-            
+
             // Inyectar datos en $_POST para compatibilidad nativa con los RSearchFields y el core de Ragnos
             if (is_array($data)) {
                 foreach ($data as $k => $v) {

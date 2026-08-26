@@ -28,12 +28,12 @@ final class ControllerGeneratorTest extends CIUnitTestCase
             'type'       => 'varchar',
             'max_length' => 80,
         ]);
-        $image = $this->generator->mapDatasetField((object) [
+        $image   = $this->generator->mapDatasetField((object) [
             'name' => 'profile_image',
             'type' => 'varchar',
         ]);
 
-        $this->assertSame('checkbox', $boolean['type']);
+        $this->assertSame('switch', $boolean['type']);
         $this->assertSame('permit_empty', $boolean['rules']);
         $this->assertStringContainsString('|max_length[80]', $varchar['rules']);
         $this->assertSame('image', $image['type']);
@@ -71,7 +71,7 @@ final class ControllerGeneratorTest extends CIUnitTestCase
 
     public function testGeneratedQueryEscapesComplexSqlAndIsValidPhp(): void
     {
-        $sql = "SELECT name, '\$value', 'C:\\\\reports' FROM tasks -- keep this comment";
+        $sql    = "SELECT name, '\$value', 'C:\\\\reports' FROM tasks -- keep this comment";
         $source = $this->generator->renderQueryController(
             'App\\Controllers\\Reports',
             'TaskReport',
@@ -104,7 +104,7 @@ final class ControllerGeneratorTest extends CIUnitTestCase
 
         try {
             $command = escapeshellarg(PHP_BINARY) . ' -l ' . escapeshellarg($path) . ' 2>&1';
-            $output = shell_exec($command) ?? '';
+            $output  = shell_exec($command) ?? '';
             $this->assertStringContainsString('No syntax errors detected', $output);
         } finally {
             @unlink($path);

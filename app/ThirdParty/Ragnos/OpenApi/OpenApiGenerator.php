@@ -14,10 +14,10 @@ final class OpenApiGenerator
     public function generate(string $serverUrl): array
     {
         $config = config('RagnosConfig');
-        $spec = $this->baseDocument($config->Ragnos_openapi_title, $config->Ragnos_openapi_version, $serverUrl);
+        $spec   = $this->baseDocument($config->Ragnos_openapi_title, $config->Ragnos_openapi_version, $serverUrl);
 
         foreach ($this->registry->all() as $entry) {
-            $controller = $this->discoverController($entry['class']);
+            $controller     = $this->discoverController($entry['class']);
             $spec['tags'][] = ['name' => $entry['tag'] ?? $controller->getTitle() ?: $controller->getClassName()];
             $this->appendDatasetPaths($spec, $entry, $controller);
         }
@@ -28,27 +28,27 @@ final class OpenApiGenerator
     private function baseDocument(string $title, string $version, string $serverUrl): array
     {
         return [
-            'openapi' => '3.1.0',
-            'info' => [
-                'title' => $title,
-                'version' => $version,
+            'openapi'    => '3.1.0',
+            'info'       => [
+                'title'       => $title,
+                'version'     => $version,
                 'description' => 'API REST híbrida generada por Ragnos.',
             ],
-            'servers' => [['url' => rtrim($serverUrl, '/')]],
-            'security' => [['BearerAuth' => []]],
-            'tags' => [],
-            'paths' => [
+            'servers'    => [['url' => rtrim($serverUrl, '/')]],
+            'security'   => [['BearerAuth' => []]],
+            'tags'       => [],
+            'paths'      => [
                 '/admin/login' => $this->loginPath(),
             ],
             'components' => [
                 'securitySchemes' => [
                     'BearerAuth' => [
-                        'type' => 'http',
-                        'scheme' => 'bearer',
+                        'type'         => 'http',
+                        'scheme'       => 'bearer',
                         'bearerFormat' => 'Ragnos token',
                     ],
                 ],
-                'schemas' => $this->commonSchemas(),
+                'schemas'         => $this->commonSchemas(),
             ],
         ];
     }
@@ -71,19 +71,19 @@ final class OpenApiGenerator
 
     private function appendDatasetPaths(array &$spec, array $entry, RDatasetController $controller): void
     {
-        $model = $controller->getModel();
-        $schemaName = $this->schemaName($entry, $controller);
-        $tag = $entry['tag'] ?? $controller->getTitle() ?: $controller->getClassName();
+        $model                                      = $controller->getModel();
+        $schemaName                                 = $this->schemaName($entry, $controller);
+        $tag                                        = $entry['tag'] ?? $controller->getTitle() ?: $controller->getClassName();
         $spec['components']['schemas'][$schemaName] = $this->recordSchema($model);
 
-        $path = '/' . ltrim($entry['path'], '/');
+        $path                 = '/' . ltrim($entry['path'], '/');
         $spec['paths'][$path] = $this->collectionOperations($controller, $schemaName, $tag);
-        $saveOperation = $this->saveOperation($controller, $schemaName, $tag);
+        $saveOperation        = $this->saveOperation($controller, $schemaName, $tag);
         if ($saveOperation !== []) {
             $spec['paths']["{$path}/save"] = $saveOperation;
         }
-        $spec['paths']["{$path}/delete/{id}"] = $this->deleteOperation($model->primaryKey, $tag, $controller);
-        $spec['paths']["{$path}/history/{id}"] = $this->historyOperation($tag, $controller);
+        $spec['paths']["{$path}/delete/{id}"]     = $this->deleteOperation($model->primaryKey, $tag, $controller);
+        $spec['paths']["{$path}/history/{id}"]    = $this->historyOperation($tag, $controller);
         $spec['paths']["{$path}/getFieldsConfig"] = $this->fieldsConfigOperation($tag, $controller);
 
         $spec = $this->merge($spec, $controller->getOpenApiDefinition());
@@ -93,12 +93,12 @@ final class OpenApiGenerator
     {
         $operations = [
             'get' => [
-                'tags' => [$tag],
-                'summary' => 'Lista registros con búsqueda, orden y paginación',
+                'tags'        => [$tag],
+                'summary'     => 'Lista registros con búsqueda, orden y paginación',
                 'operationId' => $this->operationPrefix($controller) . 'List',
-                'parameters' => $this->listParameters(),
-                'responses' => $this->responses(['200' => $this->jsonResponse('Listado de registros', $this->listSchema($schemaName))]),
-                'security' => [['BearerAuth' => []]],
+                'parameters'  => $this->listParameters(),
+                'responses'   => $this->responses(['200' => $this->jsonResponse('Listado de registros', $this->listSchema($schemaName))]),
+                'security'    => [['BearerAuth' => []]],
             ],
         ];
 
@@ -113,64 +113,72 @@ final class OpenApiGenerator
 
         return [
             'post' => [
-                'tags' => [$tag],
-                'summary' => 'Crea o actualiza un registro',
+                'tags'        => [$tag],
+                'summary'     => 'Crea o actualiza un registro',
                 'operationId' => $this->operationPrefix($controller) . 'Save',
                 'requestBody' => ['required' => true, 'content' => ['application/json' => ['schema' => ['$ref' => "#/components/schemas/{$schemaName}"]]]],
-                'responses' => $this->responses([
+                'responses'   => $this->responses([
                     '200' => $this->jsonResponse('Registro actualizado', ['$ref' => '#/components/schemas/MutationResponse']),
                     '201' => $this->jsonResponse('Registro creado', ['$ref' => '#/components/schemas/MutationResponse']),
                 ]),
-                'security' => [['BearerAuth' => []]],
+                'security'    => [['BearerAuth' => []]],
             ],
         ];
     }
 
     private function deleteOperation(string $primaryKey, string $tag, RDatasetController $controller): array
     {
-        return ['delete' => [
-            'tags' => [$tag],
-            'summary' => 'Elimina un registro',
-            'operationId' => $this->operationPrefix($controller) . 'Delete',
-            'parameters' => [['name' => 'id', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string'], 'description' => "Valor de {$primaryKey}"],],
-            'responses' => $this->responses(['200' => $this->jsonResponse('Registro eliminado', ['$ref' => '#/components/schemas/MutationResponse'])]),
-            'security' => [['BearerAuth' => []]],
-        ]];
+        return [
+            'delete' => [
+                'tags'        => [$tag],
+                'summary'     => 'Elimina un registro',
+                'operationId' => $this->operationPrefix($controller) . 'Delete',
+                'parameters'  => [['name' => 'id', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string'], 'description' => "Valor de {$primaryKey}"],],
+                'responses'   => $this->responses(['200' => $this->jsonResponse('Registro eliminado', ['$ref' => '#/components/schemas/MutationResponse'])]),
+                'security'    => [['BearerAuth' => []]],
+            ]
+        ];
     }
 
     private function historyOperation(string $tag, RDatasetController $controller): array
     {
-        return ['get' => [
-            'tags' => [$tag],
-            'summary' => 'Consulta el historial de auditoría',
-            'operationId' => $this->operationPrefix($controller) . 'History',
-            'parameters' => [['name' => 'id', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']]],
-            'responses' => $this->responses(['200' => $this->jsonResponse('Historial', ['type' => 'object', 'properties' => ['data' => ['type' => 'array', 'items' => ['type' => 'object']]]])]),
-            'security' => [['BearerAuth' => []]],
-        ]];
+        return [
+            'get' => [
+                'tags'        => [$tag],
+                'summary'     => 'Consulta el historial de auditoría',
+                'operationId' => $this->operationPrefix($controller) . 'History',
+                'parameters'  => [['name' => 'id', 'in' => 'path', 'required' => true, 'schema' => ['type' => 'string']]],
+                'responses'   => $this->responses(['200' => $this->jsonResponse('Historial', ['type' => 'object', 'properties' => ['data' => ['type' => 'array', 'items' => ['type' => 'object']]]])]),
+                'security'    => [['BearerAuth' => []]],
+            ]
+        ];
     }
 
     private function fieldsConfigOperation(string $tag, RDatasetController $controller): array
     {
-        return ['get' => [
-            'tags' => [$tag],
-            'summary' => 'Obtiene la configuración de campos',
-            'operationId' => $this->operationPrefix($controller) . 'FieldsConfig',
-            'responses' => $this->responses(['200' => $this->jsonResponse('Configuración de campos', ['type' => 'object'])]),
-            'security' => [['BearerAuth' => []]],
-        ]];
+        return [
+            'get' => [
+                'tags'        => [$tag],
+                'summary'     => 'Obtiene la configuración de campos',
+                'operationId' => $this->operationPrefix($controller) . 'FieldsConfig',
+                'responses'   => $this->responses(['200' => $this->jsonResponse('Configuración de campos', ['type' => 'object'])]),
+                'security'    => [['BearerAuth' => []]],
+            ]
+        ];
     }
 
     private function loginPath(): array
     {
-        return ['post' => [
-            'tags' => ['Authentication'],
-            'summary' => 'Inicia una sesión API',
-            'operationId' => 'login',
-            'requestBody' => ['required' => true, 'content' => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['usuario', 'pword'], 'properties' => ['usuario' => ['type' => 'string'], 'pword' => ['type' => 'string', 'format' => 'password']]]]]],
-            'responses' => $this->responses(['200' => $this->jsonResponse('Sesión iniciada', ['$ref' => '#/components/schemas/LoginResponse'])]),
-            'security' => [],
-        ]];
+        return [
+            'post' => [
+                'tags'        => ['Authentication'],
+                'summary'     => 'Inicia una sesión API',
+                'operationId' => 'login',
+                'requestBody' => ['required' => true, 'content' => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['usuario', 'pword'], 'properties' => ['usuario' => ['type' => 'string'], 'pword' => ['type' => 'string', 'format' => 'password']]]]]],
+                'responses'   => $this->responses(['200' => $this->jsonResponse('Sesión iniciada', ['$ref' => '#/components/schemas/LoginResponse'])]),
+                'security'    => [],
+            ]
+        ];
     }
 
     private function listParameters(): array
@@ -189,7 +197,7 @@ final class OpenApiGenerator
     private function recordSchema(object $model): array
     {
         $properties = [];
-        $required = [];
+        $required   = [];
         foreach ($model->ofieldlist as $field) {
             $properties[$field->getFieldName()] = $this->fieldSchema($field);
             if ($field->isRequired()) {
@@ -210,15 +218,19 @@ final class OpenApiGenerator
 
     private function fieldSchema(object $field): array
     {
-        $type = strtolower($field->getType());
-        $schema = match ($type) {
-            'number', 'money' => ['type' => 'number'],
-            'checkbox' => ['type' => 'boolean'],
-            'date' => ['type' => 'string', 'format' => 'date'],
-            'datetime' => ['type' => 'string', 'format' => 'date-time'],
-            default => ['type' => 'string'],
+        $type            = strtolower($field->getType());
+        $schema          = match ($type) {
+            'number', 'money'    => ['type'    => 'number'],
+            'checkbox', 'switch' => ['type' => 'boolean'],
+            'date'               => ['type'               => 'string', 'format'               => 'date'],
+            'datetime'           => ['type'           => 'string', 'format'           => 'date-time'],
+            default              => ['type'              => 'string'],
         };
         $schema['title'] = $field->getLabel();
+        $options         = method_exists($field, 'getOptions') ? $field->getOptions() : [];
+        if (!empty($options)) {
+            $schema['enum'] = array_keys($options);
+        }
         return $schema;
     }
 
@@ -234,15 +246,33 @@ final class OpenApiGenerator
 
     private function listSchema(string $schemaName): array
     {
-        return ['type' => 'object', 'properties' => ['status' => ['type' => 'integer'], 'data' => ['type' => 'array', 'items' => ['$ref' => "#/components/schemas/{$schemaName}"]], 'count' => ['type' => 'integer'], 'total' => ['type' => 'integer']]];
+        return [
+            'type'       => 'object',
+            'properties' => [
+                'status' => ['type' => 'integer'],
+                'meta'   => [
+                    'type'       => 'object',
+                    'properties' => [
+                        'total' => ['type' => 'integer'],
+                        'count' => ['type' => 'integer'],
+                    ],
+                ],
+                'data'   => [
+                    'type'  => 'array',
+                    'items' => ['$ref' => "#/components/schemas/{$schemaName}"],
+                ],
+                'count'  => ['type' => 'integer'],
+                'total'  => ['type' => 'integer'],
+            ],
+        ];
     }
 
     private function commonSchemas(): array
     {
         return [
-            'LoginResponse' => ['type' => 'object', 'properties' => ['status' => ['type' => 'string'], 'token' => ['type' => 'string'], 'user_id' => ['type' => 'string'], 'user_name' => ['type' => 'string'], 'user_group' => ['type' => 'string']]],
+            'LoginResponse'    => ['type' => 'object', 'properties' => ['status' => ['type' => 'string'], 'token' => ['type' => 'string'], 'user_id' => ['type' => 'string'], 'user_name' => ['type' => 'string'], 'user_group' => ['type' => 'string']]],
             'MutationResponse' => ['type' => 'object', 'properties' => ['status' => ['type' => 'integer'], 'message' => ['type' => 'string'], 'data' => ['type' => 'object']]],
-            'ErrorResponse' => ['type' => 'object', 'properties' => ['error' => ['type' => 'string'], 'message' => ['type' => 'string'], 'errors' => ['type' => 'object']]],
+            'ErrorResponse'    => ['type' => 'object', 'properties' => ['error' => ['type' => 'string'], 'message' => ['type' => 'string'], 'errors' => ['type' => 'object']]],
         ];
     }
 

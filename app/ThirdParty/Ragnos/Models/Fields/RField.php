@@ -84,9 +84,18 @@ abstract class RField
         return $this->type;
     }
 
-    public function setType(string $type): void
+    public function setType(string|RFieldType $type): void
     {
-        $this->type = trim($type);
+        if ($type instanceof RFieldType) {
+            $this->type = $type->value;
+        } else {
+            $this->type = trim($type);
+        }
+    }
+
+    public function getFieldTypeEnum(): RFieldType
+    {
+        return RFieldType::fromOrDefault($this->type);
     }
 
     public function getOptions(): array
