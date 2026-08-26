@@ -223,7 +223,7 @@ function isJson($string)
  *
  * @return string El HTML del elemento <select> generado.
  */
-function arrayToSelect(string $name, array $options, string $valueField, string $textField = null, $selectedValue = null, array $extra = []): string
+function arrayToSelect(string $name, array $options, string $valueField, ?string $textField = null, $selectedValue = null, array $extra = []): string
 {
     // Normaliza los valores y sanitiza los atributos
     $textField     = $textField ?? $valueField;
@@ -295,14 +295,14 @@ function redirectAndDie($url, $statusCode = 302)
         ->setHeader('Location', $url)
         ->setContentType('text/html')
         ->setBody(sprintf(
-                '<html><head><meta http-equiv="refresh" content="0;url=%s">
+            '<html><head><meta http-equiv="refresh" content="0;url=%s">
                 <script>window.location.href="%s";</script></head>
                 <body>Redirecting to <a href="%s">%s</a>...</body></html>',
-                $url,
-                $url,
-                $url,
-                htmlspecialchars($url)
-            ))
+            $url,
+            $url,
+            $url,
+            htmlspecialchars($url)
+        ))
         ->send();
 
     exit;

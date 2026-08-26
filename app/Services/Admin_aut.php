@@ -3,9 +3,12 @@
 namespace App\Services;
 
 use CodeIgniter\Config\BaseService;
+use CodeIgniter\Session\Session;
 
 class Admin_aut extends BaseService
 {
+
+    protected Session $session;
 
     private static $user_record;
 

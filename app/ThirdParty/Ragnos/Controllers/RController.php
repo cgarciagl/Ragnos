@@ -84,7 +84,7 @@ class RController extends BaseController
      * @param string $message Error message
      * @return \CodeIgniter\HTTP\Response
      */
-    private function respondWithError(int $statusCode, string $message)
+    protected function respondWithError(int $statusCode, string $message)
     {
         return $this->response->setStatusCode($statusCode)
             ->setJSON(['success' => false, 'error' => $message]);
