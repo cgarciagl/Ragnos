@@ -327,6 +327,18 @@ Each field is a <strong>declarative description</strong> of how a domain attribu
 </tbody>
 </table>
 <div class="admonition tip">
+<p class="admonition-title">Using the <code>RFieldType</code> Enum (PHP 8.1+)</p>
+<p>In addition to string type names (e.g. <code>'type' =&gt; 'select'</code>), Ragnos supports the backed Enum <code>App\ThirdParty\Ragnos\Models\Fields\RFieldType</code> for type assignments with full IDE autocompletion:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="x">use App\ThirdParty\Ragnos\Models\Fields\RFieldType;</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="x">$this-&gt;addField('status', [</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="x">    'label'   =&gt; 'Status',</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="x">    'type'    =&gt; RFieldType::SELECT,</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="x">    'options' =&gt; ['A' =&gt; 'Active', 'I' =&gt; 'Inactive']</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="x">]);</span>
+</code></pre></div>
+</div>
+<div class="admonition tip">
 <p class="admonition-title">Validation Rules</p>
 <p>Ragnos adopts the powerful CodeIgniter 4 validation engine. You can use rules such as <code>required</code>, <code>is_unique</code>, <code>min_length</code>, <code>valid_email</code>, etc.</p>
 <p><a href="https://codeigniter.com/user_guide/libraries/validation.html#available-rules">Consult all available rules in the official CodeIgniter 4 documentation</a></p>
@@ -347,9 +359,9 @@ It is ideal for fields that must be unique across the system, such as:</p>
 <h3 id="tabbed-organization">Tabbed Organization</h3>
 <p>Ragnos allows you to organize form fields into tabs to improve usability in extensive forms.
 Simply add the <code>tab</code> key to the field configuration array with the desired tab name.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="x">$this-&gt;addField('basic_info', [ ... , 'tab' =&gt; 'General' ]);</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="x">$this-&gt;addField('technical_details', [ ... , 'tab' =&gt; 'Details' ]);</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="x">$this-&gt;addField('pricing', [ ... , 'tab' =&gt; 'Finance' ]);</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="x">$this-&gt;addField('basic_info', [ ... , 'tab' =&gt; 'General' ]);</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="x">$this-&gt;addField('technical_details', [ ... , 'tab' =&gt; 'Details' ]);</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="x">$this-&gt;addField('pricing', [ ... , 'tab' =&gt; 'Finance' ]);</span>
 </code></pre></div>
 <ul>
 <li>Fields without a defined tab will automatically be placed in a tab labeled <strong>"General"</strong>.</li>
@@ -358,10 +370,10 @@ Simply add the <code>tab</code> key to the field configuration array with the de
 </ul>
 <hr />
 <h2 id="2-text-field-string">2. Text Field (string)</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="x">$this-&gt;addField('customerName', [</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="x">    'label' =&gt; 'Name',</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="x">    'rules' =&gt; 'required'</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="x">]);</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="x">$this-&gt;addField('customerName', [</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="x">    'label' =&gt; 'Name',</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="x">    'rules' =&gt; 'required'</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="x">]);</span>
 </code></pre></div>
 <ul>
 <li>Persistent</li>
@@ -371,11 +383,11 @@ Simply add the <code>tab</code> key to the field configuration array with the de
 <hr />
 <h2 id="3-multiline-text-field-textarea">3. Multiline Text Field (<code>textarea</code>)</h2>
 <p>For long texts like descriptions or comments.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="x">$this-&gt;addField('productDescription', [</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="x">    'label' =&gt; 'Description',</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="x">    'type'  =&gt; 'textarea',</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="x">    'rules' =&gt; 'required'</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="x">]);</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="x">$this-&gt;addField('productDescription', [</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="x">    'label' =&gt; 'Description',</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="x">    'type'  =&gt; 'textarea',</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="x">    'rules' =&gt; 'required'</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="x">]);</span>
 </code></pre></div>
 <ul>
 <li><strong>HTML Variant:</strong> Use <code>type =&gt; 'htmltextarea'</code> to enable the native rich text editor. It includes paragraph styles, lists, alignment, indentation, tables, links, source view, and fullscreen mode. Pasted or edited content is sanitized before submission so that only safe formatting HTML is retained.</li>
@@ -383,21 +395,21 @@ Simply add the <code>tab</code> key to the field configuration array with the de
 <hr />
 <h2 id="4-date-and-time-field">4. Date and Time Field</h2>
 <p>Ragnos automatically handles date selection through native browser controls, without plugins or additional dependencies.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="x">$this-&gt;addField('orderDate', [</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="x">    'label' =&gt; 'Order Date',</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="x">    'type'  =&gt; 'datetime', // or 'date'</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="x">    'rules' =&gt; 'required'</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="x">]);</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="x">$this-&gt;addField('orderDate', [</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="x">    'label' =&gt; 'Order Date',</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="x">    'type'  =&gt; 'datetime', // or 'date'</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="x">    'rules' =&gt; 'required'</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="x">]);</span>
 </code></pre></div>
 <ul>
 <li>Includes date/time picker (datepicker).</li>
 </ul>
 <hr />
 <h2 id="5-numeric-field">5. Numeric Field</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="x">$this-&gt;addField('postalCode', [</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="x">    'label' =&gt; 'Postal code',</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="x">    'rules' =&gt; 'required|numeric'</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="x">]);</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="x">$this-&gt;addField('postalCode', [</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="x">    'label' =&gt; 'Postal code',</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="x">    'rules' =&gt; 'required|numeric'</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="x">]);</span>
 </code></pre></div>
 <ul>
 <li>Persistent</li>
@@ -406,10 +418,10 @@ Simply add the <code>tab</code> key to the field configuration array with the de
 </ul>
 <hr />
 <h2 id="6-monetary-field-money">6. Monetary Field (<code>money</code>)</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="x">$this-&gt;addField('creditLimit', [</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="x">    'label' =&gt; 'Credit limit',</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="x">    'rules' =&gt; 'required|money'</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="x">]);</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="x">$this-&gt;addField('creditLimit', [</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="x">    'label' =&gt; 'Credit limit',</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="x">    'rules' =&gt; 'required|money'</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="x">]);</span>
 </code></pre></div>
 <ul>
 <li>Custom validator</li>
@@ -418,10 +430,10 @@ Simply add the <code>tab</code> key to the field configuration array with the de
 </ul>
 <hr />
 <h2 id="7-readonly-field">7. Readonly Field</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="x">$this-&gt;addField('Contact', [</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="x">    'label' =&gt; 'Contact',</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="x">    'rules' =&gt; 'readonly'</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="x">]);</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="x">$this-&gt;addField('Contact', [</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="x">    'label' =&gt; 'Contact',</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="x">    'rules' =&gt; 'readonly'</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="x">]);</span>
 </code></pre></div>
 <ul>
 <li>Visible</li>
@@ -429,11 +441,11 @@ Simply add the <code>tab</code> key to the field configuration array with the de
 </ul>
 <hr />
 <h2 id="8-hidden-field">8. Hidden Field</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="x">$this-&gt;addField('Contact', [</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="x">    'label' =&gt; 'Contact',</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="x">    'rules' =&gt; 'readonly',</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="x">    'type'  =&gt; 'hidden'</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="x">]);</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="x">$this-&gt;addField('Contact', [</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="x">    'label' =&gt; 'Contact',</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="x">    'rules' =&gt; 'readonly',</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="x">    'type'  =&gt; 'hidden'</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="x">]);</span>
 </code></pre></div>
 <ul>
 <li>Not visible in forms</li>
@@ -441,12 +453,12 @@ Simply add the <code>tab</code> key to the field configuration array with the de
 </ul>
 <hr />
 <h2 id="9-calculated-field-query">9. Calculated Field (<code>query</code>)</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="x">$this-&gt;addField('fullName', [</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="x">    'label' =&gt; 'Full Name',</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="x">    'rules' =&gt; 'readonly',</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="x">    'query' =&gt; "concat(contactLastName, ', ', contactFirstName)",</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="x">    'type'  =&gt; 'hidden'</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="x">]);</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="x">$this-&gt;addField('fullName', [</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="x">    'label' =&gt; 'Full Name',</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="x">    'rules' =&gt; 'readonly',</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="x">    'query' =&gt; "concat(contactLastName, ', ', contactFirstName)",</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="x">    'type'  =&gt; 'hidden'</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="x">]);</span>
 </code></pre></div>
 <ul>
 <li>Non-persistent (not a real column in the table)</li>
@@ -456,7 +468,7 @@ Simply add the <code>tab</code> key to the field configuration array with the de
 <hr />
 <h2 id="10-related-field-addsearch">10. Related Field (<code>addSearch</code>)</h2>
 <p>Links a field to another controller for selection (Foreign Key).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="x">$this-&gt;addSearch('salesRepEmployeeNumber', 'Shop\\Employees');</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="x">$this-&gt;addSearch('salesRepEmployeeNumber', 'Shop\\Employees');</span>
 </code></pre></div>
 <ul>
 <li>Logical foreign key</li>
@@ -468,9 +480,9 @@ Simply add the <code>tab</code> key to the field configuration array with the de
 </blockquote>
 <hr />
 <h2 id="11-primary-key-field">11. Primary Key Field</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="x">$this-&gt;setIdField('customerNumber');</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="x">// Disable auto-increment if needed (e.g., for alphanumeric codes)</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="x">$this-&gt;setAutoIncrement(false);</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="x">$this-&gt;setIdField('customerNumber');</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="x">// Disable auto-increment if needed (e.g., for alphanumeric codes)</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="x">$this-&gt;setAutoIncrement(false);</span>
 </code></pre></div>
 <ul>
 <li>Dataset identity</li>
@@ -497,30 +509,30 @@ Simply add the <code>tab</code> key to the field configuration array with the de
 <p><strong>Static Example:</strong></p>
 </li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="x">$this-&gt;addField('status', [</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="x">    'label'   =&gt; 'Status',</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="x">    'type'    =&gt; 'dropdown',</span>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="x">    'options' =&gt; [</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="x">        'shipped'   =&gt; 'Shipped',</span>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="x">        'pending'   =&gt; 'Pending',</span>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="x">        'cancelled' =&gt; 'Cancelled'</span>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="x">    ],</span>
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="x">    'default' =&gt; 'pending',</span>
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="x">    'rules'   =&gt; 'required|in_list[shipped,pending,cancelled]'</span>
-<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="x">]);</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="x">$this-&gt;addField('status', [</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="x">    'label'   =&gt; 'Status',</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="x">    'type'    =&gt; 'dropdown',</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="x">    'options' =&gt; [</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="x">        'shipped'   =&gt; 'Shipped',</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="x">        'pending'   =&gt; 'Pending',</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="x">        'cancelled' =&gt; 'Cancelled'</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="x">    ],</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="x">    'default' =&gt; 'pending',</span>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="x">    'rules'   =&gt; 'required|in_list[shipped,pending,cancelled]'</span>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="x">]);</span>
 </code></pre></div>
 <ul>
 <li><strong>Dynamic Example (load from DB):</strong></li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="x">$rows = $this-&gt;db-&gt;table('categories')-&gt;select('id, name')-&gt;get()-&gt;getResultArray();</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="x">$options = array_column($rows, 'name', 'id');</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="x">$this-&gt;addField('categoryId', [</span>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="x">    'label'   =&gt; 'Category',</span>
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="x">    'type'    =&gt; 'dropdown',</span>
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="x">    'options' =&gt; $options,</span>
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="x">    'rules'   =&gt; 'required|in_list[' . implode(',', array_keys($options)) . ']'</span>
-<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="x">]);</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="x">$rows = $this-&gt;db-&gt;table('categories')-&gt;select('id, name')-&gt;get()-&gt;getResultArray();</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="x">$options = array_column($rows, 'name', 'id');</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="x">$this-&gt;addField('categoryId', [</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="x">    'label'   =&gt; 'Category',</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="x">    'type'    =&gt; 'dropdown',</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="x">    'options' =&gt; $options,</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="x">    'rules'   =&gt; 'required|in_list[' . implode(',', array_keys($options)) . ']'</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="x">]);</span>
 </code></pre></div>
 <ul>
 <li>
@@ -551,14 +563,14 @@ Simply add the <code>tab</code> key to the field configuration array with the de
 <hr />
 <h2 id="13-switch-field-boolean">13. Switch Field (Boolean)</h2>
 <p>Renders a modern toggle switch. Ideal for boolean or status fields (active/inactive).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="x">$this-&gt;addField('isActive', [</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="x">    'label'   =&gt; 'Published',</span>
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="x">    'type'    =&gt; 'switch',</span>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="x">    'default' =&gt; 1,          // Default value (checked)</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="x">    // Optional: Customize values (defaults are 1 and 0)</span>
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="x">    'onValue' =&gt; 'Y',</span>
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="x">    'offValue'=&gt; 'N'</span>
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="x">]);</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="x">$this-&gt;addField('isActive', [</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="x">    'label'   =&gt; 'Published',</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="x">    'type'    =&gt; 'switch',</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="x">    'default' =&gt; 1,          // Default value (checked)</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="x">    // Optional: Customize values (defaults are 1 and 0)</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="x">    'onValue' =&gt; 'Y',</span>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="x">    'offValue'=&gt; 'N'</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="x">]);</span>
 </code></pre></div>
 <ul>
 <li>Handles <code>1/0</code> values (or custom).</li>
@@ -567,10 +579,10 @@ Simply add the <code>tab</code> key to the field configuration array with the de
 <hr />
 <h2 id="14-pillbox-field-tags">14. Pillbox Field (Tags)</h2>
 <p>Allows managing a list of simple tags. It is stored in the database as a JSON array.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="x">$this-&gt;addField('tags', [</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="x">    'label' =&gt; 'Tags',</span>
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="x">    'type'  =&gt; 'pillbox'</span>
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="x">]);</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="x">$this-&gt;addField('tags', [</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="x">    'label' =&gt; 'Tags',</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="x">    'type'  =&gt; 'pillbox'</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="x">]);</span>
 </code></pre></div>
 <ul>
 <li><strong>Interface:</strong> Text input that converts entries into "pills" upon pressing Enter or Comma.</li>
@@ -587,12 +599,12 @@ Simply add the <code>tab</code> key to the field configuration array with the de
 <li>If the field has file-specific rules (e.g., <code>max_size</code>, <code>ext_in</code>), they are automatically ignored if no new file is uploaded during an update, preventing validation errors.</li>
 <li><strong>Automatic Folder Creation:</strong> If the destination path does not exist, the system attempts to create it recursively.</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="x">$this-&gt;addField('attached_document', [</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="x">    'label'      =&gt; 'PDF Document',</span>
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="x">    'type'       =&gt; 'fileupload',</span>
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="x">    'uploadPath' =&gt; 'assets/docs/contracts',  // Destination folder (relative to public/)</span>
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="x">    'rules'      =&gt; 'uploaded[attached_document]|ext_in[attached_document,pdf,docx]|max_size[attached_document,4096]'</span>
-<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="x">]);</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="x">$this-&gt;addField('attached_document', [</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="x">    'label'      =&gt; 'PDF Document',</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="x">    'type'       =&gt; 'fileupload',</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="x">    'uploadPath' =&gt; 'assets/docs/contracts',  // Destination folder (relative to public/)</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="x">    'rules'      =&gt; 'uploaded[attached_document]|ext_in[attached_document,pdf,docx]|max_size[attached_document,4096]'</span>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="x">]);</span>
 </code></pre></div>
 <h3 id="specific-parameters">Specific Parameters</h3>
 <table>
@@ -625,18 +637,18 @@ Simply add the <code>tab</code> key to the field configuration array with the de
 <li><strong>Visualization:</strong> Displays the currently stored image if it exists.</li>
 <li><strong>Validation:</strong> Identical to <code>fileupload</code>, compatible with <code>is_image</code>, <code>max_dims</code>, etc.</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="x">$this-&gt;addField('profile_photo', [</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="x">    'label'      =&gt; 'Avatar',</span>
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="x">    'type'       =&gt; 'imageupload',</span>
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="x">    'uploadPath' =&gt; 'assets/img/users',</span>
-<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="x">    'rules'      =&gt; 'is_image[profile_photo]|max_size[profile_photo,2048]',</span>
-<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="x">    'accept'     =&gt; 'image/*' // HTML attribute for input file</span>
-<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="x">]);</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="x">$this-&gt;addField('profile_photo', [</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="x">    'label'      =&gt; 'Avatar',</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="x">    'type'       =&gt; 'imageupload',</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="x">    'uploadPath' =&gt; 'assets/img/users',</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="x">    'rules'      =&gt; 'is_image[profile_photo]|max_size[profile_photo,2048]',</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="x">    'accept'     =&gt; 'image/*' // HTML attribute for input file</span>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="x">]);</span>
 </code></pre></div>
 <div class="admonition tip">
 <p class="admonition-title">Making the image optional</p>
 <p>If you want the image to be optional even when creating the record, simply <strong>omit</strong> the <code>uploaded</code> rule.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="x">'rules' =&gt; 'is_image[profile_photo]' // Optional, but if something is uploaded, it must be an image</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="x">'rules' =&gt; 'is_image[profile_photo]' // Optional, but if something is uploaded, it must be an image</span>
 </code></pre></div>
 </div>
 <hr />
@@ -644,33 +656,33 @@ Simply add the <code>tab</code> key to the field configuration array with the de
 <p>Ragnos inherits CodeIgniter 4's ability to define custom validation rules. If you need a validation that doesn't exist by default (for example, validating a specific ID format or checking against an external service), follow these steps:</p>
 <h3 id="1-create-the-rule-class">1. Create the rule class</h3>
 <p>Create a file in the <code>app/Validation/MyCustomRules.php</code> directory (you will need to create the folder if it doesn't exist):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="x">namespace App\Validation;</span>
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>
-<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="x">class MyCustomRules</span>
-<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="x">{</span>
-<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="x">    public function even_number(string $str, string &amp;$error = null): bool</span>
-<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="x">    {</span>
-<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="x">        if ((int)$str % 2 !== 0) {</span>
-<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a><span class="x">            $error = "The {field} field must be an even number.";</span>
-<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a><span class="x">            return false;</span>
-<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a><span class="x">        }</span>
-<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a><span class="x">        return true;</span>
-<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a><span class="x">    }</span>
-<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a><span class="x">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="x">namespace App\Validation;</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="x">class MyCustomRules</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="x">{</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="x">    public function even_number(string $str, string &amp;$error = null): bool</span>
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="x">    {</span>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="x">        if ((int)$str % 2 !== 0) {</span>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="x">            $error = "The {field} field must be an even number.";</span>
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a><span class="x">            return false;</span>
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="x">        }</span>
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a><span class="x">        return true;</span>
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a><span class="x">    }</span>
+<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a><span class="x">}</span>
 </code></pre></div>
 <h3 id="2-register-the-rule">2. Register the rule</h3>
 <p>Edit <code>app/Config/Validation.php</code> to include your new class in the <code>$ruleSets</code> array:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="x">public array $ruleSets = [</span>
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="x">    // ... other existing rules</span>
-<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="x">    \App\Validation\MyCustomRules::class,</span>
-<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="x">];</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="x">public array $ruleSets = [</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="x">    // ... other existing rules</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="x">    \App\Validation\MyCustomRules::class,</span>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="x">];</span>
 </code></pre></div>
 <h3 id="3-use-the-rule-in-the-dataset">3. Use the rule in the Dataset</h3>
 <p>Now you can use your custom rule in the <code>addField()</code> method of your controller:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="x">$this-&gt;addField('quantity', [</span>
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="x">    'label' =&gt; 'Even Quantity',</span>
-<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="x">    'rules' =&gt; 'required|even_number'</span>
-<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="x">]);</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="x">$this-&gt;addField('quantity', [</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="x">    'label' =&gt; 'Even Quantity',</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="x">    'rules' =&gt; 'required|even_number'</span>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="x">]);</span>
 </code></pre></div>
 <hr />
 <p><strong>In Ragnos, fields are domain declarations, not simple inputs.</strong></p>
