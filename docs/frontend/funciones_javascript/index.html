@@ -325,17 +325,26 @@
 <h2 id="ragnossearch-y-clases-relacionadas"><code>RagnosSearch</code> y Clases relacionadas</h2>
 <p>La clase <code>RagnosSearch</code> y sus métodos auxiliares proporcionan una interfaz estandarizada para realizar búsquedas en inputs, integrando interfaz gráfica (botones) y manejo de resultados.</p>
 <h3 id="ragnossearchsetupsimplesearchelemento-ruta-params-callback"><code>RagnosSearch.setupSimpleSearch(elemento, ruta, params, callback)</code></h3>
-<p>Método estático para configurar una búsqueda sencilla en un input existente. Transforma el input agregando botones de búsqueda y limpieza.</p>
+<p>Método estático para configurar una búsqueda sencilla en un input existente. Transforma el input agregando o reutilizando botones de búsqueda y limpieza en un grupo de entrada (<code>.input-group</code>), protegiendo la idempotencia mediante la marca <code>Ragnosffied</code>.</p>
 <h4 id="parametros_2">Parámetros</h4>
 <ul>
-<li><strong><code>elemento</code></strong> (string | DOM Element): El selector CSS o input donde se habilitará la búsqueda.</li>
+<li><strong><code>elemento</code></strong> (string | DOM Element): El selector CSS o elemento DOM input donde se habilitará la búsqueda.</li>
 <li><strong><code>ruta</code></strong> (string): La URL del servidor (Controlador/Método) que procesará la búsqueda.</li>
 <li><strong><code>params</code></strong> (object): Configuración adicional.</li>
 <li><code>canSetToNull</code> (boolean): Define si se muestra el botón "X" para limpiar el campo (Default: <code>true</code>).</li>
-<li><strong><code>callback</code></strong> (function): Función a ejecutar tras una búsqueda exitosa. Recibe el elemento DOM del input como argumento <code>e</code>.</li>
+<li><strong><code>callback</code></strong> (function, opcional): Función a ejecutar tras una búsqueda o limpieza exitosa. Recibe el elemento DOM del input como argumento <code>e</code>.</li>
 </ul>
 <h4 id="retorno_2">Retorno</h4>
-<p>No retorna valor. Modifica el DOM del input.</p>
+<ul>
+<li>Devuelve el elemento <code>HTMLInputElement</code> configurado (o <code>null</code> si el elemento no es válido). Retorna tempranamente si el control ya fue marcado con <code>Ragnosffied</code>.</li>
+</ul>
+<h4 id="caracteristicas-destacadas">Características Destacadas</h4>
+<ul>
+<li><strong>Idempotencia (<code>Ragnosffied</code>)</strong>: Evita la duplicación de listeners y botones si la función se invoca múltiples veces sobre el mismo control.</li>
+<li><strong>Búsqueda por Botón y Tecla <code>Enter</code></strong>: Al hacer clic en la lupa o presionar <code>Enter</code>, ejecuta la búsqueda enviando el valor actual del input (<code>input.value</code>) y previene el envío accidental del formulario.</li>
+<li><strong>Sincronización de Estado y Campos Ocultos</strong>: Al vaciar el input o pulsar el botón de limpieza "X", resetea <code>input.ragnosSearchData = null</code> y limpia cualquier campo <code>hidden</code> asociado.</li>
+<li><strong>Soporte para Hooks por Convención</strong>: Al completar una búsqueda o limpiar el campo, busca y ejecuta automáticamente la función global <code>_{id}OnSearch(control)</code> o <code>_{name}OnSearch(control)</code> si está definida en <code>custom.js</code>.</li>
+</ul>
 <h4 id="ejemplo-de-uso">Ejemplo de uso</h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nx">RagnosSearch</span><span class="p">.</span><span class="nx">setupSimpleSearch</span><span class="p">(</span>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">"#miInput"</span><span class="p">),</span>
@@ -409,8 +418,9 @@ Cuando se selecciona un producto en el input <code>productCode</code>, esta func
 <a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">datos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">control</span><span class="p">.</span><span class="nx">ragnosSearchData</span><span class="p">;</span>
 <a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
 <a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span><span class="c1">// Actualizamos otro campo (Precio Unitario) con el valor MSRP del producto</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">  </span><span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s1">'#detalleorden input[name="priceEach"]'</span><span class="p">).</span><span class="nx">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">datos</span><span class="p">.</span><span class="nx">MSRP</span><span class="p">;</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="p">}</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">  </span><span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s1">'#detalleorden input[name="priceEach"]'</span><span class="p">).</span><span class="nx">value</span><span class="w"> </span><span class="o">=</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">    </span><span class="nx">datos</span><span class="p">.</span><span class="nx">MSRP</span><span class="p">;</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="p">}</span>
 </code></pre></div>
 <h4 id="2-hooks-de-cambio-en-tabla-_nombretablaonchange">2. Hooks de Cambio en Tabla (<code>_NombreTablaOnChange</code>)</h4>
 <p>Se ejecutan cuando ocurre un cambio en una tabla gestionada (por ejemplo, al agregar o editar filas en una tabla detalle).</p>
