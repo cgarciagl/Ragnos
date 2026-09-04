@@ -177,6 +177,10 @@
 <ul class="nav flex-column">
 </ul>
 </li>
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#driver-architecture-ragnosauthinterface">Driver Architecture (RagnosAuthInterface)</a>
+<ul class="nav flex-column">
+</ul>
+</li>
 <li class="nav-item" data-bs-level="2"><a class="nav-link" href="#api-authentication">API Authentication</a>
 <ul class="nav flex-column">
 </ul>
@@ -296,6 +300,76 @@ Recommended to call at start of function requiring auth, or in constructor if wh
 <a href="#__codelineno-4-2" id="__codelineno-4-2" name="__codelineno-4-2"></a><span class="x">$email = service('Admin_aut')-&gt;getField('usu_email');</span>
 </code></pre></div>
 <hr/>
+<h2 id="driver-architecture-ragnosauthinterface">Driver Architecture (<code>RagnosAuthInterface</code>)</h2>
+<p>Starting with Ragnos Framework v1.1+, the authentication subsystem is decoupled under an <strong>Adapter/Driver</strong> pattern. This allows swapping the underlying authentication provider without breaking the documented public API (<code>service('Admin_aut')</code>, <code>$this-&gt;checkLogin()</code>, <code>$this-&gt;checkUserInGroup()</code>, audit logs, etc.).</p>
+<h3 id="available-drivers">Available Drivers</h3>
+<ol>
+<li><strong><code>native</code> (Default)</strong>:</li>
+<li>Built on native PHP sessions and tables <code>gen_usuarios</code> and <code>gen_gruposdeusuarios</code>.</li>
+<li>Includes Bearer Token support for REST APIs against <code>usu_token</code>.</li>
+<li>Case-insensitive role comparison.</li>
+<li><strong><code>shield</code></strong>:</li>
+<li>Direct integration with <a href="https://shield.codeigniter.com/">CodeIgniter 4 Shield</a>.</li>
+<li>Maps calls to Shield APIs (<code>auth()</code>, <code>auth()-&gt;user()</code>, <code>auth('tokens')</code>, etc.).</li>
+<li>If Shield is not installed in the project, the system automatically falls back safely to the native driver.</li>
+</ol>
+<h3 id="driver-configuration">Driver Configuration</h3>
+<p>You can define the active driver in <code>app/Config/RagnosConfig.php</code>:</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-5-1" id="__codelineno-5-1" name="__codelineno-5-1"></a><span class="x">public string $authDriver = 'native'; // Options: 'native' | 'shield'</span>
+</code></pre></div>
+<p>Or override it per environment in your <code>.env</code> file:</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-6-1" id="__codelineno-6-1" name="__codelineno-6-1"></a><span class="na">ragnos.authDriver</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">shield</span>
+</code></pre></div>
+<h3 id="ragnosauthinterface-contract-methods"><code>RagnosAuthInterface</code> Contract Methods</h3>
+<p>All drivers implement <code>App\ThirdParty\Ragnos\Auth\RagnosAuthInterface</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Return Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>checkLogin()</code></td>
+<td><code>bool</code></td>
+<td>Returns <code>true</code> if a user is currently authenticated.</td>
+</tr>
+<tr>
+<td><code>isUserInGroup(string $group)</code></td>
+<td><code>bool</code></td>
+<td>Checks membership in the specified group.</td>
+</tr>
+<tr>
+<td><code>getUserId()</code></td>
+<td><code>?int</code></td>
+<td>Unique user identifier or <code>null</code>.</td>
+</tr>
+<tr>
+<td><code>getUserName()</code></td>
+<td><code>?string</code></td>
+<td>Authenticated username or <code>null</code>.</td>
+</tr>
+<tr>
+<td><code>getUserEmail()</code></td>
+<td><code>?string</code></td>
+<td>User email address or <code>null</code>.</td>
+</tr>
+<tr>
+<td><code>logout()</code></td>
+<td><code>void</code></td>
+<td>Terminates the active session and credentials.</td>
+</tr>
+<tr>
+<td><code>checkApiToken(string $token)</code></td>
+<td><code>bool</code></td>
+<td>Validates a Bearer token for API requests.</td>
+</tr>
+</tbody>
+</table>
+<p>To guarantee 100% backward compatibility, both drivers and the <code>Admin_aut</code> service also support legacy methods: <code>$auth-&gt;isLoggedIn()</code>, <code>$auth-&gt;id()</code>, <code>$auth-&gt;name()</code>, <code>$auth-&gt;getField($field)</code>, and <code>$auth-&gt;checkUserInGroup($grupos)</code>.</p>
+<hr/>
 <h2 id="api-authentication">API Authentication</h2>
 <p>System supports authentication for REST APIs transparently.</p>
 <ol>
@@ -305,45 +379,45 @@ Recommended to call at start of function requiring auth, or in constructor if wh
 </ol>
 <p>Allows using same controllers for web interface and mobile apps or decoupled frontends.</p>
 <h2 id="complete-example">Complete Example</h2>
-<div class="highlight"><pre><span></span><code><a href="#__codelineno-5-1" id="__codelineno-5-1" name="__codelineno-5-1"></a><span class="cp">&lt;?php</span>
-<a href="#__codelineno-5-2" id="__codelineno-5-2" name="__codelineno-5-2"></a>
-<a href="#__codelineno-5-3" id="__codelineno-5-3" name="__codelineno-5-3"></a><span class="k">namespace</span> <span class="nx">App\Controllers</span><span class="p">;</span>
-<a href="#__codelineno-5-4" id="__codelineno-5-4" name="__codelineno-5-4"></a>
-<a href="#__codelineno-5-5" id="__codelineno-5-5" name="__codelineno-5-5"></a><span class="k">use</span> <span class="nx">App\ThirdParty\Ragnos\Controllers\BaseController</span><span class="p">;</span>
-<a href="#__codelineno-5-6" id="__codelineno-5-6" name="__codelineno-5-6"></a>
-<a href="#__codelineno-5-7" id="__codelineno-5-7" name="__codelineno-5-7"></a><span class="k">class</span> <span class="nc">Orders</span> <span class="k">extends</span> <span class="nx">BaseController</span>
-<a href="#__codelineno-5-8" id="__codelineno-5-8" name="__codelineno-5-8"></a><span class="p">{</span>
-<a href="#__codelineno-5-9" id="__codelineno-5-9" name="__codelineno-5-9"></a>    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">()</span>
-<a href="#__codelineno-5-10" id="__codelineno-5-10" name="__codelineno-5-10"></a>    <span class="p">{</span>
-<a href="#__codelineno-5-11" id="__codelineno-5-11" name="__codelineno-5-11"></a>        <span class="c1">// Load helpers</span>
-<a href="#__codelineno-5-12" id="__codelineno-5-12" name="__codelineno-5-12"></a>        <span class="nx">helper</span><span class="p">([</span><span class="s1">'form'</span><span class="p">,</span> <span class="s1">'url'</span><span class="p">]);</span>
-<a href="#__codelineno-5-13" id="__codelineno-5-13" name="__codelineno-5-13"></a>    <span class="p">}</span>
-<a href="#__codelineno-5-14" id="__codelineno-5-14" name="__codelineno-5-14"></a>
-<a href="#__codelineno-5-15" id="__codelineno-5-15" name="__codelineno-5-15"></a>    <span class="k">public</span> <span class="k">function</span> <span class="nf">index</span><span class="p">()</span>
-<a href="#__codelineno-5-16" id="__codelineno-5-16" name="__codelineno-5-16"></a>    <span class="p">{</span>
-<a href="#__codelineno-5-17" id="__codelineno-5-17" name="__codelineno-5-17"></a>        <span class="c1">// 1. Ensure logged in</span>
-<a href="#__codelineno-5-18" id="__codelineno-5-18" name="__codelineno-5-18"></a>        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">checkLogin</span><span class="p">();</span>
-<a href="#__codelineno-5-19" id="__codelineno-5-19" name="__codelineno-5-19"></a>
-<a href="#__codelineno-5-20" id="__codelineno-5-20" name="__codelineno-5-20"></a>        <span class="nv">$auth</span> <span class="o">=</span> <span class="nx">service</span><span class="p">(</span><span class="s1">'Admin_aut'</span><span class="p">);</span>
-<a href="#__codelineno-5-21" id="__codelineno-5-21" name="__codelineno-5-21"></a>
-<a href="#__codelineno-5-22" id="__codelineno-5-22" name="__codelineno-5-22"></a>        <span class="c1">// 2. Get user data</span>
-<a href="#__codelineno-5-23" id="__codelineno-5-23" name="__codelineno-5-23"></a>        <span class="nv">$data</span><span class="p">[</span><span class="s1">'user'</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$auth</span><span class="o">-&gt;</span><span class="na">name</span><span class="p">();</span>
-<a href="#__codelineno-5-24" id="__codelineno-5-24" name="__codelineno-5-24"></a>        <span class="nv">$data</span><span class="p">[</span><span class="s1">'isAdmin'</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$auth</span><span class="o">-&gt;</span><span class="na">isUserInGroup</span><span class="p">(</span><span class="s1">'Administrator'</span><span class="p">);</span>
-<a href="#__codelineno-5-25" id="__codelineno-5-25" name="__codelineno-5-25"></a>
-<a href="#__codelineno-5-26" id="__codelineno-5-26" name="__codelineno-5-26"></a>        <span class="k">return</span> <span class="nx">view</span><span class="p">(</span><span class="s1">'orders/index'</span><span class="p">,</span> <span class="nv">$data</span><span class="p">);</span>
-<a href="#__codelineno-5-27" id="__codelineno-5-27" name="__codelineno-5-27"></a>    <span class="p">}</span>
-<a href="#__codelineno-5-28" id="__codelineno-5-28" name="__codelineno-5-28"></a>
-<a href="#__codelineno-5-29" id="__codelineno-5-29" name="__codelineno-5-29"></a>    <span class="k">public</span> <span class="k">function</span> <span class="nf">delete</span><span class="p">(</span><span class="nv">$id</span><span class="p">)</span>
-<a href="#__codelineno-5-30" id="__codelineno-5-30" name="__codelineno-5-30"></a>    <span class="p">{</span>
-<a href="#__codelineno-5-31" id="__codelineno-5-31" name="__codelineno-5-31"></a>        <span class="c1">// 3. Strict restriction: Only Admins can delete</span>
-<a href="#__codelineno-5-32" id="__codelineno-5-32" name="__codelineno-5-32"></a>        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">checkUserInGroup</span><span class="p">(</span><span class="s1">'Administrator'</span><span class="p">);</span>
-<a href="#__codelineno-5-33" id="__codelineno-5-33" name="__codelineno-5-33"></a>
-<a href="#__codelineno-5-34" id="__codelineno-5-34" name="__codelineno-5-34"></a>        <span class="nv">$model</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\App\Models\OrdersModel</span><span class="p">();</span>
-<a href="#__codelineno-5-35" id="__codelineno-5-35" name="__codelineno-5-35"></a>        <span class="nv">$model</span><span class="o">-&gt;</span><span class="na">delete</span><span class="p">(</span><span class="nv">$id</span><span class="p">);</span>
-<a href="#__codelineno-5-36" id="__codelineno-5-36" name="__codelineno-5-36"></a>
-<a href="#__codelineno-5-37" id="__codelineno-5-37" name="__codelineno-5-37"></a>        <span class="k">return</span> <span class="nx">redirect</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">to</span><span class="p">(</span><span class="s1">'/orders'</span><span class="p">);</span>
-<a href="#__codelineno-5-38" id="__codelineno-5-38" name="__codelineno-5-38"></a>    <span class="p">}</span>
-<a href="#__codelineno-5-39" id="__codelineno-5-39" name="__codelineno-5-39"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-7-1" id="__codelineno-7-1" name="__codelineno-7-1"></a><span class="cp">&lt;?php</span>
+<a href="#__codelineno-7-2" id="__codelineno-7-2" name="__codelineno-7-2"></a>
+<a href="#__codelineno-7-3" id="__codelineno-7-3" name="__codelineno-7-3"></a><span class="k">namespace</span> <span class="nx">App\Controllers</span><span class="p">;</span>
+<a href="#__codelineno-7-4" id="__codelineno-7-4" name="__codelineno-7-4"></a>
+<a href="#__codelineno-7-5" id="__codelineno-7-5" name="__codelineno-7-5"></a><span class="k">use</span> <span class="nx">App\ThirdParty\Ragnos\Controllers\BaseController</span><span class="p">;</span>
+<a href="#__codelineno-7-6" id="__codelineno-7-6" name="__codelineno-7-6"></a>
+<a href="#__codelineno-7-7" id="__codelineno-7-7" name="__codelineno-7-7"></a><span class="k">class</span> <span class="nc">Orders</span> <span class="k">extends</span> <span class="nx">BaseController</span>
+<a href="#__codelineno-7-8" id="__codelineno-7-8" name="__codelineno-7-8"></a><span class="p">{</span>
+<a href="#__codelineno-7-9" id="__codelineno-7-9" name="__codelineno-7-9"></a>    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">()</span>
+<a href="#__codelineno-7-10" id="__codelineno-7-10" name="__codelineno-7-10"></a>    <span class="p">{</span>
+<a href="#__codelineno-7-11" id="__codelineno-7-11" name="__codelineno-7-11"></a>        <span class="c1">// Load helpers</span>
+<a href="#__codelineno-7-12" id="__codelineno-7-12" name="__codelineno-7-12"></a>        <span class="nx">helper</span><span class="p">([</span><span class="s1">'form'</span><span class="p">,</span> <span class="s1">'url'</span><span class="p">]);</span>
+<a href="#__codelineno-7-13" id="__codelineno-7-13" name="__codelineno-7-13"></a>    <span class="p">}</span>
+<a href="#__codelineno-7-14" id="__codelineno-7-14" name="__codelineno-7-14"></a>
+<a href="#__codelineno-7-15" id="__codelineno-7-15" name="__codelineno-7-15"></a>    <span class="k">public</span> <span class="k">function</span> <span class="nf">index</span><span class="p">()</span>
+<a href="#__codelineno-7-16" id="__codelineno-7-16" name="__codelineno-7-16"></a>    <span class="p">{</span>
+<a href="#__codelineno-7-17" id="__codelineno-7-17" name="__codelineno-7-17"></a>        <span class="c1">// 1. Ensure logged in</span>
+<a href="#__codelineno-7-18" id="__codelineno-7-18" name="__codelineno-7-18"></a>        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">checkLogin</span><span class="p">();</span>
+<a href="#__codelineno-7-19" id="__codelineno-7-19" name="__codelineno-7-19"></a>
+<a href="#__codelineno-7-20" id="__codelineno-7-20" name="__codelineno-7-20"></a>        <span class="nv">$auth</span> <span class="o">=</span> <span class="nx">service</span><span class="p">(</span><span class="s1">'Admin_aut'</span><span class="p">);</span>
+<a href="#__codelineno-7-21" id="__codelineno-7-21" name="__codelineno-7-21"></a>
+<a href="#__codelineno-7-22" id="__codelineno-7-22" name="__codelineno-7-22"></a>        <span class="c1">// 2. Get user data</span>
+<a href="#__codelineno-7-23" id="__codelineno-7-23" name="__codelineno-7-23"></a>        <span class="nv">$data</span><span class="p">[</span><span class="s1">'user'</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$auth</span><span class="o">-&gt;</span><span class="na">name</span><span class="p">();</span>
+<a href="#__codelineno-7-24" id="__codelineno-7-24" name="__codelineno-7-24"></a>        <span class="nv">$data</span><span class="p">[</span><span class="s1">'isAdmin'</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$auth</span><span class="o">-&gt;</span><span class="na">isUserInGroup</span><span class="p">(</span><span class="s1">'Administrator'</span><span class="p">);</span>
+<a href="#__codelineno-7-25" id="__codelineno-7-25" name="__codelineno-7-25"></a>
+<a href="#__codelineno-7-26" id="__codelineno-7-26" name="__codelineno-7-26"></a>        <span class="k">return</span> <span class="nx">view</span><span class="p">(</span><span class="s1">'orders/index'</span><span class="p">,</span> <span class="nv">$data</span><span class="p">);</span>
+<a href="#__codelineno-7-27" id="__codelineno-7-27" name="__codelineno-7-27"></a>    <span class="p">}</span>
+<a href="#__codelineno-7-28" id="__codelineno-7-28" name="__codelineno-7-28"></a>
+<a href="#__codelineno-7-29" id="__codelineno-7-29" name="__codelineno-7-29"></a>    <span class="k">public</span> <span class="k">function</span> <span class="nf">delete</span><span class="p">(</span><span class="nv">$id</span><span class="p">)</span>
+<a href="#__codelineno-7-30" id="__codelineno-7-30" name="__codelineno-7-30"></a>    <span class="p">{</span>
+<a href="#__codelineno-7-31" id="__codelineno-7-31" name="__codelineno-7-31"></a>        <span class="c1">// 3. Strict restriction: Only Admins can delete</span>
+<a href="#__codelineno-7-32" id="__codelineno-7-32" name="__codelineno-7-32"></a>        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">checkUserInGroup</span><span class="p">(</span><span class="s1">'Administrator'</span><span class="p">);</span>
+<a href="#__codelineno-7-33" id="__codelineno-7-33" name="__codelineno-7-33"></a>
+<a href="#__codelineno-7-34" id="__codelineno-7-34" name="__codelineno-7-34"></a>        <span class="nv">$model</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\App\Models\OrdersModel</span><span class="p">();</span>
+<a href="#__codelineno-7-35" id="__codelineno-7-35" name="__codelineno-7-35"></a>        <span class="nv">$model</span><span class="o">-&gt;</span><span class="na">delete</span><span class="p">(</span><span class="nv">$id</span><span class="p">);</span>
+<a href="#__codelineno-7-36" id="__codelineno-7-36" name="__codelineno-7-36"></a>
+<a href="#__codelineno-7-37" id="__codelineno-7-37" name="__codelineno-7-37"></a>        <span class="k">return</span> <span class="nx">redirect</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">to</span><span class="p">(</span><span class="s1">'/orders'</span><span class="p">);</span>
+<a href="#__codelineno-7-38" id="__codelineno-7-38" name="__codelineno-7-38"></a>    <span class="p">}</span>
+<a href="#__codelineno-7-39" id="__codelineno-7-39" name="__codelineno-7-39"></a><span class="p">}</span>
 </code></pre></div></div>
 </div>
 </div>
