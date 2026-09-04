@@ -1,97 +1,146 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
+use App\ThirdParty\Ragnos\Auth\RagnosAuthInterface;
 use CodeIgniter\Config\BaseService;
-use CodeIgniter\Session\Session;
 
-class Admin_aut extends BaseService
+/**
+ * Class Admin_aut
+ *
+ * Proxy / Adaptador de retrocompatibilidad para el servicio de autenticación de Ragnos.
+ * Mantiene la compatibilidad 100% con código legado delegando todas las llamadas al
+ * driver configurado en el contenedor de servicios (service('Admin_aut')).
+ */
+class Admin_aut extends BaseService implements RagnosAuthInterface
 {
-
-    protected Session $session;
-
-    private static $user_record;
-
-    private static $campoId = 'usu_id';
-
-    private static $instance = null;
-
-    private function __construct()
+    /**
+     * Retorna la instancia activa del servicio de autenticación.
+     */
+    public static function getInstance(): RagnosAuthInterface
     {
-        helper('url');
-        helper('App\ThirdParty\Ragnos\Helpers\utiles_helper');
-        $this->session = session();
+        return service('Admin_aut');
     }
 
-    public static function getInstance()
+    /**
+     * Retorna el ID del usuario actual de manera estática (compatibilidad legacy).
+     */
+    public static function id(): ?int
     {
-        if (self::$instance == null) {
-            self::$instance = new Admin_aut();
-        }
-
-        return self::$instance;
+        return service('Admin_aut')->getUserId();
     }
 
-    public function isLoggedIn()
+    /**
+     * Obtiene el driver activo desde el contenedor de servicios.
+     */
+    protected function getDriver(): RagnosAuthInterface
     {
-        return !$this->id() ? false : true;
+        return service('Admin_aut');
     }
 
-    public function checkLogin()
+    /**
+     * {@inheritDoc}
+     */
+    public function checkLogin(): bool
     {
-        if (!$this->isLoggedIn()) {
-            $this->session->set('bef_uri', current_url());
-
-            redirectAndDie('admin/login', 401);
-        }
+        return $this->getDriver()->checkLogin();
     }
 
-    public static function id()
+    /**
+     * {@inheritDoc}
+     */
+    public function isUserInGroup(string $group): bool
     {
-        $id = sessionValue(Admin_aut::$campoId);
-        return $id;
+        return $this->getDriver()->isUserInGroup($group);
     }
 
-    public function getField($field)
+    /**
+     * {@inheritDoc}
+     */
+    public function getUserId(): ?int
     {
-        if ($this->isLoggedIn()) {
-            if (!Admin_aut::$user_record) {
-                $id                     = $this->id();
-                $sql                    = "select usu_id, usu_nombre, gru_nombre from gen_usuarios, gen_gruposdeusuarios where usu_grupo=gru_id and usu_id=?";
-                $db                     = db_connect();
-                $query                  = $db->query($sql, [$id]);
-                $result                 = $query->getFirstRow('array');
-                Admin_aut::$user_record = $result;
-            }
-            return isset(Admin_aut::$user_record[$field]) ? Admin_aut::$user_record[$field] : '';
-        } else {
-            return '';
-        }
+        return $this->getDriver()->getUserId();
     }
 
-    public function name()
+    /**
+     * {@inheritDoc}
+     */
+    public function getUserName(): ?string
     {
-        return $this->getField('usu_nombre');
+        return $this->getDriver()->getUserName();
     }
 
-    public function isUserInGroup($grupo)
+    /**
+     * {@inheritDoc}
+     */
+    public function getUserEmail(): ?string
     {
-        return (trim(strtolower($this->getField('gru_nombre'))) == trim(strtolower($grupo)));
+        return $this->getDriver()->getUserEmail();
     }
 
-    public function checkUserInGroup($grupos)
+    /**
+     * {@inheritDoc}
+     */
+    public function logout(): void
     {
-        $this->checkLogin();
-        $groupName = trim(strtolower($this->getField('gru_nombre')));
-        if (is_array($grupos)) {
-            $grupos = array_map(static fn($grupo) => trim(strtolower($grupo)), $grupos);
-            if (!in_array($groupName, $grupos)) {
-                redirectAndDie('admin/index', 403);
-            }
-        } else {
-            if ($groupName != trim(strtolower($grupos))) {
-                redirectAndDie('admin/index', 403);
-            }
-        }
+        $this->getDriver()->logout();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function checkApiToken(string $token): bool
+    {
+        return $this->getDriver()->checkApiToken($token);
+    }
+
+    // -------------------------------------------------------------------------
+    // Métodos de Retrocompatibilidad (Legacy API)
+    // -------------------------------------------------------------------------
+
+    /**
+     * {@inheritDoc}
+     */
+    public function isLoggedIn(): bool
+    {
+        return $this->checkLogin();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function name(): ?string
+    {
+        return $this->getUserName();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getField(string $field): mixed
+    {
+        return $this->getDriver()->getField($field);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function checkUserInGroup(string|array $grupos): void
+    {
+        $this->getDriver()->checkUserInGroup($grupos);
+    }
+
+    /**
+     * Delegación dinámica para cualquier método adicional del driver activo.
+     *
+     * @param string $method
+     * @param array<int, mixed> $arguments
+     * @return mixed
+     */
+    public function __call(string $method, array $arguments): mixed
+    {
+        return $this->getDriver()->{$method}(...$arguments);
     }
 }

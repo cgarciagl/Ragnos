@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\ThirdParty\Ragnos\Controllers;
 
 use CodeIgniter\Controller;
@@ -17,7 +19,6 @@ use App\ThirdParty\Ragnos\OpenApi\OpenApiDiscovery;
  * and performing functions that are needed by all your controllers.
  * Extend this class in any new controllers:
  *     class Home extends BaseController
- *
  */
 abstract class BaseController extends Controller
 {
@@ -53,80 +54,110 @@ abstract class BaseController extends Controller
 
         $this->session = \Config\Services::session();
         $this->db      = db_connect();
-
     }
 
-    public function checkLogin()
+    /**
+     * Verifica la autenticación del usuario. Si no está autenticado,
+     * deniega el acceso con 401 (API) o redirige al login (Web).
+     */
+    public function checkLogin(): void
     {
         if (OpenApiDiscovery::isActive()) {
             return;
         }
 
+        $auth = service('Admin_aut');
+
         if (isApiCall()) {
             $token = $this->getAuthorizationToken();
-            if (!$this->validarToken($token)) {
+            if (!$auth->checkApiToken($token)) {
                 $this->denyApiAccess(401, 'Unauthorized');
             }
             return;
         }
 
-        $auth = service('Admin_aut');
-        $auth->checkLogin();
+        if (!$auth->checkLogin()) {
+            $this->session->set('bef_uri', current_url());
+            redirectAndDie('admin/login', 401);
+        }
     }
 
+    /**
+     * Valida un token API utilizando el servicio de autenticación desacoplado.
+     */
     public function validarToken(string $token): bool
     {
-        return $this->getApiUser($token) !== null;
+        return service('Admin_aut')->checkApiToken($token);
     }
 
+    /**
+     * Valida si un token API pertenece a un usuario dentro de los grupos especificados.
+     */
     public function validarTokenEnGrupos(string $token, string|array $grupos): bool
     {
-        $user = $this->getApiUser($token);
+        $auth = service('Admin_aut');
+        if (!$auth->checkApiToken($token)) {
+            return false;
+        }
 
-        return $user !== null
-            && in_array($this->normalizeGroup($user['gru_nombre']), $this->normalizeGroups($grupos), true);
+        foreach ((array) $grupos as $group) {
+            if ($auth->isUserInGroup((string) $group)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
+    /**
+     * Verifica que el usuario pertenezca a uno de los grupos especificados.
+     * Si no cumple la condición, deniega acceso con 403 (o 401 si no está autenticado).
+     */
     public function checkUserInGroup(string|array $grupos): void
     {
         if (OpenApiDiscovery::isActive()) {
             return;
         }
 
+        $auth = service('Admin_aut');
+
         if (isApiCall()) {
             $token = $this->getAuthorizationToken();
-            $user  = $this->getApiUser($token);
-
-            if ($user === null) {
+            if (!$auth->checkApiToken($token)) {
                 $this->denyApiAccess(401, 'Unauthorized');
             }
 
-            if (!in_array($this->normalizeGroup($user['gru_nombre']), $this->normalizeGroups($grupos), true)) {
+            $allowed = false;
+            foreach ((array) $grupos as $group) {
+                if ($auth->isUserInGroup((string) $group)) {
+                    $allowed = true;
+                    break;
+                }
+            }
+
+            if (!$allowed) {
                 $this->denyApiAccess(403, 'Forbidden');
             }
 
             return;
         }
 
-        $auth = service('Admin_aut');
-        $auth->checkUserInGroup($grupos);
-    }
-
-    private function getApiUser(string $token): ?array
-    {
-        if ($token === '') {
-            return null;
+        if (!$auth->checkLogin()) {
+            $this->session->set('bef_uri', current_url());
+            redirectAndDie('admin/login', 401);
         }
 
-        $db = \Config\Database::connect();
+        $allowed = false;
+        foreach ((array) $grupos as $group) {
+            if ($auth->isUserInGroup((string) $group)) {
+                $allowed = true;
+                break;
+            }
+        }
 
-        return $db->table('gen_usuarios u')
-            ->select('u.usu_id, g.gru_nombre')
-            ->join('gen_gruposdeusuarios g', 'g.gru_id = u.usu_grupo')
-            ->where('u.usu_token', $token)
-            ->where('u.usu_activo', 'S')
-            ->get()
-            ->getRowArray() ?: null;
+        if (!$allowed) {
+            redirectAndDie('admin/index', 403);
+        }
     }
 
     private function getAuthorizationToken(): string
@@ -158,5 +189,4 @@ abstract class BaseController extends Controller
 
         exit;
     }
-
 }

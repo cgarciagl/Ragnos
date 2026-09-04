@@ -339,41 +339,20 @@ trait CrudOperationsTrait
     }
 
     /**
-     * Método auxiliar para resolver la identidad sin efectos secundarios
+     * Método auxiliar para resolver la identidad del usuario para auditoría
      */
     private function getCurrentUserId(): int
     {
-        // A. Si ya hay sesión (Web), usarla directo
-        if (session()->has('usu_id')) {
-            return (int) session()->get('usu_id');
-        }
+        $auth = service('Admin_aut');
+        return $auth->getUserId() ?? 0;
+    }
 
-        // B. Si es API, intentar resolver el token
-        if (isApiCall()) {
-            $header = request()->getHeaderLine('Authorization');
-
-            // Extraer el token si viene como "Bearer <token>"
-            if (preg_match('/Bearer\s(\S+)/', $header, $matches)) {
-                $token = $matches[1];
-            } else {
-                $token = $header; // Intento fallback por si envían el token crudo
-            }
-
-            if ($token) {
-                $db = \Config\Database::connect();
-                // Solo seleccionamos el ID para optimizar memoria
-                $user = $db->table('gen_usuarios')
-                    ->select('usu_id')
-                    ->where('usu_token', $token)
-                    ->get()
-                    ->getRowArray();
-
-                if ($user) {
-                    return (int) $user['usu_id'];
-                }
-            }
-        }
-
-        return 0; // Usuario desconocido o sistema
+    /**
+     * Método auxiliar para resolver el nombre del usuario para auditoría
+     */
+    private function getCurrentUserName(): ?string
+    {
+        $auth = service('Admin_aut');
+        return $auth->getUserName();
     }
 }

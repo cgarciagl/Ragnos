@@ -14,6 +14,22 @@ class RagnosConfig extends BaseConfig
     public $currency = 'USD';
     public $locale = 'es_MX';
 
+    /**
+     * Driver de autenticación activo.
+     * Opciones soportadas: 'native' | 'shield'
+     */
+    public string $authDriver = 'native';
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $envDriver = env('ragnos.authDriver');
+        if ($envDriver !== null && $envDriver !== '') {
+            $this->authDriver = (string) $envDriver;
+        }
+    }
+
     public bool $Ragnos_openapi_enabled = true;
     public bool $Ragnos_openapi_public = ENVIRONMENT !== 'production';
     public string $Ragnos_openapi_title = 'Ragnos API';

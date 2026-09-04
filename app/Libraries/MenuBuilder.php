@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Libraries;
 
 class MenuBuilder
@@ -168,5 +170,37 @@ class MenuBuilder
     public function getSidebarMenu(): array
     {
         return [];
+    }
+
+    /**
+     * Obtiene el ID del usuario actual a través del servicio de autenticación.
+     */
+    public function getUserId(): ?int
+    {
+        $auth = $this->authorization ?? service('Admin_aut');
+        if (method_exists($auth, 'getUserId')) {
+            return $auth->getUserId();
+        }
+        if (method_exists($auth, 'id')) {
+            return $auth->id();
+        }
+
+        return null;
+    }
+
+    /**
+     * Obtiene el nombre del usuario actual a través del servicio de autenticación.
+     */
+    public function getUserName(): ?string
+    {
+        $auth = $this->authorization ?? service('Admin_aut');
+        if (method_exists($auth, 'getUserName')) {
+            return $auth->getUserName();
+        }
+        if (method_exists($auth, 'name')) {
+            return $auth->name();
+        }
+
+        return null;
     }
 }

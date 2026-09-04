@@ -142,6 +142,53 @@ $email = service('Admin_aut')->getField('usu_email');
 
 ---
 
+## Driver Architecture (`RagnosAuthInterface`)
+
+Starting with Ragnos Framework v1.1+, the authentication subsystem is decoupled under an **Adapter/Driver** pattern. This allows swapping the underlying authentication provider without breaking the documented public API (`service('Admin_aut')`, `$this->checkLogin()`, `$this->checkUserInGroup()`, audit logs, etc.).
+
+### Available Drivers
+
+1. **`native` (Default)**:
+   - Built on native PHP sessions and tables `gen_usuarios` and `gen_gruposdeusuarios`.
+   - Includes Bearer Token support for REST APIs against `usu_token`.
+   - Case-insensitive role comparison.
+2. **`shield`**:
+   - Direct integration with [CodeIgniter 4 Shield](https://shield.codeigniter.com/).
+   - Maps calls to Shield APIs (`auth()`, `auth()->user()`, `auth('tokens')`, etc.).
+   - If Shield is not installed in the project, the system automatically falls back safely to the native driver.
+
+### Driver Configuration
+
+You can define the active driver in `app/Config/RagnosConfig.php`:
+
+```php
+public string $authDriver = 'native'; // Options: 'native' | 'shield'
+```
+
+Or override it per environment in your `.env` file:
+
+```ini
+ragnos.authDriver = shield
+```
+
+### `RagnosAuthInterface` Contract Methods
+
+All drivers implement `App\ThirdParty\Ragnos\Auth\RagnosAuthInterface`:
+
+| Method                         | Return Type | Description                                          |
+| ------------------------------ | ----------- | ---------------------------------------------------- |
+| `checkLogin()`                 | `bool`      | Returns `true` if a user is currently authenticated. |
+| `isUserInGroup(string $group)` | `bool`      | Checks membership in the specified group.            |
+| `getUserId()`                  | `?int`      | Unique user identifier or `null`.                    |
+| `getUserName()`                | `?string`   | Authenticated username or `null`.                    |
+| `getUserEmail()`               | `?string`   | User email address or `null`.                        |
+| `logout()`                     | `void`      | Terminates the active session and credentials.       |
+| `checkApiToken(string $token)` | `bool`      | Validates a Bearer token for API requests.           |
+
+To guarantee 100% backward compatibility, both drivers and the `Admin_aut` service also support legacy methods: `$auth->isLoggedIn()`, `$auth->id()`, `$auth->name()`, `$auth->getField($field)`, and `$auth->checkUserInGroup($grupos)`.
+
+---
+
 ## API Authentication
 
 System supports authentication for REST APIs transparently.

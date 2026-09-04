@@ -189,7 +189,7 @@ class Admin extends BaseController
 
     public function logout()
     {
-        session()->destroy();
+        service('Admin_aut')->logout();
         return redirect()->to('admin/login');
     }
 

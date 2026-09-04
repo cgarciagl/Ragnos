@@ -30,9 +30,20 @@ class Services extends BaseService
      * }
      */
 
-    public static function Admin_aut()
+    public static function Admin_aut(bool $getShared = true): \App\ThirdParty\Ragnos\Auth\RagnosAuthInterface
     {
-        return \App\Services\Admin_aut::getInstance();
+        if ($getShared) {
+            return static::getSharedInstance('Admin_aut');
+        }
+
+        $config = config('RagnosConfig');
+        $driver = $config->authDriver ?? 'native';
+
+        if ($driver === 'shield' && class_exists(\CodeIgniter\Shield\Auth::class)) {
+            return new \App\ThirdParty\Ragnos\Auth\Drivers\ShieldAuthDriver();
+        }
+
+        return new \App\ThirdParty\Ragnos\Auth\Drivers\NativeAuthDriver();
     }
 
     public static function menu()
