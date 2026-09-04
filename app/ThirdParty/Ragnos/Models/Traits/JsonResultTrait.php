@@ -38,13 +38,25 @@ trait JsonResultTrait
     function getTableForAPI()
     {
         if ($this->table) {
-            $count = $this->getCountForSearch();
-            $this->checkRelations();
-            $this->performSearchForJson();
-            $this->setLimitForJsonResult();
-            $this->setOrderByForJsonResult();
-            $query = $this->builder()->get();
-            $datos = $query->getResultArray();
+            if (!empty($this->baseQuerySQL)) {
+                $count = $this->getCountForSearchSQL($this->baseQuerySQL);
+                $this->checkRelations();
+                $this->performSearchForJson();
+                $this->setLimitForJsonResult();
+                $this->setOrderByForJsonResult();
+                $sqlCompiled = $this->builder()->getCompiledSelect();
+                $sqlCompiled = " WITH {$this->table} AS ({$this->baseQuerySQL})  " . $sqlCompiled;
+                $db          = db_connect();
+                $query       = $db->query($sqlCompiled);
+            } else {
+                $count = $this->getCountForSearch();
+                $this->checkRelations();
+                $this->performSearchForJson();
+                $this->setLimitForJsonResult();
+                $this->setOrderByForJsonResult();
+                $query = $this->builder()->get();
+            }
+            $datos = $query ? $query->getResultArray() : [];
 
             $processedData = [];
             foreach ($datos as $aRow) {

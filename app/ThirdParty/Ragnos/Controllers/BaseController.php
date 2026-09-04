@@ -77,7 +77,8 @@ abstract class BaseController extends Controller
         }
 
         if (!$auth->checkLogin()) {
-            $this->session->set('bef_uri', current_url());
+            $session = $this->session ?? \Config\Services::session();
+            $session->set('bef_uri', current_url());
             redirectAndDie('admin/login', 401);
         }
     }

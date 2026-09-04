@@ -34,6 +34,26 @@ abstract class RDatasetModel extends RTableModel
         parent::__construct();
     }
 
+    /**
+     * Busca un registro por ID. Si es un RQueryController (tiene baseQuerySQL),
+     * ejecuta la consulta con CTE en lugar de consultar una tabla física inexistente.
+     */
+    public function find($id = null)
+    {
+        if (!empty($this->baseQuerySQL) && $id !== null) {
+            $builder = $this->builder();
+            $builder->where($this->table . '.' . $this->primaryKey, $id);
+            $builder->limit(1);
+            $sqlCompiled = $builder->getCompiledSelect();
+            $sqlCompiled = " WITH {$this->table} AS ({$this->baseQuerySQL}) " . $sqlCompiled;
+            $db          = db_connect();
+            $query       = $db->query($sqlCompiled);
+            return $query ? $query->getRowArray() : null;
+        }
+
+        return parent::find($id);
+    }
+
     use FieldManagementTrait;
     use SearchFilterTrait;
     use CrudOperationsTrait;

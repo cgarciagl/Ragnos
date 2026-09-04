@@ -196,12 +196,24 @@ trait CrudOperationsTrait
         }
         $this->checkRelations();
         $this->builder()->limit(1);
-        $query = $this->builder()->get();
-        $b     = $query->getRowArray();
-        if (count($b) > 0) {
+
+        if (!empty($this->baseQuerySQL)) {
+            $sqlCompiled = $this->builder()->getCompiledSelect();
+            $sqlCompiled = " WITH {$this->table} AS ({$this->baseQuerySQL}) " . $sqlCompiled;
+            $db          = db_connect();
+            $query       = $db->query($sqlCompiled);
+        } else {
+            $query = $this->builder()->get();
+        }
+
+        $b     = $query ? $query->getRowArray() : null;
+        if (!empty($b)) {
             foreach ($this->ofieldlist as $k => $fieldItem) {
-                $fieldItem->setValue($b[$this->realField($fieldItem->getFieldName())]);
-                if ($fieldItem instanceof RSearchField) {
+                $fieldName = $this->realField($fieldItem->getFieldName());
+                if (isset($b[$fieldName])) {
+                    $fieldItem->setValue($b[$fieldName]);
+                }
+                if ($fieldItem instanceof RSearchField && isset($b[$fieldItem->getFieldName()])) {
                     $fieldItem->setIdValue($b[$fieldItem->getFieldName()]);
                 }
             }
