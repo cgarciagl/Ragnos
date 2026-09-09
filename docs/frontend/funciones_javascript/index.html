@@ -225,6 +225,10 @@
               <ul class="nav flex-column">
               </ul>
             </li>
+            <li class="nav-item" data-bs-level="2"><a href="#ragnosuiprintelementtarget-title-printelement" class="nav-link">Ragnos.UI.printElement(target, title) / printElement()</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
               </ul>
             </li>
         </ul>
@@ -526,6 +530,25 @@ Una función simple diseñada para ser pasada como parámetro <code>callback</co
 <a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
 <a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1">// O mediante el alias global directo:</span>
 <a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="nx">exportToExcel</span><span class="p">(</span><span class="s1">'mi_tabla'</span><span class="p">,</span><span class="w"> </span><span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s1">'table'</span><span class="p">).</span><span class="nx">outerHTML</span><span class="p">);</span>
+</code></pre></div>
+<hr />
+<h2 id="ragnosuiprintelementtarget-title-printelement"><code>Ragnos.UI.printElement(target, title)</code> / <code>printElement()</code></h2>
+<p>Imprime de forma limpia y aislada cualquier contenedor o elemento del DOM (como <code>#imprimible</code>), clonando el contenido en un iframe fuera de pantalla, preservando los estilos CSS y temas, y evitando interferencias de animaciones o elementos de navegación.</p>
+<h3 id="parametros_6">Parámetros</h3>
+<ul>
+<li><strong><code>target</code></strong> (string | HTMLElement): Selector CSS (ej. <code>'#imprimible'</code>) o referencia directa al nodo DOM a imprimir.</li>
+<li><strong><code>title</code></strong> (string, opcional): Título para la vista previa de impresión y encabezado del documento (por defecto <code>document.title</code>).</li>
+</ul>
+<h3 id="retorno_4">Retorno</h3>
+<ul>
+<li>Devuelve <code>true</code> si el elemento objetivo fue encontrado y el flujo de impresión se preparó, o <code>false</code> si el elemento no existe.</li>
+</ul>
+<h3 id="ejemplo-de-uso_5">Ejemplo de uso</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1">// Imprimir el reporte actual</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nx">printElement</span><span class="p">(</span><span class="s1">'#imprimible'</span><span class="p">,</span><span class="w"> </span><span class="s1">'Reporte de Ventas por Mes'</span><span class="p">);</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1">// O mediante el espacio de nombres:</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="nx">Ragnos</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">printElement</span><span class="p">(</span><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">'imprimible'</span><span class="p">),</span><span class="w"> </span><span class="s1">'Estado de Cuenta'</span><span class="p">);</span>
 </code></pre></div></div>
             </div>
         </div>
