@@ -221,6 +221,10 @@
               <ul class="nav flex-column">
               </ul>
             </li>
+            <li class="nav-item" data-bs-level="2"><a href="#ragnostableexporttoexcelfilename-htmlcontent-exporttoexcel" class="nav-link">Ragnos.Table.exportToExcel(fileName, htmlContent) / exportToExcel()</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
               </ul>
             </li>
         </ul>
@@ -499,6 +503,29 @@ Una función simple diseñada para ser pasada como parámetro <code>callback</co
 <a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span><span class="s2">"#sidebar-report"</span><span class="p">,</span>
 <a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">  </span><span class="s2">"estadisticas/grafico_ventas"</span><span class="p">,</span>
 <a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="p">);</span>
+</code></pre></div>
+<hr />
+<h2 id="ragnostableexporttoexcelfilename-htmlcontent-exporttoexcel"><code>Ragnos.Table.exportToExcel(fileName, htmlContent)</code> / <code>exportToExcel()</code></h2>
+<p>Exporta tablas HTML y reportes completos directamente a formato Microsoft Excel nativo (<strong><code>.xlsx</code></strong>), sin advertencias de compatibilidad y preservando la jerarquía visual del reporte (títulos, filtros, subtotales, totales y estilos de celda).</p>
+<p>Internamente, envía de forma asíncrona (<code>fetch</code> POST) el HTML procesado al endpoint nativo <code>ragnos/export-xlsx</code>, el cual utiliza <code>htmlToXLSXFile()</code> en el backend para generar y descargar un paquete OpenXML legítimo.</p>
+<h3 id="parametros_5">Parámetros</h3>
+<ul>
+<li><strong><code>fileName</code></strong> (string): Nombre base del archivo descargado (ej. <code>'reporte_ventas'</code>). Si no termina en <code>.xlsx</code>, la extensión se añade automáticamente.</li>
+<li><strong><code>htmlContent</code></strong> (string): Contenido HTML que se convertirá a Excel (usualmente <code>document.getElementById('imprimible').innerHTML</code> o el HTML de una tabla).</li>
+</ul>
+<h3 id="retorno_3">Retorno</h3>
+<ul>
+<li>Devuelve una <code>Promise&lt;boolean&gt;</code> que resuelve a <code>true</code> si la descarga se inició exitosamente o <code>false</code> si ocurrió algún error (mostrando un toast de notificación).</li>
+</ul>
+<h3 id="ejemplo-de-uso_4">Ejemplo de uso</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1">// Exportar el contenedor de reporte actual</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="kd">const</span><span class="w"> </span><span class="nx">nombreArchivo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'reporte_empleados_'</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">();</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="kd">const</span><span class="w"> </span><span class="nx">html</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">'imprimible'</span><span class="p">).</span><span class="nx">innerHTML</span><span class="p">;</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="k">await</span><span class="w"> </span><span class="nx">Ragnos</span><span class="p">.</span><span class="nx">Table</span><span class="p">.</span><span class="nx">exportToExcel</span><span class="p">(</span><span class="nx">nombreArchivo</span><span class="p">,</span><span class="w"> </span><span class="nx">html</span><span class="p">);</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1">// O mediante el alias global directo:</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="nx">exportToExcel</span><span class="p">(</span><span class="s1">'mi_tabla'</span><span class="p">,</span><span class="w"> </span><span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s1">'table'</span><span class="p">).</span><span class="nx">outerHTML</span><span class="p">);</span>
 </code></pre></div></div>
             </div>
         </div>

@@ -456,18 +456,186 @@
 <a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="x">    'custom_widths' =&gt; ['A' =&gt; 10, 'B' =&gt; 35, 'C' =&gt; 18, 'D' =&gt; 12]</span>
 <a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="x">]);</span>
 </code></pre></div>
-<h3 id="arraytocsvfile"><code>arrayToCSVFile()</code></h3>
-<p>Convierte un array asociativo en un archivo <code>.csv</code> estándar compatible con Excel y UTF-8 (con BOM incluido para compatibilidad con caracteres especiales y tildes).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="x">function arrayToCSVFile(</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="x">    array $results,</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="x">    $fileName = 'temp.csv',</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="x">    $download = true,</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="x">    $delimiter = ',',</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="x">    $enclosure = '"',</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="x">    $escape = '\\'</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="x">): bool</span>
+<hr />
+<h3 id="htmltoxlsxfile-htmltoexcelfile"><code>htmlToXLSXFile()</code> / <code>htmlToExcelFile()</code></h3>
+<p>Convierte contenido HTML (tablas simples o reportes complejos de Ragnos con títulos, filtros activos, fecha/hora, grupos de corte de control, subtotales y resumen general) en un archivo nativo de Microsoft Excel (<code>.xlsx</code>) sin necesidad de librerías externas o dependencias como PhpSpreadsheet.</p>
+<p>Preserva fielmente la jerarquía visual del reporte, ajusta los anchos de columna automáticamente para evitar textos truncados y aplica una paleta de estilos ejecutiva con colores diferenciados para cabeceras, grupos, subtotales y totales generales.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="x">function htmlToXLSXFile(</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="x">    string $html,</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="x">    string $fileName = 'reporte.xlsx',</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="x">    bool $download = true,</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="x">    string $sheetName = 'Reporte',</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="x">    array $options = []</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="x">): bool</span>
 </code></pre></div>
 <h4 id="parametros_2">Parámetros</h4>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Parámetro</th>
+<th style="text-align: left;">Tipo</th>
+<th style="text-align: left;">Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>$html</code></td>
+<td style="text-align: left;"><code>string</code></td>
+<td style="text-align: left;">Contenido HTML a convertir (puede ser una tabla <code>&lt;table&gt;</code> o el HTML completo de un reporte <code>#imprimible</code>).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$fileName</code></td>
+<td style="text-align: left;"><code>string</code></td>
+<td style="text-align: left;">Nombre del archivo o ruta de destino (por defecto: <code>'reporte.xlsx'</code>). Si no incluye <code>.xlsx</code>, se añadirá automáticamente.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$download</code></td>
+<td style="text-align: left;"><code>bool</code></td>
+<td style="text-align: left;">Si es <code>true</code>, envía los encabezados HTTP para descarga directa en el navegador. Si es <code>false</code>, guarda el archivo en disco.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$sheetName</code></td>
+<td style="text-align: left;"><code>string</code></td>
+<td style="text-align: left;">Nombre de la pestaña de la hoja de cálculo (por defecto: <code>'Reporte'</code>).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$options</code></td>
+<td style="text-align: left;"><code>array</code></td>
+<td style="text-align: left;">(Opcional) Opciones avanzadas de personalización de estilos.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="opciones-de-personalizacion-options_1">Opciones de Personalización (<code>$options</code>)</h4>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Opción</th>
+<th style="text-align: left;">Tipo</th>
+<th style="text-align: left;">Defecto</th>
+<th style="text-align: left;">Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>'header_bg'</code></td>
+<td style="text-align: left;"><code>string</code></td>
+<td style="text-align: left;"><code>'1F4E79'</code></td>
+<td style="text-align: left;">Color HEX de fondo para las cabeceras de columnas en tablas (azul corporativo por defecto).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>'header_color'</code></td>
+<td style="text-align: left;"><code>string</code></td>
+<td style="text-align: left;"><code>'FFFFFF'</code></td>
+<td style="text-align: left;">Color HEX del texto de cabeceras de columnas.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>'title_color'</code></td>
+<td style="text-align: left;"><code>string</code></td>
+<td style="text-align: left;"><code>'1F4E79'</code></td>
+<td style="text-align: left;">Color HEX utilizado para el título principal del reporte y los bordes del resumen general.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>'group_bg'</code></td>
+<td style="text-align: left;"><code>string</code></td>
+<td style="text-align: left;"><code>'E9EEF4'</code></td>
+<td style="text-align: left;">Color HEX de fondo para las filas de encabezados de grupo (control break).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>'subtotal_bg'</code></td>
+<td style="text-align: left;"><code>string</code></td>
+<td style="text-align: left;"><code>'F2F4F7'</code></td>
+<td style="text-align: left;">Color HEX de fondo para las filas de subtotales.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>'grand_bg'</code></td>
+<td style="text-align: left;"><code>string</code></td>
+<td style="text-align: left;"><code>'D9E1F2'</code></td>
+<td style="text-align: left;">Color HEX de fondo para la fila de resumen general (gran total).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>'font_name'</code></td>
+<td style="text-align: left;"><code>string</code></td>
+<td style="text-align: left;"><code>'Calibri'</code></td>
+<td style="text-align: left;">Nombre de la fuente tipográfica.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>'font_size'</code></td>
+<td style="text-align: left;"><code>int</code></td>
+<td style="text-align: left;"><code>11</code></td>
+<td style="text-align: left;">Tamaño base de la fuente.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>'auto_width'</code></td>
+<td style="text-align: left;"><code>bool</code></td>
+<td style="text-align: left;"><code>true</code></td>
+<td style="text-align: left;">Ajustar automáticamente el ancho de las columnas según su contenido.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="ejemplos-de-uso_1">Ejemplos de Uso</h4>
+<h5 id="1-exportar-un-reporte-rsimplelevelreport-directamente">1. Exportar un Reporte RSimpleLevelReport Directamente</h5>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="x">helper('App\ThirdParty\Ragnos\Helpers\xlsxfiles_helper');</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="x">$reporte = new \App\ThirdParty\Ragnos\Controllers\RSimpleLevelReport();</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="x">$reporte-&gt;quickSetup('Mejores Empleados', $datos, ['employeeNumber', 'Empleado', 'TotalVentasTrimestre'], ['Oficina' =&gt; ['label' =&gt; 'Oficina']]);</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="x">// Generar el HTML del reporte y convertirlo a un archivo .xlsx real</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="x">$html = $reporte-&gt;generate();</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="x">htmlToXLSXFile($html, 'mejores_empleados.xlsx');</span>
+</code></pre></div>
+<h5 id="2-exportacion-nativa-desde-la-instancia-de-rsimplelevelreport">2. Exportación Nativa desde la Instancia de RSimpleLevelReport</h5>
+<p>El objeto <code>RSimpleLevelReport</code> incluye el método directo <code>exportToXLSX()</code>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="x">$reporte = new \App\ThirdParty\Ragnos\Controllers\RSimpleLevelReport();</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="x">$reporte-&gt;quickSetup('Margen por Línea', $datos, ['productLine', 'MargenTotal']);</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="x">// Descarga directa en el navegador</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="x">$reporte-&gt;exportToXLSX('margen_por_linea.xlsx');</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="x">// O guardar en el servidor</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="x">$reporte-&gt;exportToXLSX(WRITEPATH . 'reportes/margen.xlsx', false);</span>
+</code></pre></div></p>
+<h5 id="3-descarga-directa-via-parametro-get">3. Descarga Directa Vía Parámetro GET</h5>
+<p>Cualquier controlador que invoque <code>$reporte-&gt;render()</code> soporta exportación inmediata a <code>.xlsx</code> simplemente añadiendo <code>?export=xlsx</code> a la URL:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>http://localhost/ragnos/content/index.php/tienda/reportes/mejoresempleados?export=xlsx
+</code></pre></div></p>
+<h3 id="buildzippackage"><code>buildZipPackage()</code></h3>
+<p>Empaqueta una colección de archivos o contenidos en un archivo ZIP/XLSX estándar. Utiliza la extensión nativa <code>\ZipArchive</code> si está disponible en PHP; de lo contrario, conmuta de forma transparente a un empaquetador ZIP nativo escrito en PHP puro (aprovechando <code>gzdeflate</code> de la extensión <code>zlib</code> incorporada en PHP). Esto garantiza que la generación de hojas de cálculo <code>.xlsx</code> funcione al 100% sin importar si la extensión compilada <code>php-zip</code> está presente o no.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="x">function buildZipPackage(string $outputPath, array $entries): bool</span>
+</code></pre></div>
+<h4 id="parametros_3">Parámetros</h4>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Parámetro</th>
+<th style="text-align: left;">Tipo</th>
+<th style="text-align: left;">Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>$outputPath</code></td>
+<td style="text-align: left;"><code>string</code></td>
+<td style="text-align: left;">Ruta completa del archivo <code>.zip</code> o <code>.xlsx</code> a crear.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>$entries</code></td>
+<td style="text-align: left;"><code>array</code></td>
+<td style="text-align: left;">Array asociativo <code>['ruta/interna' =&gt; ['type' =&gt; 'string'\|'file', 'content' =&gt; ...]]</code>.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="arraytocsvfile"><code>arrayToCSVFile()</code></h3>
+<p>Convierte un array asociativo en un archivo <code>.csv</code> estándar compatible con Excel y UTF-8 (con BOM incluido para compatibilidad con caracteres especiales y tildes).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="x">function arrayToCSVFile(</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="x">    array $results,</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="x">    $fileName = 'temp.csv',</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="x">    $download = true,</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="x">    $delimiter = ',',</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="x">    $enclosure = '"',</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="x">    $escape = '\\'</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="x">): bool</span>
+</code></pre></div>
+<h4 id="parametros_4">Parámetros</h4>
 <table>
 <thead>
 <tr>
@@ -510,49 +678,49 @@
 </tbody>
 </table>
 <h4 id="ejemplo-de-uso_1">Ejemplo de Uso</h4>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="x">helper('App\ThirdParty\Ragnos\Helpers\csvfiles_helper');</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="x">$productos = [</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="x">    ['id' =&gt; 1, 'nombre' =&gt; 'Laptop Gamer', 'precio' =&gt; 1200.00],</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="x">    ['id' =&gt; 2, 'nombre' =&gt; 'Mouse USB', 'precio' =&gt; 25.50],</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="x">];</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="x">// Descarga directa en formato CSV compatible con Excel</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="x">arrayToCSVFile($productos, 'catalogo_productos.csv');</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="x">helper('App\ThirdParty\Ragnos\Helpers\csvfiles_helper');</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="x">$productos = [</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="x">    ['id' =&gt; 1, 'nombre' =&gt; 'Laptop Gamer', 'precio' =&gt; 1200.00],</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="x">    ['id' =&gt; 2, 'nombre' =&gt; 'Mouse USB', 'precio' =&gt; 25.50],</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="x">];</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="x">// Descarga directa en formato CSV compatible con Excel</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="x">arrayToCSVFile($productos, 'catalogo_productos.csv');</span>
 </code></pre></div>
 <hr />
 <h2 id="depuracion-y-diagnostico">Depuración y Diagnóstico</h2>
 <h3 id="dbgconsola"><code>dbgConsola()</code></h3>
 <p>Envía datos de PHP directamente a la consola del navegador del desarrollador. Utiliza <code>console.log</code> vía inyección de script. <strong>Solo funciona en entorno de desarrollo (<code>development</code>).</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="x">function dbgConsola($data, string $label = 'dbgConsola')</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="x">function dbgConsola($data, string $label = 'dbgConsola')</span>
 </code></pre></div>
 <h4 id="ejemplo_1">Ejemplo</h4>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="x">$usuarios = $model-&gt;findAll();</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="x">dbgConsola($usuarios, 'Lista de Usuarios');</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="x">// Verifica la consola de Chrome/Firefox (F12)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="x">$usuarios = $model-&gt;findAll();</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="x">dbgConsola($usuarios, 'Lista de Usuarios');</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="x">// Verifica la consola de Chrome/Firefox (F12)</span>
 </code></pre></div>
 <h3 id="dbgdie"><code>dbgDie()</code></h3>
 <p>Mata la ejecución del script y devuelve los datos proporcionados en formato JSON. Es perfecto para depurar llamadas API o AJAX.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="x">function dbgDie($data, int $statusCode = 200): never</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="x">function dbgDie($data, int $statusCode = 200): never</span>
 </code></pre></div>
 <hr />
 <h2 id="formato-y-ui">Formato y UI</h2>
 <h3 id="currency"><code>currency()</code></h3>
 <p>Formatea números como moneda respetando la configuración regional (<code>locale</code>) sin necesidad de extensiones complejas.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="x">function currency(float|int $number, bool $includeSymbol = true): string</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="x">function currency(float|int $number, bool $includeSymbol = true): string</span>
 </code></pre></div>
 <h4 id="ejemplo_2">Ejemplo</h4>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="x">echo currency(1500.50); // Muestra "$1,500.50" (dependiendo de config)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="x">echo currency(1500.50); // Muestra "$1,500.50" (dependiendo de config)</span>
 </code></pre></div>
 <h3 id="returnasjson"><code>returnAsJSON()</code></h3>
 <p>Estandariza las respuestas JSON de tu API o controladores AJAX. Maneja automáticamente los encabezados HTTP y la codificación UTF-8.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="x">function returnAsJSON($data, $statusCode = 200)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="x">function returnAsJSON($data, $statusCode = 200)</span>
 </code></pre></div>
 <h4 id="ejemplo_3">Ejemplo</h4>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="x">if (!$usuario) {</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="x">    returnAsJSON(['error' =&gt; 'Usuario no encontrado'], 404);</span>
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="x">}</span>
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="x">returnAsJSON($usuario);</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="x">if (!$usuario) {</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="x">    returnAsJSON(['error' =&gt; 'Usuario no encontrado'], 404);</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="x">}</span>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="x">returnAsJSON($usuario);</span>
 </code></pre></div></div>
             </div>
         </div>
