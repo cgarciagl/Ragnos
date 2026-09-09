@@ -25,6 +25,27 @@ $grouprecords = 0; ?>
     <?php echo $yo->generate(); ?>
 </div>
 
+<style>
+    @media print {
+        .report-wrapper {
+            box-shadow: none !important;
+            margin: 0 !important;
+        }
+
+        .btn,
+        nav,
+        header,
+        footer,
+        #barradebotones {
+            display: none !important;
+        }
+
+        body {
+            background: white !important;
+        }
+    }
+</style>
+
 
 
 <script>

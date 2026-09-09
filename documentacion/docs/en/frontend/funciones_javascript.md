@@ -364,3 +364,29 @@ await Ragnos.Table.exportToExcel(fileName, html);
 exportToExcel('my_table', document.querySelector('table').outerHTML);
 ```
 
+---
+
+## `Ragnos.UI.printElement(target, title)` / `printElement()`
+
+Cleanly and in isolation prints any container or DOM element (such as `#imprimible`), cloning the content into an off-screen iframe, preserving CSS styles and themes, and eliminating interference from animations or navigation elements.
+
+### Parameters
+
+- **`target`** (string | HTMLElement): CSS selector (e.g. `'#imprimible'`) or direct reference to the DOM node to be printed.
+- **`title`** (string, optional): Title for the print preview and document header (defaults to `document.title`).
+
+### Return Value
+
+- Returns `true` if the target element was found and print preview was initiated, or `false` if the element does not exist.
+
+### Usage Example
+
+```javascript
+// Print the current report
+printElement('#imprimible', 'Sales by Month Report');
+
+// Or using the namespace:
+Ragnos.UI.printElement(document.getElementById('imprimible'), 'Account Statement');
+```
+
+

@@ -1062,20 +1062,90 @@ Ragnos.UI = {
       });
     });
 
+    // Remove animation classes that leave elements at initial keyframe (e.g. opacity: 0 from animate__fadeIn)
+    printable.classList.remove("animate__animated", "animate__fadeIn", "animate__fadeOut");
+    printable.querySelectorAll(".animate__animated, .animate__fadeIn, .animate__fadeOut").forEach((node) => {
+      node.classList.remove("animate__animated", "animate__fadeIn", "animate__fadeOut");
+    });
+
+    // Create an off-screen iframe without display:none / hidden=true.
+    // In Chromium and WebKit, iframes with display:none are excluded from layout and produce blank print output.
     const frame = document.createElement("iframe");
-    frame.hidden = true;
+    frame.style.position = "fixed";
+    frame.style.right = "100%";
+    frame.style.bottom = "100%";
+    frame.style.width = "0";
+    frame.style.height = "0";
+    frame.style.border = "0";
     frame.title = "Print preview";
     document.body.append(frame);
+
     const styles = Array.from(document.querySelectorAll('link[rel="stylesheet"], style'))
       .map((node) => node.outerHTML)
       .join("");
-    frame.srcdoc = `<!doctype html><html><head><title>${Ragnos.DOM.escapeHtml(title)}</title>${styles}</head><body>${printable.outerHTML}</body></html>`;
+
+    const baseTag = document.baseURI ? `<base href="${document.baseURI}">` : "";
+    const printResetStyle = `
+      <style>
+        *, *::before, *::after {
+          -webkit-print-color-adjust: exact !important;
+          print-color-adjust: exact !important;
+          animation: none !important;
+          transition: none !important;
+        }
+        html, body {
+          background-color: #ffffff !important;
+          color: #000000 !important;
+          opacity: 1 !important;
+          visibility: visible !important;
+          margin: 0 !important;
+          padding: 12px !important;
+        }
+        .card {
+          box-shadow: none !important;
+          border: 1px solid #dee2e6 !important;
+        }
+        .shadow-sm {
+          box-shadow: none !important;
+        }
+        @media print {
+          body {
+            padding: 0 !important;
+          }
+        }
+      </style>
+    `;
+
+    frame.srcdoc = `<!doctype html><html><head><title>${Ragnos.DOM.escapeHtml(title)}</title>${baseTag}${styles}${printResetStyle}</head><body>${printable.outerHTML}</body></html>`;
+
+    let cleanedUp = false;
+    const cleanup = () => {
+      if (cleanedUp) return;
+      cleanedUp = true;
+      setTimeout(() => {
+        try {
+          frame.remove();
+        } catch (_) {}
+      }, 500);
+    };
+
+    if (frame.contentWindow) {
+      frame.contentWindow.addEventListener("afterprint", cleanup);
+    }
+
     frame.addEventListener(
       "load",
       () => {
-        frame.contentWindow.focus();
-        frame.contentWindow.print();
-        setTimeout(() => frame.remove(), 1000);
+        setTimeout(() => {
+          try {
+            frame.contentWindow.focus();
+            frame.contentWindow.print();
+          } catch (e) {
+            console.error("printElement error:", e);
+          }
+          // Fallback cleanup if afterprint does not fire
+          setTimeout(cleanup, 60000);
+        }, 150);
       },
       { once: true },
     );

@@ -385,7 +385,7 @@ class RSimpleLevelReport extends BaseController
 
     public function generate(): string
     {
-        $output = '<div id="imprimible" class="ragnos-report-container p-4 bg-body shadow-sm border rounded mb-5">';
+        $output = '<div class="ragnos-report-container p-4 bg-body shadow-sm border rounded mb-5">';
 
         // Header del reporte con fecha
         $output .= '<div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">';
