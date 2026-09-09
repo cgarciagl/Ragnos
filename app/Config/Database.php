@@ -200,4 +200,13 @@ class Database extends Config
             $this->defaultGroup = 'tests';
         }
     }
+
+    /**
+     * Resets any shared database connections and registrars.
+     */
+    public static function reset(): void
+    {
+        parent::reset();
+        static::$instances = [];
+    }
 }

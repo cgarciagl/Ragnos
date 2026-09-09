@@ -12,6 +12,8 @@ use CodeIgniter\Config\Services;
  */
 class RagnosTestCase extends CIUnitTestCase
 {
+    private static ?array $originalTestsConfig = null;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -31,6 +33,14 @@ class RagnosTestCase extends CIUnitTestCase
         if ($this->db) {
             $this->db->close();
         }
+
+        // Restore original database configuration
+        if (self::$originalTestsConfig !== null) {
+            $config = config('Database');
+            $config->tests = self::$originalTestsConfig;
+        }
+
+        \Config\Database::reset();
     }
 
     /**
@@ -44,6 +54,10 @@ class RagnosTestCase extends CIUnitTestCase
     protected function initializeDatabase()
     {
         $config = config('Database');
+
+        if (self::$originalTestsConfig === null) {
+            self::$originalTestsConfig = $config->tests;
+        }
 
         $config->tests['DBDriver'] = 'SQLite3';
         $config->tests['database'] = ':memory:';

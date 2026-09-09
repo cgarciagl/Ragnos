@@ -333,21 +333,25 @@ trait CrudOperationsTrait
             return;
         }
 
-        // 1. Obtenemos el ID limpiamente (sin modificar la session global)
-        $userId = $this->getCurrentUserId();
+        try {
+            // 1. Obtenemos el ID limpiamente (sin modificar la session global)
+            $userId = $this->getCurrentUserId();
 
-        $auditModel = new \App\ThirdParty\Ragnos\Models\AuditLogModel();
+            $auditModel = new \App\ThirdParty\Ragnos\Models\AuditLogModel($this->db ?? null);
 
-        $auditModel->insert([
-            'user_id'    => $userId,
-            'table_name' => $this->table,
-            'record_id'  => $recordId,
-            'action'     => $action,
-            // 2. UNESCAPED_UNICODE para que guarde acentos y ñ correctamente en el JSON
-            'changes'    => $changes ? json_encode($changes, JSON_UNESCAPED_UNICODE) : null,
-            'ip_address' => request()->getIPAddress(),
-            'user_agent' => (string) request()->getUserAgent()
-        ]);
+            $auditModel->insert([
+                'user_id'    => $userId,
+                'table_name' => $this->table,
+                'record_id'  => $recordId,
+                'action'     => $action,
+                // 2. UNESCAPED_UNICODE para que guarde acentos y ñ correctamente en el JSON
+                'changes'    => $changes ? json_encode($changes, JSON_UNESCAPED_UNICODE) : null,
+                'ip_address' => request()->getIPAddress(),
+                'user_agent' => (string) request()->getUserAgent()
+            ]);
+        } catch (\Throwable $e) {
+            log_message('error', '[CrudOperationsTrait::logAudit] ' . $e->getMessage());
+        }
     }
 
     /**
@@ -355,8 +359,12 @@ trait CrudOperationsTrait
      */
     private function getCurrentUserId(): int
     {
-        $auth = service('Admin_aut');
-        return $auth->getUserId() ?? 0;
+        try {
+            $auth = service('Admin_aut');
+            return $auth->getUserId() ?? 0;
+        } catch (\Throwable $e) {
+            return 0;
+        }
     }
 
     /**
@@ -364,7 +372,11 @@ trait CrudOperationsTrait
      */
     private function getCurrentUserName(): ?string
     {
-        $auth = service('Admin_aut');
-        return $auth->getUserName();
+        try {
+            $auth = service('Admin_aut');
+            return $auth->getUserName();
+        } catch (\Throwable) {
+            return null;
+        }
     }
 }

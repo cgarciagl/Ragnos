@@ -221,7 +221,7 @@ class ShieldAuthDriver implements RagnosAuthInterface
     {
         if (!$this->checkLogin()) {
             session()->set('bef_uri', current_url());
-            redirectAndDie('admin/login', 401);
+            redirectAndDie('admin/login', 302);
         }
 
         $allowed = false;

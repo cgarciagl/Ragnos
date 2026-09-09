@@ -12,16 +12,22 @@ use CodeIgniter\Config\Services;
  */
 trait RequestSimulator
 {
+    private static array $cleanServer = [];
+
     /**
      * Limpia todas las superglobales y resetea Services.
      * Llamar en setUp() de cada test case.
      */
     protected function resetRequest(): void
     {
+        if (empty(self::$cleanServer)) {
+            self::$cleanServer = $_SERVER;
+        }
+
         Services::reset(true);
         $_POST   = [];
         $_GET    = [];
-        $_SERVER = [];
+        $_SERVER = self::$cleanServer;
         \setOldRecordCache([]);
     }
 

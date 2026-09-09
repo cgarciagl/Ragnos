@@ -79,7 +79,7 @@ abstract class BaseController extends Controller
         if (!$auth->checkLogin()) {
             $session = $this->session ?? \Config\Services::session();
             $session->set('bef_uri', current_url());
-            redirectAndDie('admin/login', 401);
+            redirectAndDie('admin/login', 302);
         }
     }
 
@@ -145,7 +145,7 @@ abstract class BaseController extends Controller
 
         if (!$auth->checkLogin()) {
             $this->session->set('bef_uri', current_url());
-            redirectAndDie('admin/login', 401);
+            redirectAndDie('admin/login', 302);
         }
 
         $allowed = false;

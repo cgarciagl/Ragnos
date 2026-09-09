@@ -1,12 +1,12 @@
 # PHP Helpers and Utilities
 
-Ragnos includes collection of global helper functions designed to speed up common tasks and improve application performance. Available throughout framework automatically.
+Ragnos includes a collection of global helper functions designed to speed up common tasks and improve application performance. Available throughout the framework automatically.
 
 ## Database and Cache Management
 
 ### `getCachedData()`
 
-Executes raw SQL query and stores result in CodeIgniter 4 cache system. Ideal for heavy queries or reports not needing real-time data.
+Executes a raw SQL query and stores the result in the CodeIgniter 4 cache system. Ideal for heavy queries or reports not needing real-time data.
 
 ```php
 function getCachedData(string $sql, array $params = [], ?string $cacheKey = null, int $ttl = 86400): array
@@ -23,7 +23,7 @@ function getCachedData(string $sql, array $params = [], ?string $cacheKey = null
 
 #### Return
 
-Returns associative `array` with query results.
+Returns an associative `array` with query results.
 
 #### Usage Example
 
@@ -47,12 +47,12 @@ public function getMetrics()
 #### ⚠️ Warnings and Considerations
 
 1.  **Real Time Data:** Do not use for critical data changing constantly (e.g. real time inventory with high concurrency, bank balances). Data served can be up to `$ttl` seconds old.
-2.  **Cache Invalidation:** If using custom `$cacheKey` (like `'dashboard_metrics'`), can manually clear that cache when data changes using `cache()->delete('dashboard_metrics')`. Automatic keys harder to manually invalidate.
-3.  **Dev Environment:** Remember if developing and changing data, might see old data until cache cleared (`php spark cache:clear`).
+2.  **Cache Invalidation:** If using custom `$cacheKey` (like `'dashboard_metrics'`), you can manually clear that cache when data changes using `cache()->delete('dashboard_metrics')`. Automatic keys are harder to manually invalidate.
+3.  **Dev Environment:** Remember if developing and changing data, you might see old data until cache is cleared (`php spark cache:clear`).
 
 ### `queryToAssocArray()`
 
-Executes SQL query and transforms result directly into associative array `[id => value]`. Extremely useful for populating dropdowns (`<select>`).
+Executes a SQL query and transforms the result directly into an associative array `[id => value]`. Extremely useful for populating dropdowns (`<select>`).
 
 ```php
 function queryToAssocArray(string $sql, string $index_key, string $column_key): array
@@ -66,6 +66,146 @@ $sql = "SELECT id, name FROM categories ORDER BY name ASC";
 $options = queryToAssocArray($sql, 'id', 'name');
 
 // Result: [1 => 'Electronics', 2 => 'Home', ...]
+```
+
+---
+
+## File Export (Excel & CSV)
+
+### `arrayToXLSXFile()` / `arrayToExcelFile()`
+
+Converts an associative array or data matrix into a native Microsoft Excel (`.xlsx`) file without needing external Composer libraries like PhpSpreadsheet. Generates compact files with modern styling (bold header with custom background fill, clean grid borders, automatic column width calculation, frozen top row pane, and auto-filters).
+
+```php
+function arrayToXLSXFile(
+    array $results,
+    string $fileName = 'temp.xlsx',
+    bool $download = true,
+    string $sheetName = 'Sheet1',
+    array $options = []
+): bool
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+| :--- | :--- | :--- |
+| `$results` | `array` | Associative array or data matrix to export. The array keys of the first item are used as column headers. |
+| `$fileName` | `string` | Target file name or path (default: `'temp.xlsx'`). If `.xlsx` extension is omitted, it is appended automatically. |
+| `$download` | `bool` | If `true`, sends HTTP download headers to the client browser. If `false`, saves the file to server storage. |
+| `$sheetName` | `string` | Spreadsheet tab name (default: `'Sheet1'`). |
+| `$options` | `array` | (Optional) Advanced customization and styling options. |
+
+#### Customization Options (`$options`)
+
+| Option | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `'header_bg'` | `string` | `'1F4E79'` | Header background color in HEX format (e.g. `'107C41'` for Excel green, `'2B579A'` for corporate blue). |
+| `'header_color'` | `string` | `'FFFFFF'` | Header text color in HEX format. |
+| `'auto_width'` | `bool` | `true` | Calculates and adjusts each column width dynamically based on longest text. |
+| `'auto_filter'` | `bool` | `true` | Adds Excel auto-filter dropdown arrows across the header row. |
+| `'freeze_header'` | `bool` | `true` | Freezes the first row so headers remain visible when scrolling down. |
+| `'custom_widths'` | `array` | `[]` | Explicit custom column widths by column letter or index (e.g. `['A' => 25, 'B' => 40]`). |
+| `'font_name'` | `string` | `'Calibri'` | Typography font family name. |
+| `'font_size'` | `int` | `11` | Typography font size in points. |
+
+#### Usage Examples
+
+##### 1. Direct Browser Download in a Controller
+```php
+namespace App\Controllers;
+
+class Sales extends BaseController
+{
+    public function exportExcel()
+    {
+        helper('App\ThirdParty\Ragnos\Helpers\xlsxfiles_helper');
+
+        $db = \Config\Database::connect();
+        $orders = $db->table('orders')
+            ->select('orderNumber as OrderID, orderDate as Date, status as Status, customerNumber as Customer')
+            ->get()
+            ->getResultArray();
+
+        // Direct download to user browser as 'sales_report.xlsx'
+        arrayToXLSXFile($orders, 'sales_report.xlsx');
+    }
+}
+```
+
+##### 2. Save on Server Storage (for Email Attachments or Batch Jobs)
+```php
+helper('App\ThirdParty\Ragnos\Helpers\xlsxfiles_helper');
+
+$data = [
+    ['id' => 101, 'product' => '4K Monitor', 'price' => 450.00, 'stock' => 12, 'code' => '00123'],
+    ['id' => 102, 'product' => 'Mechanical Keyboard', 'price' => 95.50, 'stock' => 30, 'code' => '00456'],
+];
+
+$targetPath = WRITEPATH . 'uploads/reports/inventory_' . date('Ymd_His') . '.xlsx';
+
+// Passing download = false saves the file directly to server path
+if (arrayToXLSXFile($data, $targetPath, false, 'Inventory')) {
+    log_message('info', 'File successfully generated at: ' . $targetPath);
+}
+```
+
+##### 3. Advanced Styling and Filter Options
+```php
+helper('App\ThirdParty\Ragnos\Helpers\xlsxfiles_helper');
+
+$clients = [
+    ['id' => 1, 'name' => 'Acme Corp', 'balance' => 15200.75, 'active' => true],
+    ['id' => 2, 'name' => 'Globex Ltd', 'balance' => -350.00, 'active' => false],
+];
+
+arrayToXLSXFile($clients, 'vip_clients.xlsx', true, 'VIP Clients', [
+    'header_bg'     => '107C41', // Excel-like green
+    'header_color'  => 'FFFFFF', // White text
+    'auto_filter'   => true,     // Excel dropdown filters
+    'freeze_header' => true,     // Sticky header row
+    'custom_widths' => ['A' => 10, 'B' => 35, 'C' => 18, 'D' => 12]
+]);
+```
+
+### `arrayToCSVFile()`
+
+Converts an associative array into a standard `.csv` file compatible with Excel and UTF-8 (with BOM included for special characters and accents).
+
+```php
+function arrayToCSVFile(
+    array $results,
+    $fileName = 'temp.csv',
+    $download = true,
+    $delimiter = ',',
+    $enclosure = '"',
+    $escape = '\\'
+): bool
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+| :--- | :--- | :--- |
+| `$results` | `array` | Associative data array to export. |
+| `$fileName` | `string` | Output file name or target path (default: `'temp.csv'`). |
+| `$download` | `bool` | `true` to download in browser, `false` to save to server storage. |
+| `$delimiter` | `string` | Delimiter character (default: `','`). |
+| `$enclosure` | `string` | Enclosure character (default: `'"'`). |
+| `$escape` | `string` | Escape character (default: `'\\'`). |
+
+#### Usage Example
+
+```php
+helper('App\ThirdParty\Ragnos\Helpers\csvfiles_helper');
+
+$products = [
+    ['id' => 1, 'name' => 'Gaming Laptop', 'price' => 1200.00],
+    ['id' => 2, 'name' => 'USB Mouse', 'price' => 25.50],
+];
+
+// Direct browser download as Excel-compatible CSV
+arrayToCSVFile($products, 'products_catalog.csv');
 ```
 
 ---

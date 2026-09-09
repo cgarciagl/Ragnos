@@ -19,7 +19,7 @@ class NativeAuthDriver implements RagnosAuthInterface
     /**
      * Instancia del gestor de sesiones de CodeIgniter.
      */
-    protected Session $session;
+    protected ?Session $session = null;
 
     /**
      * Caché en memoria del registro completo del usuario autenticado.
@@ -43,7 +43,11 @@ class NativeAuthDriver implements RagnosAuthInterface
     public function __construct()
     {
         helper(['url', 'App\ThirdParty\Ragnos\Helpers\utiles_helper']);
-        $this->session = session();
+        try {
+            $this->session = session();
+        } catch (\Throwable) {
+            $this->session = null;
+        }
     }
 
     /**
@@ -78,9 +82,19 @@ class NativeAuthDriver implements RagnosAuthInterface
         }
 
         // 2. Identidad establecida en la Sesión Web de PHP
-        $sessionId = $this->session->get($this->campoId);
-        if ($sessionId !== null && $sessionId !== '') {
-            return (int) $sessionId;
+        if ($this->session !== null) {
+            try {
+                $sessionId = $this->session->get($this->campoId);
+                if ($sessionId !== null && $sessionId !== '') {
+                    return (int) $sessionId;
+                }
+            } catch (\Throwable) {
+                // Continuar a fallback de $_SESSION
+            }
+        }
+
+        if (isset($_SESSION[$this->campoId]) && $_SESSION[$this->campoId] !== '') {
+            return (int) $_SESSION[$this->campoId];
         }
 
         // 3. Fallback: Si es llamada API y aún no se ha validado el token explícitamente
@@ -103,9 +117,19 @@ class NativeAuthDriver implements RagnosAuthInterface
             return (string) $this->apiUser['usu_nombre'];
         }
 
-        $sessionName = $this->session->get('usu_nombre');
-        if ($sessionName !== null && $sessionName !== '') {
-            return (string) $sessionName;
+        if ($this->session !== null) {
+            try {
+                $sessionName = $this->session->get('usu_nombre');
+                if ($sessionName !== null && $sessionName !== '') {
+                    return (string) $sessionName;
+                }
+            } catch (\Throwable) {
+                // Continuar a fallback
+            }
+        }
+
+        if (!empty($_SESSION['usu_nombre'])) {
+            return (string) $_SESSION['usu_nombre'];
         }
 
         $fieldName = (string) $this->getField('usu_nombre');
@@ -135,8 +159,14 @@ class NativeAuthDriver implements RagnosAuthInterface
      */
     public function logout(): void
     {
-        $this->session->remove([$this->campoId, 'usu_nombre', 'gru_nombre', 'usu_token']);
-        $this->session->destroy();
+        if ($this->session !== null) {
+            try {
+                $this->session->remove([$this->campoId, 'usu_nombre', 'gru_nombre', 'usu_token']);
+                $this->session->destroy();
+            } catch (\Throwable) {
+            }
+        }
+        unset($_SESSION[$this->campoId], $_SESSION['usu_nombre'], $_SESSION['gru_nombre'], $_SESSION['usu_token']);
         $this->userRecord = null;
         $this->apiUser    = null;
     }
@@ -233,8 +263,13 @@ class NativeAuthDriver implements RagnosAuthInterface
     public function checkUserInGroup(string|array $grupos): void
     {
         if (!$this->checkLogin()) {
-            $this->session->set('bef_uri', current_url());
-            redirectAndDie('admin/login', 401);
+            if ($this->session !== null) {
+                try {
+                    $this->session->set('bef_uri', current_url());
+                } catch (\Throwable) {
+                }
+            }
+            redirectAndDie('admin/login', 302);
         }
 
         $groupName    = mb_strtolower(trim((string) $this->getField('gru_nombre')));
