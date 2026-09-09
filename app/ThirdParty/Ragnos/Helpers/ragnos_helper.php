@@ -214,3 +214,17 @@ if (!function_exists('moneyToNumber')) {
         return (float) $amt;
     }
 }
+
+if (!function_exists('integerFormat')) {
+    function integerFormat(float|int $num): string
+    {
+        if (extension_loaded('intl')) {
+            $locale    = Ragnos::config()->locale ?? 'es_MX';
+            $formatter = new NumberFormatter($locale, NumberFormatter::DECIMAL);
+            $formatter->setAttribute(NumberFormatter::FRACTION_DIGITS, 0);
+            return $formatter->format($num);
+        }
+        return number_format($num, 0);
+    }
+}
+

@@ -104,4 +104,59 @@ class RSimpleLevelReportTest extends RagnosTestCase
         $this->assertNotFalse($zip->getFromName('xl/worksheets/sheet1.xml'));
         $zip->close();
     }
+
+    public function testSubtotalsFormatQuantityAsIntegerAndMoneyAsCurrency(): void
+    {
+        $reporte = new RSimpleLevelReport();
+        $datos = [
+            ['productName' => 'Producto 1', 'quantityInStock' => 150, 'buyPrice' => 25.50],
+            ['productName' => 'Producto 2', 'quantityInStock' => 200, 'buyPrice' => 10.00],
+        ];
+        $reporte->setShowTotals(true);
+        $reporte->setSummableFields(['quantityInStock', 'buyPrice']);
+        $reporte->setFieldFormats([
+            'quantityInStock' => 'integer',
+            'buyPrice'        => 'money',
+        ]);
+        $reporte->quickSetup('Reporte Stock', $datos, [
+            'productName'     => 'Producto',
+            'quantityInStock' => 'Cantidad en Stock',
+            'buyPrice'        => 'Precio',
+        ]);
+
+        $html = $reporte->generate();
+        // Check that quantityInStock subtotal is formatted as integer (350), NOT as currency ($ 350.00)
+        $this->assertStringContainsString('350', $html);
+        $this->assertStringNotContainsString('$ 350', $html);
+        $this->assertStringNotContainsString('$350', $html);
+        // Check that buyPrice subtotal has currency format
+        $this->assertMatchesRegularExpression('/\$ ?35\.50/', $html);
+    }
+
+    public function testAutoDetectsQuantityInStockAsIntegerFormat(): void
+    {
+        $reporte = new RSimpleLevelReport();
+        $datos = [
+            ['productName' => 'Producto 1', 'quantityInStock' => 100],
+            ['productName' => 'Producto 2', 'quantityInStock' => 250],
+        ];
+        $reporte->setShowTotals(true);
+        $reporte->quickSetup('Reporte Auto Stock', $datos, [
+            'productName'     => 'Producto',
+            'quantityInStock' => 'Cantidad en stock',
+        ]);
+
+        $html = $reporte->generate();
+        $this->assertStringContainsString('350', $html);
+        $this->assertStringNotContainsString('$ 350', $html);
+        $this->assertStringNotContainsString('$350', $html);
+    }
+
+    public function testFormatTotalValueWithCustomCallable(): void
+    {
+        $reporte = new RSimpleLevelReport();
+        $reporte->setFieldFormat('custom', fn($val) => $val . ' unidades');
+        $this->assertSame('50 unidades', $reporte->formatTotalValue('custom', 50));
+    }
 }
+

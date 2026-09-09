@@ -611,13 +611,67 @@ class RDatasetReportGenerator
         $reportCheck = new RSimpleLevelReport();
         $reportCheck->setShowTotals(true);
 
-        // Mapear campos a etiquetas legibles
+        // Mapear campos a etiquetas legibles y detectar campos sumables con sus formatos
         $listFieldsLabels = [];
         $summables        = [];
+        $fieldFormats     = [];
+        $pk               = $this->model->primaryKey ?? null;
+        $rawConfig        = method_exists($this->controller, 'getFieldsConfig') ? $this->controller->getFieldsConfig() : [];
 
         foreach ($selectFields as $f) {
             $listFieldsLabels[$f] = $this->getFieldLabel($f);
+
+            // Determinar si el campo es numérico/sumable y su formato
+            if ($f === $pk) {
+                continue;
+            }
+
+            $config = $this->model->ofieldlist[$f] ?? ($rawConfig[$f] ?? null);
+            if (!$config) {
+                continue;
+            }
+
+            $rules = is_array($config) ? ($config['rules'] ?? '') :
+                (method_exists($config, 'getRules') ? ($config->getRules() ?? '') : ($config->rules ?? ''));
+
+            $type = is_array($config) ? ($config['type'] ?? 'text') :
+                (method_exists($config, 'getType') ? $config->getType() : ($config->type ?? 'text'));
+
+            // Ignorar campos únicos o no acumulables
+            if (strpos($rules, 'is_unique') !== false || in_array($type, ['fileupload', 'imageupload', 'password', 'date', 'datetime', 'switch', 'boolean'])) {
+                continue;
+            }
+
+            $isMoney   = (strpos($rules, 'money') !== false || $type === 'money');
+            $isDecimal = (strpos($rules, 'decimal') !== false || $type === 'decimal');
+            $isInteger = (strpos($rules, 'integer') !== false || $type === 'integer');
+            $isNumeric = ($isMoney || $isDecimal || $isInteger || strpos($rules, 'numeric') !== false || $type === 'number');
+
+            if ($isNumeric) {
+                $summables[] = $f;
+                if ($isMoney) {
+                    $fieldFormats[$f] = 'money';
+                } elseif ($isDecimal) {
+                    $fieldFormats[$f] = 'decimal';
+                } elseif ($isInteger || preg_match('/quantity|stock|cant(idad)?|qty|unidades|count/i', $f)) {
+                    $fieldFormats[$f] = 'integer';
+                } else {
+                    // Verificar si hay decimales en los datos para campos con regla numeric genérica
+                    $hasDecimals = false;
+                    foreach ($data as $dRow) {
+                        $v = $dRow[$f] ?? null;
+                        if ($v !== null && $v !== '' && is_numeric($v) && (float) $v != (int) $v) {
+                            $hasDecimals = true;
+                            break;
+                        }
+                    }
+                    $fieldFormats[$f] = $hasDecimals ? 'decimal' : 'integer';
+                }
+            }
         }
+
+        $reportCheck->setSummableFields($summables);
+        $reportCheck->setFieldFormats($fieldFormats);
 
         // Titulo del reporte concatenando filtros para contexto
         $reportTitle = 'Reporte de ' . $this->controller->getTitle();

@@ -20,6 +20,7 @@ class RSimpleLevelReport extends BaseController
 
     // Nuevas propiedades para acumular sumas
     private array $summableFields = [];
+    private array $fieldFormats = [];
     private array $groupTotals = [];
     private array $grandTotals = [];
 
@@ -41,6 +42,64 @@ class RSimpleLevelReport extends BaseController
     public function setSummableFields(array $fields): void
     {
         $this->summableFields = $fields;
+    }
+
+    public function setFieldFormats(array $formats): void
+    {
+        $this->fieldFormats = $formats;
+    }
+
+    public function setFieldFormat(string $field, string|callable $format): void
+    {
+        $this->fieldFormats[$field] = $format;
+    }
+
+    public function getFieldFormats(): array
+    {
+        return $this->fieldFormats;
+    }
+
+    public function formatTotalValue(string $field, float|int $val): string
+    {
+        $format = $this->fieldFormats[$field] ?? null;
+
+        if ($format === null) {
+            $label     = $this->listfields[$field] ?? '';
+            $searchStr = $field . ' ' . (is_string($label) ? $label : '');
+
+            if (preg_match('/quantity|stock|cant(idad)?|unidades|count|qty/i', $searchStr)) {
+                $format = 'integer';
+            } elseif (preg_match('/precio|price|monto|amount|costo|cost|total|deuda|saldo|pagado|comprado|msrp|credit|credito|margen/i', $searchStr)) {
+                $format = 'money';
+            } else {
+                $format = (floor($val) == $val) ? 'integer' : 'decimal';
+            }
+        }
+
+        if (is_callable($format)) {
+            return (string) call_user_func($format, $val);
+        }
+
+        switch ($format) {
+            case 'integer':
+            case 'int':
+                if (function_exists('integerFormat')) {
+                    return integerFormat($val);
+                }
+                return number_format($val, 0);
+
+            case 'decimal':
+            case 'number':
+                return number_format($val, 2);
+
+            case 'money':
+            case 'currency':
+            default:
+                if (function_exists('moneyFormat')) {
+                    return moneyFormat((float) $val);
+                }
+                return '$' . number_format($val, 2);
+        }
     }
 
     public function getData(): array
@@ -180,12 +239,8 @@ class RSimpleLevelReport extends BaseController
 
             if ($isSummable) {
                 // Usamos fieldNameToCheck para recuperar el valor correcto del array de totales
-                $val = $totalsSource[$fieldNameToCheck] ?? 0;
-                if (function_exists('moneyFormat')) {
-                    $content = moneyFormat($val);
-                } else {
-                    $content = number_format($val, 2);
-                }
+                $val     = $totalsSource[$fieldNameToCheck] ?? 0;
+                $content = $this->formatTotalValue($fieldNameToCheck, $val);
             }
 
             $padding  = $isGrandTotal ? 'py-2 px-2 fs-6' : 'py-1 px-2 small';
