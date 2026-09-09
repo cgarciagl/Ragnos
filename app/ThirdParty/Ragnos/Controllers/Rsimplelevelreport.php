@@ -6,7 +6,7 @@ use App\ThirdParty\Ragnos\Controllers\Ragnos;
 use CodeIgniter\View\RendererInterface; // Para tipar el retorno de view()
 use CodeIgniter\HTTP\IncomingRequest; // Si se necesitara inyectar
 
-class RSimpleLevelReport
+class RSimpleLevelReport extends BaseController
 {
     private string $title = '';
     private string $descfilter = '';
@@ -383,8 +383,86 @@ class RSimpleLevelReport
         return $output;
     }
 
-    public function render(string $rutadevuelta = 'admin/index'): string
+    /**
+     * Exporta el reporte actual a un archivo Excel (.xlsx) nativo con formato completo.
+     *
+     * @param string $fileName Nombre de archivo opcional (por defecto se genera a partir del título y fecha)
+     * @param bool   $download Si es true descarga el archivo vía HTTP, si es false lo guarda localmente
+     * @param array  $options  Opciones adicionales para htmlToXLSXFile
+     * @return bool True si tuvo éxito, false en caso de error
+     */
+    public function exportToXLSX(string $fileName = '', bool $download = true, array $options = []): bool
     {
+        helper('App\ThirdParty\Ragnos\Helpers\xlsxfiles_helper');
+        if (empty($fileName)) {
+            $baseName = !empty($this->title) ? url_title($this->title, '_', true) : 'reporte';
+            $fileName = $baseName . '_' . date('d.m.Y_H.i') . '.xlsx';
+        }
+
+        $html = $this->generate();
+        return htmlToXLSXFile($html, $fileName, $download, $this->title ?: 'Reporte', $options);
+    }
+
+    /**
+     * Endpoint controlador para procesar peticiones POST de exportación de HTML a Excel (.xlsx)
+     * invocadas desde JavaScript (utiles.js exportToExcel).
+     */
+    public function exportHtmlToXlsx()
+    {
+        helper('App\ThirdParty\Ragnos\Helpers\xlsxfiles_helper');
+        $request  = service('request');
+        $html     = $request ? ($request->getPost('html') ?? '') : '';
+        $fileName = $request ? ($request->getPost('filename') ?? 'reporte.xlsx') : 'reporte.xlsx';
+
+        if (empty(trim($html))) {
+            log_message('error', 'exportHtmlToXlsx: Petición recibida sin contenido HTML.');
+            return service('response')->setStatusCode(400)->setBody('Contenido HTML no proporcionado');
+        }
+
+        if (!preg_match('/\.xlsx$/i', $fileName)) {
+            $fileName .= '.xlsx';
+        }
+
+        $tempPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'export_' . uniqid('', true) . '.xlsx';
+        try {
+            if (htmlToXLSXFile($html, $tempPath, false)) {
+                $content = file_get_contents($tempPath);
+                return service('response')
+                    ->setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+                    ->setHeader('Content-Disposition', 'attachment; filename="' . basename($fileName) . '"')
+                    ->setBody($content);
+            }
+        } catch (\Throwable $e) {
+            log_message('error', 'exportHtmlToXlsx Exception: ' . $e->getMessage() . "\n" . $e->getTraceAsString());
+        } finally {
+            if (file_exists($tempPath)) {
+                @unlink($tempPath);
+            }
+        }
+
+        log_message('error', 'exportHtmlToXlsx: Falló la generación del archivo Excel. Longitud HTML recibido: ' . strlen($html));
+        return service('response')->setStatusCode(500)->setBody('Error generando el archivo Excel');
+    }
+
+    public function render(string $rutadevuelta = 'admin/index')
+    {
+        $request = service('request');
+        $exportParam = $request ? strtolower((string) $request->getGet('export')) : '';
+        if ($exportParam === 'xlsx' || $exportParam === 'excel') {
+            $baseName = !empty($this->title) ? url_title($this->title, '_', true) : 'reporte';
+            $fileName = $baseName . '_' . date('d.m.Y_H.i') . '.xlsx';
+
+            $tempPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'export_' . uniqid('', true) . '.xlsx';
+            if ($this->exportToXLSX($tempPath, false)) {
+                $content = file_get_contents($tempPath);
+                @unlink($tempPath);
+                return service('response')
+                    ->setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+                    ->setHeader('Content-Disposition', 'attachment; filename="' . basename($fileName) . '"')
+                    ->setBody($content);
+            }
+        }
+
         $data['rutadevuelta'] = $rutadevuelta;
         $data['yo']           = $this;
 

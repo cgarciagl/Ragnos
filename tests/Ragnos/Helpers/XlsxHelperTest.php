@@ -208,4 +208,168 @@ class XlsxHelperTest extends CIUnitTestCase
         $this->assertStringContainsString('id,nombre,precio', $csvContent);
         $this->assertStringContainsString('1,"Producto 1",10.5', $csvContent);
     }
+
+    public function testHtmlToXlsxReturnsFalseForEmptyHtml(): void
+    {
+        $this->assertFalse(\htmlToXLSXFile(''));
+        $this->assertFalse(\htmlToXLSXFile('   '));
+        $this->assertFalse(\htmlToExcelFile(''));
+    }
+
+    public function testHtmlToXlsxGeneratesValidZipAndOpenXmlFromSimpleTable(): void
+    {
+        $html = '<table border="1">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>101</td>
+                    <td>Servicio Web</td>
+                    <td class="text-end">$ 1,500.00</td>
+                </tr>
+            </tbody>
+        </table>';
+
+        $outputFile = $this->getTempFilePath('.xlsx');
+        $result = \htmlToXLSXFile($html, $outputFile, false, 'TablaSimple');
+
+        $this->assertTrue($result);
+        $this->assertFileExists($outputFile);
+        $this->assertGreaterThan(0, filesize($outputFile));
+
+        $zip = new ZipArchive();
+        $this->assertTrue($zip->open($outputFile));
+
+        $expectedFiles = [
+            '[Content_Types].xml',
+            '_rels/.rels',
+            'xl/_rels/workbook.xml.rels',
+            'xl/workbook.xml',
+            'xl/styles.xml',
+            'xl/worksheets/sheet1.xml',
+        ];
+
+        foreach ($expectedFiles as $expectedFile) {
+            $content = $zip->getFromName($expectedFile);
+            $this->assertNotFalse($content, "El archivo {$expectedFile} debe existir");
+            $dom = new DOMDocument();
+            $this->assertTrue(@$dom->loadXML($content), "{$expectedFile} debe ser XML válido");
+        }
+
+        $sheetXml = $zip->getFromName('xl/worksheets/sheet1.xml');
+        $this->assertStringContainsString('Servicio Web', $sheetXml);
+        $this->assertStringContainsString('101', $sheetXml);
+        $this->assertStringContainsString('$ 1,500.00', $sheetXml);
+
+        $zip->close();
+    }
+
+    public function testHtmlToXlsxPreservesReportStructureAndFormatting(): void
+    {
+        helper('App\ThirdParty\Ragnos\Helpers\ragnos_helper');
+
+        $reporte = new \App\ThirdParty\Ragnos\Controllers\RSimpleLevelReport();
+        $datos = [
+            ['Oficina' => 'Boston', 'employeeNumber' => 1188, 'Empleado' => 'Julie Firrelli', 'TotalVentasTrimestre' => '$ 485,320.00'],
+            ['Oficina' => 'Boston', 'employeeNumber' => 1216, 'Empleado' => 'Steve Patterson', 'TotalVentasTrimestre' => '$ 505,875.50'],
+            ['Oficina' => 'San Francisco', 'employeeNumber' => 1165, 'Empleado' => 'Leslie Jennings', 'TotalVentasTrimestre' => '$ 1,081,524.80'],
+        ];
+        $reporte->setShowTotals(true);
+        $reporte->quickSetup(
+            'Mejores Empleados (Último Trimestre)',
+            $datos,
+            ['employeeNumber', 'Empleado', 'TotalVentasTrimestre'],
+            ['Oficina' => ['label' => 'Oficina']],
+            'Trimestre Q3'
+        );
+
+        $html = $reporte->generate();
+
+        $outputFile = $this->getTempFilePath('.xlsx');
+        $result = \htmlToXLSXFile($html, $outputFile, false, 'ReporteEmpleados', [
+            'header_bg'   => '1F4E79',
+            'title_color' => '1F4E79',
+        ]);
+
+        $this->assertTrue($result);
+        $this->assertFileExists($outputFile);
+
+        $zip = new ZipArchive();
+        $this->assertTrue($zip->open($outputFile));
+
+        $sheetXml = $zip->getFromName('xl/worksheets/sheet1.xml');
+        $stylesXml = $zip->getFromName('xl/styles.xml');
+        $workbookXml = $zip->getFromName('xl/workbook.xml');
+        $zip->close();
+
+        // 1. Título del reporte presente
+        $this->assertStringContainsString('Mejores Empleados (Último Trimestre)', $sheetXml);
+
+        // 2. Filtros activos presentes
+        $this->assertStringContainsString('Trimestre Q3', $sheetXml);
+
+        // 3. Encabezados de grupos de corte de control
+        $this->assertStringContainsString('Oficina: Boston', $sheetXml);
+        $this->assertStringContainsString('Oficina: San Francisco', $sheetXml);
+
+        // 4. Filas de datos
+        $this->assertStringContainsString('Julie Firrelli', $sheetXml);
+        $this->assertStringContainsString('Leslie Jennings', $sheetXml);
+        $this->assertStringContainsString('$ 1,081,524.80', $sheetXml);
+
+        // 5. Subtotales por grupo
+        $this->assertStringContainsString('SUBTOTAL', $sheetXml);
+
+        // 6. Resumen General / Totales
+        $this->assertStringContainsString('Resumen General', $sheetXml);
+        $this->assertStringContainsString('RESUMEN GENERAL', $sheetXml);
+
+        // 7. Nombre de la hoja en workbook.xml
+        $this->assertStringContainsString('name="ReporteEmpleados"', $workbookXml);
+
+        // 8. Colores corporativos en styles.xml
+        $this->assertStringContainsString('FF1F4E79', $stylesXml);
+    }
+
+    public function testRSimpleLevelReportExportToXlsxMethod(): void
+    {
+        helper('App\ThirdParty\Ragnos\Helpers\ragnos_helper');
+
+        $reporte = new \App\ThirdParty\Ragnos\Controllers\RSimpleLevelReport();
+        $datos = [
+            ['employeeNumber' => 101, 'Empleado' => 'Test User', 'Total' => 100.50],
+        ];
+        $reporte->setShowTotals(true);
+        $reporte->quickSetup('Reporte Test', $datos, ['employeeNumber', 'Empleado', 'Total']);
+
+        $outputFile = $this->getTempFilePath('.xlsx');
+        $res = $reporte->exportToXLSX($outputFile, false);
+
+        $this->assertTrue($res);
+        $this->assertFileExists($outputFile);
+        $this->assertGreaterThan(0, filesize($outputFile));
+    }
+
+    public function testBuildZipPackageCreatesValidZip(): void
+    {
+        $outputFile = $this->getTempFilePath('.zip');
+        $entries = [
+            'test.txt' => ['type' => 'string', 'content' => 'Hello World Zip'],
+        ];
+
+        $res = \buildZipPackage($outputFile, $entries);
+        $this->assertTrue($res);
+        $this->assertFileExists($outputFile);
+
+        $zip = new ZipArchive();
+        $this->assertTrue($zip->open($outputFile));
+        $this->assertSame('Hello World Zip', $zip->getFromName('test.txt'));
+        $zip->close();
+    }
 }
+

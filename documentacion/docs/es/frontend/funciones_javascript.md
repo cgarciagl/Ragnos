@@ -336,3 +336,34 @@ RagnosUtils.showControllerReportIn(
   "estadisticas/grafico_ventas",
 );
 ```
+
+---
+
+## `Ragnos.Table.exportToExcel(fileName, htmlContent)` / `exportToExcel()`
+
+Exporta tablas HTML y reportes completos directamente a formato Microsoft Excel nativo (**`.xlsx`**), sin advertencias de compatibilidad y preservando la jerarquía visual del reporte (títulos, filtros, subtotales, totales y estilos de celda).
+
+Internamente, envía de forma asíncrona (`fetch` POST) el HTML procesado al endpoint nativo `ragnos/export-xlsx`, el cual utiliza `htmlToXLSXFile()` en el backend para generar y descargar un paquete OpenXML legítimo.
+
+### Parámetros
+
+- **`fileName`** (string): Nombre base del archivo descargado (ej. `'reporte_ventas'`). Si no termina en `.xlsx`, la extensión se añade automáticamente.
+- **`htmlContent`** (string): Contenido HTML que se convertirá a Excel (usualmente `document.getElementById('imprimible').innerHTML` o el HTML de una tabla).
+
+### Retorno
+
+- Devuelve una `Promise<boolean>` que resuelve a `true` si la descarga se inició exitosamente o `false` si ocurrió algún error (mostrando un toast de notificación).
+
+### Ejemplo de uso
+
+```javascript
+// Exportar el contenedor de reporte actual
+const nombreArchivo = 'reporte_empleados_' + Date.now();
+const html = document.getElementById('imprimible').innerHTML;
+
+await Ragnos.Table.exportToExcel(nombreArchivo, html);
+
+// O mediante el alias global directo:
+exportToExcel('mi_tabla', document.querySelector('table').outerHTML);
+```
+

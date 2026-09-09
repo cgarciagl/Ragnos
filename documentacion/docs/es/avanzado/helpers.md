@@ -168,6 +168,98 @@ arrayToXLSXFile($clientes, 'clientes_vip.xlsx', true, 'Clientes VIP', [
 ]);
 ```
 
+---
+
+### `htmlToXLSXFile()` / `htmlToExcelFile()`
+
+Convierte contenido HTML (tablas simples o reportes complejos de Ragnos con títulos, filtros activos, fecha/hora, grupos de corte de control, subtotales y resumen general) en un archivo nativo de Microsoft Excel (`.xlsx`) sin necesidad de librerías externas o dependencias como PhpSpreadsheet.
+
+Preserva fielmente la jerarquía visual del reporte, ajusta los anchos de columna automáticamente para evitar textos truncados y aplica una paleta de estilos ejecutiva con colores diferenciados para cabeceras, grupos, subtotales y totales generales.
+
+```php
+function htmlToXLSXFile(
+    string $html,
+    string $fileName = 'reporte.xlsx',
+    bool $download = true,
+    string $sheetName = 'Reporte',
+    array $options = []
+): bool
+```
+
+#### Parámetros
+
+| Parámetro | Tipo | Descripción |
+| :--- | :--- | :--- |
+| `$html` | `string` | Contenido HTML a convertir (puede ser una tabla `<table>` o el HTML completo de un reporte `#imprimible`). |
+| `$fileName` | `string` | Nombre del archivo o ruta de destino (por defecto: `'reporte.xlsx'`). Si no incluye `.xlsx`, se añadirá automáticamente. |
+| `$download` | `bool` | Si es `true`, envía los encabezados HTTP para descarga directa en el navegador. Si es `false`, guarda el archivo en disco. |
+| `$sheetName` | `string` | Nombre de la pestaña de la hoja de cálculo (por defecto: `'Reporte'`). |
+| `$options` | `array` | (Opcional) Opciones avanzadas de personalización de estilos. |
+
+#### Opciones de Personalización (`$options`)
+
+| Opción | Tipo | Defecto | Descripción |
+| :--- | :--- | :--- | :--- |
+| `'header_bg'` | `string` | `'1F4E79'` | Color HEX de fondo para las cabeceras de columnas en tablas (azul corporativo por defecto). |
+| `'header_color'` | `string` | `'FFFFFF'` | Color HEX del texto de cabeceras de columnas. |
+| `'title_color'` | `string` | `'1F4E79'` | Color HEX utilizado para el título principal del reporte y los bordes del resumen general. |
+| `'group_bg'` | `string` | `'E9EEF4'` | Color HEX de fondo para las filas de encabezados de grupo (control break). |
+| `'subtotal_bg'` | `string` | `'F2F4F7'` | Color HEX de fondo para las filas de subtotales. |
+| `'grand_bg'` | `string` | `'D9E1F2'` | Color HEX de fondo para la fila de resumen general (gran total). |
+| `'font_name'` | `string` | `'Calibri'` | Nombre de la fuente tipográfica. |
+| `'font_size'` | `int` | `11` | Tamaño base de la fuente. |
+| `'auto_width'` | `bool` | `true` | Ajustar automáticamente el ancho de las columnas según su contenido. |
+
+#### Ejemplos de Uso
+
+##### 1. Exportar un Reporte RSimpleLevelReport Directamente
+```php
+helper('App\ThirdParty\Ragnos\Helpers\xlsxfiles_helper');
+
+$reporte = new \App\ThirdParty\Ragnos\Controllers\RSimpleLevelReport();
+$reporte->quickSetup('Mejores Empleados', $datos, ['employeeNumber', 'Empleado', 'TotalVentasTrimestre'], ['Oficina' => ['label' => 'Oficina']]);
+
+// Generar el HTML del reporte y convertirlo a un archivo .xlsx real
+$html = $reporte->generate();
+htmlToXLSXFile($html, 'mejores_empleados.xlsx');
+```
+
+##### 2. Exportación Nativa desde la Instancia de RSimpleLevelReport
+El objeto `RSimpleLevelReport` incluye el método directo `exportToXLSX()`:
+```php
+$reporte = new \App\ThirdParty\Ragnos\Controllers\RSimpleLevelReport();
+$reporte->quickSetup('Margen por Línea', $datos, ['productLine', 'MargenTotal']);
+
+// Descarga directa en el navegador
+$reporte->exportToXLSX('margen_por_linea.xlsx');
+
+// O guardar en el servidor
+$reporte->exportToXLSX(WRITEPATH . 'reportes/margen.xlsx', false);
+```
+
+##### 3. Descarga Directa Vía Parámetro GET
+Cualquier controlador que invoque `$reporte->render()` soporta exportación inmediata a `.xlsx` simplemente añadiendo `?export=xlsx` a la URL:
+```text
+http://localhost/ragnos/content/index.php/tienda/reportes/mejoresempleados?export=xlsx
+```
+
+
+### `buildZipPackage()`
+
+Empaqueta una colección de archivos o contenidos en un archivo ZIP/XLSX estándar. Utiliza la extensión nativa `\ZipArchive` si está disponible en PHP; de lo contrario, conmuta de forma transparente a un empaquetador ZIP nativo escrito en PHP puro (aprovechando `gzdeflate` de la extensión `zlib` incorporada en PHP). Esto garantiza que la generación de hojas de cálculo `.xlsx` funcione al 100% sin importar si la extensión compilada `php-zip` está presente o no.
+
+```php
+function buildZipPackage(string $outputPath, array $entries): bool
+```
+
+#### Parámetros
+
+| Parámetro | Tipo | Descripción |
+| :--- | :--- | :--- |
+| `$outputPath` | `string` | Ruta completa del archivo `.zip` o `.xlsx` a crear. |
+| `$entries` | `array` | Array asociativo `['ruta/interna' => ['type' => 'string'\|'file', 'content' => ...]]`. |
+
+
 ### `arrayToCSVFile()`
 
 Convierte un array asociativo en un archivo `.csv` estándar compatible con Excel y UTF-8 (con BOM incluido para compatibilidad con caracteres especiales y tildes).

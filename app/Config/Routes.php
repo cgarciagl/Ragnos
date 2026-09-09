@@ -11,3 +11,5 @@ $routes->group('api', static function ($routes): void {
     $routes->get('openapi.yaml', 'OpenApi::yaml');
     $routes->get('docs', 'OpenApi::docs');
 });
+$routes->post('ragnos/export-xlsx', '\App\ThirdParty\Ragnos\Controllers\RSimpleLevelReport::exportHtmlToXlsx');
+

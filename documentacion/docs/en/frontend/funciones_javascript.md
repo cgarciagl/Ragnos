@@ -333,3 +333,34 @@ Similar to `showControllerTableIn`, but specifically designed to load report vie
 // Load a statistical summary in a side div
 RagnosUtils.showControllerReportIn("#sidebar-report", "statistics/sales_chart");
 ```
+
+---
+
+## `Ragnos.Table.exportToExcel(fileName, htmlContent)` / `exportToExcel()`
+
+Exports HTML tables and full reports directly into native Microsoft Excel (**`.xlsx`**) format without compatibility warnings, while preserving the report's visual structure (titles, filters, subtotals, grand totals, and cell styles).
+
+Internally, it sends the processed HTML asynchronously (`fetch` POST) to the native `ragnos/export-xlsx` endpoint, which uses `htmlToXLSXFile()` on the backend to produce and stream a genuine OpenXML spreadsheet package.
+
+### Parameters
+
+- **`fileName`** (string): Base file name for the downloaded spreadsheet (e.g. `'sales_report'`). If `.xlsx` is omitted, it is appended automatically.
+- **`htmlContent`** (string): HTML content to convert into Excel (typically `document.getElementById('imprimible').innerHTML` or table HTML).
+
+### Return Value
+
+- Returns a `Promise<boolean>` resolving to `true` on successful download initiation or `false` if an error occurs (displaying a user toast alert).
+
+### Usage Example
+
+```javascript
+// Export current report container
+const fileName = 'employee_report_' + Date.now();
+const html = document.getElementById('imprimible').innerHTML;
+
+await Ragnos.Table.exportToExcel(fileName, html);
+
+// Or using direct global alias:
+exportToExcel('my_table', document.querySelector('table').outerHTML);
+```
+

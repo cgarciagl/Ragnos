@@ -673,7 +673,7 @@ Ragnos.Table = {
     });
   },
 
-  exportToExcel(fileName, htmlContent) {
+  async exportToExcel(fileName, htmlContent) {
     try {
       if (!fileName || typeof fileName !== "string") {
         throw new Error("Invalid file name");
@@ -681,54 +681,43 @@ Ragnos.Table = {
       if (!htmlContent || typeof htmlContent !== "string") {
         throw new Error("Invalid HTML content");
       }
-      const EXCEL_URI = "data:application/vnd.ms-excel;charset=UTF-8;base64,";
-      const EXCEL_TEMPLATE = `
-        <html xmlns:o="urn:schemas-microsoft-com:office:office" 
-            xmlns:x="urn:schemas-microsoft-com:office:excel" 
-            xmlns="http://www.w3.org/TR/REC-html40">
-          <head>
-            <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-            <meta charset="utf-8" />
-            <!--[if gte mso 9]>
-            <xml>
-              <x:ExcelWorkbook>
-                <x:ExcelWorksheets>
-                  <x:ExcelWorksheet>
-                    <x:Name>{worksheet}</x:Name>
-                    <x:WorksheetOptions>
-                      <x:DisplayGridlines/>
-                    </x:WorksheetOptions>
-                  </x:ExcelWorksheet>
-                </x:ExcelWorksheets>
-              </x:ExcelWorkbook>
-            </xml>
-            <![endif]-->
-          </head>
-          <body>
-            <table>{table}</table>
-          </body>
-        </html>`;
 
-      const base64 = (s) => window.btoa(unescape(encodeURIComponent(s)));
-      const format = (template, context) =>
-        template.replace(/{(\w+)}/g, (match, key) => context[key] || "");
+      // Asegurar extensión .xlsx
+      const cleanFileName = fileName.trim().replace(/\.(xls|xlsx)$/i, "") + ".xlsx";
 
+      const url = Ragnos.Http.fixUrl("ragnos/export-xlsx");
+      const formData = new FormData();
+      formData.append("filename", cleanFileName);
+      formData.append("html", htmlContent);
+
+      if (typeof globalThis.Ragnos_csrf === "object" && globalThis.Ragnos_csrf !== null) {
+        Object.entries(globalThis.Ragnos_csrf).forEach(([key, val]) => {
+          formData.append(key, val);
+        });
+      }
+
+      const response = await fetch(url, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text().catch(() => "");
+        throw new Error(errorText || `HTTP error ${response.status}`);
+      }
+
+      const blob = await response.blob();
+      const downloadUrl = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
-      link.download = `${fileName.trim()}.xls`;
-      link.href =
-        EXCEL_URI +
-        base64(
-          format(EXCEL_TEMPLATE, {
-            worksheet: "Worksheet",
-            table: htmlContent,
-          }),
-        );
+      link.href = downloadUrl;
+      link.download = cleanFileName;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+      window.URL.revokeObjectURL(downloadUrl);
       return true;
     } catch (error) {
-      console.error("Error exporting to Excel:", error);
+      console.error("Error exporting to Excel (.xlsx):", error);
       Ragnos.UI.showToast("Error al exportar a Excel", "error");
       return false;
     }
