@@ -318,17 +318,17 @@ abstract class RDataset extends RController
 
     function setCreatedField($value)
     {
-        $this->modelo->setCreatedField($value);
+        $this->modelo->setCreatedFieldName($value);
     }
 
     function setUpdatedField($value)
     {
-        $this->modelo->setUpdatedField($value);
+        $this->modelo->setUpdatedFieldName($value);
     }
 
     function setDeletedField($value)
     {
-        $this->modelo->setDeletedField($value);
+        $this->modelo->setDeletedFieldName($value);
     }
 
     function setUseSoftDeletes($value)

@@ -123,17 +123,17 @@ abstract class RTableModel extends Model
         return (bool) $this->useSoftDeletes;
     }
 
-    function setCreatedField($value)
+    function setCreatedFieldName($value)
     {
         $this->createdField = (string) $value;
     }
 
-    function setUpdatedField($value)
+    function setUpdatedFieldName($value)
     {
         $this->updatedField = (string) $value;
     }
 
-    function setDeletedField($value)
+    function setDeletedFieldName($value)
     {
         $this->deletedField = (string) $value;
     }
