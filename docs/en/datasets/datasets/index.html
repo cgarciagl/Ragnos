@@ -221,6 +221,14 @@
               <ul class="nav flex-column">
               </ul>
             </li>
+            <li class="nav-item" data-bs-level="2"><a href="#soft-deletes" class="nav-link">Soft Deletes</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#removing-inherited-fields-removefield" class="nav-link">Removing Inherited Fields (removeField)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
             <li class="nav-item" data-bs-level="2"><a href="#operation-control" class="nav-link">Operation Control</a>
               <ul class="nav flex-column">
               </ul>
@@ -353,6 +361,49 @@
 <a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="x">}</span>
 </code></pre></div>
 <p>By enabling <code>setUseTimeStamps(true)</code>, Ragnos will take care of inserting the current date when creating a record and automatically updating it whenever a modification is made, using the date format configured in the database (usually <code>datetime</code>).</p>
+<h2 id="soft-deletes">Soft Deletes</h2>
+<p>In many systems you should not physically delete a record: it may carry accounting history, be referenced by other tables, or simply need to be restored later. <strong>Soft deletes</strong> solve this by marking the row as deleted (storing the date in a column) instead of running a <code>DELETE</code>.</p>
+<ul>
+<li><code>setUseSoftDeletes(true|false)</code>: Enables or disables soft deletes.</li>
+<li><code>setDeletedField('field')</code>: Sets the column that stores the deletion date (default <code>deleted_at</code>).</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="x">public function __construct()</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="x">{</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="x">    parent::__construct();</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="x">    $this-&gt;setUseSoftDeletes(true);</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="x">    $this-&gt;setDeletedField('deleted_at'); // Optional if you use the standard name</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="x">}</span>
+</code></pre></div>
+<p>The column must exist in the table and accept <code>NULL</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">products</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="k">ADD</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="n">deleted_at</span><span class="w"> </span><span class="n">DATETIME</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">NULL</span><span class="p">;</span>
+</code></pre></div>
+<p>With soft deletes enabled:</p>
+<ul>
+<li>Deleting from the UI or the API fills <code>deleted_at</code> instead of removing the row.</li>
+<li>The grid and the API listing <strong>automatically hide</strong> records whose <code>deleted_at</code> is not <code>NULL</code>.</li>
+<li>The <a href="../../avanzado/auditlog/">Audit Log</a> still records the operation as <code>DELETE</code>, with a full copy of the record.</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Searches and reports</p>
+<p>The automatic filter applies to the grid and the API listing. If a soft-deleted dataset is used as the source of an <code>addSearch</code> or in your own queries, add the <code>deleted_at IS NULL</code> condition in <code>_filters()</code> or in your SQL.</p>
+</div>
+<h2 id="removing-inherited-fields-removefield">Removing Inherited Fields (<code>removeField</code>)</h2>
+<p><code>removeField('field')</code> removes a field from the dataset definition. It is useful when a controller <strong>inherits</strong> from another one (for example, a simplified version of a catalog for a certain role) and must not show or edit some column:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="x">class ProductosVentas extends Productos</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="x">{</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="x">    public function __construct()</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="x">    {</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="x">        parent::__construct();</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="x">        // Sales staff must not see the purchase cost</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="x">        $this-&gt;removeField('buyPrice');</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="x">        $this-&gt;setTableFields(['productName', 'productLine', 'MSRP']);</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="x">    }</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="x">}</span>
+</code></pre></div>
+<p>If the field also appears in <code>setTableFields()</code>, redefine the column list without it, as in the example.</p>
 <h2 id="operation-control">Operation Control</h2>
 <p>It is possible to restrict which CRUD operations are allowed in the dataset using the following methods:</p>
 <ul>
@@ -362,13 +413,13 @@
 </ul>
 <p>This is useful for read-only tables, historical catalogs, or sensitive data that should not be modified or deleted.</p>
 <h3 id="usage-example">Usage Example</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="x">// Disable record deletion</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="x">$this-&gt;setCanDelete(false);</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="x">// Read-only dataset (view only)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="x">$this-&gt;setCanInsert(false);</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="x">$this-&gt;setCanUpdate(false);</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="x">$this-&gt;setCanDelete(false);</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="x">// Disable record deletion</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="x">$this-&gt;setCanDelete(false);</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="x">// Read-only dataset (view only)</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="x">$this-&gt;setCanInsert(false);</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="x">$this-&gt;setCanUpdate(false);</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="x">$this-&gt;setCanDelete(false);</span>
 </code></pre></div>
 <h2 id="field-definition">Field Definition</h2>
 <p>Use <code>addField(name, options)</code> to describe validation, presentation, and persistence.
@@ -387,11 +438,11 @@ For a complete reference of all options and field types, consult the <a href="..
 <p><strong>Example:</strong>
 Imagine you are in the <strong>Payments</strong> module (<code>Store/Payments</code>) and need to select a <strong>Customer</strong>.
 If in the <strong>Customers</strong> dataset (<code>Store/Customers</code>) you defined:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="x">$this-&gt;setTableFields([</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="x">    'customerName',</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="x">    'Contact', // Calculated field: concat(contactLastName, ', ', contactFirstName)</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="x">    'salesRepEmployeeNumber' // Sales Rep</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="x">]);</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="x">$this-&gt;setTableFields([</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="x">    'customerName',</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="x">    'Contact', // Calculated field: concat(contactLastName, ', ', contactFirstName)</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="x">    'salesRepEmployeeNumber' // Sales Rep</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="x">]);</span>
 </code></pre></div>
 <p>When searching for a customer from the Payments form, you can type:</p>
 <ul>

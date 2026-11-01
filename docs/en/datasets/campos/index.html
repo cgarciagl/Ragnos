@@ -439,6 +439,7 @@ Simply add the <code>tab</code> key to the field configuration array with the de
 <li>Visible</li>
 <li>Not editable</li>
 </ul>
+<p><strong>How does it work?</strong> Ragnos translates <code>readonly</code> into the internal rule <code>readonly_Ragnos[field]</code>, defined in the <code>RagnosRules</code> class. On save, it compares the received value with the record's original value (<code>fieldHasChanged()</code>); if someone altered it (for example, by tampering with the form or sending it through the API), validation fails with the message <em>"The field can not be modified."</em>. So <code>readonly</code> is not just visual: it is also enforced on the server.</p>
 <hr />
 <h2 id="8-hidden-field">8. Hidden Field</h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="x">$this-&gt;addField('Contact', [</span>
@@ -673,9 +674,10 @@ Simply add the <code>tab</code> key to the field configuration array with the de
 <h3 id="2-register-the-rule">2. Register the rule</h3>
 <p>Edit <code>app/Config/Validation.php</code> to include your new class in the <code>$ruleSets</code> array:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="x">public array $ruleSets = [</span>
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="x">    // ... other existing rules</span>
-<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="x">    \App\Validation\MyCustomRules::class,</span>
-<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="x">];</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="x">    // ... existing CodeIgniter rules</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="x">    \App\ThirdParty\Ragnos\Controllers\RagnosRules::class, // Keep it: implements 'readonly'</span>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="x">    \App\Validation\MyCustomRules::class,</span>
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="x">];</span>
 </code></pre></div>
 <h3 id="3-use-the-rule-in-the-dataset">3. Use the rule in the Dataset</h3>
 <p>Now you can use your custom rule in the <code>addField()</code> method of your controller:</p>

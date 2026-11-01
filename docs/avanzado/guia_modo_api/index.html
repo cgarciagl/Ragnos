@@ -229,6 +229,10 @@
               <ul class="nav flex-column">
               </ul>
             </li>
+            <li class="nav-item" data-bs-level="2"><a href="#cliente-de-pruebas-incluido-apitest" class="nav-link">Cliente de pruebas incluido (apitest/)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
               </ul>
             </li>
         </ul>
@@ -542,7 +546,22 @@
 <p>También puedes validar o exportar la especificación desde CLI:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>php<span class="w"> </span>spark<span class="w"> </span>ragnos:openapi<span class="w"> </span>--format<span class="w"> </span>json<span class="w"> </span>--output<span class="w"> </span>writable/openapi.json
 <a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>php<span class="w"> </span>spark<span class="w"> </span>ragnos:openapi<span class="w"> </span>--format<span class="w"> </span>yaml<span class="w"> </span>--output<span class="w"> </span>writable/openapi.yaml
-</code></pre></div></div>
+</code></pre></div>
+<h2 id="cliente-de-pruebas-incluido-apitest">Cliente de pruebas incluido (<code>apitest/</code>)</h2>
+<p>El repositorio incluye en la carpeta <code>apitest/</code> una pequeña aplicación web (HTML + JavaScript, sin dependencias de compilación) para probar el modo API sin instalar Postman ni escribir código:</p>
+<ul>
+<li>Inicia sesión y obtiene el token Bearer.</li>
+<li>Lee la especificación OpenAPI y descubre automáticamente los datasets publicados.</li>
+<li>Permite listar con paginación y búsqueda, crear, editar, eliminar y consultar el historial (<code>history/{id}</code>) de los registros.</li>
+<li>Guarda las últimas peticiones realizadas para revisarlas.</li>
+</ul>
+<p>Ábrela desde el navegador en <code>http://localhost/tu-proyecto/apitest/</code>. Por defecto apunta a <code>../content/index.php</code>; si tu API vive en otra URL, edita <code>apitest/config.js</code> o define <code>window.RAGNOS_API_BASE</code> antes de cargarlo:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span><span class="nb">window</span><span class="p">.</span><span class="nx">RAGNOS_API_BASE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'https://api.mi-dominio.com'</span><span class="p">;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Producción</p>
+<p><code>apitest/</code> es una herramienta de desarrollo. No la publiques en servidores de producción.</p>
+</div></div>
             </div>
         </div>
 

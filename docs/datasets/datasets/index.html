@@ -221,6 +221,14 @@
               <ul class="nav flex-column">
               </ul>
             </li>
+            <li class="nav-item" data-bs-level="2"><a href="#borrado-logico-soft-deletes" class="nav-link">Borrado Lógico (Soft Deletes)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#quitar-campos-heredados-removefield" class="nav-link">Quitar campos heredados (removeField)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
             <li class="nav-item" data-bs-level="2"><a href="#control-de-operaciones" class="nav-link">Control de Operaciones</a>
               <ul class="nav flex-column">
               </ul>
@@ -373,6 +381,49 @@
 <a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="x">}</span>
 </code></pre></div>
 <p>Al activar <code>setUseTimeStamps(true)</code>, Ragnos se encargará de insertar la fecha actual al crear un registro y de actualizarla automáticamente cada vez que se realice una modificación, utilizando el formato de fecha configurado en la base de datos (habitualmente <code>datetime</code>).</p>
+<h2 id="borrado-logico-soft-deletes">Borrado Lógico (Soft Deletes)</h2>
+<p>En muchos sistemas no conviene eliminar físicamente un registro: puede tener historial contable, estar referenciado por otras tablas o simplemente necesitar recuperarse después. El <strong>borrado lógico</strong> resuelve esto marcando la fila como eliminada (con la fecha en una columna) en lugar de ejecutar un <code>DELETE</code>.</p>
+<ul>
+<li><code>setUseSoftDeletes(true|false)</code>: Activa o desactiva el borrado lógico.</li>
+<li><code>setDeletedField('campo')</code>: Define la columna que guarda la fecha de eliminación (por defecto <code>deleted_at</code>).</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="x">public function __construct()</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="x">{</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="x">    parent::__construct();</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="x">    $this-&gt;setUseSoftDeletes(true);</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="x">    $this-&gt;setDeletedField('deleted_at'); // Opcional si usas el nombre estándar</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="x">}</span>
+</code></pre></div>
+<p>La columna debe existir en la tabla y aceptar <code>NULL</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">products</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="k">ADD</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="n">deleted_at</span><span class="w"> </span><span class="n">DATETIME</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">NULL</span><span class="p">;</span>
+</code></pre></div>
+<p>Con el borrado lógico activo:</p>
+<ul>
+<li>Al eliminar desde la interfaz o la API, Ragnos llena <code>deleted_at</code> en lugar de borrar la fila.</li>
+<li>La grilla y el listado de la API <strong>ocultan automáticamente</strong> los registros con <code>deleted_at</code> distinto de <code>NULL</code>.</li>
+<li>El <a href="../../avanzado/auditlog/">Audit Log</a> sigue registrando la operación como <code>DELETE</code>, con la copia completa del registro.</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Búsquedas y reportes</p>
+<p>El filtro automático se aplica a la grilla y al listado de la API. Si un dataset con borrado lógico se usa como origen de un <code>addSearch</code> o en consultas propias, añade la condición <code>deleted_at IS NULL</code> en <code>_filters()</code> o en tu SQL.</p>
+</div>
+<h2 id="quitar-campos-heredados-removefield">Quitar campos heredados (<code>removeField</code>)</h2>
+<p><code>removeField('campo')</code> elimina un campo de la definición del dataset. Es útil cuando un controlador <strong>hereda</strong> de otro (por ejemplo, una versión simplificada de un catálogo para cierto rol) y no debe mostrar o editar alguna columna:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="x">class ProductosVentas extends Productos</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="x">{</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="x">    public function __construct()</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="x">    {</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="x">        parent::__construct();</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="x">        // Los vendedores no deben ver el costo de compra</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="x">        $this-&gt;removeField('buyPrice');</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="x">        $this-&gt;setTableFields(['productName', 'productLine', 'MSRP']);</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="x">    }</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="x">}</span>
+</code></pre></div>
+<p>Si el campo también aparece en <code>setTableFields()</code>, vuelve a definir la lista de columnas sin él, como en el ejemplo.</p>
 <h2 id="control-de-operaciones">Control de Operaciones</h2>
 <p>Es posible restringir qué operaciones CRUD están permitidas en el dataset mediante los siguientes métodos:</p>
 <ul>
@@ -382,13 +433,13 @@
 </ul>
 <p>Esto es útil para tablas de solo lectura, catálogos históricos o datos sensibles que no deben modificarse ni borrarse.</p>
 <h3 id="ejemplo-de-uso">Ejemplo de uso</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="x">// Deshabilitar la eliminación de registros</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="x">$this-&gt;setCanDelete(false);</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="x">// Dataset de solo lectura (solo visualización)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="x">$this-&gt;setCanInsert(false);</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="x">$this-&gt;setCanUpdate(false);</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="x">$this-&gt;setCanDelete(false);</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="x">// Deshabilitar la eliminación de registros</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="x">$this-&gt;setCanDelete(false);</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="x">// Dataset de solo lectura (solo visualización)</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="x">$this-&gt;setCanInsert(false);</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="x">$this-&gt;setCanUpdate(false);</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="x">$this-&gt;setCanDelete(false);</span>
 </code></pre></div>
 <h2 id="definicion-de-campos">Definición de campos</h2>
 <p>Use <code>addField(name, options)</code> para describir validación, presentación y persistencia.
@@ -422,11 +473,11 @@ Para una referencia completa de todas las opciones y tipos de campo, consulta la
 <p><strong>Ejemplo:</strong>
 Imagina que estás en el módulo de <strong>Pagos</strong> (<code>Tienda/Pagos</code>) y necesitas seleccionar un <strong>Cliente</strong>.
 Si en el dataset de <strong>Clientes</strong> (<code>Tienda/Clientes</code>) definiste:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="x">$this-&gt;setTableFields([</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="x">    'customerName',</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="x">    'Contacto', // Campo calculado: concat(contactLastName, ', ', contactFirstName)</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="x">    'salesRepEmployeeNumber' // Empleado a cargo</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="x">]);</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="x">$this-&gt;setTableFields([</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="x">    'customerName',</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="x">    'Contacto', // Campo calculado: concat(contactLastName, ', ', contactFirstName)</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="x">    'salesRepEmployeeNumber' // Empleado a cargo</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="x">]);</span>
 </code></pre></div>
 <p>Cuando busques un cliente desde el formulario de Pagos, podrás escribir:</p>
 <ul>

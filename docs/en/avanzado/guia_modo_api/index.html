@@ -229,6 +229,10 @@
               <ul class="nav flex-column">
               </ul>
             </li>
+            <li class="nav-item" data-bs-level="2"><a href="#bundled-test-client-apitest" class="nav-link">Bundled Test Client (apitest/)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
               </ul>
             </li>
         </ul>
@@ -542,7 +546,22 @@
 <p>You can also validate or export the specification from the CLI:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>php<span class="w"> </span>spark<span class="w"> </span>ragnos:openapi<span class="w"> </span>--format<span class="w"> </span>json<span class="w"> </span>--output<span class="w"> </span>writable/openapi.json
 <a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>php<span class="w"> </span>spark<span class="w"> </span>ragnos:openapi<span class="w"> </span>--format<span class="w"> </span>yaml<span class="w"> </span>--output<span class="w"> </span>writable/openapi.yaml
-</code></pre></div></div>
+</code></pre></div>
+<h2 id="bundled-test-client-apitest">Bundled Test Client (<code>apitest/</code>)</h2>
+<p>The repository includes, in the <code>apitest/</code> folder, a small web app (HTML + JavaScript, no build step) for testing API mode without installing Postman or writing code:</p>
+<ul>
+<li>Logs in and obtains the Bearer token.</li>
+<li>Reads the OpenAPI specification and automatically discovers the published datasets.</li>
+<li>Lets you list with pagination and search, create, edit, delete and query the history (<code>history/{id}</code>) of records.</li>
+<li>Keeps the latest requests so you can review them.</li>
+</ul>
+<p>Open it in the browser at <code>http://localhost/your-project/apitest/</code>. By default it points to <code>../content/index.php</code>; if your API lives at another URL, edit <code>apitest/config.js</code> or define <code>window.RAGNOS_API_BASE</code> before loading it:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span><span class="nb">window</span><span class="p">.</span><span class="nx">RAGNOS_API_BASE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'https://api.my-domain.com'</span><span class="p">;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Production</p>
+<p><code>apitest/</code> is a development tool. Do not deploy it to production servers.</p>
+</div></div>
             </div>
         </div>
 

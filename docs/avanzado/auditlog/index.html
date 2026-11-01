@@ -213,6 +213,10 @@
               <ul class="nav flex-column">
               </ul>
             </li>
+            <li class="nav-item" data-bs-level="2"><a href="#consultar-el-historial-de-un-registro-api" class="nav-link">Consultar el historial de un registro (API)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
               </ul>
             </li>
         </ul>
@@ -336,7 +340,36 @@
 <li><strong>Sesión Web:</strong> Verifica si existe una sesión activa de CodeIgniter (<code>session()-&gt;get('usu_id')</code>).</li>
 <li><strong>API Token:</strong> Si es una llamada API, inspecciona el encabezado <code>Authorization</code>. Extrae el token Bearer y busca al usuario correspondiente en la tabla <code>gen_usuarios</code>.</li>
 <li><strong>Fallback:</strong> Si no se identifica al usuario, se registra el ID <code>0</code> (Sistema/Anónimo).</li>
-</ol></div>
+</ol>
+<h2 id="consultar-el-historial-de-un-registro-api">Consultar el historial de un registro (API)</h2>
+<p>Todo dataset basado en <code>RDatasetController</code> expone automáticamente el endpoint <code>history/{id}</code>, que devuelve las entradas de auditoría de un registro, de la más reciente a la más antigua. Es la base ideal para construir una pestaña de "Historial de cambios" en tu interfaz o en una app externa.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">"https://tu-dominio.com/tienda/productos/history/S10_1678"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">     </span>-H<span class="w"> </span><span class="s2">"Accept: application/json"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">     </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer TU_API_TOKEN"</span>
+</code></pre></div>
+<p>Respuesta de ejemplo:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"152"</span><span class="p">,</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">      </span><span class="nt">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"3"</span><span class="p">,</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">      </span><span class="nt">"table_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"products"</span><span class="p">,</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">      </span><span class="nt">"record_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"S10_1678"</span><span class="p">,</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">      </span><span class="nt">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"UPDATE"</span><span class="p">,</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">      </span><span class="nt">"changes"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{\"buyPrice\":{\"old\":\"48.81\",\"new\":\"52.00\"}}"</span><span class="p">,</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">      </span><span class="nt">"ip_address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"192.168.1.20"</span><span class="p">,</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">      </span><span class="nt">"user_agent"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Mozilla/5.0 ..."</span><span class="p">,</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">      </span><span class="nt">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-10-28 11:42:07"</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">  </span><span class="p">]</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="p">}</span>
+</code></pre></div>
+<ul>
+<li>Es un endpoint <strong>exclusivo del modo API</strong>: si no se envía <code>Accept: application/json</code>, responde <code>400</code> con <code>{"error": "API call required"}</code>.</li>
+<li>Requiere las mismas credenciales que el resto de la API.</li>
+<li>Aparece documentado automáticamente en la especificación OpenAPI (<code>GET {ruta}/history/{id}</code>).</li>
+<li>El campo <code>changes</code> es un JSON en texto; decodifícalo en el cliente (<code>JSON.parse</code>) para mostrar el antes y el después.</li>
+</ul></div>
             </div>
         </div>
 

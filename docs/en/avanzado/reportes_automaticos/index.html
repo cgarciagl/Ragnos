@@ -163,53 +163,53 @@
 </div>
 <div class="navbar-collapse collapse card bg-body-tertiary" id="toc-collapse">
 <ul class="nav flex-column">
-<li class="nav-item" data-bs-level="1"><a class="nav-link" href="#generador-automatico-de-reportes">📊 Generador Automático de Reportes</a>
+<li class="nav-item" data-bs-level="1"><a class="nav-link" href="#automatic-report-generator">📊 Automatic Report Generator</a>
 <ul class="nav flex-column">
-<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#introduccion">Introducción</a>
-<ul class="nav flex-column">
-</ul>
-</li>
-<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#acceso-desde-la-interfaz-grafica">Acceso desde la Interfaz Gráfica</a>
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#introduction">Introduction</a>
 <ul class="nav flex-column">
 </ul>
 </li>
-<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#mejoras-de-experiencia-de-usuario-ux-premium">Mejoras de Experiencia de Usuario (UX) Premium</a>
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#access-from-the-user-interface">Access from the User Interface</a>
 <ul class="nav flex-column">
 </ul>
 </li>
-<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#funcionalidades-avanzadas-de-configuracion">Funcionalidades Avanzadas de Configuración</a>
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#premium-user-experience-ux-improvements">Premium User Experience (UX) Improvements</a>
 <ul class="nav flex-column">
 </ul>
 </li>
-<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#caracteristicas-principales">Características Principales</a>
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#advanced-configuration-features">Advanced Configuration Features</a>
 <ul class="nav flex-column">
 </ul>
 </li>
-<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#arquitectura-y-funcionamiento">Arquitectura y Funcionamiento</a>
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#main-features">Main Features</a>
 <ul class="nav flex-column">
 </ul>
 </li>
-<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#uso-practico-ejemplo-completo">Uso Práctico: Ejemplo Completo</a>
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#architecture-and-operation">Architecture and Operation</a>
 <ul class="nav flex-column">
 </ul>
 </li>
-<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#ventajas-del-sistema">Ventajas del Sistema</a>
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#practical-use-complete-example">Practical Use: Complete Example</a>
 <ul class="nav flex-column">
 </ul>
 </li>
-<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#limitaciones-y-consideraciones">Limitaciones y Consideraciones</a>
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#system-advantages">System Advantages</a>
 <ul class="nav flex-column">
 </ul>
 </li>
-<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#personalizacion-avanzada">Personalización Avanzada</a>
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#limitations-and-considerations">Limitations and Considerations</a>
 <ul class="nav flex-column">
 </ul>
 </li>
-<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#integracion-con-el-ecosistema-ragnos">Integración con el Ecosistema Ragnos</a>
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#advanced-customization">Advanced Customization</a>
 <ul class="nav flex-column">
 </ul>
 </li>
-<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#conclusion">Conclusión</a>
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#integration-with-the-ragnos-ecosystem">Integration with the Ragnos Ecosystem</a>
+<ul class="nav flex-column">
+</ul>
+</li>
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#conclusion">Conclusion</a>
 <ul class="nav flex-column">
 </ul>
 </li>
@@ -219,249 +219,249 @@
 </div>
 </div></div>
 <div class="col-md-9" role="main">
-<h1 id="generador-automatico-de-reportes">📊 Generador Automático de Reportes</h1>
-<h2 id="introduccion">Introducción</h2>
-<p>El <strong>Generador Automático de Reportes</strong> (<code>RDatasetReportGenerator</code>) es una característica poderosa de Ragnos que permite crear reportes complejos y personalizados <strong>sin escribir código adicional</strong>.</p>
-<p>Esta funcionalidad está <strong>integrada automáticamente</strong> en todos los datasets basados en <code>RDatasetController</code>, lo que significa que cualquier catálogo que hayas creado ya tiene capacidades de reportería avanzada disponibles desde el primer momento.</p>
-<h2 id="acceso-desde-la-interfaz-grafica">Acceso desde la Interfaz Gráfica</h2>
-<p>Cada dataset basado en <code>RDatasetController</code> incluye automáticamente un botón de <strong>"Reporte Avanzado"</strong> (icono de impresora 🖨️) en la barra de herramientas de la vista de tabla:</p>
-<div class="highlight"><pre><span></span><code><a href="#__codelineno-0-1" id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="x">// Ubicado en: app/ThirdParty/Ragnos/Views/rdatasetcontroller/table_view.php</span>
+<h1 id="automatic-report-generator">📊 Automatic Report Generator</h1>
+<h2 id="introduction">Introduction</h2>
+<p>The <strong>Automatic Report Generator</strong> (<code>RDatasetReportGenerator</code>) is a powerful Ragnos feature that lets you build complex, customized reports <strong>without writing additional code</strong>.</p>
+<p>This functionality is <strong>automatically built into</strong> every dataset based on <code>RDatasetController</code>, which means any catalog you have created already has advanced reporting capabilities available from day one.</p>
+<h2 id="access-from-the-user-interface">Access from the User Interface</h2>
+<p>Every dataset based on <code>RDatasetController</code> automatically includes an <strong>"Advanced Report"</strong> button (printer icon 🖨️) in the table view toolbar:</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-0-1" id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="x">// Located in: app/ThirdParty/Ragnos/Views/rdatasetcontroller/table_view.php</span>
 <a href="#__codelineno-0-2" id="__codelineno-0-2" name="__codelineno-0-2"></a><span class="x">&lt;a href="</span><span class="cp">&lt;?</span><span class="o">=</span> <span class="nx">site_url</span><span class="p">(</span><span class="nv">$clase</span> <span class="o">.</span> <span class="s1">'/genericAdvancedReport'</span><span class="p">)</span> <span class="cp">?&gt;</span><span class="x">"</span>
 <a href="#__codelineno-0-3" id="__codelineno-0-3" name="__codelineno-0-3"></a><span class="x">    class="toolbtn btn btn-outline-secondary btn-lg bg-white shadow-sm"</span>
 <a href="#__codelineno-0-4" id="__codelineno-0-4" name="__codelineno-0-4"></a><span class="x">    title="</span><span class="cp">&lt;?</span><span class="o">=</span> <span class="nx">lang</span><span class="p">(</span><span class="s1">'Ragnos.Ragnos_advanced_report_tooltip'</span><span class="p">)</span> <span class="cp">?&gt;</span><span class="x">"&gt;</span>
 <a href="#__codelineno-0-5" id="__codelineno-0-5" name="__codelineno-0-5"></a><span class="x">    &lt;i class="bi bi-printer"&gt;&lt;/i&gt;</span>
 <a href="#__codelineno-0-6" id="__codelineno-0-6" name="__codelineno-0-6"></a><span class="x">&lt;/a&gt;</span>
 </code></pre></div>
-<p>Al hacer clic en este botón, el usuario accede a una interfaz de configuración de reportes donde puede:</p>
-<p><strong>Generar reportes</strong> con totales y subtotales automáticos</p>
-<h2 id="mejoras-de-experiencia-de-usuario-ux-premium">Mejoras de Experiencia de Usuario (UX) Premium</h2>
-<p>El generador ha sido actualizado con una interfaz moderna y eficiente que optimiza el flujo de trabajo:</p>
-<h3 id="1-diseno-compacto-y-eficiente">1. Diseño Compacto y Eficiente</h3>
+<p>Clicking this button takes the user to a report configuration screen where they can:</p>
+<p><strong>Generate reports</strong> with automatic totals and subtotals</p>
+<h2 id="premium-user-experience-ux-improvements">Premium User Experience (UX) Improvements</h2>
+<p>The generator has been updated with a modern, efficient interface that streamlines the workflow:</p>
+<h3 id="1-compact-and-efficient-design">1. Compact and Efficient Design</h3>
 <ul>
-<li><strong>Layout Optimizado:</strong> Se han reducido los espacios innecesarios (paddings y márgenes) para mostrar más información en menos pantalla, ideal para configuraciones con muchos filtros.</li>
-<li><strong>Cabeceras y Pie de Página Pegajosos:</strong> El botón de "Generar Reporte" y la barra de herramientas de filtros están siempre visibles (sticky), eliminando la necesidad de hacer scroll infinito.</li>
-<li><strong>Barra Lateral de Agrupamiento:</strong> En pantallas grandes, la configuración de grupos se mantiene fija a la derecha para un acceso rápido.</li>
+<li><strong>Optimized Layout:</strong> Unnecessary spacing (paddings and margins) has been reduced to show more information on less screen, ideal for configurations with many filters.</li>
+<li><strong>Sticky Header and Footer:</strong> The "Generate Report" button and the filter toolbar are always visible (sticky), removing the need for endless scrolling.</li>
+<li><strong>Grouping Sidebar:</strong> On large screens, the grouping configuration stays fixed on the right for quick access.</li>
 </ul>
-<h3 id="2-navegacion-inteligente-y-ajax">2. Navegación Inteligente y AJAX</h3>
+<h3 id="2-smart-navigation-and-ajax">2. Smart Navigation and AJAX</h3>
 <ul>
-<li><strong>Limpieza de Sesión sin Recarga:</strong> El botón "Borrar/Limpiar" ahora funciona mediante AJAX. Esto limpia los filtros instantáneamente sin recargar la página, lo que evita "ensuciar" el historial del navegador. Ahora, al presionar el botón <strong>"Volver atrás"</strong> del navegador, regresarás a la página anterior con un solo clic.</li>
-<li><strong>Confirmaciones Profesionales:</strong> Se utiliza <strong>SweetAlert2</strong> para confirmaciones críticas, ofreciendo una estética mucho más integrada y profesional que los mensajes nativos del navegador.</li>
+<li><strong>Session Clearing Without Reload:</strong> The "Clear" button now works via AJAX. It clears the filters instantly without reloading the page, which avoids "polluting" the browser history. Now, when you press the browser's <strong>"Back"</strong> button, you return to the previous page with a single click.</li>
+<li><strong>Professional Confirmations:</strong> <strong>SweetAlert2</strong> is used for critical confirmations, offering a far more integrated and professional look than native browser dialogs.</li>
 </ul>
-<h3 id="3-feedback-visual-dinamico">3. Feedback Visual Dinámico</h3>
+<h3 id="3-dynamic-visual-feedback">3. Dynamic Visual Feedback</h3>
 <ul>
-<li><strong>Animaciones de Resaltado:</strong> Al agregar un nuevo filtro, este aparece con una suave animación de pulso para indicar dónde se ha añadido.</li>
-<li><strong>Scroll Automático:</strong> La pantalla se desplaza suavemente hacia el nuevo filtro seleccionado.</li>
-<li><strong>Estados de Carga:</strong> El botón de generación muestra un spinner y se deshabilita durante el procesamiento para evitar envíos duplicados.</li>
+<li><strong>Highlight Animations:</strong> When you add a new filter, it appears with a soft pulse animation to show where it was added.</li>
+<li><strong>Automatic Scrolling:</strong> The screen scrolls smoothly to the newly selected filter.</li>
+<li><strong>Loading States:</strong> The generate button shows a spinner and is disabled during processing to prevent duplicate submissions.</li>
 </ul>
-<h2 id="funcionalidades-avanzadas-de-configuracion">Funcionalidades Avanzadas de Configuración</h2>
-<h3 id="1-auto-agrupamiento-inteligente">1. Auto-Agrupamiento Inteligente</h3>
-<p>Cuando se añade un filtro de tipo <strong>Búsqueda Contextual</strong> (campos con <code>addSearch()</code>), el sistema intenta automáticamente asignar ese campo al primer nivel de agrupamiento disponible. Esto agiliza la creación de reportes, ya que normalmente se desea ver los datos agrupados por la entidad que se está filtrando.</p>
-<h3 id="2-niveles-de-agrupacion-excluyentes">2. Niveles de Agrupación Excluyentes</h3>
-<p>Para evitar errores en la lógica del reporte, los niveles de agrupación (Nivel 1, 2 y 3) son inteligentes: si seleccionas un campo en el Nivel 1, esa opción se deshabilitará automáticamente en los niveles 2 y 3, asegurando una jerarquía lógica y sin duplicados.</p>
-<h2 id="caracteristicas-principales">Características Principales</h2>
-<h3 id="1-generacion-automatica-de-filtros">1. Generación Automática de Filtros</h3>
-<p>El generador analiza <strong>automáticamente</strong> todos los campos definidos en tu dataset mediante <code>addField()</code> y crea los filtros apropiados según el tipo de campo:</p>
-<h4 id="tipos-de-filtros-detectados-automaticamente">Tipos de Filtros Detectados Automáticamente</h4>
+<h2 id="advanced-configuration-features">Advanced Configuration Features</h2>
+<h3 id="1-smart-auto-grouping">1. Smart Auto-Grouping</h3>
+<p>When you add a <strong>Contextual Search</strong> filter (fields defined with <code>addSearch()</code>), the system automatically tries to assign that field to the first available grouping level. This speeds up report creation, since you usually want to see the data grouped by the entity you are filtering.</p>
+<h3 id="2-mutually-exclusive-grouping-levels">2. Mutually Exclusive Grouping Levels</h3>
+<p>To avoid errors in the report logic, the grouping levels (Level 1, 2 and 3) are smart: if you select a field in Level 1, that option is automatically disabled in Levels 2 and 3, ensuring a logical hierarchy without duplicates.</p>
+<h2 id="main-features">Main Features</h2>
+<h3 id="1-automatic-filter-generation">1. Automatic Filter Generation</h3>
+<p>The generator <strong>automatically</strong> analyzes every field defined in your dataset through <code>addField()</code> and creates the appropriate filters according to the field type:</p>
+<h4 id="automatically-detected-filter-types">Automatically Detected Filter Types</h4>
 <table>
 <thead>
 <tr>
-<th>Tipo de Campo</th>
-<th>Tipo de Filtro Generado</th>
-<th>Descripción</th>
+<th>Field Type</th>
+<th>Generated Filter Type</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>date</code> / <code>datetime</code></td>
-<td><strong>Rango de Fechas</strong></td>
-<td>Permite filtrar desde/hasta una fecha específica</td>
+<td><strong>Date Range</strong></td>
+<td>Filter from/to a specific date</td>
 </tr>
 <tr>
 <td><code>money</code> / <code>numeric</code> / <code>decimal</code></td>
-<td><strong>Rango Numérico</strong></td>
-<td>Filtro min/max para valores numéricos</td>
+<td><strong>Numeric Range</strong></td>
+<td>Min/max filter for numeric values</td>
 </tr>
 <tr>
 <td><code>dropdown</code> / <code>enum</code></td>
-<td><strong>Selector de Opciones</strong></td>
-<td>Lista desplegable con las opciones definidas</td>
+<td><strong>Option Selector</strong></td>
+<td>Dropdown list with the defined options</td>
 </tr>
 <tr>
 <td><code>switch</code> / <code>boolean</code></td>
-<td><strong>Selector Booleano</strong></td>
-<td>Filtro Sí/No o Activo/Inactivo</td>
+<td><strong>Boolean Selector</strong></td>
+<td>Yes/No or Active/Inactive filter</td>
 </tr>
 <tr>
-<td><strong>Campos con <code>addSearch()</code></strong></td>
-<td><strong>Búsqueda Contextual</strong></td>
-<td>Permite buscar en el dataset relacionado</td>
+<td><strong>Fields with <code>addSearch()</code></strong></td>
+<td><strong>Contextual Search</strong></td>
+<td>Searches within the related dataset</td>
 </tr>
 <tr>
-<td>Texto (otros)</td>
-<td><strong>Filtro de Texto</strong></td>
-<td>Búsqueda por coincidencia de texto</td>
+<td>Text (others)</td>
+<td><strong>Text Filter</strong></td>
+<td>Text match search</td>
 </tr>
 </tbody>
 </table>
-<h4 id="ejemplo-de-deteccion-automatica">Ejemplo de Detección Automática</h4>
-<div class="highlight"><pre><span></span><code><a href="#__codelineno-1-1" id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="x">// En tu dataset de Clientes</span>
+<h4 id="automatic-detection-example">Automatic Detection Example</h4>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-1-1" id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="x">// In your Customers dataset</span>
 <a href="#__codelineno-1-2" id="__codelineno-1-2" name="__codelineno-1-2"></a><span class="x">$this-&gt;addField('customerName', [</span>
-<a href="#__codelineno-1-3" id="__codelineno-1-3" name="__codelineno-1-3"></a><span class="x">    'label' =&gt; 'Nombre del Cliente',</span>
+<a href="#__codelineno-1-3" id="__codelineno-1-3" name="__codelineno-1-3"></a><span class="x">    'label' =&gt; 'Customer Name',</span>
 <a href="#__codelineno-1-4" id="__codelineno-1-4" name="__codelineno-1-4"></a><span class="x">    'rules' =&gt; 'required'</span>
 <a href="#__codelineno-1-5" id="__codelineno-1-5" name="__codelineno-1-5"></a><span class="x">]);</span>
-<a href="#__codelineno-1-6" id="__codelineno-1-6" name="__codelineno-1-6"></a><span class="x">// → Se generará un filtro de TEXTO</span>
+<a href="#__codelineno-1-6" id="__codelineno-1-6" name="__codelineno-1-6"></a><span class="x">// → A TEXT filter will be generated</span>
 <a href="#__codelineno-1-7" id="__codelineno-1-7" name="__codelineno-1-7"></a>
 <a href="#__codelineno-1-8" id="__codelineno-1-8" name="__codelineno-1-8"></a><span class="x">$this-&gt;addField('creditLimit', [</span>
-<a href="#__codelineno-1-9" id="__codelineno-1-9" name="__codelineno-1-9"></a><span class="x">    'label' =&gt; 'Límite de Crédito',</span>
+<a href="#__codelineno-1-9" id="__codelineno-1-9" name="__codelineno-1-9"></a><span class="x">    'label' =&gt; 'Credit Limit',</span>
 <a href="#__codelineno-1-10" id="__codelineno-1-10" name="__codelineno-1-10"></a><span class="x">    'rules' =&gt; 'required|money'</span>
 <a href="#__codelineno-1-11" id="__codelineno-1-11" name="__codelineno-1-11"></a><span class="x">]);</span>
-<a href="#__codelineno-1-12" id="__codelineno-1-12" name="__codelineno-1-12"></a><span class="x">// → Se generará un filtro de RANGO NUMÉRICO (min/max)</span>
+<a href="#__codelineno-1-12" id="__codelineno-1-12" name="__codelineno-1-12"></a><span class="x">// → A NUMERIC RANGE filter (min/max) will be generated</span>
 <a href="#__codelineno-1-13" id="__codelineno-1-13" name="__codelineno-1-13"></a>
 <a href="#__codelineno-1-14" id="__codelineno-1-14" name="__codelineno-1-14"></a><span class="x">$this-&gt;addField('status', [</span>
-<a href="#__codelineno-1-15" id="__codelineno-1-15" name="__codelineno-1-15"></a><span class="x">    'label' =&gt; 'Estado',</span>
+<a href="#__codelineno-1-15" id="__codelineno-1-15" name="__codelineno-1-15"></a><span class="x">    'label' =&gt; 'Status',</span>
 <a href="#__codelineno-1-16" id="__codelineno-1-16" name="__codelineno-1-16"></a><span class="x">    'type' =&gt; 'dropdown',</span>
 <a href="#__codelineno-1-17" id="__codelineno-1-17" name="__codelineno-1-17"></a><span class="x">    'options' =&gt; [</span>
-<a href="#__codelineno-1-18" id="__codelineno-1-18" name="__codelineno-1-18"></a><span class="x">        'active' =&gt; 'Activo',</span>
-<a href="#__codelineno-1-19" id="__codelineno-1-19" name="__codelineno-1-19"></a><span class="x">        'inactive' =&gt; 'Inactivo',</span>
-<a href="#__codelineno-1-20" id="__codelineno-1-20" name="__codelineno-1-20"></a><span class="x">        'suspended' =&gt; 'Suspendido'</span>
+<a href="#__codelineno-1-18" id="__codelineno-1-18" name="__codelineno-1-18"></a><span class="x">        'active' =&gt; 'Active',</span>
+<a href="#__codelineno-1-19" id="__codelineno-1-19" name="__codelineno-1-19"></a><span class="x">        'inactive' =&gt; 'Inactive',</span>
+<a href="#__codelineno-1-20" id="__codelineno-1-20" name="__codelineno-1-20"></a><span class="x">        'suspended' =&gt; 'Suspended'</span>
 <a href="#__codelineno-1-21" id="__codelineno-1-21" name="__codelineno-1-21"></a><span class="x">    ]</span>
 <a href="#__codelineno-1-22" id="__codelineno-1-22" name="__codelineno-1-22"></a><span class="x">]);</span>
-<a href="#__codelineno-1-23" id="__codelineno-1-23" name="__codelineno-1-23"></a><span class="x">// → Se generará un filtro de SELECCIÓN con las opciones definidas</span>
+<a href="#__codelineno-1-23" id="__codelineno-1-23" name="__codelineno-1-23"></a><span class="x">// → A SELECTION filter with the defined options will be generated</span>
 <a href="#__codelineno-1-24" id="__codelineno-1-24" name="__codelineno-1-24"></a>
 <a href="#__codelineno-1-25" id="__codelineno-1-25" name="__codelineno-1-25"></a><span class="x">$this-&gt;addSearch('salesRepEmployeeNumber', 'Tienda\\Empleados');</span>
-<a href="#__codelineno-1-26" id="__codelineno-1-26" name="__codelineno-1-26"></a><span class="x">// → Se generará un filtro de BÚSQUEDA que reutiliza el dataset de Empleados</span>
+<a href="#__codelineno-1-26" id="__codelineno-1-26" name="__codelineno-1-26"></a><span class="x">// → A SEARCH filter that reuses the Employees dataset will be generated</span>
 </code></pre></div>
-<h3 id="2-generacion-automatica-de-agrupaciones">2. Generación Automática de Agrupaciones</h3>
-<p>Los criterios de agrupación también se generan automáticamente basándose en la configuración de campos:</p>
-<h4 id="tipos-de-agrupacion-detectados">Tipos de Agrupación Detectados</h4>
+<h3 id="2-automatic-grouping-generation">2. Automatic Grouping Generation</h3>
+<p>Grouping criteria are also generated automatically based on the field configuration:</p>
+<h4 id="detected-grouping-types">Detected Grouping Types</h4>
 <table>
 <thead>
 <tr>
-<th>Tipo de Campo</th>
-<th>Agrupaciones Generadas</th>
+<th>Field Type</th>
+<th>Generated Groupings</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>date</code> / <code>datetime</code></td>
-<td>• <strong>Por Mes</strong> (Año-Mes)<br/>• <strong>Por Año</strong></td>
+<td>• <strong>By Month</strong> (Year-Month)<br/>• <strong>By Year</strong></td>
 </tr>
 <tr>
-<td><strong>Campos con <code>addSearch()</code></strong></td>
-<td>• <strong>Por Valor Exacto</strong> del campo relacionado</td>
+<td><strong>Fields with <code>addSearch()</code></strong></td>
+<td>• <strong>By Exact Value</strong> of the related field</td>
 </tr>
 <tr>
 <td><code>dropdown</code> / <code>enum</code></td>
-<td>• <strong>Por Valor Exacto</strong> de la opción seleccionada</td>
+<td>• <strong>By Exact Value</strong> of the selected option</td>
 </tr>
 </tbody>
 </table>
-<h4 id="ejemplo-de-agrupaciones-automaticas">Ejemplo de Agrupaciones Automáticas</h4>
-<div class="highlight"><pre><span></span><code><a href="#__codelineno-2-1" id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="x">// Campo de fecha en el dataset de Órdenes</span>
+<h4 id="automatic-grouping-example">Automatic Grouping Example</h4>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-2-1" id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="x">// Date field in the Orders dataset</span>
 <a href="#__codelineno-2-2" id="__codelineno-2-2" name="__codelineno-2-2"></a><span class="x">$this-&gt;addField('orderDate', [</span>
-<a href="#__codelineno-2-3" id="__codelineno-2-3" name="__codelineno-2-3"></a><span class="x">    'label' =&gt; 'Fecha de Orden',</span>
+<a href="#__codelineno-2-3" id="__codelineno-2-3" name="__codelineno-2-3"></a><span class="x">    'label' =&gt; 'Order Date',</span>
 <a href="#__codelineno-2-4" id="__codelineno-2-4" name="__codelineno-2-4"></a><span class="x">    'type' =&gt; 'date',</span>
 <a href="#__codelineno-2-5" id="__codelineno-2-5" name="__codelineno-2-5"></a><span class="x">    'rules' =&gt; 'required'</span>
 <a href="#__codelineno-2-6" id="__codelineno-2-6" name="__codelineno-2-6"></a><span class="x">]);</span>
-<a href="#__codelineno-2-7" id="__codelineno-2-7" name="__codelineno-2-7"></a><span class="x">// → Genera dos opciones de agrupación:</span>
-<a href="#__codelineno-2-8" id="__codelineno-2-8" name="__codelineno-2-8"></a><span class="x">//   1. "Fecha de Orden (Por Mes)"</span>
-<a href="#__codelineno-2-9" id="__codelineno-2-9" name="__codelineno-2-9"></a><span class="x">//   2. "Fecha de Orden (Por Año)"</span>
+<a href="#__codelineno-2-7" id="__codelineno-2-7" name="__codelineno-2-7"></a><span class="x">// → Generates two grouping options:</span>
+<a href="#__codelineno-2-8" id="__codelineno-2-8" name="__codelineno-2-8"></a><span class="x">//   1. "Order Date (By Month)"</span>
+<a href="#__codelineno-2-9" id="__codelineno-2-9" name="__codelineno-2-9"></a><span class="x">//   2. "Order Date (By Year)"</span>
 <a href="#__codelineno-2-10" id="__codelineno-2-10" name="__codelineno-2-10"></a>
-<a href="#__codelineno-2-11" id="__codelineno-2-11" name="__codelineno-2-11"></a><span class="x">// Campo relacionado en el dataset de Pagos</span>
+<a href="#__codelineno-2-11" id="__codelineno-2-11" name="__codelineno-2-11"></a><span class="x">// Related field in the Payments dataset</span>
 <a href="#__codelineno-2-12" id="__codelineno-2-12" name="__codelineno-2-12"></a><span class="x">$this-&gt;addSearch('customerNumber', 'Tienda\\Clientes');</span>
-<a href="#__codelineno-2-13" id="__codelineno-2-13" name="__codelineno-2-13"></a><span class="x">// → Genera agrupación:</span>
-<a href="#__codelineno-2-14" id="__codelineno-2-14" name="__codelineno-2-14"></a><span class="x">//   "customerNumber (Valor exacto)" - agrupa por cliente</span>
+<a href="#__codelineno-2-13" id="__codelineno-2-13" name="__codelineno-2-13"></a><span class="x">// → Generates grouping:</span>
+<a href="#__codelineno-2-14" id="__codelineno-2-14" name="__codelineno-2-14"></a><span class="x">//   "customerNumber (Exact value)" - groups by customer</span>
 </code></pre></div>
-<h3 id="3-agrupacion-multinivel">3. Agrupación Multinivel</h3>
-<p>El generador soporta <strong>hasta 3 niveles de agrupación jerárquica</strong>, permitiendo reportes complejos como:</p>
+<h3 id="3-multi-level-grouping">3. Multi-level Grouping</h3>
+<p>The generator supports <strong>up to 3 levels of hierarchical grouping</strong>, enabling complex reports such as:</p>
 <ul>
-<li><strong>Ventas por Año → Mes → Empleado</strong></li>
-<li><strong>Pagos por Cliente → Año → Método de Pago</strong></li>
-<li><strong>Productos por Línea → Año → Mes</strong></li>
+<li><strong>Sales by Year → Month → Employee</strong></li>
+<li><strong>Payments by Customer → Year → Payment Method</strong></li>
+<li><strong>Products by Line → Year → Month</strong></li>
 </ul>
-<p>Cada nivel de agrupación genera automáticamente <strong>subtotales</strong> y el reporte incluye un <strong>total general</strong>.</p>
-<h3 id="4-busqueda-contextual-en-filtros">4. Búsqueda Contextual en Filtros</h3>
-<p>Cuando un campo está vinculado a otro dataset mediante <code>addSearch()</code>, el filtro del reporte hereda toda la funcionalidad de búsqueda contextual:</p>
-<p><strong>Ejemplo Práctico:</strong></p>
-<p>En el dataset de <strong>Pagos</strong>, tienes:</p>
+<p>Each grouping level automatically generates <strong>subtotals</strong>, and the report includes a <strong>grand total</strong>.</p>
+<h3 id="4-contextual-search-in-filters">4. Contextual Search in Filters</h3>
+<p>When a field is linked to another dataset through <code>addSearch()</code>, the report filter inherits all the contextual search functionality:</p>
+<p><strong>Practical Example:</strong></p>
+<p>In the <strong>Payments</strong> dataset you have:</p>
 <div class="highlight"><pre><span></span><code><a href="#__codelineno-3-1" id="__codelineno-3-1" name="__codelineno-3-1"></a><span class="x">$this-&gt;addSearch('customerNumber', 'Tienda\\Clientes');</span>
 </code></pre></div>
-<p>Y en el dataset de <strong>Clientes</strong>, definiste:</p>
+<p>And in the <strong>Customers</strong> dataset you defined:</p>
 <div class="highlight"><pre><span></span><code><a href="#__codelineno-4-1" id="__codelineno-4-1" name="__codelineno-4-1"></a><span class="x">$this-&gt;setTableFields([</span>
 <a href="#__codelineno-4-2" id="__codelineno-4-2" name="__codelineno-4-2"></a><span class="x">    'customerName',</span>
-<a href="#__codelineno-4-3" id="__codelineno-4-3" name="__codelineno-4-3"></a><span class="x">    'Contacto', // Campo calculado</span>
-<a href="#__codelineno-4-4" id="__codelineno-4-4" name="__codelineno-4-4"></a><span class="x">    'salesRepEmployeeNumber' // Empleado a cargo</span>
+<a href="#__codelineno-4-3" id="__codelineno-4-3" name="__codelineno-4-3"></a><span class="x">    'Contacto', // Calculated field</span>
+<a href="#__codelineno-4-4" id="__codelineno-4-4" name="__codelineno-4-4"></a><span class="x">    'salesRepEmployeeNumber' // Employee in charge</span>
 <a href="#__codelineno-4-5" id="__codelineno-4-5" name="__codelineno-4-5"></a><span class="x">]);</span>
 </code></pre></div>
-<p><strong>Resultado en el Generador de Reportes:</strong></p>
-<p>Al filtrar pagos por cliente, el usuario puede buscar escribiendo:</p>
+<p><strong>Result in the Report Generator:</strong></p>
+<p>When filtering payments by customer, the user can search by typing:</p>
 <ul>
-<li>El nombre de la empresa</li>
-<li>El nombre del contacto</li>
-<li>El nombre del empleado a cargo</li>
+<li>The company name</li>
+<li>The contact name</li>
+<li>The name of the employee in charge</li>
 </ul>
-<p>¡El sistema buscará automáticamente en todos los campos visibles del dataset de Clientes!</p>
-<h2 id="arquitectura-y-funcionamiento">Arquitectura y Funcionamiento</h2>
-<h3 id="clase-rdatasetreportgenerator">Clase <code>RDatasetReportGenerator</code></h3>
-<p>Esta clase es el motor detrás de la generación automática de reportes. Sus responsabilidades incluyen:</p>
+<p>The system automatically searches across all visible fields of the Customers dataset!</p>
+<h2 id="architecture-and-operation">Architecture and Operation</h2>
+<h3 id="the-rdatasetreportgenerator-class">The <code>RDatasetReportGenerator</code> Class</h3>
+<p>This class is the engine behind automatic report generation. Its responsibilities include:</p>
 <ol>
-<li><strong>Introspección de Campos</strong> (<code>detectCapabilities()</code>)</li>
-<li>Analiza todos los campos del dataset</li>
-<li>Identifica tipos de filtros aplicables</li>
-<li>Detecta criterios de agrupación viables</li>
+<li><strong>Field Introspection</strong> (<code>detectCapabilities()</code>)</li>
+<li>Analyzes all fields in the dataset</li>
+<li>Identifies applicable filter types</li>
+<li>Detects viable grouping criteria</li>
 <li>
-<p>Ignora campos no aptos (claves primarias, campos únicos, archivos)</p>
+<p>Ignores unsuitable fields (primary keys, unique fields, files)</p>
 </li>
 <li>
-<p><strong>Procesamiento de Solicitudes</strong> (<code>processRequest()</code>)</p>
+<p><strong>Request Processing</strong> (<code>processRequest()</code>)</p>
 </li>
-<li>Lee los filtros y agrupaciones enviados desde el formulario</li>
-<li>Valida y normaliza los valores</li>
+<li>Reads the filters and groupings submitted from the form</li>
+<li>Validates and normalizes the values</li>
 <li>
-<p>Construye las condiciones de consulta</p>
-</li>
-<li>
-<p><strong>Generación de Consultas SQL</strong></p>
-</li>
-<li>Aplica filtros simples (<code>WHERE campo = valor</code>)</li>
-<li>Aplica rangos de fechas (<code>WHERE fecha &gt;= inicio AND fecha &lt;= fin</code>)</li>
-<li>Aplica rangos numéricos (<code>WHERE campo &gt;= min AND campo &lt;= max</code>)</li>
-<li>
-<p>Maneja correctamente JOINs para campos relacionados</p>
+<p>Builds the query conditions</p>
 </li>
 <li>
-<p><strong>Formateo y Agrupación</strong> (<code>generateHTML()</code>)</p>
+<p><strong>SQL Query Generation</strong></p>
 </li>
-<li>Ejecuta la consulta con todos los filtros aplicados</li>
-<li>Enriquece los datos con claves de agrupación formateadas</li>
-<li>Ordena jerárquicamente por los niveles de agrupación</li>
+<li>Applies simple filters (<code>WHERE field = value</code>)</li>
+<li>Applies date ranges (<code>WHERE date &gt;= start AND date &lt;= end</code>)</li>
+<li>Applies numeric ranges (<code>WHERE field &gt;= min AND field &lt;= max</code>)</li>
 <li>
-<p>Delega el formateo de valores al modelo (moneda, fechas, relaciones)</p>
+<p>Correctly handles JOINs for related fields</p>
 </li>
 <li>
-<p><strong>Generación de Reporte HTML</strong></p>
+<p><strong>Formatting and Grouping</strong> (<code>generateHTML()</code>)</p>
 </li>
-<li>Utiliza <code>RSimpleLevelReport</code> para generar HTML estructurado</li>
-<li>Incluye totales y subtotales automáticos</li>
-<li>Muestra descripción de filtros aplicados</li>
+<li>Runs the query with all filters applied</li>
+<li>Enriches the data with formatted grouping keys</li>
+<li>Sorts hierarchically by the grouping levels</li>
+<li>
+<p>Delegates value formatting to the model (currency, dates, relationships)</p>
+</li>
+<li>
+<p><strong>HTML Report Generation</strong></p>
+</li>
+<li>Uses <code>RSimpleLevelReport</code> to generate structured HTML</li>
+<li>Includes automatic totals and subtotals</li>
+<li>Shows a description of the applied filters</li>
 </ol>
-<h3 id="flujo-de-ejecucion">Flujo de Ejecución</h3>
+<h3 id="execution-flow">Execution Flow</h3>
 <div class="mermaid">graph TD
-    A[Usuario hace clic en botón Reporte] --&gt; B[genericAdvancedReport método]
-    B --&gt; C{¿Es POST?}
-    C --&gt;|No| D[Mostrar formulario de configuración]
-    C --&gt;|Sí| E[Procesar filtros y agrupaciones]
-    E --&gt; F[Ejecutar consulta SQL con filtros]
-    F --&gt; G[Formatear datos y agrupar]
-    G --&gt; H[Generar HTML con totales]
-    H --&gt; I[Mostrar reporte al usuario]
+    A[User clicks the Report button] --&gt; B[genericAdvancedReport method]
+    B --&gt; C{Is it POST?}
+    C --&gt;|No| D[Show configuration form]
+    C --&gt;|Yes| E[Process filters and groupings]
+    E --&gt; F[Run SQL query with filters]
+    F --&gt; G[Format and group data]
+    G --&gt; H[Generate HTML with totals]
+    H --&gt; I[Show report to the user]
 
-    D --&gt; J[Usuario configura filtros/grupos]
-    J --&gt; K[Usuario envía formulario]
+    D --&gt; J[User configures filters/groups]
+    J --&gt; K[User submits the form]
     K --&gt; C
 </div>
-<h2 id="uso-practico-ejemplo-completo">Uso Práctico: Ejemplo Completo</h2>
-<h3 id="dataset-de-ordenes">Dataset de Órdenes</h3>
+<h2 id="practical-use-complete-example">Practical Use: Complete Example</h2>
+<h3 id="orders-dataset">Orders Dataset</h3>
 <div class="highlight"><pre><span></span><code><a href="#__codelineno-5-1" id="__codelineno-5-1" name="__codelineno-5-1"></a><span class="x">namespace App\Controllers\Tienda;</span>
 <a href="#__codelineno-5-2" id="__codelineno-5-2" name="__codelineno-5-2"></a>
 <a href="#__codelineno-5-3" id="__codelineno-5-3" name="__codelineno-5-3"></a><span class="x">use App\ThirdParty\Ragnos\Controllers\RDatasetController;</span>
@@ -473,34 +473,34 @@
 <a href="#__codelineno-5-9" id="__codelineno-5-9" name="__codelineno-5-9"></a><span class="x">        parent::__construct();</span>
 <a href="#__codelineno-5-10" id="__codelineno-5-10" name="__codelineno-5-10"></a>
 <a href="#__codelineno-5-11" id="__codelineno-5-11" name="__codelineno-5-11"></a><span class="x">        $this-&gt;checkLogin();</span>
-<a href="#__codelineno-5-12" id="__codelineno-5-12" name="__codelineno-5-12"></a><span class="x">        $this-&gt;setTitle('Órdenes de Compra');</span>
+<a href="#__codelineno-5-12" id="__codelineno-5-12" name="__codelineno-5-12"></a><span class="x">        $this-&gt;setTitle('Purchase Orders');</span>
 <a href="#__codelineno-5-13" id="__codelineno-5-13" name="__codelineno-5-13"></a>
 <a href="#__codelineno-5-14" id="__codelineno-5-14" name="__codelineno-5-14"></a><span class="x">        $this-&gt;setTableName('orders');</span>
 <a href="#__codelineno-5-15" id="__codelineno-5-15" name="__codelineno-5-15"></a><span class="x">        $this-&gt;setIdField('orderNumber');</span>
 <a href="#__codelineno-5-16" id="__codelineno-5-16" name="__codelineno-5-16"></a>
-<a href="#__codelineno-5-17" id="__codelineno-5-17" name="__codelineno-5-17"></a><span class="x">        // Campo de fecha → generará filtro de rango + agrupación por mes/año</span>
+<a href="#__codelineno-5-17" id="__codelineno-5-17" name="__codelineno-5-17"></a><span class="x">        // Date field → generates range filter + grouping by month/year</span>
 <a href="#__codelineno-5-18" id="__codelineno-5-18" name="__codelineno-5-18"></a><span class="x">        $this-&gt;addField('orderDate', [</span>
-<a href="#__codelineno-5-19" id="__codelineno-5-19" name="__codelineno-5-19"></a><span class="x">            'label' =&gt; 'Fecha de Orden',</span>
+<a href="#__codelineno-5-19" id="__codelineno-5-19" name="__codelineno-5-19"></a><span class="x">            'label' =&gt; 'Order Date',</span>
 <a href="#__codelineno-5-20" id="__codelineno-5-20" name="__codelineno-5-20"></a><span class="x">            'type'  =&gt; 'date',</span>
 <a href="#__codelineno-5-21" id="__codelineno-5-21" name="__codelineno-5-21"></a><span class="x">            'rules' =&gt; 'required'</span>
 <a href="#__codelineno-5-22" id="__codelineno-5-22" name="__codelineno-5-22"></a><span class="x">        ]);</span>
 <a href="#__codelineno-5-23" id="__codelineno-5-23" name="__codelineno-5-23"></a>
-<a href="#__codelineno-5-24" id="__codelineno-5-24" name="__codelineno-5-24"></a><span class="x">        // Campo relacionado → generará filtro de búsqueda + agrupación por cliente</span>
+<a href="#__codelineno-5-24" id="__codelineno-5-24" name="__codelineno-5-24"></a><span class="x">        // Related field → generates search filter + grouping by customer</span>
 <a href="#__codelineno-5-25" id="__codelineno-5-25" name="__codelineno-5-25"></a><span class="x">        $this-&gt;addSearch('customerNumber', 'Tienda\\Clientes');</span>
 <a href="#__codelineno-5-26" id="__codelineno-5-26" name="__codelineno-5-26"></a>
-<a href="#__codelineno-5-27" id="__codelineno-5-27" name="__codelineno-5-27"></a><span class="x">        // Campo enum → generará filtro de selección + agrupación por estado</span>
+<a href="#__codelineno-5-27" id="__codelineno-5-27" name="__codelineno-5-27"></a><span class="x">        // Enum field → generates selection filter + grouping by status</span>
 <a href="#__codelineno-5-28" id="__codelineno-5-28" name="__codelineno-5-28"></a><span class="x">        $this-&gt;addField('status', [</span>
-<a href="#__codelineno-5-29" id="__codelineno-5-29" name="__codelineno-5-29"></a><span class="x">            'label'   =&gt; 'Estado',</span>
+<a href="#__codelineno-5-29" id="__codelineno-5-29" name="__codelineno-5-29"></a><span class="x">            'label'   =&gt; 'Status',</span>
 <a href="#__codelineno-5-30" id="__codelineno-5-30" name="__codelineno-5-30"></a><span class="x">            'type'    =&gt; 'dropdown',</span>
 <a href="#__codelineno-5-31" id="__codelineno-5-31" name="__codelineno-5-31"></a><span class="x">            'options' =&gt; [</span>
-<a href="#__codelineno-5-32" id="__codelineno-5-32" name="__codelineno-5-32"></a><span class="x">                'Shipped'   =&gt; 'Enviado',</span>
-<a href="#__codelineno-5-33" id="__codelineno-5-33" name="__codelineno-5-33"></a><span class="x">                'Pending'   =&gt; 'Pendiente',</span>
-<a href="#__codelineno-5-34" id="__codelineno-5-34" name="__codelineno-5-34"></a><span class="x">                'Cancelled' =&gt; 'Cancelado'</span>
+<a href="#__codelineno-5-32" id="__codelineno-5-32" name="__codelineno-5-32"></a><span class="x">                'Shipped'   =&gt; 'Shipped',</span>
+<a href="#__codelineno-5-33" id="__codelineno-5-33" name="__codelineno-5-33"></a><span class="x">                'Pending'   =&gt; 'Pending',</span>
+<a href="#__codelineno-5-34" id="__codelineno-5-34" name="__codelineno-5-34"></a><span class="x">                'Cancelled' =&gt; 'Cancelled'</span>
 <a href="#__codelineno-5-35" id="__codelineno-5-35" name="__codelineno-5-35"></a><span class="x">            ],</span>
 <a href="#__codelineno-5-36" id="__codelineno-5-36" name="__codelineno-5-36"></a><span class="x">            'rules' =&gt; 'required'</span>
 <a href="#__codelineno-5-37" id="__codelineno-5-37" name="__codelineno-5-37"></a><span class="x">        ]);</span>
 <a href="#__codelineno-5-38" id="__codelineno-5-38" name="__codelineno-5-38"></a>
-<a href="#__codelineno-5-39" id="__codelineno-5-39" name="__codelineno-5-39"></a><span class="x">        // Campo calculado (monto total)</span>
+<a href="#__codelineno-5-39" id="__codelineno-5-39" name="__codelineno-5-39"></a><span class="x">        // Calculated field (total amount)</span>
 <a href="#__codelineno-5-40" id="__codelineno-5-40" name="__codelineno-5-40"></a><span class="x">        $this-&gt;addField('Total', [</span>
 <a href="#__codelineno-5-41" id="__codelineno-5-41" name="__codelineno-5-41"></a><span class="x">            'label' =&gt; 'Total',</span>
 <a href="#__codelineno-5-42" id="__codelineno-5-42" name="__codelineno-5-42"></a><span class="x">            'query' =&gt; '(SELECT SUM(quantityOrdered * priceEach)</span>
@@ -519,113 +519,113 @@
 <a href="#__codelineno-5-55" id="__codelineno-5-55" name="__codelineno-5-55"></a><span class="x">    }</span>
 <a href="#__codelineno-5-56" id="__codelineno-5-56" name="__codelineno-5-56"></a><span class="x">}</span>
 </code></pre></div>
-<h3 id="reportes-generados-automaticamente">Reportes Generados Automáticamente</h3>
-<p>Con esta configuración, el usuario puede generar reportes como:</p>
-<p><strong>Ejemplo 1: Ventas por Cliente en un Rango de Fechas</strong></p>
+<h3 id="automatically-generated-reports">Automatically Generated Reports</h3>
+<p>With this configuration, the user can generate reports such as:</p>
+<p><strong>Example 1: Sales by Customer in a Date Range</strong></p>
 <ul>
-<li><strong>Filtro:</strong> Fecha desde 2024-01-01 hasta 2024-12-31</li>
-<li><strong>Agrupación:</strong> Por Cliente</li>
-<li><strong>Resultado:</strong> Lista de clientes con el total vendido a cada uno en 2024</li>
+<li><strong>Filter:</strong> Date from 2024-01-01 to 2024-12-31</li>
+<li><strong>Grouping:</strong> By Customer</li>
+<li><strong>Result:</strong> List of customers with the total sold to each one in 2024</li>
 </ul>
-<p><strong>Ejemplo 2: Órdenes Canceladas por Mes</strong></p>
+<p><strong>Example 2: Cancelled Orders by Month</strong></p>
 <ul>
-<li><strong>Filtro:</strong> Estado = "Cancelado"</li>
-<li><strong>Agrupación Nivel 1:</strong> Por Mes</li>
-<li><strong>Resultado:</strong> Total de órdenes canceladas agrupadas por mes con subtotales</li>
+<li><strong>Filter:</strong> Status = "Cancelled"</li>
+<li><strong>Level 1 Grouping:</strong> By Month</li>
+<li><strong>Result:</strong> Total cancelled orders grouped by month with subtotals</li>
 </ul>
-<p><strong>Ejemplo 3: Análisis Jerárquico Anual</strong></p>
+<p><strong>Example 3: Annual Hierarchical Analysis</strong></p>
 <ul>
-<li><strong>Agrupación Nivel 1:</strong> Por Año</li>
-<li><strong>Agrupación Nivel 2:</strong> Por Mes</li>
-<li><strong>Agrupación Nivel 3:</strong> Por Estado</li>
-<li><strong>Resultado:</strong> Reporte jerárquico: Año → Mes → Estado con todos sus subtotales</li>
+<li><strong>Level 1 Grouping:</strong> By Year</li>
+<li><strong>Level 2 Grouping:</strong> By Month</li>
+<li><strong>Level 3 Grouping:</strong> By Status</li>
+<li><strong>Result:</strong> Hierarchical report: Year → Month → Status with all subtotals</li>
 </ul>
-<h2 id="ventajas-del-sistema">Ventajas del Sistema</h2>
-<h3 id="1-cero-configuracion-adicional">1. <strong>Cero Configuración Adicional</strong></h3>
-<p>No necesitas escribir controladores especiales, vistas o queries para reportes. Todo se genera automáticamente desde la definición del dataset.</p>
-<h3 id="2-reutilizacion-de-logica">2. <strong>Reutilización de Lógica</strong></h3>
-<p>Los filtros y agrupaciones reutilizan:</p>
+<h2 id="system-advantages">System Advantages</h2>
+<h3 id="1-zero-additional-configuration">1. <strong>Zero Additional Configuration</strong></h3>
+<p>You don't need to write special controllers, views or queries for reports. Everything is generated automatically from the dataset definition.</p>
+<h3 id="2-logic-reuse">2. <strong>Logic Reuse</strong></h3>
+<p>Filters and groupings reuse:</p>
 <ul>
-<li>Las validaciones definidas en <code>addField()</code></li>
-<li>Las relaciones definidas con <code>addSearch()</code></li>
-<li>El formateo definido en el modelo</li>
+<li>The validations defined in <code>addField()</code></li>
+<li>The relationships defined with <code>addSearch()</code></li>
+<li>The formatting defined in the model</li>
 </ul>
-<h3 id="3-consistencia-de-interfaz">3. <strong>Consistencia de Interfaz</strong></h3>
-<p>Todos los datasets tienen exactamente la misma interfaz de reportes, reduciendo la curva de aprendizaje para los usuarios.</p>
-<h3 id="4-flexibilidad-total">4. <strong>Flexibilidad Total</strong></h3>
-<p>Los usuarios finales pueden combinar cualquier filtro con cualquier agrupación, generando reportes ad-hoc según sus necesidades sin requerir desarrollo.</p>
-<h3 id="5-escalabilidad">5. <strong>Escalabilidad</strong></h3>
-<p>A medida que agregas más campos a tu dataset, automáticamente se amplían las opciones de filtros y agrupaciones disponibles.</p>
-<h2 id="limitaciones-y-consideraciones">Limitaciones y Consideraciones</h2>
-<h3 id="campos-excluidos-automaticamente">Campos Excluidos Automáticamente</h3>
-<p>El sistema <strong>ignora</strong> automáticamente ciertos tipos de campos para filtros y agrupaciones:</p>
+<h3 id="3-interface-consistency">3. <strong>Interface Consistency</strong></h3>
+<p>Every dataset has exactly the same reporting interface, reducing the learning curve for users.</p>
+<h3 id="4-total-flexibility">4. <strong>Total Flexibility</strong></h3>
+<p>End users can combine any filter with any grouping, producing ad-hoc reports to suit their needs without requiring development.</p>
+<h3 id="5-scalability">5. <strong>Scalability</strong></h3>
+<p>As you add more fields to your dataset, the available filter and grouping options grow automatically.</p>
+<h2 id="limitations-and-considerations">Limitations and Considerations</h2>
+<h3 id="automatically-excluded-fields">Automatically Excluded Fields</h3>
+<p>The system automatically <strong>ignores</strong> certain field types for filters and groupings:</p>
 <ul>
-<li><strong>Claves primarias</strong>: No suelen ser útiles para filtros generales</li>
-<li><strong>Campos con <code>is_unique</code></strong>: Pensados para identificadores únicos</li>
-<li><strong>Archivos e imágenes</strong> (<code>fileupload</code>, <code>imageupload</code>)</li>
-<li><strong>Contraseñas</strong> (<code>password</code>)</li>
+<li><strong>Primary keys</strong>: Rarely useful for general filters</li>
+<li><strong>Fields with <code>is_unique</code></strong>: Intended for unique identifiers</li>
+<li><strong>Files and images</strong> (<code>fileupload</code>, <code>imageupload</code>)</li>
+<li><strong>Passwords</strong> (<code>password</code>)</li>
 </ul>
-<h3 id="campos-calculados-y-agrupaciones">Campos Calculados y Agrupaciones</h3>
-<p>Los campos con <code>query</code> (calculados) pueden aparecer en el reporte, pero <strong>no se pueden usar como criterio de agrupación</strong> ya que son expresiones SQL derivadas.</p>
-<h3 id="performance-en-grandes-volumenes">Performance en Grandes Volúmenes</h3>
-<p>Para datasets con millones de registros, considera:</p>
+<h3 id="calculated-fields-and-groupings">Calculated Fields and Groupings</h3>
+<p>Fields with <code>query</code> (calculated) can appear in the report, but <strong>cannot be used as a grouping criterion</strong> because they are derived SQL expressions.</p>
+<h3 id="performance-with-large-volumes">Performance with Large Volumes</h3>
+<p>For datasets with millions of records, consider:</p>
 <ul>
-<li>Añadir índices en campos frecuentemente filtrados</li>
-<li>Limitar las opciones de agrupación si son muy costosas</li>
-<li>Implementar paginación o límites en la consulta si es necesario</li>
+<li>Adding indexes on frequently filtered fields</li>
+<li>Limiting grouping options if they are very expensive</li>
+<li>Implementing pagination or limits on the query if needed</li>
 </ul>
-<h2 id="personalizacion-avanzada">Personalización Avanzada</h2>
-<p>Aunque el generador es automático, puedes influir en su comportamiento:</p>
-<h3 id="controlar-que-campos-son-filtrables">Controlar qué Campos son Filtrables</h3>
-<p>Al definir campos como <code>hidden</code> o con reglas específicas, puedes controlar su aparición en filtros:</p>
-<div class="highlight"><pre><span></span><code><a href="#__codelineno-6-1" id="__codelineno-6-1" name="__codelineno-6-1"></a><span class="x">// Este campo NO aparecerá en filtros (es hidden y calculado)</span>
+<h2 id="advanced-customization">Advanced Customization</h2>
+<p>Although the generator is automatic, you can influence its behavior:</p>
+<h3 id="controlling-which-fields-are-filterable">Controlling Which Fields Are Filterable</h3>
+<p>By defining fields as <code>hidden</code> or with specific rules, you can control whether they appear in filters:</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-6-1" id="__codelineno-6-1" name="__codelineno-6-1"></a><span class="x">// This field will NOT appear in filters (it is hidden and calculated)</span>
 <a href="#__codelineno-6-2" id="__codelineno-6-2" name="__codelineno-6-2"></a><span class="x">$this-&gt;addField('internalCode', [</span>
-<a href="#__codelineno-6-3" id="__codelineno-6-3" name="__codelineno-6-3"></a><span class="x">    'label' =&gt; 'Código Interno',</span>
+<a href="#__codelineno-6-3" id="__codelineno-6-3" name="__codelineno-6-3"></a><span class="x">    'label' =&gt; 'Internal Code',</span>
 <a href="#__codelineno-6-4" id="__codelineno-6-4" name="__codelineno-6-4"></a><span class="x">    'type'  =&gt; 'hidden',</span>
 <a href="#__codelineno-6-5" id="__codelineno-6-5" name="__codelineno-6-5"></a><span class="x">    'query' =&gt; 'MD5(customerNumber)'</span>
 <a href="#__codelineno-6-6" id="__codelineno-6-6" name="__codelineno-6-6"></a><span class="x">]);</span>
 </code></pre></div>
-<h3 id="metodos-programaticos">Métodos Programáticos</h3>
-<p>También puedes usar el generador programáticamente desde código:</p>
-<div class="highlight"><pre><span></span><code><a href="#__codelineno-7-1" id="__codelineno-7-1" name="__codelineno-7-1"></a><span class="x">public function reportePersonalizado()</span>
+<h3 id="programmatic-methods">Programmatic Methods</h3>
+<p>You can also use the generator programmatically from code:</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-7-1" id="__codelineno-7-1" name="__codelineno-7-1"></a><span class="x">public function customReport()</span>
 <a href="#__codelineno-7-2" id="__codelineno-7-2" name="__codelineno-7-2"></a><span class="x">{</span>
 <a href="#__codelineno-7-3" id="__codelineno-7-3" name="__codelineno-7-3"></a><span class="x">    $generator = new RDatasetReportGenerator($this);</span>
 <a href="#__codelineno-7-4" id="__codelineno-7-4" name="__codelineno-7-4"></a>
-<a href="#__codelineno-7-5" id="__codelineno-7-5" name="__codelineno-7-5"></a><span class="x">    // Agregar filtros manualmente</span>
+<a href="#__codelineno-7-5" id="__codelineno-7-5" name="__codelineno-7-5"></a><span class="x">    // Add filters manually</span>
 <a href="#__codelineno-7-6" id="__codelineno-7-6" name="__codelineno-7-6"></a><span class="x">    $generator-&gt;addDateRangeFilter('orderDate', '2024-01-01', '2024-12-31');</span>
 <a href="#__codelineno-7-7" id="__codelineno-7-7" name="__codelineno-7-7"></a><span class="x">    $generator-&gt;addFilter('status', 'Shipped');</span>
 <a href="#__codelineno-7-8" id="__codelineno-7-8" name="__codelineno-7-8"></a>
-<a href="#__codelineno-7-9" id="__codelineno-7-9" name="__codelineno-7-9"></a><span class="x">    // Configurar agrupación</span>
-<a href="#__codelineno-7-10" id="__codelineno-7-10" name="__codelineno-7-10"></a><span class="x">    $generator-&gt;setGrouping('customerNumber', 'raw', 'Cliente');</span>
-<a href="#__codelineno-7-11" id="__codelineno-7-11" name="__codelineno-7-11"></a><span class="x">    $generator-&gt;setGrouping('orderDate', 'date_month', 'Mes');</span>
+<a href="#__codelineno-7-9" id="__codelineno-7-9" name="__codelineno-7-9"></a><span class="x">    // Configure grouping</span>
+<a href="#__codelineno-7-10" id="__codelineno-7-10" name="__codelineno-7-10"></a><span class="x">    $generator-&gt;setGrouping('customerNumber', 'raw', 'Customer');</span>
+<a href="#__codelineno-7-11" id="__codelineno-7-11" name="__codelineno-7-11"></a><span class="x">    $generator-&gt;setGrouping('orderDate', 'date_month', 'Month');</span>
 <a href="#__codelineno-7-12" id="__codelineno-7-12" name="__codelineno-7-12"></a>
-<a href="#__codelineno-7-13" id="__codelineno-7-13" name="__codelineno-7-13"></a><span class="x">    // Generar HTML</span>
+<a href="#__codelineno-7-13" id="__codelineno-7-13" name="__codelineno-7-13"></a><span class="x">    // Generate HTML</span>
 <a href="#__codelineno-7-14" id="__codelineno-7-14" name="__codelineno-7-14"></a><span class="x">    $html = $generator-&gt;generateHTML();</span>
 <a href="#__codelineno-7-15" id="__codelineno-7-15" name="__codelineno-7-15"></a>
-<a href="#__codelineno-7-16" id="__codelineno-7-16" name="__codelineno-7-16"></a><span class="x">    return view('mi_plantilla_reporte', ['contenido' =&gt; $html]);</span>
+<a href="#__codelineno-7-16" id="__codelineno-7-16" name="__codelineno-7-16"></a><span class="x">    return view('my_report_template', ['contenido' =&gt; $html]);</span>
 <a href="#__codelineno-7-17" id="__codelineno-7-17" name="__codelineno-7-17"></a><span class="x">}</span>
 </code></pre></div>
-<h2 id="integracion-con-el-ecosistema-ragnos">Integración con el Ecosistema Ragnos</h2>
-<h3 id="relacion-con-addsearch">Relación con <code>addSearch()</code></h3>
-<p>Como se mencionó en la <a href="../../datasets/datasets/#relaciones-entre-datasets-addsearch">guía de Datasets</a>, los campos definidos con <code>addSearch()</code> no solo crean selectores en formularios, sino que también:</p>
+<h2 id="integration-with-the-ragnos-ecosystem">Integration with the Ragnos Ecosystem</h2>
+<h3 id="relationship-with-addsearch">Relationship with <code>addSearch()</code></h3>
+<p>As mentioned in the <a href="../../datasets/datasets/#relationships-between-datasets-addsearch">Datasets guide</a>, fields defined with <code>addSearch()</code> not only create selectors in forms, they also:</p>
 <ol>
-<li><strong>En Filtros de Reportes:</strong> Permiten búsqueda contextual avanzada</li>
-<li><strong>En Agrupaciones:</strong> Se convierten automáticamente en criterios de agrupación</li>
+<li><strong>In Report Filters:</strong> Enable advanced contextual search</li>
+<li><strong>In Groupings:</strong> Automatically become grouping criteria</li>
 </ol>
-<p>Esta sinergia hace que definir relaciones sea doblemente poderoso.</p>
-<h3 id="relacion-con-settablefields">Relación con <code>setTableFields()</code></h3>
-<p>Los campos incluidos en <code>setTableFields()</code> son los que aparecerán en el reporte generado. Esto te da control sobre qué columnas se muestran sin afectar la disponibilidad de filtros y agrupaciones.</p>
-<h2 id="conclusion">Conclusión</h2>
-<p>El <strong>Generador Automático de Reportes</strong> es una de las características más potentes de Ragnos, transformando cada dataset simple en una herramienta de análisis avanzado sin esfuerzo adicional de desarrollo.</p>
-<p>Al aprovechar toda la metadata declarativa que defines en tu dataset (<code>addField</code>, <code>addSearch</code>, <code>setTableFields</code>), el sistema construye automáticamente una interfaz completa de reportería con:</p>
+<p>This synergy makes defining relationships doubly powerful.</p>
+<h3 id="relationship-with-settablefields">Relationship with <code>setTableFields()</code></h3>
+<p>The fields included in <code>setTableFields()</code> are the ones that appear in the generated report. This gives you control over which columns are shown without affecting the availability of filters and groupings.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>The <strong>Automatic Report Generator</strong> is one of Ragnos's most powerful features, turning every simple dataset into an advanced analysis tool with no additional development effort.</p>
+<p>By leveraging all the declarative metadata you define in your dataset (<code>addField</code>, <code>addSearch</code>, <code>setTableFields</code>), the system automatically builds a complete reporting interface with:</p>
 <ul>
-<li>✅ Filtros inteligentes según tipo de campo</li>
-<li>✅ Agrupaciones jerárquicas multinivel</li>
-<li>✅ Búsqueda contextual en relaciones</li>
-<li>✅ Totales y subtotales automáticos</li>
-<li>✅ Interfaz consistente en todos los módulos</li>
+<li>✅ Smart filters by field type</li>
+<li>✅ Multi-level hierarchical groupings</li>
+<li>✅ Contextual search in relationships</li>
+<li>✅ Automatic totals and subtotals</li>
+<li>✅ Consistent interface across all modules</li>
 </ul>
-<p><strong>Resultado:</strong> Reportes empresariales de calidad profesional, disponibles en minutos, no en semanas.</p></div>
+<p><strong>Result:</strong> Professional-quality business reports, available in minutes, not weeks.</p></div>
 </div>
 </div>
 <footer class="col-md-12">
