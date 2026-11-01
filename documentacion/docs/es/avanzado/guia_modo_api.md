@@ -374,3 +374,21 @@ También puedes validar o exportar la especificación desde CLI:
 php spark ragnos:openapi --format json --output writable/openapi.json
 php spark ragnos:openapi --format yaml --output writable/openapi.yaml
 ```
+
+## Cliente de pruebas incluido (`apitest/`)
+
+El repositorio incluye en la carpeta `apitest/` una pequeña aplicación web (HTML + JavaScript, sin dependencias de compilación) para probar el modo API sin instalar Postman ni escribir código:
+
+- Inicia sesión y obtiene el token Bearer.
+- Lee la especificación OpenAPI y descubre automáticamente los datasets publicados.
+- Permite listar con paginación y búsqueda, crear, editar, eliminar y consultar el historial (`history/{id}`) de los registros.
+- Guarda las últimas peticiones realizadas para revisarlas.
+
+Ábrela desde el navegador en `http://localhost/tu-proyecto/apitest/`. Por defecto apunta a `../content/index.php`; si tu API vive en otra URL, edita `apitest/config.js` o define `window.RAGNOS_API_BASE` antes de cargarlo:
+
+```html
+<script>window.RAGNOS_API_BASE = 'https://api.mi-dominio.com';</script>
+```
+
+!!! warning "Producción"
+    `apitest/` es una herramienta de desarrollo. No la publiques en servidores de producción.

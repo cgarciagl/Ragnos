@@ -250,6 +250,14 @@ abstract class RDataset extends RController
      */
     protected function applyFilters()
     {
+        // Con borrado lógico activo, ocultar los registros marcados como eliminados
+        if (method_exists($this->modelo, 'usesSoftDeletes') && $this->modelo->usesSoftDeletes()) {
+            $this->modelo->builder()->where(
+                $this->modelo->table . '.' . $this->modelo->getDeletedField() . ' IS NULL',
+                null,
+                false
+            );
+        }
         $this->_filters();
     }
 
@@ -295,9 +303,17 @@ abstract class RDataset extends RController
     {
     }
 
-    function setUseTimesStamps($value)
+    function setUseTimeStamps($value)
     {
         $this->modelo->setUseTimeStamps($value);
+    }
+
+    /**
+     * @deprecated Usar setUseTimeStamps(). Se conserva por compatibilidad.
+     */
+    function setUseTimesStamps($value)
+    {
+        $this->setUseTimeStamps($value);
     }
 
     function setCreatedField($value)

@@ -173,6 +173,8 @@ $this->addField('Contacto', [
 - Visible
 - No editable
 
+**¿Cómo funciona?** Ragnos traduce `readonly` a la regla interna `readonly_Ragnos[campo]`, definida en la clase `RagnosRules`. Al guardar, compara el valor recibido con el valor original del registro (`fieldHasChanged()`); si alguien lo alteró (por ejemplo, manipulando el formulario o enviándolo por la API), la validación falla con el mensaje *"El campo no puede modificarse."*. Así, `readonly` no es solo visual: también se protege en el servidor.
+
 ---
 
 ## 8. Campo hidden
@@ -420,7 +422,8 @@ Edita `app/Config/Validation.php` para incluir tu nueva clase en el array `$rule
 
 ```php
 public array $ruleSets = [
-    // ... otras reglas existentes
+    // ... reglas de CodeIgniter existentes
+    \App\ThirdParty\Ragnos\Controllers\RagnosRules::class, // No la quites: implementa 'readonly'
     \App\Validation\MyCustomRules::class,
 ];
 ```

@@ -118,6 +118,59 @@ public function __construct()
 
 By enabling `setUseTimeStamps(true)`, Ragnos will take care of inserting the current date when creating a record and automatically updating it whenever a modification is made, using the date format configured in the database (usually `datetime`).
 
+## Soft Deletes
+
+In many systems you should not physically delete a record: it may carry accounting history, be referenced by other tables, or simply need to be restored later. **Soft deletes** solve this by marking the row as deleted (storing the date in a column) instead of running a `DELETE`.
+
+- `setUseSoftDeletes(true|false)`: Enables or disables soft deletes.
+- `setDeletedField('field')`: Sets the column that stores the deletion date (default `deleted_at`).
+
+```php
+public function __construct()
+{
+    parent::__construct();
+
+    $this->setUseSoftDeletes(true);
+    $this->setDeletedField('deleted_at'); // Optional if you use the standard name
+}
+```
+
+The column must exist in the table and accept `NULL`:
+
+```sql
+ALTER TABLE products
+  ADD COLUMN deleted_at DATETIME NULL DEFAULT NULL;
+```
+
+With soft deletes enabled:
+
+- Deleting from the UI or the API fills `deleted_at` instead of removing the row.
+- The grid and the API listing **automatically hide** records whose `deleted_at` is not `NULL`.
+- The [Audit Log](../avanzado/auditlog.md) still records the operation as `DELETE`, with a full copy of the record.
+
+!!! note "Searches and reports"
+    The automatic filter applies to the grid and the API listing. If a soft-deleted dataset is used as the source of an `addSearch` or in your own queries, add the `deleted_at IS NULL` condition in `_filters()` or in your SQL.
+
+## Removing Inherited Fields (`removeField`)
+
+`removeField('field')` removes a field from the dataset definition. It is useful when a controller **inherits** from another one (for example, a simplified version of a catalog for a certain role) and must not show or edit some column:
+
+```php
+class ProductosVentas extends Productos
+{
+    public function __construct()
+    {
+        parent::__construct();
+
+        // Sales staff must not see the purchase cost
+        $this->removeField('buyPrice');
+        $this->setTableFields(['productName', 'productLine', 'MSRP']);
+    }
+}
+```
+
+If the field also appears in `setTableFields()`, redefine the column list without it, as in the example.
+
 ## Operation Control
 
 It is possible to restrict which CRUD operations are allowed in the dataset using the following methods:

@@ -118,6 +118,31 @@ abstract class RTableModel extends Model
         $this->useSoftDeletes = (bool) $value;
     }
 
+    function usesSoftDeletes(): bool
+    {
+        return (bool) $this->useSoftDeletes;
+    }
+
+    function setCreatedField($value)
+    {
+        $this->createdField = (string) $value;
+    }
+
+    function setUpdatedField($value)
+    {
+        $this->updatedField = (string) $value;
+    }
+
+    function setDeletedField($value)
+    {
+        $this->deletedField = (string) $value;
+    }
+
+    function getDeletedField(): string
+    {
+        return (string) $this->deletedField;
+    }
+
     public function setAutoIncrement(bool $value): void
     {
         $this->useAutoIncrement = $value;

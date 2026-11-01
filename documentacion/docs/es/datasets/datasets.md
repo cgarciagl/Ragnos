@@ -118,6 +118,59 @@ public function __construct()
 
 Al activar `setUseTimeStamps(true)`, Ragnos se encargará de insertar la fecha actual al crear un registro y de actualizarla automáticamente cada vez que se realice una modificación, utilizando el formato de fecha configurado en la base de datos (habitualmente `datetime`).
 
+## Borrado Lógico (Soft Deletes)
+
+En muchos sistemas no conviene eliminar físicamente un registro: puede tener historial contable, estar referenciado por otras tablas o simplemente necesitar recuperarse después. El **borrado lógico** resuelve esto marcando la fila como eliminada (con la fecha en una columna) en lugar de ejecutar un `DELETE`.
+
+- `setUseSoftDeletes(true|false)`: Activa o desactiva el borrado lógico.
+- `setDeletedField('campo')`: Define la columna que guarda la fecha de eliminación (por defecto `deleted_at`).
+
+```php
+public function __construct()
+{
+    parent::__construct();
+
+    $this->setUseSoftDeletes(true);
+    $this->setDeletedField('deleted_at'); // Opcional si usas el nombre estándar
+}
+```
+
+La columna debe existir en la tabla y aceptar `NULL`:
+
+```sql
+ALTER TABLE products
+  ADD COLUMN deleted_at DATETIME NULL DEFAULT NULL;
+```
+
+Con el borrado lógico activo:
+
+- Al eliminar desde la interfaz o la API, Ragnos llena `deleted_at` en lugar de borrar la fila.
+- La grilla y el listado de la API **ocultan automáticamente** los registros con `deleted_at` distinto de `NULL`.
+- El [Audit Log](../avanzado/auditlog.md) sigue registrando la operación como `DELETE`, con la copia completa del registro.
+
+!!! note "Búsquedas y reportes"
+    El filtro automático se aplica a la grilla y al listado de la API. Si un dataset con borrado lógico se usa como origen de un `addSearch` o en consultas propias, añade la condición `deleted_at IS NULL` en `_filters()` o en tu SQL.
+
+## Quitar campos heredados (`removeField`)
+
+`removeField('campo')` elimina un campo de la definición del dataset. Es útil cuando un controlador **hereda** de otro (por ejemplo, una versión simplificada de un catálogo para cierto rol) y no debe mostrar o editar alguna columna:
+
+```php
+class ProductosVentas extends Productos
+{
+    public function __construct()
+    {
+        parent::__construct();
+
+        // Los vendedores no deben ver el costo de compra
+        $this->removeField('buyPrice');
+        $this->setTableFields(['productName', 'productLine', 'MSRP']);
+    }
+}
+```
+
+Si el campo también aparece en `setTableFields()`, vuelve a definir la lista de columnas sin él, como en el ejemplo.
+
 ## Control de Operaciones
 
 Es posible restringir qué operaciones CRUD están permitidas en el dataset mediante los siguientes métodos:

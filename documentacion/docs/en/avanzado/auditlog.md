@@ -107,3 +107,38 @@ Audit mechanism is agnostic to request origin. Method `getCurrentUserId()` resol
 1. **Web Session:** Checks if CodeIgniter session active (`session()->get('usu_id')`).
 2. **API Token:** If API call, inspects `Authorization` header. Extracts Bearer token and looks up user in `gen_usuarios`.
 3. **Fallback:** If user not identified, logs ID `0` (System/Anonymous).
+
+## Querying a Record's History (API)
+
+Every dataset based on `RDatasetController` automatically exposes the `history/{id}` endpoint, which returns a record's audit entries from newest to oldest. It is the ideal foundation for a "Change history" tab in your UI or in an external app.
+
+```bash
+curl -X GET "https://your-domain.com/tienda/productos/history/S10_1678" \
+     -H "Accept: application/json" \
+     -H "Authorization: Bearer YOUR_API_TOKEN"
+```
+
+Sample response:
+
+```json
+{
+  "data": [
+    {
+      "id": "152",
+      "user_id": "3",
+      "table_name": "products",
+      "record_id": "S10_1678",
+      "action": "UPDATE",
+      "changes": "{\"buyPrice\":{\"old\":\"48.81\",\"new\":\"52.00\"}}",
+      "ip_address": "192.168.1.20",
+      "user_agent": "Mozilla/5.0 ...",
+      "created_at": "2026-10-28 11:42:07"
+    }
+  ]
+}
+```
+
+- It is an **API-mode-only** endpoint: if `Accept: application/json` is not sent, it responds `400` with `{"error": "API call required"}`.
+- It requires the same credentials as the rest of the API.
+- It is automatically documented in the OpenAPI specification (`GET {route}/history/{id}`).
+- The `changes` field is JSON stored as text; decode it on the client (`JSON.parse`) to show the before and after.

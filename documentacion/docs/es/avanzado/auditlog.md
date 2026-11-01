@@ -107,3 +107,38 @@ El mecanismo de auditoría es agnóstico al origen de la petición. El método `
 1. **Sesión Web:** Verifica si existe una sesión activa de CodeIgniter (`session()->get('usu_id')`).
 2. **API Token:** Si es una llamada API, inspecciona el encabezado `Authorization`. Extrae el token Bearer y busca al usuario correspondiente en la tabla `gen_usuarios`.
 3. **Fallback:** Si no se identifica al usuario, se registra el ID `0` (Sistema/Anónimo).
+
+## Consultar el historial de un registro (API)
+
+Todo dataset basado en `RDatasetController` expone automáticamente el endpoint `history/{id}`, que devuelve las entradas de auditoría de un registro, de la más reciente a la más antigua. Es la base ideal para construir una pestaña de "Historial de cambios" en tu interfaz o en una app externa.
+
+```bash
+curl -X GET "https://tu-dominio.com/tienda/productos/history/S10_1678" \
+     -H "Accept: application/json" \
+     -H "Authorization: Bearer TU_API_TOKEN"
+```
+
+Respuesta de ejemplo:
+
+```json
+{
+  "data": [
+    {
+      "id": "152",
+      "user_id": "3",
+      "table_name": "products",
+      "record_id": "S10_1678",
+      "action": "UPDATE",
+      "changes": "{\"buyPrice\":{\"old\":\"48.81\",\"new\":\"52.00\"}}",
+      "ip_address": "192.168.1.20",
+      "user_agent": "Mozilla/5.0 ...",
+      "created_at": "2026-10-28 11:42:07"
+    }
+  ]
+}
+```
+
+- Es un endpoint **exclusivo del modo API**: si no se envía `Accept: application/json`, responde `400` con `{"error": "API call required"}`.
+- Requiere las mismas credenciales que el resto de la API.
+- Aparece documentado automáticamente en la especificación OpenAPI (`GET {ruta}/history/{id}`).
+- El campo `changes` es un JSON en texto; decodifícalo en el cliente (`JSON.parse`) para mostrar el antes y el después.
