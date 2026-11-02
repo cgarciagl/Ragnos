@@ -70,6 +70,7 @@ Instead of writing boilerplate code, you define your data structure and business
    ```bash
    mysql -u root -p ragnos < sampledatabase/ragnos_base.sql
    ```
+   > 💡 Prefer a GUI? Try **[PyroStudio](https://github.com/cgarciagl/PyroStudio)**, the native MariaDB/MySQL client by the author of Ragnos: right-click the database → *Respaldar / Restaurar* → *Restaurar en BD Existente*.
 5. *(Optional)* **Load the demo** — a scale-model store with catalogs, reports and a sales dashboard:
    ```bash
    mysql -u root -p ragnos < sampledatabase/demo_classicmodels.sql

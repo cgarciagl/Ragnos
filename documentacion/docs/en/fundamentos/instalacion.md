@@ -106,6 +106,16 @@ Ragnos splits its tables into two scripts inside `sampledatabase/`:
     mysql -u root -p ragnos < sampledatabase/demo_classicmodels.sql
     ```
 
+!!! success "Recommended: PyroStudio, by the author of Ragnos"
+
+    [**PyroStudio**](https://github.com/cgarciagl/PyroStudio) is the desktop client for **MariaDB, MySQL and SQLite** created by the author of Ragnos, designed to work hand in hand with the framework. It's free (MIT), native and ultralight (Tauri + Rust, no Electron or Java) and runs on Windows, macOS and Linux.
+
+    To load the scripts: right-click the `ragnos` database → *Respaldar / Restaurar* (Backup / Restore) → *Restaurar* (Restore) tab → *Restaurar en BD Existente* (Restore into existing DB), and choose `ragnos_base.sql` first, then `demo_classicmodels.sql`.
+
+    It also includes a **PHP HTTP tunnel** to manage the database of a shared hosting that doesn't expose the MySQL port (exactly where Ragnos is often deployed), **Safe Mode** that asks for confirmation before destructive statements, and encrypted credentials.
+
+    Download it from [Releases](https://github.com/cgarciagl/PyroStudio/releases).
+
 !!! tip "Using HeidiSQL or phpMyAdmin?"
 
     Select the database and use *File → Load SQL file* (HeidiSQL) or the *Import* tab (phpMyAdmin). The scripts don't hard-code the database name, so they import into whichever one is selected.
