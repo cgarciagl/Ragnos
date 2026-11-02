@@ -11,7 +11,7 @@
   ],
   "license": "MIT",
   "type": "project",
-  "homepage": "https://ragnos.dev",
+  "homepage": "https://ragnos.build",
   "authors": [
     {
       "name": "Carlos García Trujillo",
@@ -22,7 +22,7 @@
   "support": {
     "issues": "https://github.com/cgarciagl/Ragnos/issues",
     "source": "https://github.com/cgarciagl/Ragnos",
-    "docs": "https://ragnos.dev"
+    "docs": "https://ragnos.build/docs/"
   },
   "require": {
     "php": "^8.1",

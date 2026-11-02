@@ -77,7 +77,7 @@ $lang         = explode('_', $ragnosConfig->locale)[0];
                     <?= $ragnosConfig->Ragnos_footer_text ?>
                 </div>
                 <div class="text-body-secondary small">
-                    Ragnos Framework v<?= CodeIgniter\CodeIgniter::CI_VERSION ?>
+                    Ragnos Framework · CodeIgniter <?= CodeIgniter\CodeIgniter::CI_VERSION ?>
                 </div>
             </div>
         </footer>

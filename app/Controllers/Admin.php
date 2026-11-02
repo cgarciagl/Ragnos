@@ -18,6 +18,20 @@ class Admin extends BaseController
         //cargar el helper utiles
         helper('Ragnos\Helpers\ragnos_helper');
         $this->checkLogin();
+
+        // Sin la demo Classicmodels, el panel de la tienda no tiene datos que
+        // mostrar: se presenta el panel de inicio genérico del sistema.
+        if (! \App\Libraries\DemoData::isInstalled()) {
+            $resumen = new \App\Models\SystemSummary();
+
+            return view('admin/inicio', [
+                'contadores'      => $resumen->counters(),
+                'actividad'       => $resumen->recentActivity(),
+                'esAdministrador' => service('Admin_aut')->isUserInGroup('administrador'),
+                'aviso'           => session()->getFlashdata('warning'),
+            ]);
+        }
+
         $model                                            = new \App\Models\Dashboard();
         $data['ventasultimos12meses']                     = $model->ventasultimos12meses();
         $data['estadosDeCuenta']                          = $model->estadosDeCuenta();

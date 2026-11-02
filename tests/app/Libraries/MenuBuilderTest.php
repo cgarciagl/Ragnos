@@ -18,7 +18,7 @@ class MenuBuilderTest extends CIUnitTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->menuBuilder = new MenuBuilder($this->authorization(false));
+        $this->menuBuilder = new MenuBuilder($this->authorization(false), true);
     }
 
     private function authorization(bool $administrator): object
@@ -124,7 +124,7 @@ class MenuBuilderTest extends CIUnitTestCase
 
     public function testMenuAdministradorIncluyeAdministracion(): void
     {
-        $menu = (new MenuBuilder($this->authorization(true)))->getTopMenu();
+        $menu = (new MenuBuilder($this->authorization(true), true))->getTopMenu();
         $titulos = array_column($menu, 'title');
 
         $this->assertCount(5, $menu);
@@ -137,5 +137,17 @@ class MenuBuilderTest extends CIUnitTestCase
         $adminChildren = array_column($administracion['children'], 'title');
         $this->assertContains('Usuarios', $adminChildren);
         $this->assertContains('Grupos de Usuarios', $adminChildren);
+    }
+
+    public function testSinDemoInstaladaSoloMuestraInicio(): void
+    {
+        $menu = (new MenuBuilder($this->authorization(false), false))->getTopMenu();
+        $this->assertSame(['Inicio'], array_column($menu, 'title'));
+    }
+
+    public function testSinDemoElAdministradorConservaAdministracion(): void
+    {
+        $menu = (new MenuBuilder($this->authorization(true), false))->getTopMenu();
+        $this->assertSame(['Inicio', 'Administración'], array_column($menu, 'title'));
     }
 }

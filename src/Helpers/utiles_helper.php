@@ -523,10 +523,12 @@ if (!function_exists('getCachedData')) {
     {
         $cache = \Config\Services::cache();
 
-        // Generar una clave única basada en la consulta y los parámetros si no se proporciona una.
-        // Se añade un prefijo para evitar colisiones con otras claves de caché.
+        // Generar una clave única basada en la conexión, la consulta y los parámetros si no se
+        // proporciona una. Incluir servidor y base de datos evita servir resultados de otra base
+        // (por ejemplo, al cambiar el .env o al compartir el directorio de caché entre proyectos).
         if (empty($cacheKey)) {
-            $cacheKey = 'sql_' . md5($sql . json_encode($params));
+            $db       = db_connect();
+            $cacheKey = 'sql_' . md5($db->hostname . '|' . $db->getDatabase() . '|' . $sql . json_encode($params));
         }
 
         // Intentar recuperar los datos del caché

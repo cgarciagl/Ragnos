@@ -17,9 +17,19 @@ final class OpenApiGenerator
         $spec   = $this->baseDocument($config->Ragnos_openapi_title, $config->Ragnos_openapi_version, $serverUrl);
 
         foreach ($this->registry->all() as $entry) {
-            $controller     = $this->discoverController($entry['class']);
-            $spec['tags'][] = ['name' => $entry['tag'] ?? $controller->getTitle() ?: $controller->getClassName()];
-            $this->appendDatasetPaths($spec, $entry, $controller);
+            try {
+                $controller = $this->discoverController($entry['class']);
+                $tag        = ['name' => $entry['tag'] ?? $controller->getTitle() ?: $controller->getClassName()];
+                $this->appendDatasetPaths($spec, $entry, $controller);
+                $spec['tags'][] = $tag;
+            } catch (\CodeIgniter\Database\Exceptions\DatabaseException $e) {
+                // La tabla del controlador no existe en esta base de datos (por ejemplo,
+                // la demo no está instalada): se omite del documento en vez de romperlo.
+                log_message('warning', 'OpenAPI: se omite {class}: {message}', [
+                    'class'   => $entry['class'],
+                    'message' => $e->getMessage(),
+                ]);
+            }
         }
 
         return $spec;

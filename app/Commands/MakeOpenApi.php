@@ -27,7 +27,7 @@ final class MakeOpenApi extends BaseCommand
             return EXIT_ERROR;
         }
 
-        $document = (new OpenApiGenerator(OpenApiRegistry::fromConfig()))->generate(base_url());
+        $document = (new OpenApiGenerator(new OpenApiRegistry(\App\Libraries\DemoData::filterOpenApiEntries(config('RagnosConfig')->Ragnos_openapi_controllers ?? []))))->generate(base_url());
         $output = $format === 'yaml'
             ? Yaml::dump($document, 12, 2, Yaml::DUMP_OBJECT_AS_MAP)
             : json_encode($document, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . PHP_EOL;

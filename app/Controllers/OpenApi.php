@@ -44,7 +44,7 @@ final class OpenApi extends BaseController
 
     private function document(): array
     {
-        return (new OpenApiGenerator(OpenApiRegistry::fromConfig()))->generate(base_url());
+        return (new OpenApiGenerator(new OpenApiRegistry(\App\Libraries\DemoData::filterOpenApiEntries(config('RagnosConfig')->Ragnos_openapi_controllers ?? []))))->generate(base_url());
     }
 
     private function canExposeDocumentation(): bool

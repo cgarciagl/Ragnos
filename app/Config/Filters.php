@@ -34,6 +34,7 @@ class Filters extends BaseFilters
         'forcehttps'    => ForceHTTPS::class,
         'pagecache'     => PageCache::class,
         'performance'   => PerformanceMetrics::class,
+        'demodata'      => \App\Filters\DemoDataFilter::class,
     ];
 
     /**
@@ -106,5 +107,8 @@ class Filters extends BaseFilters
      *
      * @var array<string, array<string, list<string>>>
      */
-    public array $filters = [];
+    public array $filters = [
+        // Módulos de la demo Classicmodels: solo si sus tablas existen.
+        'demodata' => ['before' => ['tienda', 'tienda/*', 'Tienda', 'Tienda/*', 'proceso', 'proceso/*', 'admin/ventasPorPais', 'admin/ventasporpais']],
+    ];
 }
