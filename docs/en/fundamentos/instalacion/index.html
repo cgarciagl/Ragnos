@@ -347,6 +347,7 @@ Uncomment and configure your database credentials:</p>
 <li>Replace the <code>app/ThirdParty/Ragnos</code> folder with the new <code>src/</code> folder and delete <code>system/</code>.</li>
 <li>Copy the changes from <code>composer.json</code> (the <code>codeigniter4/framework</code> dependency and the <code>"Ragnos\\": "src/"</code> autoload), <code>app/Config/Paths.php</code> and <code>app/Config/Autoload.php</code>, then run <code>composer install</code>.</li>
 <li>Search and replace <code>App\ThirdParty\Ragnos\</code> with <code>Ragnos\</code> in your code.</li>
+<li>Run <code>php spark migrate</code> (it widens the password column; existing md5 passwords are upgraded automatically on the next login).</li>
 <li>If your <code>.env</code> was committed, remove it from the repository with <code>git rm --cached .env</code> and rotate any password that was ever pushed.</li>
 </ol>
 <div class="admonition info">

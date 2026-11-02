@@ -209,7 +209,11 @@
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#4-eliminar-archivos-de-desarrollo" class="nav-link">4. Eliminar archivos de desarrollo</a>
+            <li class="nav-item" data-bs-level="2"><a href="#4-carpeta-publica-y-servidor-web" class="nav-link">4. Carpeta pública y servidor web</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#5-eliminar-archivos-de-desarrollo" class="nav-link">5. Eliminar archivos de desarrollo</a>
               <ul class="nav flex-column">
               </ul>
             </li>
@@ -243,13 +247,25 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>chmod<span class="w"> </span>-R<span class="w"> </span><span class="m">775</span><span class="w"> </span>writable/
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>chown<span class="w"> </span>-R<span class="w"> </span>www-data:www-data<span class="w"> </span>writable/
 </code></pre></div>
-<p>Las demás carpetas (<code>app</code>, <code>system</code>, <code>public</code>) deben ser de solo lectura para el servidor web por motivos de seguridad, a menos que tengas necesidades específicas.</p>
+<p>Las demás carpetas (<code>app</code>, <code>src</code>, <code>vendor</code> y la carpeta pública <code>content</code>) deben ser de solo lectura para el servidor web por motivos de seguridad, a menos que tengas necesidades específicas.</p>
 <h2 id="3-base-de-datos">3. Base de Datos</h2>
 <p>Actualiza las credenciales de conexión en el archivo <code>.env</code> apuntando a tu base de datos de producción.</p>
 <p>Asegúrate de que <code>app.baseURL</code> esté configurado correctamente con el dominio real (HTTPS recomendado).</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="na">app.baseURL</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">'https://mi-sistema-produccion.com/'</span>
 </code></pre></div>
-<h2 id="4-eliminar-archivos-de-desarrollo">4. Eliminar archivos de desarrollo</h2>
+<h3 id="migraciones-y-credenciales">Migraciones y credenciales</h3>
+<p>Ejecuta las migraciones pendientes en cada despliegue. Entre otras cosas, amplían la columna de contraseñas para usar <code>password_hash()</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>php<span class="w"> </span>spark<span class="w"> </span>migrate
+</code></pre></div>
+<p>Antes de abrir el sistema, cambia la contraseña de <code>admin</code> desde el menú de usuario → <em>Cambiar contraseña</em> (pide la actual y al menos 8 caracteres).</p>
+<div class="admonition info">
+<p class="admonition-title">Contraseñas de versiones anteriores</p>
+<p>Si tu base viene de una versión de Ragnos que guardaba contraseñas con md5, no hace falta restablecerlas: cada usuario sigue entrando con su clave y Ragnos actualiza su hash a <code>password_hash()</code> en ese primer inicio de sesión (requiere haber ejecutado <code>php spark migrate</code>).</p>
+</div>
+<h2 id="4-carpeta-publica-y-servidor-web">4. Carpeta pública y servidor web</h2>
+<p>Apunta el <em>Document Root</em> del servidor a la carpeta pública de Ragnos (<code>content</code>). Si tu hosting exige otro nombre (<code>public_html</code>, <code>www</code>), renómbrala y actualiza <code>$publicDirectory</code> en <code>app/Config/Paths.php</code>; consulta <a href="../../fundamentos/configuracion/#carpeta-publica-content">Configuración</a>.</p>
+<p>Para mayor seguridad puedes desactivar el Auto Routing (<code>$autoRoute = false</code>): Ragnos registrará rutas explícitas solo para sus acciones. Consulta <a href="../../fundamentos/configuracion/#trabajar-sin-auto-routing-rutas-explicitas">Trabajar sin Auto Routing</a>.</p>
+<h2 id="5-eliminar-archivos-de-desarrollo">5. Eliminar archivos de desarrollo</h2>
 <p>Se recomienda no subir archivos innecesarios al servidor de producción:</p>
 <ul>
 <li>Tests (<code>tests/</code>)</li>
@@ -260,7 +276,7 @@
 <h2 id="solucion-de-problemas-comunes">Solución de Problemas Comunes</h2>
 <p><strong>Error 404 en todas las páginas excepto el Home:</strong>
 Esto suele ser un problema de configuración del servidor web (Apache/Nginx) que no está redirigiendo las peticiones a <code>index.php</code>.
-Asegúrate de que el archivo <code>public/.htaccess</code> esté presente y que el módulo <code>mod_rewrite</code> esté activo en Apache.</p>
+Asegúrate de que el archivo <code>.htaccess</code> de la carpeta pública (<code>content/.htaccess</code>) esté presente y que el módulo <code>mod_rewrite</code> esté activo en Apache.</p>
 <p><strong>Página en blanco o Error 500:</strong>
 Verifica los logs en <code>writable/logs/</code> para ver el error real, ya que en modo producción no se muestran en pantalla.</p></div>
             </div>
