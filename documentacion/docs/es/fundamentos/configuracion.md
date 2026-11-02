@@ -50,6 +50,53 @@ Las características principales del modo Auto Routing radican en su transparenc
 
 Las ventajas más destacables de usar el entorno Legacy Auto Routing en Ragnos incluyen una drástica reducción del tiempo de configuración y un enrutamiento altamente predecible. Esto resulta invaluable para proyectos de gestión, paneles administrativos y utilidades internas interconectadas, en donde la cantidad de controladores tiende a crecer con gran rapidez. Permite también la rápida visualización y prototipado sin tener que alternar constantemente entre archivos de mapeo de rutas y los propios controladores. Es fundamental mencionar que esto no limita la flexibilidad de la plataforma; el desarrollador puede, en un modelo híbrido, seguir definiendo excepciones o rutas seguras de manera convencional en la configuración en los casos donde necesite control estricto sobre URI paramétricas específicas, manteniendo lo mejor de ambos mundos: rapidez productiva y control granular cuando la capa de seguridad o restricciones lo requieran.
 
+### Trabajar sin Auto Routing (rutas explícitas)
+
+Si tu política de seguridad exige desactivar el Auto Routing, Ragnos sigue funcionando completo. Basta con cambiar una línea en `app/Config/Routing.php`:
+
+```php
+public bool $autoRoute = false;
+```
+
+Al detectarlo, `app/Config/Routes.php` llama a `Ragnos\Routing\RagnosRoutes::discover($routes)`, que recorre `app/Controllers` y registra, para cada controlador:
+
+| Tipo de controlador | Rutas que registra |
+| :------------------ | :----------------- |
+| `RDatasetController` / `RQueryController` | `index` y las acciones que usan las vistas, el JavaScript y el modo API (`getAjaxGridData`, `getFormData`, `formProcess`, `searchByAjax`, `tableByAjax`, `getRecordByAjax`, `ajaxdelete`, `save`, `delete`, `history`, `getFieldsConfig`, `getTableFields`, `genericAdvancedReport`, `search`) |
+| `RProcessController` | `showProgress` y `start` |
+| Cualquier otro controlador | Sus métodos públicos propios |
+
+En todos los casos se agregan además los métodos públicos que declara la propia clase (por ejemplo, `Ordenes::calculatotal` o `Reportes::ventaspormes`). Las URLs son las mismas que con Auto Routing, así que menús y enlaces no cambian.
+
+!!! tip "Más seguro que el Auto Routing"
+
+    Con el Auto Routing cualquier método público, incluso heredado (como `setSortingField()`), es alcanzable por URL. `RagnosRoutes` solo expone acciones conocidas y los métodos que tú declaraste.
+
+Si prefieres declarar cada controlador a mano, usa los métodos individuales en `Routes.php`:
+
+```php
+use Ragnos\Routing\RagnosRoutes;
+
+RagnosRoutes::dataset($routes, 'tienda/productos', \App\Controllers\Tienda\Productos::class);
+RagnosRoutes::process($routes, 'proceso', \App\Controllers\Proceso::class);
+RagnosRoutes::controller($routes, 'admin', \App\Controllers\Admin::class);
+```
+
+## Carpeta pública (`content`)
+
+CodeIgniter llama `public` a la carpeta raíz del sitio web; Ragnos la llama `content` porque muchos servidores exigen un nombre distinto. Puedes usar el que necesites (`public`, `public_html`, `www`, …):
+
+1. Renombra la carpeta.
+2. Actualiza la ruta en `app/Config/Paths.php`:
+
+    ```php
+    public string $publicDirectory = __DIR__ . '/../../public_html';
+    ```
+
+3. Apunta el *Document Root* de tu servidor web a la carpeta renombrada.
+
+El navegador entra por el `index.php` de esa carpeta, que no necesita cambios. `$publicDirectory` lo usan `php spark` (incluido `php spark serve`) y las pruebas automatizadas.
+
 ## Otras Configuraciones (CodeIgniter)
 
 Recuerda que Ragnos respeta la configuración nativa de CI4. Archivos importantes en `app/Config/`:

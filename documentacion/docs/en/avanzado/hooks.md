@@ -258,14 +258,14 @@ Real example combining hooks to manage user passwords securely.
 // On create, ALWAYS hash password
 public function _beforeInsert(&$userData)
 {
-    $userData['usu_pword'] = md5(strtoupper($userData['usu_pword']));
+    $userData['usu_pword'] = \App\Libraries\Passwords::hash($userData['usu_pword']);
 }
 
 // On edit, ONLY hash if user wrote new password
 public function _beforeUpdate(&$userData)
 {
     if (fieldHasChanged('usu_pword')) {
-        $userData['usu_pword'] = md5(strtoupper($userData['usu_pword']));
+        $userData['usu_pword'] = \App\Libraries\Passwords::hash($userData['usu_pword']);
     }
 }
 ```
@@ -274,6 +274,7 @@ public function _beforeUpdate(&$userData)
 
 1. In `_beforeInsert`, password always comes plaintext, so hash unconditionally.
 2. In `_beforeUpdate`, use `fieldHasChanged` to detect if user entered new key. If check skipped, existing hash re-hashed, corrupting password.
+3. `Passwords::hash()` uses PHP's `password_hash()` (bcrypt). Accounts created with earlier Ragnos versions (md5) keep working, and their hash is upgraded automatically on their next login.
 
 ---
 

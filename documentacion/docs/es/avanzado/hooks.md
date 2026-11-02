@@ -258,14 +258,14 @@ Este ejemplo real muestra cómo combinar hooks para gestionar contraseñas de us
 // Al crear, SIEMPRE se cifra la contraseña
 public function _beforeInsert(&$userData)
 {
-    $userData['usu_pword'] = md5(strtoupper($userData['usu_pword']));
+    $userData['usu_pword'] = \App\Libraries\Passwords::hash($userData['usu_pword']);
 }
 
 // Al editar, SOLO se cifra si el usuario escribió una nueva contraseña
 public function _beforeUpdate(&$userData)
 {
     if (fieldHasChanged('usu_pword')) {
-        $userData['usu_pword'] = md5(strtoupper($userData['usu_pword']));
+        $userData['usu_pword'] = \App\Libraries\Passwords::hash($userData['usu_pword']);
     }
 }
 ```
@@ -274,6 +274,7 @@ public function _beforeUpdate(&$userData)
 
 1. En `_beforeInsert`, la contraseña siempre viene en texto plano, así que se cifra incondicionalmente.
 2. En `_beforeUpdate`, usamos `fieldHasChanged` para detectar si el usuario ingresó una nueva clave. Si no se verifica esto, se podría volver a cifrar el hash existente, corrompiendo la contraseña.
+3. `Passwords::hash()` usa `password_hash()` de PHP (bcrypt). Las cuentas creadas con versiones anteriores de Ragnos (md5) siguen funcionando y su hash se actualiza solo en su siguiente inicio de sesión.
 
 ---
 

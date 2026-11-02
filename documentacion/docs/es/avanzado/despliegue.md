@@ -26,7 +26,7 @@ chmod -R 775 writable/
 chown -R www-data:www-data writable/
 ```
 
-Las demás carpetas (`app`, `system`, `public`) deben ser de solo lectura para el servidor web por motivos de seguridad, a menos que tengas necesidades específicas.
+Las demás carpetas (`app`, `src`, `vendor` y la carpeta pública `content`) deben ser de solo lectura para el servidor web por motivos de seguridad, a menos que tengas necesidades específicas.
 
 ## 3. Base de Datos
 
@@ -38,7 +38,27 @@ Asegúrate de que `app.baseURL` esté configurado correctamente con el dominio r
 app.baseURL = 'https://mi-sistema-produccion.com/'
 ```
 
-## 4. Eliminar archivos de desarrollo
+### Migraciones y credenciales
+
+Ejecuta las migraciones pendientes en cada despliegue. Entre otras cosas, amplían la columna de contraseñas para usar `password_hash()`:
+
+```bash
+php spark migrate
+```
+
+Antes de abrir el sistema, cambia la contraseña de `admin` desde el menú de usuario → *Cambiar contraseña* (pide la actual y al menos 8 caracteres).
+
+!!! info "Contraseñas de versiones anteriores"
+
+    Si tu base viene de una versión de Ragnos que guardaba contraseñas con md5, no hace falta restablecerlas: cada usuario sigue entrando con su clave y Ragnos actualiza su hash a `password_hash()` en ese primer inicio de sesión (requiere haber ejecutado `php spark migrate`).
+
+## 4. Carpeta pública y servidor web
+
+Apunta el *Document Root* del servidor a la carpeta pública de Ragnos (`content`). Si tu hosting exige otro nombre (`public_html`, `www`), renómbrala y actualiza `$publicDirectory` en `app/Config/Paths.php`; consulta [Configuración](../fundamentos/configuracion.md#carpeta-publica-content).
+
+Para mayor seguridad puedes desactivar el Auto Routing (`$autoRoute = false`): Ragnos registrará rutas explícitas solo para sus acciones. Consulta [Trabajar sin Auto Routing](../fundamentos/configuracion.md#trabajar-sin-auto-routing-rutas-explicitas).
+
+## 5. Eliminar archivos de desarrollo
 
 Se recomienda no subir archivos innecesarios al servidor de producción:
 
@@ -51,7 +71,7 @@ Se recomienda no subir archivos innecesarios al servidor de producción:
 
 **Error 404 en todas las páginas excepto el Home:**
 Esto suele ser un problema de configuración del servidor web (Apache/Nginx) que no está redirigiendo las peticiones a `index.php`.
-Asegúrate de que el archivo `public/.htaccess` esté presente y que el módulo `mod_rewrite` esté activo en Apache.
+Asegúrate de que el archivo `.htaccess` de la carpeta pública (`content/.htaccess`) esté presente y que el módulo `mod_rewrite` esté activo en Apache.
 
 **Página en blanco o Error 500:**
 Verifica los logs en `writable/logs/` para ver el error real, ya que en modo producción no se muestran en pantalla.

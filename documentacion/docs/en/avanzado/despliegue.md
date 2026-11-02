@@ -26,7 +26,7 @@ chmod -R 775 writable/
 chown -R www-data:www-data writable/
 ```
 
-Other folders (`app`, `system`, `public`) should be read-only for web server for security, unless specific needs.
+Other folders (`app`, `src`, `vendor` and the public folder `content`) should be read-only for web server for security, unless specific needs.
 
 ## 3. Database
 
@@ -38,7 +38,27 @@ Ensure `app.baseURL` configured correctly with real domain (HTTPS recommended).
 app.baseURL = 'https://my-production-system.com/'
 ```
 
-## 4. Remove Development Files
+### Migrations and Credentials
+
+Run pending migrations on every deployment. Among other things, they widen the password column to use `password_hash()`:
+
+```bash
+php spark migrate
+```
+
+Before opening the system, change the `admin` password from the user menu → *Change password* (it asks for the current one and at least 8 characters).
+
+!!! info "Passwords from earlier versions"
+
+    If your database comes from a Ragnos version that stored md5 passwords, there's no need to reset them: each user keeps logging in with their password, and Ragnos upgrades its hash to `password_hash()` on that first login (requires having run `php spark migrate`).
+
+## 4. Public Folder and Web Server
+
+Point the server's *Document Root* to the Ragnos public folder (`content`). If your hosting requires another name (`public_html`, `www`), rename it and update `$publicDirectory` in `app/Config/Paths.php`; see [Configuration](../fundamentos/configuracion.md#public-folder-content).
+
+For extra security you can disable Auto Routing (`$autoRoute = false`): Ragnos will register explicit routes for its actions only. See [Working Without Auto Routing](../fundamentos/configuracion.md#working-without-auto-routing-explicit-routes).
+
+## 5. Remove Development Files
 
 Recommended not to upload unnecessary files to production:
 
@@ -51,7 +71,7 @@ Recommended not to upload unnecessary files to production:
 
 **404 Error on all pages except Home:**
 Usually web server config (Apache/Nginx) not redirecting requests to `index.php`.
-Ensure `public/.htaccess` present and `mod_rewrite` active in Apache.
+Ensure the public folder's `.htaccess` (`content/.htaccess`) is present and `mod_rewrite` active in Apache.
 
 **Blank Page or 500 Error:**
 Check logs in `writable/logs/` for real error, as production mode hides them.

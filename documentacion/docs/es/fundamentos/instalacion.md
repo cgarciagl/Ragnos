@@ -139,7 +139,8 @@ Si tu proyecto se creó con una versión anterior de Ragnos, el núcleo vivía e
 1. Reemplaza la carpeta `app/ThirdParty/Ragnos` por la nueva carpeta `src/` y elimina `system/`.
 2. Copia los cambios de `composer.json` (dependencia `codeigniter4/framework` y autoload `"Ragnos\\": "src/"`), de `app/Config/Paths.php` y de `app/Config/Autoload.php`, y ejecuta `composer install`.
 3. Busca y reemplaza en tu código `App\ThirdParty\Ragnos\` por `Ragnos\`.
-4. Si tenías `.env` versionado, quítalo del repositorio con `git rm --cached .env` y cambia cualquier contraseña que haya llegado a subirse.
+4. Ejecuta `php spark migrate` (amplía la columna de contraseñas; las claves md5 existentes se actualizan solas en el siguiente inicio de sesión).
+5. Si tenías `.env` versionado, quítalo del repositorio con `git rm --cached .env` y cambia cualquier contraseña que haya llegado a subirse.
 
 !!! info "Compatibilidad temporal"
 
