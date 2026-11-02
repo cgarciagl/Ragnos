@@ -110,9 +110,17 @@ Ragnos splits its tables into two scripts inside `sampledatabase/`:
 
     Select the database and use *File → Load SQL file* (HeidiSQL) or the *Import* tab (phpMyAdmin). The scripts don't hard-code the database name, so they import into whichever one is selected.
 
+!!! tip "Using Laragon on Windows?"
+
+    Open the terminal from Laragon's *Terminal* button: it already has `mysql` on the PATH (the `root` user has no password; you can omit `-p`).
+
+!!! warning "Installation scripts"
+
+    Both scripts drop and recreate their tables. Use them to install, never on a database with data you want to keep.
+
 !!! info "With or without the demo"
 
-    Without the demo, Ragnos starts with a system home panel (users, groups and recent activity) and the menu only shows *Home* and *Administration*. Importing `demo_classicmodels.sql` automatically brings up the *Catalogs*, *Reports* and *Processes* menus and the store's sales dashboard. No configuration change is needed.
+    Without the demo, Ragnos starts with a system home panel (users, groups and recent activity) and the menu only shows *Home* and *Administration*. Importing `demo_classicmodels.sql` automatically brings up the *Catalogs*, *Reports* and *Processes* menus and the store's sales dashboard. No configuration change or restart is needed: you can load the demo at any time.
 
 ### 4. Verify Permissions
 
