@@ -128,9 +128,9 @@ $tarjetas = [
             </div>
             <div class="card-body small">
                 <p class="mb-2">Genera tu primer módulo CRUD a partir de una tabla:</p>
-                <pre class="bg-body-tertiary rounded p-2 mb-3"><code>php spark ragnos:make</code></pre>
+                <pre class="bg-body-tertiary rounded p-2 mb-3 text-wrap text-break"><code>php spark ragnos:make</code></pre>
                 <p class="mb-2">¿Quieres ver Ragnos en acción con datos reales? Importa la demo de la tienda de modelos a escala:</p>
-                <pre class="bg-body-tertiary rounded p-2 mb-3"><code>mysql -u root -p ragnos &lt; sampledatabase/demo_classicmodels.sql</code></pre>
+                <pre class="bg-body-tertiary rounded p-2 mb-3 text-wrap text-break"><code>mysql -u root -p ragnos &lt; sampledatabase/demo_classicmodels.sql</code></pre>
                 <a href="https://ragnos.build/docs/" target="_blank" rel="noopener" class="btn btn-sm btn-outline-primary">
                     <i class="bi bi-book me-1"></i>Documentación
                 </a>
