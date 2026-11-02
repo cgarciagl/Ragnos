@@ -53,7 +53,7 @@ Al habilitar esta propiedad, todas las operaciones de inserción, actualización
 
 ## Funcionamiento Interno
 
-El sistema funciona a través de `App\ThirdParty\Ragnos\Models\Traits\CrudOperationsTrait`. Cuando se ejecuta una acción de escritura, el sistema realiza los siguientes pasos de manera transparente:
+El sistema funciona a través de `Ragnos\Models\Traits\CrudOperationsTrait`. Cuando se ejecuta una acción de escritura, el sistema realiza los siguientes pasos de manera transparente:
 
 ### 1. Inserción (INSERT)
 

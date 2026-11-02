@@ -34,7 +34,7 @@ Abre el archivo recién creado `app/Controllers/Proceso/Tareas.php` y completa l
 ```php
 namespace App\Controllers\Proceso;
 
-use App\ThirdParty\Ragnos\Controllers\RDatasetController;
+use Ragnos\Controllers\RDatasetController;
 
 class Tareas extends RDatasetController
 {

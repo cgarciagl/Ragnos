@@ -130,7 +130,7 @@ Ragnos internally uses the **DataTables** parameter format to handle grid data q
   - `start`: The starting offset index to fetch records from (e.g., `0` for page 1, `10` for page 2 if the limit is 10).
   - `length`: The number of records to fetch per page (Limit). The default is 10.
 - **Search:**
-  - `search[value]`: A text string to search for matches across all enabled fields in the controller.
+  - `search[value]`: A text string to search for matches across all enabled fields in the controller. The `%` and `_` characters are matched literally (they do not act as SQL wildcards).
 - **Sorting:**
   - `order[0][name]`: (Recommended) The name of the database column to sort by (e.g., `date`, `name`, `id`).
   - `order[0][dir]`: The sorting direction, either `asc` (ascending) or `desc` (descending).

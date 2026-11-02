@@ -77,6 +77,10 @@ To facilitate business logic, Ragnos provides helper functions to inspect data s
 | `newValue()` |   ✅   |   ✅   |   ❌   |
 | `oldValue()` |   ❌   |   ✅   |   ✅   |
 
+!!! tip "Newly inserted ID in `_afterInsert()`"
+
+    After an insert, `newValue('<primary key>')` returns the generated ID. Ragnos exposes it through the `setInputOverride()` helper instead of writing to `$_POST`. If your own hooks need to share a computed value with the rest of the save, use `setInputOverride('field', $value)`; values are cleared at the start of every save.
+
 ### 3. Change Detection: `fieldHasChanged()`
 
 Especially useful in updates to execute actions only if specific field modified.

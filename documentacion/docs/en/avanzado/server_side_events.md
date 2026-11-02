@@ -12,7 +12,7 @@ Ideal for tasks exceeding usual HTTP request timeout or where user needs visual 
 
 System based on two main components:
 
-1.  **`App\ThirdParty\Ragnos\Controllers\RProcessController`**: Base class for controllers executing processes.
+1.  **`Ragnos\Controllers\RProcessController`**: Base class for controllers executing processes.
 2.  **`process_helper.php`**: Helper containing functions managing SSE event flow (headers, sending data, buffer control, etc.).
 
 ### Workflow
@@ -101,7 +101,7 @@ Simulates process iterating over 100 items.
 
 namespace App\Controllers;
 
-use App\ThirdParty\Ragnos\Controllers\RProcessController;
+use Ragnos\Controllers\RProcessController;
 
 class RecalculatePrices extends RProcessController
 {
@@ -146,7 +146,7 @@ More complex example simulating import where info validated.
 
 namespace App\Controllers;
 
-use App\ThirdParty\Ragnos\Controllers\RProcessController;
+use Ragnos\Controllers\RProcessController;
 
 class ImportUsers extends RProcessController
 {
@@ -199,7 +199,7 @@ class ImportUsers extends RProcessController
 
 namespace App\Controllers\Admin;
 
-use App\ThirdParty\Ragnos\Controllers\RProcessController;
+use Ragnos\Controllers\RProcessController;
 
 class BackupSystem extends RProcessController
 {

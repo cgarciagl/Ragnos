@@ -119,7 +119,7 @@ class Sales extends BaseController
 {
     public function exportExcel()
     {
-        helper('App\ThirdParty\Ragnos\Helpers\xlsxfiles_helper');
+        helper('Ragnos\Helpers\xlsxfiles_helper');
 
         $db = \Config\Database::connect();
         $orders = $db->table('orders')
@@ -135,7 +135,7 @@ class Sales extends BaseController
 
 ##### 2. Save on Server Storage (for Email Attachments or Batch Jobs)
 ```php
-helper('App\ThirdParty\Ragnos\Helpers\xlsxfiles_helper');
+helper('Ragnos\Helpers\xlsxfiles_helper');
 
 $data = [
     ['id' => 101, 'product' => '4K Monitor', 'price' => 450.00, 'stock' => 12, 'code' => '00123'],
@@ -152,7 +152,7 @@ if (arrayToXLSXFile($data, $targetPath, false, 'Inventory')) {
 
 ##### 3. Advanced Styling and Filter Options
 ```php
-helper('App\ThirdParty\Ragnos\Helpers\xlsxfiles_helper');
+helper('Ragnos\Helpers\xlsxfiles_helper');
 
 $clients = [
     ['id' => 1, 'name' => 'Acme Corp', 'balance' => 15200.75, 'active' => true],
@@ -214,9 +214,9 @@ function htmlToXLSXFile(
 
 ##### 1. Export an RSimpleLevelReport Directly
 ```php
-helper('App\ThirdParty\Ragnos\Helpers\xlsxfiles_helper');
+helper('Ragnos\Helpers\xlsxfiles_helper');
 
-$reporte = new \App\ThirdParty\Ragnos\Controllers\RSimpleLevelReport();
+$reporte = new \Ragnos\Controllers\RSimpleLevelReport();
 $reporte->quickSetup('Top Employees', $datos, ['employeeNumber', 'Empleado', 'TotalVentasTrimestre'], ['Oficina' => ['label' => 'Office']]);
 
 // Generate HTML and convert directly into a real .xlsx file
@@ -227,7 +227,7 @@ htmlToXLSXFile($html, 'top_employees.xlsx');
 ##### 2. Native Export via RSimpleLevelReport Instance
 The `RSimpleLevelReport` object provides the direct `exportToXLSX()` method:
 ```php
-$reporte = new \App\ThirdParty\Ragnos\Controllers\RSimpleLevelReport();
+$reporte = new \Ragnos\Controllers\RSimpleLevelReport();
 $reporte->quickSetup('Margin by Line', $datos, ['productLine', 'MargenTotal']);
 
 // Direct download to user browser
@@ -289,7 +289,7 @@ function arrayToCSVFile(
 #### Usage Example
 
 ```php
-helper('App\ThirdParty\Ragnos\Helpers\csvfiles_helper');
+helper('Ragnos\Helpers\csvfiles_helper');
 
 $products = [
     ['id' => 1, 'name' => 'Gaming Laptop', 'price' => 1200.00],

@@ -25,7 +25,7 @@ A query controller extends from `RQueryController` and defines its logic in the 
 ```php
 namespace App\Controllers;
 
-use App\ThirdParty\Ragnos\Controllers\RQueryController;
+use Ragnos\Controllers\RQueryController;
 
 class SearchUsers extends RQueryController
 {

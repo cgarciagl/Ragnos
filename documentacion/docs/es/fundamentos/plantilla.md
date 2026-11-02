@@ -120,7 +120,7 @@ Si quieres crear un nuevo Dataset desde cero, sin utilizar la línea de comandos
 
 namespace App\Controllers\Tienda;
 
-use App\ThirdParty\Ragnos\Controllers\RDatasetController;
+use Ragnos\Controllers\RDatasetController;
 
 class EjemploDataset extends RDatasetController
 {

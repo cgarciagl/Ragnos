@@ -58,10 +58,13 @@ Instead of writing boilerplate code, you define your data structure and business
 
 ### Installation
 
-1. **Download** the latest version as a [ZIP file](https://github.com/cgarciagl/Ragnos/archive/refs/heads/main.zip)
-2. **Extract** to your web server directory (e.g., `c:\laragon\www\mi-proyecto` or `/var/www/html/mi-proyecto`)
+1. **Clone** the repository into your web server directory (or download the [ZIP file](https://github.com/cgarciagl/Ragnos/archive/refs/heads/main.zip)):
+   ```bash
+   git clone https://github.com/cgarciagl/Ragnos.git mi-proyecto && cd mi-proyecto
+   ```
+2. **Install** dependencies (CodeIgniter 4 included) with `composer install`
 3. **Configure** the environment:
-   - Copy `env` to `.env`
+   - Copy `.env.example` to `.env` (never commit `.env`)
    - Update database credentials and base URL
 4. **Import** the database:
    - Create a new database
@@ -153,7 +156,7 @@ class Tasks extends RDatasetController
 
 ## ⚙️ Requirements
 
-- **PHP 8.0** or higher
+- **PHP 8.1** or higher
 - **Composer**
 - **MariaDB/MySQL 5.7** or higher
 

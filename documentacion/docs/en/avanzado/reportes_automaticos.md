@@ -11,7 +11,7 @@ This functionality is **automatically built into** every dataset based on `RData
 Every dataset based on `RDatasetController` automatically includes an **"Advanced Report"** button (printer icon 🖨️) in the table view toolbar:
 
 ```php
-// Located in: app/ThirdParty/Ragnos/Views/rdatasetcontroller/table_view.php
+// Located in: src/Views/rdatasetcontroller/table_view.php
 <a href="<?= site_url($clase . '/genericAdvancedReport') ?>"
     class="toolbtn btn btn-outline-secondary btn-lg bg-white shadow-sm"
     title="<?= lang('Ragnos.Ragnos_advanced_report_tooltip') ?>">
@@ -234,7 +234,7 @@ graph TD
 ```php
 namespace App\Controllers\Tienda;
 
-use App\ThirdParty\Ragnos\Controllers\RDatasetController;
+use Ragnos\Controllers\RDatasetController;
 
 class Ordenes extends RDatasetController
 {

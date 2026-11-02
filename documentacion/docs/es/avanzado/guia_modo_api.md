@@ -130,7 +130,7 @@ Ragnos utiliza internamente el formato de parámetros de **DataTables** para man
   - `start`: El índice de desplazamiento (Offset). Indica desde qué registro empezar (ej. `0` para la página 1, `10` para la página 2 si el límite es 10).
   - `length`: El número de registros a traer (Límite). Por defecto es 10.
 - **Búsqueda:**
-  - `search[value]`: Cadena de texto para realizar una búsqueda global en todos los campos habilitados del controlador.
+  - `search[value]`: Cadena de texto para realizar una búsqueda global en todos los campos habilitados del controlador. Los caracteres `%` y `_` se buscan de forma literal (no actúan como comodines SQL).
 - **Ordenamiento:**
   - `order[0][name]`: (Recomendado) El nombre de la columna por la cual deseas ordenar (ej. `fecha`, `nombre`, `id`).
   - `order[0][dir]`: La dirección del ordenamiento, ya sea `asc` (ascendente) o `desc` (descendente).

@@ -27,7 +27,7 @@ A dataset is a controller that extends `RDatasetController`. All configuration i
 ```php
 namespace App\Controllers\Store;
 
-use App\ThirdParty\Ragnos\Controllers\RDatasetController;
+use Ragnos\Controllers\RDatasetController;
 
 class Customers extends RDatasetController
 {

@@ -35,10 +35,10 @@ $this->addField('nombreCampo', [
 
 !!! tip "Uso del Enum `RFieldType` (PHP 8.1+)"
 
-    Además de utilizar cadenas de texto (ej. `'type' => 'select'`), Ragnos soporta el Enum respaldado `App\ThirdParty\Ragnos\Models\Fields\RFieldType` para asignación de tipos con autocompletado en IDEs:
+    Además de utilizar cadenas de texto (ej. `'type' => 'select'`), Ragnos soporta el Enum respaldado `Ragnos\Models\Fields\RFieldType` para asignación de tipos con autocompletado en IDEs:
 
     ```php
-    use App\ThirdParty\Ragnos\Models\Fields\RFieldType;
+    use Ragnos\Models\Fields\RFieldType;
 
     $this->addField('status', [
         'label'   => 'Estado',
@@ -423,7 +423,7 @@ Edita `app/Config/Validation.php` para incluir tu nueva clase en el array `$rule
 ```php
 public array $ruleSets = [
     // ... reglas de CodeIgniter existentes
-    \App\ThirdParty\Ragnos\Controllers\RagnosRules::class, // No la quites: implementa 'readonly'
+    \Ragnos\Controllers\RagnosRules::class, // No la quites: implementa 'readonly'
     \App\Validation\MyCustomRules::class,
 ];
 ```

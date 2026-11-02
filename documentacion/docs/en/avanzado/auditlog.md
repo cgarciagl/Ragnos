@@ -53,7 +53,7 @@ By enabling this property, all insert, update, delete operations via controller/
 
 ## Internal Functioning
 
-System works via `App\ThirdParty\Ragnos\Models\Traits\CrudOperationsTrait`. When write action executes, system performs steps transparently:
+System works via `Ragnos\Models\Traits\CrudOperationsTrait`. When write action executes, system performs steps transparently:
 
 ### 1. Insertion (INSERT)
 

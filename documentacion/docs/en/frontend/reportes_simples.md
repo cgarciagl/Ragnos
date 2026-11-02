@@ -13,7 +13,7 @@ The `RSimpleLevelReport` class allows generating reports in HTML table format qu
 ## Basic Usage Flow
 
 1.  Get data (usually from Model).
-2.  Instantiate `App\ThirdParty\Ragnos\Controllers\RSimpleLevelReport`.
+2.  Instantiate `Ragnos\Controllers\RSimpleLevelReport`.
 3.  Configure report using `quickSetup`.
 4.  Render report and pass to view.
 
@@ -64,8 +64,8 @@ Example showing monthly sales list without grouping.
 
 namespace App\Controllers\Store;
 
-use App\ThirdParty\Ragnos\Controllers\BaseController;
-use App\ThirdParty\Ragnos\Controllers\RSimpleLevelReport;
+use Ragnos\Controllers\BaseController;
+use Ragnos\Controllers\RSimpleLevelReport;
 
 class Reports extends BaseController
 {
@@ -107,8 +107,8 @@ Example generates product list grouped by **Category**. Every time category chan
 
 namespace App\Controllers\Store;
 
-use App\ThirdParty\Ragnos\Controllers\BaseController;
-use App\ThirdParty\Ragnos\Controllers\RSimpleLevelReport;
+use Ragnos\Controllers\BaseController;
+use Ragnos\Controllers\RSimpleLevelReport;
 
 class Products extends BaseController
 {

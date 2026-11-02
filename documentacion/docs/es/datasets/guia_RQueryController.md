@@ -25,7 +25,7 @@ Un controlador de consulta extiende de `RQueryController` y define su lógica en
 ```php
 namespace App\Controllers;
 
-use App\ThirdParty\Ragnos\Controllers\RQueryController;
+use Ragnos\Controllers\RQueryController;
 
 class Searchusuarios extends RQueryController
 {

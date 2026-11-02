@@ -12,7 +12,7 @@ Esta funcionalidad es ideal para tareas que exceden el tiempo de espera habitual
 
 El sistema se basa en dos componentes principales:
 
-1.  **`App\ThirdParty\Ragnos\Controllers\RProcessController`**: Una clase base para los controladores que ejecutarán procesos.
+1.  **`Ragnos\Controllers\RProcessController`**: Una clase base para los controladores que ejecutarán procesos.
 2.  **`process_helper.php`**: Un helper que contiene las funciones para gestionar el flujo de eventos SSE (cabeceras, envío de datos, control de bufer, etc.).
 
 ### Flujo de Trabajo
@@ -101,7 +101,7 @@ Este ejemplo simula un proceso que itera sobre 100 elementos.
 
 namespace App\Controllers;
 
-use App\ThirdParty\Ragnos\Controllers\RProcessController;
+use Ragnos\Controllers\RProcessController;
 
 class RecalculoPrecios extends RProcessController
 {
@@ -146,7 +146,7 @@ Un ejemplo más complejo simulando una importación donde se valida información
 
 namespace App\Controllers;
 
-use App\ThirdParty\Ragnos\Controllers\RProcessController;
+use Ragnos\Controllers\RProcessController;
 
 class ImportarUsuarios extends RProcessController
 {
@@ -199,7 +199,7 @@ class ImportarUsuarios extends RProcessController
 
 namespace App\Controllers\Admin;
 
-use App\ThirdParty\Ragnos\Controllers\RProcessController;
+use Ragnos\Controllers\RProcessController;
 
 class BackupSystem extends RProcessController
 {

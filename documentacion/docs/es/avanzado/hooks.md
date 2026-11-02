@@ -77,6 +77,10 @@ Para facilitar la lógica de negocio, Ragnos proporciona funciones helper para i
 | `newValue()` |   ✅   |   ✅   |   ❌   |
 | `oldValue()` |   ❌   |   ✅   |   ✅   |
 
+!!! tip "ID recién insertado en `_afterInsert()`"
+
+    Después de un insert, `newValue('<llave primaria>')` devuelve el ID generado. Ragnos lo expone con el helper `setInputOverride()` en lugar de escribir en `$_POST`. Si necesitas que tus propios hooks compartan un valor calculado con el resto del guardado, usa `setInputOverride('campo', $valor)`; los valores se descartan al iniciar cada guardado.
+
 ### 3. Detección de cambios: `fieldHasChanged()`
 
 Útil especialmente en actualizaciones para ejecutar acciones solo si un campo específico ha sido modificado.

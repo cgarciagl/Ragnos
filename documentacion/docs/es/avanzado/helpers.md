@@ -119,7 +119,7 @@ class Ventas extends BaseController
 {
     public function exportarExcel()
     {
-        helper('App\ThirdParty\Ragnos\Helpers\xlsxfiles_helper');
+        helper('Ragnos\Helpers\xlsxfiles_helper');
 
         $db = \Config\Database::connect();
         $ventas = $db->table('orders')
@@ -135,7 +135,7 @@ class Ventas extends BaseController
 
 ##### 2. Guardar en Servidor Local (para adjuntar a un Email o proceso Batch)
 ```php
-helper('App\ThirdParty\Ragnos\Helpers\xlsxfiles_helper');
+helper('Ragnos\Helpers\xlsxfiles_helper');
 
 $datos = [
     ['id' => 101, 'producto' => 'Monitor 4K', 'precio' => 450.00, 'stock' => 12, 'codigo' => '00123'],
@@ -152,7 +152,7 @@ if (arrayToXLSXFile($datos, $rutaDestino, false, 'Inventario')) {
 
 ##### 3. Opciones Avanzadas de Estilos y Filtros
 ```php
-helper('App\ThirdParty\Ragnos\Helpers\xlsxfiles_helper');
+helper('Ragnos\Helpers\xlsxfiles_helper');
 
 $clientes = [
     ['id' => 1, 'nombre' => 'Acme Corp', 'saldo' => 15200.75, 'activo' => true],
@@ -214,9 +214,9 @@ function htmlToXLSXFile(
 
 ##### 1. Exportar un Reporte RSimpleLevelReport Directamente
 ```php
-helper('App\ThirdParty\Ragnos\Helpers\xlsxfiles_helper');
+helper('Ragnos\Helpers\xlsxfiles_helper');
 
-$reporte = new \App\ThirdParty\Ragnos\Controllers\RSimpleLevelReport();
+$reporte = new \Ragnos\Controllers\RSimpleLevelReport();
 $reporte->quickSetup('Mejores Empleados', $datos, ['employeeNumber', 'Empleado', 'TotalVentasTrimestre'], ['Oficina' => ['label' => 'Oficina']]);
 
 // Generar el HTML del reporte y convertirlo a un archivo .xlsx real
@@ -227,7 +227,7 @@ htmlToXLSXFile($html, 'mejores_empleados.xlsx');
 ##### 2. Exportación Nativa desde la Instancia de RSimpleLevelReport
 El objeto `RSimpleLevelReport` incluye el método directo `exportToXLSX()`:
 ```php
-$reporte = new \App\ThirdParty\Ragnos\Controllers\RSimpleLevelReport();
+$reporte = new \Ragnos\Controllers\RSimpleLevelReport();
 $reporte->quickSetup('Margen por Línea', $datos, ['productLine', 'MargenTotal']);
 
 // Descarga directa en el navegador
@@ -289,7 +289,7 @@ function arrayToCSVFile(
 #### Ejemplo de Uso
 
 ```php
-helper('App\ThirdParty\Ragnos\Helpers\csvfiles_helper');
+helper('Ragnos\Helpers\csvfiles_helper');
 
 $productos = [
     ['id' => 1, 'nombre' => 'Laptop Gamer', 'precio' => 1200.00],

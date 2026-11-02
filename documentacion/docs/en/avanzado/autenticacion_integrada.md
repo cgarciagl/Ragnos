@@ -173,7 +173,7 @@ ragnos.authDriver = shield
 
 ### `RagnosAuthInterface` Contract Methods
 
-All drivers implement `App\ThirdParty\Ragnos\Auth\RagnosAuthInterface`:
+All drivers implement `Ragnos\Auth\RagnosAuthInterface`:
 
 | Method                         | Return Type | Description                                          |
 | ------------------------------ | ----------- | ---------------------------------------------------- |
@@ -206,7 +206,7 @@ Allows using same controllers for web interface and mobile apps or decoupled fro
 
 namespace App\Controllers;
 
-use App\ThirdParty\Ragnos\Controllers\BaseController;
+use Ragnos\Controllers\BaseController;
 
 class Orders extends BaseController
 {
