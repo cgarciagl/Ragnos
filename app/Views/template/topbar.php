@@ -74,7 +74,7 @@ $appTitle     = $ragnosConfig->Ragnos_all_to_uppercase ? strtoupper($ragnosConfi
                 <!-- User Profile Dropdown -->
                 <li class="nav-item dropdown user-menu">
                     <a href="#" class="nav-link dropdown-toggle d-flex align-items-center gap-2 p-1" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img class="user-image rounded-circle shadow-sm border" src="./img/avatar.jpg" alt="Avatar" style="width: 32px; height: 32px; object-fit: cover;">
+                        <img class="user-image rounded-circle shadow-sm border" src="<?= base_url('img/avatar.svg') ?>" alt="Avatar" style="width: 32px; height: 32px; object-fit: cover;">
                         <span class="d-none d-md-inline fw-semibold text-body"><?= esc($auth->name()); ?></span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2" style="min-width: 230px;">
@@ -88,14 +88,12 @@ $appTitle     = $ragnosConfig->Ragnos_all_to_uppercase ? strtoupper($ragnosConfi
                                 <span>Mi Perfil</span>
                             </a>
                         </li>
-                        <?php if ($auth->id() != 1): ?>
-                            <li>
-                                <a href="javascript:void(0);" class="dropdown-item d-flex align-items-center gap-2 py-2" id="btn-cambiar-password-propio">
-                                    <i class="bi bi-key text-warning"></i>
-                                    <span>Cambiar Contraseña</span>
-                                </a>
-                            </li>
-                        <?php endif; ?>
+                        <li>
+                            <a href="javascript:void(0);" class="dropdown-item d-flex align-items-center gap-2 py-2" id="btn-cambiar-password-propio">
+                                <i class="bi bi-key text-warning"></i>
+                                <span>Cambiar Contraseña</span>
+                            </a>
+                        </li>
                         <li><hr class="dropdown-divider my-1"></li>
                         <li>
                             <a href="<?= site_url('admin/logout'); ?>" class="dropdown-item d-flex align-items-center gap-2 py-2 text-danger">
@@ -139,31 +137,43 @@ $appTitle     = $ragnosConfig->Ragnos_all_to_uppercase ? strtoupper($ragnosConfi
     // Modal para cambio de contraseña propio
     document.getElementById('btn-cambiar-password-propio')?.addEventListener('click', function () {
         Swal.fire({
-            title: 'Cambiar Contraseña',
-            input: 'password',
-            inputLabel: 'Nueva contraseña',
-            inputPlaceholder: 'Ingresa tu nueva contraseña',
-            inputAttributes: {
-                autocapitalize: 'off',
-                autocorrect: 'off'
-            },
+            title: 'Cambiar contraseña',
+            html: `
+                <div class="text-start">
+                    <label for="pw-actual" class="form-label small mb-1">Contraseña actual</label>
+                    <input type="password" id="pw-actual" class="form-control mb-3" autocomplete="current-password">
+                    <label for="pw-nueva" class="form-label small mb-1">Nueva contraseña (mínimo 8 caracteres)</label>
+                    <input type="password" id="pw-nueva" class="form-control mb-3" autocomplete="new-password">
+                    <label for="pw-confirma" class="form-label small mb-1">Confirmar nueva contraseña</label>
+                    <input type="password" id="pw-confirma" class="form-control" autocomplete="new-password">
+                </div>`,
+            focusConfirm: false,
             showCancelButton: true,
             confirmButtonText: 'Cambiar',
             cancelButtonText: 'Cancelar',
             showLoaderOnConfirm: true,
-            preConfirm: (password) => {
-                if (!password) {
-                    Swal.showValidationMessage('La contraseña no puede estar vacía');
+            didOpen: () => document.getElementById('pw-actual')?.focus(),
+            preConfirm: () => {
+                const actual = document.getElementById('pw-actual').value;
+                const password = document.getElementById('pw-nueva').value;
+                const confirma = document.getElementById('pw-confirma').value;
+                if (!actual || !password) {
+                    Swal.showValidationMessage('Completa todos los campos');
                     return false;
                 }
-                return getObject('admin/cambiar_password', { password: password })
+                if (password.length < 8) {
+                    Swal.showValidationMessage('La nueva contraseña debe tener al menos 8 caracteres');
+                    return false;
+                }
+                if (password !== confirma) {
+                    Swal.showValidationMessage('Las contraseñas no coinciden');
+                    return false;
+                }
+                return getObject('admin/cambiar_password', { actual: actual, password: password })
                     .then(data => {
                         if (data.result === 'error') {
-                            let errorMsg = 'Error al cambiar la contraseña';
-                            if (data.errors && data.errors.password) {
-                                errorMsg = data.errors.password;
-                            }
-                            throw new Error(errorMsg);
+                            const errors = data.errors || {};
+                            throw new Error(errors.actual || errors.password || 'Error al cambiar la contraseña');
                         }
                         return data;
                     })

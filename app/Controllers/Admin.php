@@ -55,7 +55,34 @@ class Admin extends BaseController
     public function perfil()
     {
         $this->checkLogin();
-        return view('admin/perfil');
+
+        $id = (int) service('Admin_aut')->id();
+        $db = db_connect();
+
+        $usuario = $db->table('gen_usuarios u')
+            ->select('u.usu_id, u.usu_login, u.usu_nombre, u.usu_activo, u.usu_avatar, g.gru_nombre')
+            ->join('gen_gruposdeusuarios g', 'g.gru_id = u.usu_grupo', 'left')
+            ->where('u.usu_id', $id)
+            ->get()->getFirstRow('array') ?? [];
+
+        $actividad = $db->table('gen_audit_logs')
+            ->where('user_id', $id)
+            ->orderBy('id', 'DESC')
+            ->limit(10)
+            ->get()->getResultArray();
+
+        $estadisticas = [
+            'total'   => $db->table('gen_audit_logs')->where('user_id', $id)->countAllResults(),
+            'mes'     => $db->table('gen_audit_logs')->where('user_id', $id)
+                ->where('created_at >=', date('Y-m-d H:i:s', strtotime('-30 days')))->countAllResults(),
+            'ultimo'  => $actividad[0]['created_at'] ?? null,
+        ];
+
+        return view('admin/perfil', [
+            'usuario'      => $usuario,
+            'actividad'    => $actividad,
+            'estadisticas' => $estadisticas,
+        ]);
     }
 
     public function login()
@@ -187,28 +214,37 @@ class Admin extends BaseController
         return $this->response->setStatusCode(200)->setJSON(session()->get());
     }
 
+    /**
+     * Cambio de la contraseña propia. Exige la contraseña actual; aplica
+     * también al superusuario (id 1), que no puede editarse desde Usuarios.
+     */
     public function cambiar_password()
     {
         checkAjaxRequest();
         $this->checkLogin();
 
-        $auth = service('Admin_aut');
-        $id   = $auth->id();
+        $id     = service('Admin_aut')->id();
+        $actual = (string) getInputValue('actual');
+        $nueva  = (string) getInputValue('password');
 
-        if ($id == 1) {
-            returnAsJSON(['result' => 'error', 'errors' => ['password' => 'El superusuario no puede cambiar su contraseña por este medio']]);
+        if (mb_strlen($nueva) < 8) {
+            returnAsJSON(['result' => 'error', 'errors' => ['password' => 'La nueva contraseña debe tener al menos 8 caracteres']]);
         }
 
-        $password = getInputValue('password');
+        $db     = db_connect();
+        $cuenta = $db->table('gen_usuarios')->select('usu_pword')->where('usu_id', $id)->get()->getFirstRow('array');
 
-        if (empty($password)) {
-            returnAsJSON(['result' => 'error', 'errors' => ['password' => 'La contraseña no puede estar vacía']]);
+        if ($cuenta === null || ! Passwords::verify($actual, (string) $cuenta['usu_pword'])) {
+            returnAsJSON(['result' => 'error', 'errors' => ['actual' => 'La contraseña actual no es correcta']]);
         }
 
-        $db = db_connect();
+        if (! Passwords::storageSupportsModernHashes()) {
+            returnAsJSON(['result' => 'error', 'errors' => ['password' => 'Ejecuta "php spark migrate" para habilitar el cambio de contraseña']]);
+        }
+
         $db->table('gen_usuarios')
             ->where('usu_id', $id)
-            ->update(['usu_pword' => Passwords::hash((string) $password)]);
+            ->update(['usu_pword' => Passwords::hash($nueva)]);
 
         returnAsJSON(['result' => 'ok']);
     }
