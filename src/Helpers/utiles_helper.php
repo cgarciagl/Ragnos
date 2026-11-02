@@ -315,9 +315,14 @@ if (!function_exists('redirectAndDie')) {
             throw new \CodeIgniter\HTTP\Exceptions\RedirectException($redirectResponse);
         }
 
-        // Use CodeIgniter's built-in redirect for 3xx status codes
+        // Redirecciones 3xx: se envía la respuesta y se detiene la ejecución.
+        // Sin el exit, el controlador seguía ejecutándose después de enviar la
+        // redirección y su salida (por ejemplo, los datos de un grid) llegaba
+        // al cliente aunque no hubiera sesión.
         if ($statusCode >= 300 && $statusCode < 400) {
-            return redirect()->to($url, null, $statusCode)->send();
+            redirect()->to($url, null, $statusCode)->send();
+
+            exit;
         }
 
         // For non-redirect status codes, create a custom response

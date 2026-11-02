@@ -145,6 +145,7 @@ class Admin extends BaseController
     public function busqueda()
     {
         checkAjaxRequest();
+        $this->checkLogin();
 
         $valorabuscar = getInputValue('valorabuscar');
         $ruta         = getInputValue('ruta');
@@ -157,50 +158,6 @@ class Admin extends BaseController
         return view('admin/busqueda', $pparams);
     }
 
-    private function search($table, $selectFields, $searchFields, $searchTerm, $limit = 10, $offset = 0)
-    {
-        checkAjaxRequest();
-
-        $userList = [];
-        $query    = $this->db->table($table)
-            ->select($selectFields);
-
-        foreach ($searchFields as $field) {
-            $query->orLike($field, $searchTerm);
-        }
-
-        $query->limit($limit, $offset);
-        $result = $query->get();
-
-        if ($result->getNumRows() > 0) {
-            $rows                  = $result->getResult('array');
-            $userList['resultado'] = 'SI';
-            $userList['datos']     = $rows;
-        } else {
-            $userList['resultado'] = 'NO';
-            $userList['mensaje']   = "No se encontraron registros";
-            $userList['datos']     = [];
-        }
-
-        return $this->response->setStatusCode(200)->setJSON($userList);
-    }
-
-    public function testusuarios()
-    {
-        $searchTerm = getInputValue('searchTerm');
-        $limit      = (int) getInputValue('iDisplayLength') ?: 10;
-        $offset     = (int) getInputValue('iDisplayStart') ?: 0;
-
-        return $this->search(
-            'gen_usuarios',
-            'usu_id, usu_login as Login, usu_nombre as Nombre',
-            ['usu_nombre', 'usu_login'],
-            $searchTerm,
-            $limit,
-            $offset
-        );
-    }
-
     public function logout()
     {
         service('Admin_aut')->logout();
@@ -208,13 +165,18 @@ class Admin extends BaseController
     }
 
 
-    function sess()
+    /**
+     * Datos de la sesión actual para Ragnos.Http.getSession() (utiles.js).
+     * Requiere una sesión iniciada.
+     */
+    public function sess()
     {
         checkAjaxRequest();
+        $this->checkLogin();
 
-        //devolvemos el arreglo de la sesion como un objeto json
         return $this->response->setStatusCode(200)->setJSON(session()->get());
     }
+
     public function cambiar_password()
     {
         checkAjaxRequest();

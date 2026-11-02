@@ -9,6 +9,13 @@ class Proceso extends RProcessController
     public $requireConfirmation = true;
     public $confirmationMessage = '¿Estás completamente seguro de iniciar el recálculo de precios? Esta acción no se puede deshacer.';
 
+    public function __construct()
+    {
+        parent::__construct();
+        // Los procesos modifican datos: solo usuarios con sesión iniciada.
+        $this->checkLogin();
+    }
+
     public function start()
     {
         processStart('Recalculando precios');

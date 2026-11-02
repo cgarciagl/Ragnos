@@ -130,7 +130,7 @@ class MenuBuilder
                     ['divider' => true],
                     [
                         'title' => 'Reporte de Pagos Avanzado',
-                        'url'   => site_url('Tienda/Reportes/reporte_avanzado'),
+                        'url'   => site_url('tienda/reportes/reporte_avanzado'),
                         'icon'  => 'bi-sliders',
                     ],
                 ],
