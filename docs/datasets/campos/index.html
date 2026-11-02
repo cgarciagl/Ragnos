@@ -328,7 +328,7 @@ Cada campo es una <strong>descripción declarativa</strong> de cómo un atributo
 </table>
 <div class="admonition tip">
 <p class="admonition-title">Uso del Enum <code>RFieldType</code> (PHP 8.1+)</p>
-<p>Además de utilizar cadenas de texto (ej. <code>'type' =&gt; 'select'</code>), Ragnos soporta el Enum respaldado <code>Ragnos\Models\Fields\RFieldType</code> para asignación de tipos con autocompletado en IDEs:</p>
+<p>Además de utilizar cadenas de texto (ej. <code>'type' =&gt; 'dropdown'</code>), Ragnos soporta el Enum respaldado <code>Ragnos\Models\Fields\RFieldType</code> para asignación de tipos con autocompletado en IDEs:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="x">use Ragnos\Models\Fields\RFieldType;</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="x">$this-&gt;addField('status', [</span>
@@ -337,6 +337,41 @@ Cada campo es una <strong>descripción declarativa</strong> de cómo un atributo
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="x">    'options' =&gt; ['A' =&gt; 'Activo', 'I' =&gt; 'Inactivo']</span>
 <a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="x">]);</span>
 </code></pre></div>
+<p>Algunos casos del Enum conservan un nombre distinto al tipo de texto equivalente; Ragnos hace la conversión por ti:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Enum</th>
+<th style="text-align: left;">Equivale a</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>RFieldType::SELECT</code></td>
+<td style="text-align: left;"><code>'dropdown'</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>RFieldType::CHECKBOX</code></td>
+<td style="text-align: left;"><code>'switch'</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>RFieldType::FILE</code></td>
+<td style="text-align: left;"><code>'fileupload'</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>RFieldType::IMAGE</code></td>
+<td style="text-align: left;"><code>'imageupload'</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>RFieldType::MONEY</code></td>
+<td style="text-align: left;"><code>'text'</code> más la regla <code>money</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Los demás (<code>TEXT</code>, <code>DATE</code>…)</td>
+<td style="text-align: left;">El mismo nombre en minúsculas</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="admonition tip">
 <p class="admonition-title">Reglas de Validación</p>
