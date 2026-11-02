@@ -1,16 +1,32 @@
 {
   "name": "cgarciagl/ragnos",
-  "description": "Ragnos Framework - Enterprise declarative PHP framework on CodeIgniter 4",
+  "description": "Ragnos Framework - Declarative admin/CRUD framework for PHP built on CodeIgniter 4",
+  "keywords": [
+    "ragnos",
+    "codeigniter4",
+    "crud",
+    "admin",
+    "framework",
+    "php"
+  ],
   "license": "MIT",
   "type": "project",
   "homepage": "https://ragnos.dev",
+  "authors": [
+    {
+      "name": "Carlos García Trujillo",
+      "email": "cgarciagl@gmail.com",
+      "homepage": "https://github.com/cgarciagl"
+    }
+  ],
   "support": {
-    "forum": "https://forum.codeigniter.com/",
+    "issues": "https://github.com/cgarciagl/Ragnos/issues",
     "source": "https://github.com/cgarciagl/Ragnos",
-    "slack": "https://codeigniterchat.slack.com"
+    "docs": "https://ragnos.dev"
   },
   "require": {
     "php": "^8.1",
+    "codeigniter4/framework": "^4.6.3",
     "ext-intl": "*",
     "ext-mbstring": "*",
     "laminas/laminas-escaper": "^2.13",
@@ -51,8 +67,8 @@
   },
   "autoload": {
     "psr-4": {
-      "CodeIgniter\\": "system/",
-      "App\\": "app/"
+      "App\\": "app/",
+      "Ragnos\\": "src/"
     },
     "exclude-from-classmap": [
       "**/Database/Migrations/**"
