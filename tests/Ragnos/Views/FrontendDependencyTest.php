@@ -14,15 +14,15 @@ final class FrontendDependencyTest extends CIUnitTestCase
         $this->assertStringNotContainsString('jquery.min.js', strtolower($scripts));
         $this->assertStringContainsString('/assets/js/datatables.min.js?v=3.0.2', $scripts);
         $this->assertStringContainsString('/assets/js/tom-select.complete.min.js?v=2.6.2', $scripts);
-        $this->assertFileExists(HOMEPATH . 'content/assets/js/swagger-ui-bundle.js');
-        $this->assertFileExists(HOMEPATH . 'content/assets/js/swagger-ui-standalone-preset.js');
-        $this->assertFileExists(HOMEPATH . 'content/assets/css/swagger-ui.css');
+        $this->assertFileExists(FCPATH . 'assets/js/swagger-ui-bundle.js');
+        $this->assertFileExists(FCPATH . 'assets/js/swagger-ui-standalone-preset.js');
+        $this->assertFileExists(FCPATH . 'assets/css/swagger-ui.css');
     }
 
     public function testLocalVendorFilesMatchDeclaredVersions(): void
     {
-        $dataTables = file_get_contents(HOMEPATH . 'content/assets/js/datatables.min.js');
-        $tomSelect  = file_get_contents(HOMEPATH . 'content/assets/js/tom-select.complete.min.js');
+        $dataTables = file_get_contents(FCPATH . 'assets/js/datatables.min.js');
+        $tomSelect  = file_get_contents(FCPATH . 'assets/js/tom-select.complete.min.js');
 
         $this->assertIsString($dataTables);
         $this->assertIsString($tomSelect);
@@ -50,18 +50,18 @@ final class FrontendDependencyTest extends CIUnitTestCase
     public function testObsoleteFrontendAssetsWereRemoved(): void
     {
         $obsoleteAssets = [
-            'content/assets/js/jquery.min.js',
-            'content/assets/js/select2.min.js',
-            'content/assets/js/printThis.min.js',
-            'content/assets/js/bootstrap-datetimepicker.min.js',
-            'content/assets/js/summernote-bs5.min.js',
-            'content/assets/css/select2.min.css',
-            'content/assets/css/bootstrap-datetimepicker.min.css',
-            'content/assets/css/summernote-bs5.css',
+            'assets/js/jquery.min.js',
+            'assets/js/select2.min.js',
+            'assets/js/printThis.min.js',
+            'assets/js/bootstrap-datetimepicker.min.js',
+            'assets/js/summernote-bs5.min.js',
+            'assets/css/select2.min.css',
+            'assets/css/bootstrap-datetimepicker.min.css',
+            'assets/css/summernote-bs5.css',
         ];
 
         foreach ($obsoleteAssets as $asset) {
-            $this->assertFileDoesNotExist(HOMEPATH . $asset);
+            $this->assertFileDoesNotExist(FCPATH . $asset);
         }
     }
 
@@ -81,7 +81,7 @@ final class FrontendDependencyTest extends CIUnitTestCase
         $directories = [
             HOMEPATH . 'app/Views',
             HOMEPATH . 'src/Views',
-            HOMEPATH . 'content/assets/js',
+            FCPATH . 'assets/js',
         ];
 
         foreach ($directories as $directory) {

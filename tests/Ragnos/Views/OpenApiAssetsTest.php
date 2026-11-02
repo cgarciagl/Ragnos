@@ -16,9 +16,9 @@ final class OpenApiAssetsTest extends CIUnitTestCase
         $this->assertStringContainsString("assets/js/swagger-ui-standalone-preset.js", $view);
         $this->assertStringContainsString("assets/css/swagger-ui.css", $view);
         $this->assertStringNotContainsString('cdn.', strtolower($view));
-        $this->assertFileExists(HOMEPATH . 'content/assets/js/swagger-ui-bundle.js');
-        $this->assertFileExists(HOMEPATH . 'content/assets/js/swagger-ui-standalone-preset.js');
-        $this->assertFileExists(HOMEPATH . 'content/assets/css/swagger-ui.css');
+        $this->assertFileExists(FCPATH . 'assets/js/swagger-ui-bundle.js');
+        $this->assertFileExists(FCPATH . 'assets/js/swagger-ui-standalone-preset.js');
+        $this->assertFileExists(FCPATH . 'assets/css/swagger-ui.css');
     }
 
     public function testOpenApiConfigurationAndRoutesAreDeclared(): void

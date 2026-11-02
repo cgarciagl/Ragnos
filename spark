@@ -56,8 +56,16 @@ ini_set('display_errors', '1');
  *---------------------------------------------------------------
  */
 
-// Path to the front controller
-define('FCPATH', __DIR__ . DIRECTORY_SEPARATOR . 'content' . DIRECTORY_SEPARATOR);
+// LOAD OUR PATHS CONFIG FILE
+// This is the line that might need to be changed, depending on your folder structure.
+require __DIR__ . '/app/Config/Paths.php';
+// ^^^ Change this line if you move your application folder
+
+$paths = new Config\Paths();
+
+// Path to the front controller. Ragnos names the public folder "content";
+// rename it freely and update $publicDirectory in app/Config/Paths.php.
+define('FCPATH', rtrim(realpath($paths->publicDirectory) ?: $paths->publicDirectory, '\\/ ') . DIRECTORY_SEPARATOR);
 
 // Ensure the current directory is pointing to the front controller's directory
 chdir(FCPATH);
@@ -70,13 +78,6 @@ chdir(FCPATH);
  * our autoloader, along with Composer's, loads our constants
  * and fires up an environment-specific bootstrapping.
  */
-
-// LOAD OUR PATHS CONFIG FILE
-// This is the line that might need to be changed, depending on your folder structure.
-require FCPATH . '../app/Config/Paths.php';
-// ^^^ Change this line if you move your application folder
-
-$paths = new Config\Paths();
 
 // LOAD THE FRAMEWORK BOOTSTRAP FILE
 require $paths->systemDirectory . '/Boot.php';
