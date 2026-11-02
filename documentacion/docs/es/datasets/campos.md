@@ -222,6 +222,8 @@ $this->addField('Contacto', [
 
 ## 10. Campo relacionado (`addSearch`)
 
+Vincula un campo con otro controlador para seleccionar el registro relacionado (llave foránea).
+
 ```php
 $this->addSearch('salesRepEmployeeNumber', 'Tienda\\Empleados');
 ```

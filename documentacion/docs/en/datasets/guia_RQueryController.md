@@ -27,41 +27,43 @@ namespace App\Controllers;
 
 use Ragnos\Controllers\RQueryController;
 
-class SearchUsers extends RQueryController
+class Searchusuarios extends RQueryController
 {
     public function __construct()
     {
         parent::__construct();
 
         // 1. Security
-        $this->checkUserInGroup('Administrator');
+        $this->checkUserInGroup('Administrador');
 
         // 2. Visual Configuration
-        $this->setTitle('🔎 Users');
+        $this->setTitle('🔎 Usuarios');
 
         // 3. Data Source (SQL)
-        $this->setQuery("SELECT usu_id, usu_nombre as 'Name', usu_login as 'Login', usu_activo as Active, usu_grupo FROM gen_usuarios");
+        $this->setQuery("SELECT usu_id, usu_nombre as 'Nombre', usu_login as 'Login', usu_activo as Activo, usu_grupo FROM gen_usuarios");
 
         // 4. Primary Key (Virtual or Real)
         $this->setIdField('usu_id');
 
-        // 5. Field Configuration (Filters and Visualization)
-        $this->addField('Active', [
-            'label'   => 'Active',
+        // 5. Field Configuration (Labels and Formatting)
+        $this->addField('Activo', [
+            'label'   => 'Activo',
             'type'    => 'dropdown',
-            'options' => ['S' => 'YES', 'N' => 'NO'],
+            'options' => ['S' => 'SI', 'N' => 'NO'],
         ]);
 
-        $this->addField('usu_grupo', ['label' => 'Group']);
+        $this->addField('usu_grupo', ['label' => 'Grupo']);
 
         // 6. Relationships for Search
-        $this->addSearch('usu_grupo', 'UserGroups');
+        $this->addSearch('usu_grupo', 'Gruposdeusuarios');
 
         // 7. Grid Definition
-        $this->setTableFields(['Name', 'Login', 'Active', 'usu_grupo']);
+        $this->setTableFields(['Nombre', 'Login', 'Activo', 'usu_grupo']);
     }
 }
 ```
+
+This is the real code of the controller included with Ragnos, so its names, labels, and the `Administrador` group keep their original Spanish names.
 
 ---
 
@@ -72,7 +74,7 @@ class SearchUsers extends RQueryController
 Defines the data source.
 
 - **Important:** Do not use `ORDER BY` or `LIMIT` here; Ragnos injects them dynamically according to user interaction in the grid.
-- **Alias:** It is highly recommended to use SQL aliases (`AS 'Name'`) so table headers are automatically readable.
+- **Alias:** It is highly recommended to use SQL aliases (`AS 'Nombre'`) so table headers are automatically readable.
 
 ### `setIdField(string $field)`
 
@@ -82,9 +84,21 @@ Even if it is a custom query, Ragnos needs to know which column uniquely identif
 
 ### `addField(string $name, array $config)`
 
-Works the same as in `RDatasetController`, but here it is mainly used to **generate search filters**.
+Works the same as in `RDatasetController`: it gives labels and formatting to the result columns.
 
-- If you define a field as `'type' => 'dropdown'`, Ragnos will create a `<select>` in the advanced search bar.
+- `'type' => 'money'` shows the column in currency format.
+- `'type' => 'dropdown'` translates values into their descriptions (for example, `S` → `SI`) and lets the grid search find records by typing that description.
+
+### `_filters()`
+
+Ragnos wraps your query in a CTE and builds the grid query on top of its result. That is why in `_filters()` you can filter any result column, including aggregated ones, with a regular `WHERE` (no `HAVING`):
+
+```php
+public function _filters()
+{
+    $this->modelo->builder()->where('Activo', 'S');
+}
+```
 
 ### `addSearch(string $field, string $controller)`
 
@@ -97,3 +111,35 @@ Allows linking a column of your query to another Ragnos controller.
 Restricts access to this controller exclusively for the specified user groups.
 
 ---
+
+## ⚠️ Differences from RDatasetController
+
+| Feature                  | RDatasetController       | RQueryController              |
+| :----------------------- | :----------------------- | :---------------------------- |
+| **Data Source**          | `setTableName('table')`  | `setQuery('SELECT...')`       |
+| **Editing (Save/Update)**| ✅ Supported (Automatic) | ❌ Not supported              |
+| **Deletion (Delete)**    | ✅ Supported             | ❌ Not supported              |
+| **New Record**           | ✅ Supported             | ❌ Not supported              |
+| **Main Use**             | CRUDs (Catalogs)         | Reports, Dashboards, Searches |
+
+---
+
+## 💡 Implementation Tips
+
+1.  **Calculated Fields:**
+    You can create "virtual" columns in the SQL and use them in the grid:
+
+    ```php
+    $this->setQuery("SELECT id, price * quantity AS Total, ... FROM sales");
+    $this->setTableFields(['id', 'Total']);
+    ```
+
+2.  **Joins (JOINs):**
+    Ideal for showing names instead of IDs without visually configuring `addSearch`:
+    ```php
+    $this->setQuery("
+        SELECT p.name, c.category_name
+        FROM products p
+        JOIN categories c ON p.cat_id = c.id
+    ");
+    ```

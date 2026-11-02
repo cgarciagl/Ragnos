@@ -213,10 +213,6 @@ Ejemplos:
 - Readonly / Hidden: visible en grilla, no editable.
 - Calculado: `query => "concat(...)"` (no se persiste).
 
-## Relaciones entre datasets
-
-- Para relaciones más complejas tipo cabecera-lineas, consulta la guía de [Maestro-Detalle](maestro-detalle.md).
-
 ## Relaciones entre datasets (`addSearch`)
 
 - Para relaciones más complejas tipo cabecera-lineas, consulta la guía de [Maestro-Detalle](maestro-detalle.md).
@@ -274,11 +270,11 @@ Para evitar este inconveniente que compromete la estabilidad de la aplicación, 
     El **primer campo** que se agrega en `setTableFields()` es muy relevante, pues es el campo que se usará como **"descripción" del registro**. Este es el texto que aparece al seleccionar el registro en los controles de búsqueda, o en los dropdowns asociados con este catálogo. Por ello es importante seleccionarlo muy bien, y de hecho puede ser un campo calculado que combine dos o más campos, como en el caso del catálogo de "empleados" donde se ha usado el `nombreCompleto` como primer campo.
 
 - Puede incluir campos virtuales y etiquetas.
-- `setSortingFields([...])` para ordenar por defecto.
+- `setSortingField('campo', 'desc')` define el ordenamiento inicial.
 
 ## Ciclo de vida (Hooks)
 
-Puedes intervenir en el ciclo de vida de los datos y de la interfaz mediante métodos protegidos.
+Puedes intervenir en el ciclo de vida de los datos y de la interfaz mediante hooks: métodos públicos como `_beforeInsert()`, `_afterUpdate()` o `_filters()` que defines en tu dataset.
 
 👉 **[Ver la Guía Completa de Hooks y Eventos](../avanzado/hooks.md)**
 
@@ -291,22 +287,23 @@ Puedes intervenir en el ciclo de vida de los datos y de la interfaz mediante mé
 
 Con `RDatasetController` no necesitas:
 
-- Modelos CRUD manuales
-- Controladores con SQL explícito
-- Formularios y validaciones duplicadas
-  Todo se genera desde la metadata del dataset.
-  Buenas Prácticas y Recomendaciones
+- Modelos CRUD manuales.
+- Controladores con SQL explícito.
+- Formularios y validaciones duplicadas.
+
+Todo se genera desde la metadata del dataset.
+
+## Buenas Prácticas y Recomendaciones
 
 - **Diseño First**: Diseña primero la base de datos de manera sólida.
 - **Un dataset = una tabla**: Cada dataset debe gestionar una tabla principal. Si necesitas vistas complejas, crea un `RQueryController`.
 - **Campos Virtuales**: Usa `query` en `addField` para conciliar columnas (ej. nombre completo) en buscar/listar sin desnormalizar la BD.
 - **Centralización**: Si una validación es regla de negocio, ponla en `rules` del dataset, no en el cliente.
-- **Desacoplamiento**: Usa los hooks para limpiar caché o loguear, pero evita poner lógica de negocio pesada directamente en el controlador; llama a Servicios o Libreríaa relaciones reutilizables.
-- Centraliza lógica en hooks.
+- **Desacoplamiento**: Usa los hooks para limpiar caché o registrar eventos, pero evita poner lógica de negocio pesada directamente en el controlador; llama a servicios o librerías reutilizables.
 
 ## Próximos pasos
 
 - Crear nuevos datasets siguiendo este patrón.
 - Extender validadores y tipos.
-- Integrar reportes y optimizar cache por eventos.
+- Integrar reportes y optimizar caché por eventos.
 - Mantener la metadata consistente para escalabilidad.

@@ -82,9 +82,21 @@ Aunque sea una consulta personalizada, Ragnos necesita saber cuál es la columna
 
 ### `addField(string $name, array $config)`
 
-Funciona igual que en `RDatasetController`, pero aquí se usa principalmente para **generar los filtros de búsqueda**.
+Funciona igual que en `RDatasetController`: da etiqueta y formato a las columnas del resultado.
 
-- Si defines un campo como `'type' => 'dropdown'`, Ragnos creará un `<select>` en la barra de búsqueda avanzada.
+- `'type' => 'money'` presenta la columna con formato de moneda.
+- `'type' => 'dropdown'` traduce los valores a sus descripciones (por ejemplo, `S` → `SI`) y permite que la búsqueda de la grilla encuentre los registros escribiendo esa descripción.
+
+### `_filters()`
+
+Ragnos envuelve tu consulta en una CTE y construye la consulta de la grilla sobre su resultado. Por eso, en `_filters()` puedes filtrar cualquier columna del resultado, incluidas las agregadas, con un `WHERE` normal (sin `HAVING`):
+
+```php
+public function _filters()
+{
+    $this->modelo->builder()->where('Activo', 'S');
+}
+```
 
 ### `addSearch(string $field, string $controller)`
 

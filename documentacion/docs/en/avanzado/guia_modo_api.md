@@ -7,7 +7,7 @@ Starting from v1.1, **Ragnos Framework** supports hybrid controllers. This means
 ## 📋 Prerequisites
 
 1. **Access Token:** Must have valid `api_token` assigned to user in database.
-2. **Endpoint:** URL is same as used in browser (e.g. `https://your-site.com/store/products`).
+2. **Endpoint:** URL is same as used in browser (e.g. `https://your-site.com/tienda/productos`).
 
 ---
 
@@ -93,7 +93,7 @@ async function apiCall(endpoint, options = {}) {
 
 ## 📡 Endpoints and Operations
 
-Assume controller is `Store/Products`.
+Assume your controller is `Tienda/Productos` (the demo store's products controller).
 
 ### 1. List Records (GET)
 
@@ -102,7 +102,7 @@ Gets list of data applying grid filters.
 **Request:**
 
 ```http
-GET /store/products
+GET /tienda/productos
 Headers:
   Accept: application/json
   Authorization: Bearer xyz123
@@ -156,7 +156,7 @@ const params = {
 
 // Convert object to Query String
 const queryString = new URLSearchParams(params).toString();
-const url = `/store/products?${queryString}`;
+const url = `/tienda/productos?${queryString}`;
 
 const response = await fetch(url, {
     headers: {
@@ -177,7 +177,7 @@ console.log('Total:', result.total); // Total filtered for pagination
 **Request:**
 
 ```http
-POST /store/products/save
+POST /tienda/productos/save
 Headers:
   Content-Type: application/json
   Accept: application/json
@@ -212,7 +212,7 @@ In Ragnos, update handled in same `save` endpoint. Difference is **must include 
 **Request:**
 
 ```http
-POST /store/products/save
+POST /tienda/productos/save
 Headers: ...
 
 Body (JSON):
@@ -255,14 +255,14 @@ Ragnos will automatically process the value without the internal prefixes used b
 
 Can send ID in URL or JSON body.
 
-**Option A (URL):** `POST /store/products/delete/15`
+**Option A (URL):** `POST /tienda/productos/delete/15`
 
 **Option B (JSON Body):**
 
 **Request:**
 
 ```http
-POST /store/products/delete
+POST /tienda/productos/delete
 Headers: ...
 
 Body (JSON):
@@ -318,7 +318,7 @@ Example: Invalid Token (401 Unauthorized)
 const token = "YOUR_API_TOKEN";
 
 // Example: Save product
-fetch("https://yoursite.com/store/products/save", {
+fetch("https://yoursite.com/tienda/productos/save", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
@@ -338,7 +338,7 @@ fetch("https://yoursite.com/store/products/save", {
 ### cURL (Terminal)
 
 ```bash
-curl -X GET https://yoursite.com/store/products   -H "Accept: application/json"   -H "Authorization: Bearer YOUR_API_TOKEN"
+curl -X GET https://yoursite.com/tienda/productos   -H "Accept: application/json"   -H "Authorization: Bearer YOUR_API_TOKEN"
 ```
 
 ## OpenAPI documentation
@@ -358,7 +358,7 @@ public function getOpenApiDefinition(): array
 {
     return [
         'paths' => [
-            '/store/products' => [
+            '/tienda/productos' => [
                 'get' => [
                     'description' => 'List of available products.',
                 ],

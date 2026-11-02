@@ -17,7 +17,7 @@ graph TD
         Logic -- "SI (ID=100)" --> LoadDetails["Carga Controlador Detalle"]
     end
 
-    LoadDetails -->|"Inyecta ID=100 como $this->master"| Detail["Controlador Detalle<br/>(OrdenesDetalles)"]
+    LoadDetails -->|"Inyecta ID=100 como $this->master"| Detail["Controlador Detalle<br/>(Ordenesdetalles)"]
 
     subgraph Detalle ["Zona del Detalle"]
         direction TB
@@ -40,7 +40,7 @@ graph TD
 La idea básica es tener dos controladores:
 
 1. **El Maestro (Ordenes):** Controla la información general (fecha, cliente, total).
-2. **El Detalle (OrdenesDetalles):** Controla la lista de productos dentro de esa orden.
+2. **El Detalle (Ordenesdetalles):** Controla la lista de productos dentro de esa orden.
 
 ---
 
@@ -120,9 +120,9 @@ Esta función se ejecuta cada vez que hay un cambio en la tabla de detalles de �
 2. Llama a un endpoint (`tienda/ordenes/calculatotal`) para recalcular el total de la orden.
 3. Actualiza el campo `total` en la pantalla con el nuevo valor.
 
-de este modo, el total siempre estará actualizado, cada que se agregue, modifique o elimine un producto en la orden.
+De este modo, el total siempre estará actualizado, cada que se agregue, modifique o elimine un producto en la orden.
 
-Esta función se enlaza automáticamente gracias a la convención de nombres: `_NombreDelControladorOnChange`.
+Esta función se enlaza automáticamente gracias a la convención de nombres: `_NombreDelControladorOnChange`, donde el nombre del controlador es el nombre corto de la clase PHP, respetando mayúsculas y minúsculas.
 
 ## Resumen del flujo de trabajo
 

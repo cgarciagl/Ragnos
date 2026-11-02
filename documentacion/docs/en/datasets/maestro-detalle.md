@@ -6,7 +6,7 @@ This guide explains how to create a screen where you have a main record (like a 
 
 ```mermaid
 graph TD
-    User["User"] -->|Opens Screen| Master["Master Controller<br/>(Orders)"]
+    User["User"] -->|Opens Screen| Master["Master Controller<br/>(Ordenes)"]
     Master -->|Renders| View["Main View"]
     View -->|Contains| Form["Master Form"]
 
@@ -17,7 +17,7 @@ graph TD
         Logic -- "YES (ID=100)" --> LoadDetails["Load Detail Controller"]
     end
 
-    LoadDetails -->|"Injects ID=100 as $this->master"| Detail["Detail Controller<br/>(OrderDetails)"]
+    LoadDetails -->|"Injects ID=100 as $this->master"| Detail["Detail Controller<br/>(Ordenesdetalles)"]
 
     subgraph Detail ["Detail Zone"]
         direction TB
@@ -39,12 +39,14 @@ graph TD
 
 The basic idea is to have two controllers:
 
-1. **The Master (Orders):** Controls general information (date, customer, total).
-2. **The Detail (OrderDetails):** Controls the list of products within that order.
+1. **The Master (Ordenes):** Controls general information (date, customer, total).
+2. **The Detail (Ordenesdetalles):** Controls the list of products within that order.
+
+The demo store controllers keep their original Spanish names in the code (`Tienda\Ordenes`, `Tienda\Ordenesdetalles`), so this guide uses those exact names.
 
 ---
 
-## 1. Configuring the Master (`Orders` Controller)
+## 1. Configuring the Master (`Ordenes` Controller)
 
 This is the "parent" of the relationship. Here we define the invoice header.
 
@@ -57,24 +59,24 @@ This is the "parent" of the relationship. Here we define the invoice header.
   **For a single detail:**
 
   ```php
-  $this->setDetailsController('Store\OrderDetails');
+  $this->setDetailsController('Tienda\Ordenesdetalles');
   ```
 
-  This tells Ragnos that the `OrderDetails` controller will handle the details related to each order.
+  This tells Ragnos that the `Ordenesdetalles` controller will handle the details related to each order.
 
   **For multiple details (Tabs):**
   If your main record has multiple types of details (e.g., products and a history log), you can pass an array of controllers. Ragnos will automatically generate a tabbed interface (nav-tabs) to display each detail separately:
 
   ```php
   $this->setDetailsController([
-      'Store\OrderDetails',
-      'Store\OrderHistory'
+      'Tienda\Ordenesdetalles',
+      'Tienda\Ordeneshistorial'
   ]);
   ```
 
   The relationship is based on the `orderNumber` field in these controllers being the same, and this is the primary key in the master.
 
-## 2. Configuring the Detail (`OrderDetails` Controller)
+## 2. Configuring the Detail (`Ordenesdetalles` Controller)
 
 This is the "child". It controls each product line.
 
@@ -106,10 +108,31 @@ The following function has been added to the custom.js file:
 ```javascript
 // with every change in the order details table
 // recalculate the order total
-function _OrderDetailsOnChange(table) {
+function _OrdenesdetallesOnChange(table) {
   const order = document.querySelector("input[name='orderNumber']").value;
-  getObject("store/orders/calculatetotal", { order: order }, function (data) {
+  getObject("tienda/ordenes/calculatotal", { orden: order }, function (data) {
     document.querySelector('input[name="total"]').value = data.total;
   });
 }
 ```
+
+This function runs every time there is a change in the order details table. What it does is:
+
+1. Gets the current order number from the hidden field.
+2. Calls an endpoint (`tienda/ordenes/calculatotal`) to recalculate the order total.
+3. Updates the `total` field on screen with the new value.
+
+This way, the total is always up to date every time a product is added, modified, or deleted in the order.
+
+This function is linked automatically thanks to the naming convention: `_ControllerNameOnChange`, where the controller name is the short name of the PHP class, respecting upper and lower case.
+
+## Workflow Summary
+
+1. **You open an Order:** You see the general data (Master).
+2. **The system checks:** Does this order already exist?
+   - **Yes:** It automatically loads the table of related products at the bottom of the screen.
+   - **No:** It hides the products section until you save the order for the first time.
+3. **You add a product:** When creating a line in the details table, the system invisibly attaches the parent order number.
+4. **You save:** When the detail is saved, the system updates the totals and everything stays in sync.
+
+And that's it! With these steps, two tables work as a single integrated screen.

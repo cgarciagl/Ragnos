@@ -80,13 +80,13 @@ Restricts access exclusively to users belonging to specified groups.
 public function __construct()
 {
     // Only allow Administrator access
-    $this->checkUserInGroup('Administrator');
+    $this->checkUserInGroup('Administrador');
 }
 
 public function managementReport()
 {
     // Allow Admins or Management
-    $this->checkUserInGroup(['Administrator', 'Management']);
+    $this->checkUserInGroup(['Administrador', 'Management']);
 
     // Report logic...
 }
@@ -225,7 +225,7 @@ class Orders extends BaseController
 
         // 2. Get user data
         $data['user'] = $auth->name();
-        $data['isAdmin'] = $auth->isUserInGroup('Administrator');
+        $data['isAdmin'] = $auth->isUserInGroup('Administrador');
 
         return view('orders/index', $data);
     }
@@ -233,7 +233,7 @@ class Orders extends BaseController
     public function delete($id)
     {
         // 3. Strict restriction: Only Admins can delete
-        $this->checkUserInGroup('Administrator');
+        $this->checkUserInGroup('Administrador');
 
         $model = new \App\Models\OrdersModel();
         $model->delete($id);

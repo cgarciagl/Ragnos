@@ -245,7 +245,7 @@ function _productCodeOnSearch(control) {
   const data = control.ragnosSearchData;
 
   // Update another field (Unit Price) with product MSRP
-  document.querySelector('#orderdetail input[name="priceEach"]').value =
+  document.querySelector('#detalleorden input[name="priceEach"]').value =
     data.MSRP;
 }
 ```
@@ -258,17 +258,17 @@ Executed when a managed table changes (e.g. adding/editing rows in detail table)
 - **Parameter:** Receives table object or change context.
 - **Usage:** Total recalculations, cross-validations.
 
-**System Example (`_OrderDetailsOnChange`):**
+**System Example (`_OrdenesdetallesOnChange`):**
 Every time something changes in `OrderDetails` table, complete order total is recalculated by calling server.
 
 ```javascript
 // Activated when modifying table <table id="OrderDetails" ...>
-function _OrderDetailsOnChange(table) {
+function _OrdenesdetallesOnChange(table) {
   // Get current order ID
   const order = document.querySelector("input[name='orderNumber']").value;
 
   // Call server to recalculate total
-  getObject("store/orders/calculatetotal", { order: order }, function (data) {
+  getObject("tienda/ordenes/calculatotal", { orden: order }, function (data) {
     // Update visual Total field
     document.querySelector('input[name="total"]').value = data.total;
   });
@@ -279,17 +279,17 @@ function _OrderDetailsOnChange(table) {
 
 Normal functions can also be defined for explicit callbacks in search configs.
 
-**Example (`officeSearchTest`):**
+**Example (`pruebaBusquedaOffice`):**
 Simple function designed to be passed as `callback` parameter in `RagnosSearch`.
 
 ```javascript
-function officeSearchTest(e) {
+function pruebaBusquedaOffice(e) {
   const data = e.ragnosSearchData;
   console.log("Office search data:", data);
 }
 
 // Usage:
-// new RagnosSearch('#office', { ..., callback: officeSearchTest });
+// new RagnosSearch('#office', { ..., callback: pruebaBusquedaOffice });
 ```
 
 ---

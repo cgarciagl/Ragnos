@@ -62,39 +62,41 @@ Example showing monthly sales list without grouping.
 ```php
 <?php
 
-namespace App\Controllers\Store;
+namespace App\Controllers\Tienda;
 
 use Ragnos\Controllers\BaseController;
 use Ragnos\Controllers\RSimpleLevelReport;
 
-class Reports extends BaseController
+class Reportes extends BaseController
 {
-    public function salesbymonth()
+    public function ventaspormes()
     {
         // 1. Get data
         $model = new \App\Models\Dashboard();
-        $data = $model->last12monthssales();
-        // Expected structure of $data:
-        // [['Month' => 'January', 'Total' => 1000], ['Month' => 'February', 'Total' => 1500], ...]
+        $datos = $model->ventasultimos12meses();
+        // Expected structure of $datos:
+        // [['Mes' => 'Enero', 'Total' => 1000], ['Mes' => 'Febrero', 'Total' => 1500], ...]
 
         // 2. Format data (optional but recommended)
-        foreach ($data as $key => $value) {
-            $data[$key]['Total'] = '$ ' . number_format($value['Total'], 2);
+        foreach ($datos as $key => $value) {
+            $datos[$key]['Total'] = '$ ' . number_format($value['Total'], 2);
         }
 
         // 3. Configure Report
-        $report = new RSimpleLevelReport();
-        $report->setShowTotals(false); // Hide record count as irrelevant here
+        $reporte = new RSimpleLevelReport();
+        $reporte->setShowTotals(false); // Hide the record count, since it is irrelevant here
 
         // quickSetup(Title, Data, Columns to show)
-        $report->quickSetup('Sales by Month', $data, ['Month', 'Total']);
+        $reporte->quickSetup('Ventas por Mes', $datos, ['Mes', 'Total']);
 
         // 4. Render
-        $content = $report->render();
-        return view('admin/report_view', ['content' => $content]);
+        $contenido = $reporte->render();
+        return view('admin/reporte_view', ['contenido' => $contenido]);
     }
 }
 ```
+
+This example follows the real `Tienda\Reportes` controller of the demo store, so its methods, columns, and view keep their original Spanish names.
 
 ### 2. Grouped Report (Control Break)
 
@@ -105,7 +107,7 @@ Example generates product list grouped by **Category**. Every time category chan
 ```php
 <?php
 
-namespace App\Controllers\Store;
+namespace App\Controllers\Tienda;
 
 use Ragnos\Controllers\BaseController;
 use Ragnos\Controllers\RSimpleLevelReport;

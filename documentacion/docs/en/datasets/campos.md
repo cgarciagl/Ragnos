@@ -175,8 +175,8 @@ $this->addField('creditLimit', [
 ## 7. Readonly Field
 
 ```php
-$this->addField('Contact', [
-    'label' => 'Contact',
+$this->addField('Contacto', [
+    'label' => 'Contacto',
     'rules' => 'readonly'
 ]);
 ```
@@ -191,8 +191,8 @@ $this->addField('Contact', [
 ## 8. Hidden Field
 
 ```php
-$this->addField('Contact', [
-    'label' => 'Contact',
+$this->addField('Contacto', [
+    'label' => 'Contacto',
     'rules' => 'readonly',
     'type'  => 'hidden'
 ]);
@@ -206,8 +206,8 @@ $this->addField('Contact', [
 ## 9. Calculated Field (`query`)
 
 ```php
-$this->addField('fullName', [
-    'label' => 'Full Name',
+$this->addField('Contacto', [
+    'label' => 'Contacto',
     'rules' => 'readonly',
     'query' => "concat(contactLastName, ', ', contactFirstName)",
     'type'  => 'hidden'
@@ -225,7 +225,7 @@ $this->addField('fullName', [
 Links a field to another controller for selection (Foreign Key).
 
 ```php
-$this->addSearch('salesRepEmployeeNumber', 'Shop\\Employees');
+$this->addSearch('salesRepEmployeeNumber', 'Tienda\\Empleados');
 ```
 
 - Logical foreign key

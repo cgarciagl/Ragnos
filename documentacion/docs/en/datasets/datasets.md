@@ -25,11 +25,11 @@ A dataset is a controller that extends `RDatasetController`. All configuration i
 ### Minimal Example
 
 ```php
-namespace App\Controllers\Store;
+namespace App\Controllers\Tienda;
 
 use Ragnos\Controllers\RDatasetController;
 
-class Customers extends RDatasetController
+class Clientes extends RDatasetController
 {
     public function __construct()
     {
@@ -51,7 +51,7 @@ class Customers extends RDatasetController
         ]);
 
         // Calculated field
-        $this->addField('Contact', [
+        $this->addField('Contacto', [
             'label' => 'Contact',
             'rules' => 'readonly',
             'query' => "concat(contactLastName, ', ', contactFirstName)",
@@ -59,12 +59,12 @@ class Customers extends RDatasetController
         ]);
 
         // Relationships
-        $this->addSearch('salesRepEmployeeNumber', 'Store\\Employees');
+        $this->addSearch('salesRepEmployeeNumber', 'Tienda\\Empleados');
 
         // Grid
         $this->setTableFields([
             'customerName',
-            'Contact',
+            'Contacto',
             'salesRepEmployeeNumber'
         ]);
     }
@@ -201,6 +201,17 @@ For a complete reference of all options and field types, consult the [Field Guid
 Common options:
 
 - `label`: visible text.
+- `rules`: validation rules (CI4 + Ragnos validators such as `money`, `readonly`).
+- `type`: `text`, `hidden`, etc.
+- `query`: SQL expression for virtual fields.
+
+Examples:
+
+- Simple field: required, text.
+- Numeric field: `numeric`.
+- Money: `rules => 'required|money'`.
+- Readonly / Hidden: visible in the grid, not editable.
+- Calculated: `query => "concat(...)"` (not persisted).
 
 ## Relationships between Datasets (`addSearch`)
 
@@ -213,13 +224,13 @@ The `addSearch(localField, 'Namespace\Of\RelatedDataset')` function is a powerfu
 By linking a field to another dataset, Ragnos automatically enables **contextual searches**. This means the search criteria is not limited to just the ID or the main field, but extends to **all visible fields** defined in the `setTableFields()` of the related dataset.
 
 **Example:**
-Imagine you are in the **Payments** module (`Store/Payments`) and need to select a **Customer**.
-If in the **Customers** dataset (`Store/Customers`) you defined:
+Imagine you are in the **Payments** module (`Tienda/Pagos`) and need to select a **Customer**.
+If in the **Customers** dataset (`Tienda/Clientes`) you defined:
 
 ```php
 $this->setTableFields([
     'customerName',
-    'Contact', // Calculated field: concat(contactLastName, ', ', contactFirstName)
+    'Contacto', // Calculated field: concat(contactLastName, ', ', contactFirstName)
     'salesRepEmployeeNumber' // Sales Rep
 ]);
 ```
@@ -227,7 +238,7 @@ $this->setTableFields([
 When searching for a customer from the Payments form, you can type:
 
 - Part of the **Company Name** (`customerName`).
-- The **Contact Name** (`Contact`).
+- The **Contact Name** (`Contacto`).
 - Or even the **Sales Rep Name**.
 
 Ragnos will search for matches in any of those fields defined in the target dataset, offering a much more flexible and powerful user experience without writing additional SQL.
@@ -256,7 +267,43 @@ To avoid this issue that compromises the application's stability, it is strongly
 
 !!! info "Importance of the first field"
 
-    The **first field** added in `setTableFields()` is very relevant, as it is the field that will be used as the **"description" of the record**. This is the text that appears when selecting the record in search controls, or in dropdowns associated with this catalog. Therefore, it is important to select it very well. It can be a calculated field that combines two or more fields, as in the case of the "employees" catalog where `fullName` (or `nombreCompleto`) is used as the first field.
+    The **first field** added in `setTableFields()` is very relevant, as it is the field that will be used as the **"description" of the record**. This is the text that appears when selecting the record in search controls, or in dropdowns associated with this catalog. Therefore, it is important to select it very well. It can be a calculated field that combines two or more fields, as in the case of the "employees" catalog where `nombreCompleto` (full name) is used as the first field.
 
 - Can include virtual fields and labels.
-- `setSortingFields([...])` for default sorting.
+- `setSortingField('field', 'desc')` sets the initial sorting.
+
+## Lifecycle (Hooks)
+
+You can step into the data and interface lifecycle through hooks: public methods such as `_beforeInsert()`, `_afterUpdate()`, or `_filters()` that you define in your dataset.
+
+👉 **[See the Complete Hooks and Events Guide](../avanzado/hooks.md)**
+
+## Supported Field Types (Summary)
+
+- Text, Numeric, Money (`money` validator), Readonly, Hidden, Calculated (`query`), Relationship (via `addSearch`), Primary key.
+- Fields with `query` or without a physical column are not inserted or updated; they are only calculated when reading.
+
+## What You Do NOT Write in Ragnos
+
+With `RDatasetController` you do not need:
+
+- Manual CRUD models.
+- Controllers with explicit SQL.
+- Duplicated forms and validations.
+
+Everything is generated from the dataset metadata.
+
+## Best Practices and Recommendations
+
+- **Design First**: Design the database solidly first.
+- **One dataset = one table**: Each dataset should manage one main table. If you need complex views, create an `RQueryController`.
+- **Virtual Fields**: Use `query` in `addField` to combine columns (e.g. full name) for searching/listing without denormalizing the database.
+- **Centralization**: If a validation is a business rule, put it in the dataset's `rules`, not on the client.
+- **Decoupling**: Use hooks to clear caches or log events, but avoid putting heavy business logic directly in the controller; call reusable services or libraries.
+
+## Next Steps
+
+- Create new datasets following this pattern.
+- Extend validators and types.
+- Integrate reports and optimize caching by events.
+- Keep metadata consistent for scalability.
