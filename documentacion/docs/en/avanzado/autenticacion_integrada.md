@@ -1,19 +1,19 @@
 # Integrated Authentication and Permissions System
 
-Ragnos includes a lightweight flexible authentication system integrated directly into framework core. Handles user sessions, controller protection and Role Based Access Control (RBAC).
+Ragnos includes a lightweight, flexible authentication system built directly into the framework core. It handles user sessions, controller protection, and Role-Based Access Control (RBAC).
 
-System relies mainly on `App\Services\Admin_aut` service and `BaseController` class.
+The system relies mainly on the `App\Services\Admin_aut` service and the `BaseController` class.
 
 ## Database Tables
 
-System expects specific database structure:
+The system expects a specific database structure:
 
-- **`gen_usuarios`**: Users table (`usu_id`, `usu_nombre`, `usu_login`, `usu_pword`, `usu_activo`, `usu_grupo`).
-- **`gen_gruposdeusuarios`**: Roles table (`gru_id`, `gru_nombre`).
+- **`gen_usuarios`**: The users table (`usu_id`, `usu_nombre`, `usu_login`, `usu_pword`, `usu_activo`, `usu_grupo`).
+- **`gen_gruposdeusuarios`**: The roles table (`gru_id`, `gru_nombre`).
 
 ## Controller Protection
 
-All controllers extending `BaseController` (including [`RDatasetController`](../datasets/datasets.md), [`RProcessController`](server_side_events.md), etc.) access simplified protection methods.
+All controllers extending `BaseController` (including [`RDatasetController`](../datasets/datasets.md), [`RProcessController`](server_side_events.md), etc.) have access to simplified protection methods.
 
 ### Verification Flow
 
@@ -43,13 +43,13 @@ graph TD
 
 ### `checkLogin()`
 
-Verifies if user has active session. If not:
+This method checks whether the user has an active session. If not:
 
-1.  Web requests: Redirects to login (`admin/login`).
-2.  API requests: Verifies `Authorization` header against `usu_token` in DB. If fails, returns JSON 401 error.
+1.  Web requests: it redirects to the login page (`admin/login`).
+2.  API requests: it validates the `Authorization` header against `usu_token` in the database. If validation fails, it returns a 401 error in JSON.
 
 **Usage:**
-Recommended to call at start of function requiring auth, or in constructor if whole controller private.
+Call it at the start of any function that requires authentication, or in the constructor if the whole controller is private.
 
 !!! tip "Public Controllers"
 
@@ -60,32 +60,32 @@ public function myPrivateFunction()
 {
     $this->checkLogin();
 
-    // Rest of code only executes if user logged in
+    // The rest of the code only runs if the user is logged in
     return view('my_view');
 }
 ```
 
 ### `checkUserInGroup($groups)`
 
-Restricts access exclusively to users belonging to specified groups.
+Restricts access to users who belong to the specified groups.
 
-- **Parameter**: Can be `string` with group name or `array` of strings for multiple groups.
+- **Parameter**: A `string` with the group name, or an `array` of strings for several groups.
 - **Behavior**:
-  - If condition not met, redirects to `admin/index` (or returns 403/401 if API).
-  - Internally calls `checkLogin()`, so calling both is unnecessary.
+  - If the condition is not met, it redirects to `admin/index` (or returns 403/401 for API requests).
+  - It calls `checkLogin()` internally, so you do not need to call both.
 
 **Usage:**
 
 ```php
 public function __construct()
 {
-    // Only allow Administrator access
+    // Only allow access to administrators
     $this->checkUserInGroup('Administrador');
 }
 
 public function managementReport()
 {
-    // Allow Admins or Management
+    // Allow administrators or management
     $this->checkUserInGroup(['Administrador', 'Management']);
 
     // Report logic...
@@ -96,15 +96,15 @@ public function managementReport()
 
 ## `Admin_aut` Service
 
-For granular logic inside views/controllers, access auth service directly.
+For finer-grained logic inside views or controllers, use the authentication service directly.
 
-Ideally invoke via `service('Admin_aut')`.
+The recommended way to get it is `service('Admin_aut')`.
 
 ### Main Functions
 
 #### `isLoggedIn()`
 
-Returns `true` if user logged in, `false` otherwise.
+Returns `true` if the user is logged in, and `false` otherwise.
 
 ```php
 if (service('Admin_aut')->isLoggedIn()) {
@@ -114,26 +114,26 @@ if (service('Admin_aut')->isLoggedIn()) {
 
 #### `id()`
 
-Returns current user ID (`usu_id`).
+Returns the current user's ID (`usu_id`).
 
 #### `name()`
 
-Returns current user full name (`usu_nombre`).
+Returns the current user's full name (`usu_nombre`).
 
 #### `isUserInGroup($group)`
 
-Evaluates if current user belongs to indicated group. Useful for hiding/showing buttons in views or conditional logic. Case-insensitive.
+Checks whether the current user belongs to the given group. It is useful for showing or hiding buttons in views, or for conditional logic. The comparison is case-insensitive.
 
 ```php
 // In controller or view
 if (service('Admin_aut')->isUserInGroup('Sales')) {
-    // Show create order button
+    // Show the create order button
 }
 ```
 
 #### `getField($fieldName)`
 
-Gets any field from `gen_usuarios` table for current user. Info lazily loaded on first request.
+Gets any field of the current user from the `gen_usuarios` table. The data is loaded lazily on the first request.
 
 ```php
 // Get email or custom field
@@ -149,8 +149,8 @@ Starting with Ragnos Framework v1.1+, the authentication subsystem is decoupled 
 ### Available Drivers
 
 1. **`native` (Default)**:
-   - Built on native PHP sessions and tables `gen_usuarios` and `gen_gruposdeusuarios`.
-   - Includes Bearer Token support for REST APIs against `usu_token`.
+   - Built on native PHP sessions and the `gen_usuarios` and `gen_gruposdeusuarios` tables.
+   - Includes Bearer token support for REST APIs, validated against `usu_token`.
    - Case-insensitive role comparison.
 2. **`shield`**:
    - Direct integration with [CodeIgniter 4 Shield](https://shield.codeigniter.com/).
@@ -191,13 +191,13 @@ To guarantee 100% backward compatibility, both drivers and the `Admin_aut` servi
 
 ## API Authentication
 
-System supports authentication for REST APIs transparently.
+The system supports REST API authentication transparently.
 
-1.  On login, secure token generated in `usu_token`.
-2.  Client must send token in `Authorization` header.
-3.  `checkLogin()` automatically detects API call (`isApiCall()`) and validates token instead of PHP session.
+1.  On login, a secure token is generated in `usu_token`.
+2.  The client must send the token in the `Authorization` header.
+3.  `checkLogin()` automatically detects API calls (`isApiCall()`) and validates the token instead of the PHP session.
 
-Allows using same controllers for web interface and mobile apps or decoupled frontends.
+This lets you use the same controllers for the web interface and for mobile apps or decoupled frontends.
 
 ## Complete Example
 
@@ -218,12 +218,12 @@ class Orders extends BaseController
 
     public function index()
     {
-        // 1. Ensure logged in
+        // 1. Make sure the user is logged in
         $this->checkLogin();
 
         $auth = service('Admin_aut');
 
-        // 2. Get user data
+        // 2. Get the user's data
         $data['user'] = $auth->name();
         $data['isAdmin'] = $auth->isUserInGroup('Administrador');
 
@@ -232,7 +232,7 @@ class Orders extends BaseController
 
     public function delete($id)
     {
-        // 3. Strict restriction: Only Admins can delete
+        // 3. Strict restriction: only administrators can delete
         $this->checkUserInGroup('Administrador');
 
         $model = new \App\Models\OrdersModel();

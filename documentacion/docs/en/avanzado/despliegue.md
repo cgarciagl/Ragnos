@@ -1,38 +1,38 @@
 # Deployment Guide (Production)
 
-This guide covers essential steps to take your Ragnos application from local development to production server.
+This guide covers the essential steps to take your Ragnos application from local development to a production server.
 
 ## 1. Environment Configuration
 
 !!! danger "Important"
 
-    In production, **never** run application in `development` mode. Exposes sensitive info and slows down app.
+    In production, **never** run the application in `development` mode. It exposes sensitive information and slows the application down.
 
-1. Edit `.env` file on server.
-2. Set environment variable:
+1. Edit the `.env` file on the server.
+2. Set the environment variable:
 
 ```ini
 CI_ENVIRONMENT = production
 ```
 
-Disables debug toolbar, hides detailed PHP errors, activates config caching.
+This disables the debug toolbar, hides detailed PHP errors, and enables configuration caching.
 
 ## 2. File System Permissions
 
-Ensure web server user (e.g. `www-data` on Apache/Nginx) has **write** permission on `writable` folder and subfolders.
+Make sure the web server user (e.g. `www-data` on Apache/Nginx) has **write** permission on the `writable` folder and its subfolders.
 
 ```bash
 chmod -R 775 writable/
 chown -R www-data:www-data writable/
 ```
 
-Other folders (`app`, `src`, `vendor` and the public folder `content`) should be read-only for web server for security, unless specific needs.
+For security, the other folders (`app`, `src`, `vendor`, and the public folder `content`) should be read-only for the web server, unless you have specific needs.
 
 ## 3. Database
 
-Update connection credentials in `.env` pointing to production database.
+Update the connection credentials in `.env` so they point to the production database.
 
-Ensure `app.baseURL` configured correctly with real domain (HTTPS recommended).
+Make sure `app.baseURL` is set correctly to your real domain (HTTPS is recommended).
 
 ```ini
 app.baseURL = 'https://my-production-system.com/'
@@ -64,7 +64,7 @@ For extra security you can disable Auto Routing (`$autoRoute = false`): Ragnos w
 
 ## 5. Remove Development Files
 
-Recommended not to upload unnecessary files to production:
+We recommend not uploading files that are unnecessary in production:
 
 - Tests (`tests/`)
 - Git files (`.git/`, `.gitignore`)
@@ -74,8 +74,8 @@ Recommended not to upload unnecessary files to production:
 ## Common Troubleshooting
 
 **404 Error on all pages except Home:**
-Usually web server config (Apache/Nginx) not redirecting requests to `index.php`.
-Ensure the public folder's `.htaccess` (`content/.htaccess`) is present and `mod_rewrite` active in Apache.
+This is usually because the web server (Apache/Nginx) is not routing requests to `index.php`.
+Make sure the public folder's `.htaccess` file (`content/.htaccess`) is present and that `mod_rewrite` is enabled in Apache.
 
 **Blank Page or 500 Error:**
-Check logs in `writable/logs/` for real error, as production mode hides them.
+Check the logs in `writable/logs/` for the real error, since production mode hides it.

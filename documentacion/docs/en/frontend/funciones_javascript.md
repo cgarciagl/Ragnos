@@ -228,7 +228,7 @@ System automatically detects global functions with specific naming patterns to e
 
 #### 1. Search Hooks (`_FieldNameOnSearch`)
 
-Executed automatically after a `RagnosSearch` control completes a selection.
+It runs automatically after a `RagnosSearch` control completes a selection.
 
 - **Pattern:** `_{input_id}OnSearch`
 - **Parameter:** Receives the control's DOM element (input).
@@ -252,7 +252,7 @@ function _productCodeOnSearch(control) {
 
 #### 2. Table Change Hooks (`_TableNameOnChange`)
 
-Executed when a managed table changes (e.g. adding/editing rows in detail table).
+It runs when a managed table changes (e.g. when rows are added or edited in a detail table).
 
 - **Pattern:** `_{table_id}OnChange`
 - **Parameter:** Receives table object or change context.

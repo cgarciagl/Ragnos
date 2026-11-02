@@ -1,55 +1,55 @@
 # 📊 Simple Report Generation (RSimpleLevelReport)
 
-The `RSimpleLevelReport` class allows generating reports in HTML table format quickly and structured directly from a data array. Ideal for displaying lists, financial summaries or any dataset requiring tabular presentation, with support for grouping levels (control breaks).
+The `RSimpleLevelReport` class lets you generate well-structured HTML table reports quickly, directly from a data array. It is ideal for displaying lists, financial summaries, or any data set that needs a tabular presentation, with support for grouping levels (control breaks).
 
 ## Main Features
 
-- Automatic HTML table generation with professional design.
+- Automatic generation of professionally styled HTML tables.
 - Support for multiple grouping levels (headers per group).
-- Automatic record total calculation.
+- Automatic calculation of record totals.
 - **Detection and calculation of sums for numeric columns (subtotals and grand totals).**
 - Easy integration with Ragnos views.
 
 ## Basic Usage Flow
 
-1.  Get data (usually from Model).
+1.  Get the data (usually from a model).
 2.  Instantiate `Ragnos\Controllers\RSimpleLevelReport`.
-3.  Configure report using `quickSetup`.
-4.  Render report and pass to view.
+3.  Configure the report with `quickSetup`.
+4.  Render the report and pass it to a view.
 
 ## Class API
 
 ### `quickSetup($title, $data, $listfields, $groups = [], $desc_filter = '')`
 
-Configures main report parameters at once.
+Configures the main report parameters in a single call.
 
-- **`$title`** (string): Main report title.
-- **`$data`** (array): Data set (array of associative arrays).
-- **`$listfields`** (array): List of fields to show.
-  - If simple array `['Field1', 'Field2']`, keys are searched in `$data`.
-  - Recommended for names to match data array keys.
-- **`$groups`** (array): (Optional) Grouping configuration.
+- **`$title`** (string): The main report title.
+- **`$data`** (array): The data set (an array of associative arrays).
+- **`$listfields`** (array): The list of fields to show.
+  - If it is a simple array such as `['Field1', 'Field2']`, those keys are looked up in `$data`.
+  - The names should match the keys of the data array.
+- **`$groups`** (array): (Optional) The grouping configuration.
   - Format: `['grouping_field' => ['label' => 'Group Label']]`.
-- **`$desc_filter`** (string): (Optional) Subtitle or description of applied filters.
+- **`$desc_filter`** (string): (Optional) A subtitle or description of the applied filters.
 
 ### `setShowTotals(bool $showTotals)`
 
-Enables or disables totals display (record count and financial sums) at the end of each group and report (default `true`).
+Enables or disables the totals (record count and sums) at the end of each group and of the report (default `true`).
 
 ### `setSummableFields(array $fields)`
 
-Explicitly defines which fields should be mathematically summed in table footers.
+Explicitly defines which fields are summed in the table footers.
 
-- **`$fields`** (array): List of field names (labels) containing numeric values.
-- _Note:_ If this method is not used, the class attempts to automatically detect summable fields by looking for names like 'Total', 'Price', 'Balance', 'Debt', etc.
+- **`$fields`** (array): The names (labels) of the fields that contain numeric values.
+- _Note:_ If you do not call this method, the class tries to detect summable fields by comparing the exact name of each column (case-sensitive) against a fixed list, for example `Total`, `Monto`, `Precio`, `Saldo`, `Deuda`, `amount`, or `MSRP`. If your columns have other names, list them with this method.
 
 ### `render($returnRoute = 'admin/index')`
 
-Returns rendered report HTML inside standard report view. Useful embedding in existing layouts.
+Returns the rendered report HTML inside the standard report view. Useful for embedding it in existing layouts.
 
 ### `generate()`
 
-Returns only HTML of table and headers, without full view wrapper. Useful for AJAX injections or custom views.
+Returns only the HTML of the table and its headers, without the full view wrapper. Useful for AJAX injection or custom views.
 
 ---
 
@@ -57,7 +57,7 @@ Returns only HTML of table and headers, without full view wrapper. Useful for AJ
 
 ### 1. Simple Report (Flat List)
 
-Example showing monthly sales list without grouping.
+An example that shows a list of monthly sales without grouping.
 
 ```php
 <?php
@@ -100,9 +100,9 @@ This example follows the real `Tienda\Reportes` controller of the demo store, so
 
 ### 2. Grouped Report (Control Break)
 
-Example generates product list grouped by **Category**. Every time category changes, new header is generated.
+This example generates a list of products grouped by **Category**. Every time the category changes, a new header is generated.
 
-**Important Requirement**: For grouping to work correctly, **input data must be sorted** by grouping field.
+**Important Requirement**: For grouping to work correctly, **the input data must be sorted** by the grouping field.
 
 ```php
 <?php
@@ -148,7 +148,7 @@ class Products extends BaseController
 
 ### 3. Multi-Level Report
 
-Possible to group by multiple levels (e.g. Country -> State -> City).
+You can group by multiple levels (e.g. Country -> State -> City).
 
 ```php
 $groups = [
@@ -175,8 +175,9 @@ $data = [
 $report = new RSimpleLevelReport();
 $report->quickSetup('Commission Report', $data, ['salesperson', 'sale', 'commission']);
 
-// Optional: Force which fields to sum (if not automatically detected)
-// $report->setSummableFields(['sale', 'commission']);
+// 'sale' and 'commission' are not among the names detected automatically,
+// so they are listed explicitly
+$report->setSummableFields(['sale', 'commission']);
 
 // Rendering will generate:
 // - A table with the data.
@@ -190,5 +191,5 @@ return $report->render();
 
 - **Inventory Lists**: Grouped by warehouse or category.
 - **Sales Reports**: Daily, monthly or grouped by salesperson.
-- **Audit**: System log lists.
-- **Financial Summaries**: Simple income/expense lists formatted.
+- **Audit**: Lists of system logs.
+- **Financial Summaries**: Simple, formatted income and expense lists.

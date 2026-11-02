@@ -1,92 +1,92 @@
 # ⏳ Long Running Processes with Server-Side Events (SSE)
 
-Ragnos framework includes implementation for handling long-running processes on server, allowing real-time progress updates to user browser using **Server-Side Events (SSE)**.
+The Ragnos framework includes an implementation for handling long-running processes on the server, sending real-time progress updates to the user's browser through **Server-Side Events (SSE)**.
 
-Ideal for tasks exceeding usual HTTP request timeout or where user needs visual feedback of progress (progress bars).
+This is ideal for tasks that exceed the usual HTTP request timeout, or where the user needs visual feedback on progress (progress bars).
 
 !!! warning "PHP Time Limits"
 
-    Although SSE keeps connection open, web server or PHP config (`max_execution_time`) might kill process if too long. Ensure `set_time_limit(0)` in logic if expecting very long processes.
+    Although SSE keeps the connection open, the web server or the PHP configuration (`max_execution_time`) might kill the process if it runs too long. Make sure your logic calls `set_time_limit(0)` if you expect very long processes.
 
 ## Architecture
 
-System based on two main components:
+The system is based on two main components:
 
-1.  **`Ragnos\Controllers\RProcessController`**: Base class for controllers executing processes.
-2.  **`process_helper.php`**: Helper containing functions managing SSE event flow (headers, sending data, buffer control, etc.).
+1.  **`Ragnos\Controllers\RProcessController`**: A base class for the controllers that run processes.
+2.  **`process_helper.php`**: A helper with the functions that manage the SSE event flow (headers, sending data, buffer control, etc.).
 
 ### Workflow
 
-1.  User accesses controller action rendering progress view (method `showProgress`).
-2.  View connects via JavaScript (`EventSource`) to `start` method of same controller.
-3.  `start` method executes heavy logic, sending progress events periodically via helper functions.
-4.  Upon completion, server sends finish event and closes connection.
+1.  The user opens the controller action that renders the progress view (the `showProgress` method).
+2.  The view connects through JavaScript (`EventSource`) to the `start` method of the same controller.
+3.  The `start` method runs the heavy logic, periodically sending progress events through the helper functions.
+4.  When it finishes, the server sends a completion event and closes the connection.
 
 ---
 
 ## RProcessController Class
 
-To create new process, must create controller extending `RProcessController`.
+To create a new process, create a controller that extends `RProcessController`.
 
-**Location**: `App\Controllers\` or any subfolder, provided namespace correct.
+**Location**: `App\Controllers\` or any subfolder, as long as the namespace is correct.
 
 ### Main Methods and Properties
 
 - **`$requireConfirmation`**: Boolean property (default `false`). If set to `true`, a confirmation dialog will appear before the process starts, warning the user.
-- **`$confirmationMessage`**: String property to set a custom message for the confirmation dialog if `$requireConfirmation` is `true`. Defaults to a generic framework defined message.
-- **`__construct()`**: Automatically loads `process_helper`.
-- **`showProgress()`**: Shows UI with progress bar. Automatically calculates URL of `start` endpoint based on class name.
-- **`start()`**: **Must be overridden**. Logic of long running process resides here.
+- **`$confirmationMessage`**: String property to set a custom message for the confirmation dialog if `$requireConfirmation` is `true`. By default, it uses a generic message defined in the framework's language files.
+- **`__construct()`**: Loads `process_helper` automatically.
+- **`showProgress()`**: Shows the user interface with the progress bar. It works out the URL of the `start` endpoint automatically from the class name.
+- **`start()`**: **Must be overridden**. This is where the logic of the long-running process lives.
 
 ---
 
 ## Helper Functions (process_helper)
 
-These functions available automatically inside extended controller.
+These functions are available automatically inside any controller that extends `RProcessController`.
 
 ### `processStart($title = 'Processing...')`
 
-Initializes SSE process.
+Initializes the SSE process.
 
-- Clears output buffers and sets `text/event-stream` headers.
-- Disables time limits (`set_time_limit(0)`) and memory in PHP to avoid timeouts.
-- Sends process title to client.
+- Clears the output buffers and sets the `text/event-stream` headers.
+- Disables PHP's time limit (`set_time_limit(0)`) and adjusts the memory settings to avoid timeouts.
+- Sends the process title to the client.
 
 ### `setProgress($percentage)`
 
-Updates progress bar to indicated percentage.
+Moves the progress bar to the given percentage.
 
-- `$percentage`: Integer (0-100).
+- `$percentage`: An integer (0-100).
 
 ### `setProgressText($text)`
 
-Updates descriptive text below progress bar. Useful to inform user what exactly is being done (e.g. "Processing row 45...").
+Updates the descriptive text below the progress bar. It is useful for telling the user exactly what is happening (e.g. "Processing row 45...").
 
 ### `setProgressOf($currentStep, $total)`
 
-Utility function calculating percentage automatically and calling `setProgress`.
+A utility function that calculates the percentage automatically and calls `setProgress`.
 
-- `$currentStep`: Current step (iterator).
-- `$total`: Total steps to perform.
+- `$currentStep`: The current step (iterator).
+- `$total`: The total number of steps.
 
 ### `endProcess($additionalData = null)`
 
-Finalizes process.
+Ends the process.
 
-- Calculates total execution time.
-- Sends finish event to client with optional data.
-- Ends script execution (`exit`).
+- Calculates the total execution time.
+- Sends the completion event to the client, with optional data.
+- Ends the script execution (`exit`).
 
 ---
 
 ## Common Applications
 
-Useful for:
+This functionality is useful for:
 
-- **Bulk Imports**: Uploading Excel/CSV files with thousands of records to DB.
-- **Report Generation**: Creating complex PDFs or large excels.
-- **Maintenance**: Cleanup tasks, price recalculation, cache or image regeneration.
-- **Mass Emails**: Sending newsletters requiring feedback per sent block.
+- **Bulk Imports**: Loading Excel/CSV files with thousands of records into the database.
+- **Report Generation**: Creating complex PDFs or large Excel files.
+- **Maintenance**: Cleanup tasks, price recalculation, or regenerating caches and images.
+- **Mass Emails**: Sending newsletters that report progress for each block sent.
 
 ---
 
@@ -94,7 +94,7 @@ Useful for:
 
 ### Example 1: Price Recalculation (Basic)
 
-Simulates process iterating over 100 items.
+This example simulates a process that iterates over 100 items.
 
 ```php
 <?php
@@ -139,7 +139,7 @@ class RecalculatePrices extends RProcessController
 
 ### Example 2: User Import (With Validation)
 
-More complex example simulating import where info validated.
+A more complex example that simulates an import where the data is validated.
 
 ```php
 <?php

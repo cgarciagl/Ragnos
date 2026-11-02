@@ -102,7 +102,7 @@ public function _filters()
 
 ### `addSearch(string $field, string $controller)`
 
-Allows linking a column of your query to another Ragnos controller.
+Lets you link a column of your query to another Ragnos controller.
 
 - This enables the magnifying glass icon to search for related values.
 

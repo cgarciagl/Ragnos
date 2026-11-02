@@ -41,7 +41,7 @@ Habilita o deshabilita la visualización de los totales (conteo de registros y s
 Define explícitamente qué campos deben ser sumados matemáticamente en los pies de tabla.
 
 - **`$fields`** (array): Lista de nombres de campos (etiquetas) que contienen valores numéricos.
-- _Nota:_ Si no se utiliza este método, la clase intentará detectar automáticamente campos sumables buscando nombres como 'Total', 'Precio', 'Saldo', 'Deuda', etc.
+- _Nota:_ Si no se utiliza este método, la clase intenta detectar los campos sumables comparando el nombre exacto de cada columna (respetando mayúsculas) con una lista fija, por ejemplo `Total`, `Monto`, `Precio`, `Saldo`, `Deuda`, `amount` o `MSRP`. Si tus columnas tienen otros nombres, indícalos con este método.
 
 ### `render($rutadevuelta = 'admin/index')`
 
@@ -173,8 +173,9 @@ $data = [
 $reporte = new RSimpleLevelReport();
 $reporte->quickSetup('Reporte de Comisiones', $data, ['vendedor', 'venta', 'comision']);
 
-// Opcional: Forzar qué campos sumar (si no se detectan automáticamente)
-// $reporte->setSummableFields(['venta', 'comision']);
+// 'venta' y 'comision' no están entre los nombres que se detectan solos,
+// así que se indican explícitamente
+$reporte->setSummableFields(['venta', 'comision']);
 
 // Al renderizar, se generará:
 // - Una tabla con los datos.

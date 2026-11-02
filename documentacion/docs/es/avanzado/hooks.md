@@ -3,7 +3,7 @@
 En Ragnos, los **hooks** permiten ejecutar lógica personalizada en distintos momentos del ciclo de vida de un dataset.
 Son el mecanismo principal para **extender comportamiento** sin romper el modelo declarativo.
 
-Los hooks se definen como métodos protegidos dentro del controlador que extiende `RDatasetController`.
+Los hooks se definen como métodos públicos dentro del controlador que extiende `RDatasetController`, igual que en la clase base. Si los declaras `protected`, PHP detiene la aplicación con un error fatal, porque un método heredado no puede ser menos visible que el original.
 
 !!! info "Concepto Clave"
 
@@ -59,7 +59,7 @@ Los hooks de tipo `_before*` (Insert y Update) reciben por referencia el array `
 
 ```php
 // Hook con manipulación de datos (por referencia)
-protected function _beforeInsert(&$data)
+public function _beforeInsert(&$data)
 {
     $data['creado_el'] = date('Y-m-d');
 }
@@ -96,7 +96,7 @@ if (fieldHasChanged('status')) {
 Si necesitas detener una operación debido a una regla de negocio, usa `raise()`. Esto detiene el proceso y muestra un mensaje de error al usuario, evitando que la operación CRUD continúe.
 
 ```php
-if (oldValue('locked') === true) {
+if (oldValue('locked') == 1) {
     raise('No se puede modificar un registro bloqueado.');
 }
 ```
@@ -126,7 +126,7 @@ Se ejecuta **antes** del INSERT. Recibe `$data` por referencia.
 - Validaciones personalizadas del payload.
 
 ```php
-protected function _beforeInsert(&$data)
+public function _beforeInsert(&$data)
 {
     // Asignar fecha de creación manual
     $data['created_at'] = date('Y-m-d H:i:s');
@@ -148,9 +148,10 @@ Se ejecuta **después** de un INSERT exitoso.
 - Envío de notificaciones de bienvenida.
 
 ```php
-protected function _afterInsert()
+public function _afterInsert()
 {
-    log_message('info', 'Nuevo usuario registrado con ID ' . $this->insertID());
+    // newValue() con la llave primaria devuelve el ID recién generado
+    log_message('info', 'Nuevo usuario registrado con ID ' . newValue('usu_id'));
 }
 ```
 
@@ -171,7 +172,7 @@ Se ejecuta **antes** del UPDATE. Recibe `$data` con los campos a actualizar.
 - Protección de campos críticos.
 
 ```php
-protected function _beforeUpdate(&$data)
+public function _beforeUpdate(&$data)
 {
     // Registrar quién modificó el registro
     $data['updated_by'] = session('user_id');
@@ -193,7 +194,7 @@ Se ejecuta **después** de un UPDATE exitoso.
 - Recalcular datos dependientes en otras tablas.
 
 ```php
-protected function _afterUpdate()
+public function _afterUpdate()
 {
     // Si cambió el límite de crédito, invalidar el cache de estados de cuenta
     if (fieldHasChanged('creditLimit')) {
@@ -218,15 +219,19 @@ Se ejecuta **antes** del DELETE.
 - Evitar borrado de registros del sistema.
 
 ```php
-protected function _beforeDelete()
+public function _beforeDelete()
 {
     // Proteger al usuario Administrador (ID 1)
-    if (oldValue('user_id') == 1) {
+    if (oldValue('usu_id') == 1) {
         raise('No se puede eliminar al usuario administrador principal.');
     }
 
-    // Verificar relaciones manualmente
-    if ($this->hasRelations()) {
+    // Verificar relaciones manualmente (por ejemplo, pedidos capturados por el usuario)
+    $pedidos = db_connect()->table('pedidos')
+        ->where('usuario_id', oldValue('usu_id'))
+        ->countAllResults();
+
+    if ($pedidos > 0) {
         raise('No se puede eliminar el registro porque tiene datos asociados.');
     }
 }
@@ -242,7 +247,7 @@ Se ejecuta **después** del DELETE.
 - Logs de actividad.
 
 ```php
-protected function _afterDelete()
+public function _afterDelete()
 {
     log_message('info', 'Registro eliminado correctamente.');
 }
@@ -282,17 +287,15 @@ public function _beforeUpdate(&$userData)
 
 Ragnos permite intervenir también en la interfaz visual generada.
 
-### `_customFormDataFooter()`
+### `_customFormDataFooter($id)`
 
-Inserta HTML o scripts al pie del formulario de edición.
+Inserta HTML o scripts al pie del formulario de edición. Recibe el identificador del registro que se está editando.
 
 ```php
-function _customFormDataFooter()
+protected function _customFormDataFooter($id)
 {
-    $id = $this->request->getPost($this->getIdField());
-
     // Retornamos una vista parcial
-    return view('Tienda/detalle_pedidos', ['orderId' => $id]);
+    return view('tienda/detalle_pedidos', ['orderId' => $id]);
 }
 ```
 
@@ -304,7 +307,9 @@ function _customFormDataFooter()
 
     **Mantén los hooks pequeños:** La lógica compleja debe ir a Servicios o Librerías.
 
-    **Documenta efectos secundarios:** Si un hook altera otra tabla, deja un comentario claro. - **Usa `raise()`** para errores de validación en lugar de excepciones duras.
+    **Documenta efectos secundarios:** Si un hook altera otra tabla, deja un comentario claro.
+
+    **Usa `raise()`** para errores de validación en lugar de excepciones duras.
 
 !!! fail "A evitar"
 

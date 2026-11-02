@@ -330,7 +330,7 @@ $this->addField('isActive', [
 
 ## 14. Pillbox Field (Tags)
 
-Allows managing a list of simple tags. It is stored in the database as a JSON array.
+Lets you manage a list of simple tags. It is stored in the database as a JSON array.
 
 ```php
 $this->addField('tags', [
@@ -347,7 +347,7 @@ $this->addField('tags', [
 
 ## 15. File Upload (`fileupload`)
 
-Allows uploading general files to the server.
+Lets you upload general files to the server.
 
 - **Persistence:** Saves the **relative path** of the file in the database (e.g., `assets/uploads/document.pdf`).
 - **Smart Validation:** Automatically detects insert vs. update scenarios.

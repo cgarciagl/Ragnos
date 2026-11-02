@@ -1,12 +1,12 @@
 # PHP Helpers and Utilities
 
-Ragnos includes a collection of global helper functions designed to speed up common tasks and improve application performance. Available throughout the framework automatically.
+Ragnos includes a collection of global helper functions designed to speed up common tasks and improve application performance. They are available automatically throughout the framework.
 
 ## Database and Cache Management
 
 ### `getCachedData()`
 
-Executes a raw SQL query and stores the result in the CodeIgniter 4 cache system. Ideal for heavy queries or reports not needing real-time data.
+Executes a raw SQL query and stores the result in the CodeIgniter 4 cache system. It is ideal for heavy queries or reports that do not need real-time data.
 
 ```php
 function getCachedData(string $sql, array $params = [], ?string $cacheKey = null, int $ttl = 86400): array
@@ -23,7 +23,7 @@ function getCachedData(string $sql, array $params = [], ?string $cacheKey = null
 
 #### Return
 
-Returns an associative `array` with query results.
+Returns an associative `array` with the query results.
 
 #### Usage Example
 
@@ -46,9 +46,9 @@ public function getMetrics()
 
 #### ⚠️ Warnings and Considerations
 
-1.  **Real Time Data:** Do not use for critical data changing constantly (e.g. real time inventory with high concurrency, bank balances). Data served can be up to `$ttl` seconds old.
-2.  **Cache Invalidation:** If using custom `$cacheKey` (like `'dashboard_metrics'`), you can manually clear that cache when data changes using `cache()->delete('dashboard_metrics')`. Automatic keys are harder to manually invalidate.
-3.  **Dev Environment:** Remember if developing and changing data, you might see old data until cache is cleared (`php spark cache:clear`).
+1.  **Real-Time Data:** Do not use it for critical data that changes constantly (e.g. real-time inventory with high concurrency, bank balances). The data served can be up to `$ttl` seconds old.
+2.  **Cache Invalidation:** If you use a custom `$cacheKey` (like `'dashboard_metrics'`), you can manually clear that cache when data changes using `cache()->delete('dashboard_metrics')`. Automatic keys are harder to manually invalidate.
+3.  **Development Environment:** Remember that while you develop and change data, you might see old data until the cache is cleared (`php spark cache:clear`).
 
 ### `queryToAssocArray()`
 
@@ -306,7 +306,7 @@ arrayToCSVFile($products, 'products_catalog.csv');
 
 ### `dbgConsola()`
 
-Sends PHP data directly to developer browser console. Uses `console.log` via script injection. **Only works in `development` environment.**
+Sends PHP data directly to the developer's browser console. Uses `console.log` via script injection. **Only works in `development` environment.**
 
 ```php
 function dbgConsola($data, string $label = 'dbgConsola')
@@ -322,7 +322,7 @@ dbgConsola($users, 'User List');
 
 ### `dbgDie()`
 
-Kills script execution and returns provided data in JSON format. Perfect for debugging API/AJAX calls.
+Stops the script and returns the provided data in JSON format. Perfect for debugging API/AJAX calls.
 
 ```php
 function dbgDie($data, int $statusCode = 200): never
@@ -334,7 +334,7 @@ function dbgDie($data, int $statusCode = 200): never
 
 ### `currency()`
 
-Formats numbers as currency respecting regional config (`locale`) without complex extensions.
+Formats numbers as currency according to the regional configuration (`locale`), without complex extensions.
 
 ```php
 function currency(float|int $number, bool $includeSymbol = true): string

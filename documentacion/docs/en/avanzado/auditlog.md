@@ -1,6 +1,6 @@
 # Audit Log
 
-Ragnos framework includes a native automatic system to log changes made to entity data. This system allows tracking who performed an action, when, from which IP address, and what specific data was modified, providing complete operation traceability.
+The Ragnos framework includes a native, automatic system that logs changes made to entity data. It lets you track who performed an action, when, from which IP address, and exactly which data was modified, providing complete traceability of every operation.
 
 ## Configuration
 
@@ -10,7 +10,7 @@ Ragnos framework includes a native automatic system to log changes made to entit
 
     All classes extending `RDatasetController` have audit logging **automatically enabled**.
 
-If you wish to **disable** audit for a specific dataset (e.g. temporary tables or massive movements not needing traceability), use `setEnableAudit(false)` method inside constructor.
+If you want to **disable** auditing for a specific dataset (e.g. temporary tables or bulk operations that do not need traceability), call the `setEnableAudit(false)` method inside the constructor.
 
 **Example:**
 
@@ -34,7 +34,7 @@ class TemporaryLogs extends RDatasetController
 
 ### Usage in Manual Models
 
-To activate audit log in custom model (not managed by Dataset), property `$enableAudit` must be set to `true`. Model must use `CrudOperationsTrait` (or inherit from base class using it, like `RdatasetModel`).
+To enable the audit log in a custom model (one not managed by a dataset), set its `$enableAudit` property to `true`. The model must use `CrudOperationsTrait` (or inherit from a base class that uses it, such as `RDatasetModel`).
 
 ```php
 class CustomersModel extends RdatasetModel
@@ -49,22 +49,22 @@ class CustomersModel extends RdatasetModel
 }
 ```
 
-By enabling this property, all insert, update, delete operations via controller/model will be intercepted and logged automatically without extra code in controllers.
+With this property enabled, every insert, update, and delete operation performed through the controller or model is intercepted and logged automatically, with no extra code in your controllers.
 
 ## Internal Functioning
 
-System works via `Ragnos\Models\Traits\CrudOperationsTrait`. When write action executes, system performs steps transparently:
+The system works through `Ragnos\Models\Traits\CrudOperationsTrait`. When a write operation runs, the system transparently performs these steps:
 
 ### 1. Insertion (INSERT)
 
-- Executed after record saved successfully.
-- Saves all new record data in log under key `new`.
+- It runs after the record has been saved successfully.
+- It saves all of the new record's data in the log under the `new` key.
 
 ### 2. Update (UPDATE)
 
-- Before saving, system compares current database values with sent new values.
-- Only if real differences exist, log save proceeds.
-- **Optimization**: Logs JSON containing only changed fields, with old value (`old`) and new (`new`).
+- Before saving, the system compares the current database values with the new values that were sent.
+- The log entry is saved only if there are real differences.
+- **Optimization**: It logs a JSON object containing only the changed fields, with their old (`old`) and new (`new`) values.
 
   _Example saved JSON:_
 
@@ -83,12 +83,12 @@ System works via `Ragnos\Models\Traits\CrudOperationsTrait`. When write action e
 
 ### 3. Deletion (DELETE)
 
-- Before deleting physical record, system queries for current data.
-- Saves full copy of deleted record data under key `deleted_data` to allow historical query or manual restore.
+- Before deleting the physical record, the system reads its current data.
+- It saves a full copy of the deleted record under the `deleted_data` key, so it can be consulted later or restored manually.
 
 ## Logged Information
 
-For each event, `AuditLogModel` (table `gen_audit_logs`) stores:
+For each event, `AuditLogModel` (the `gen_audit_logs` table) stores:
 
 | Field        | Description                                                                                                         |
 | ------------ | ------------------------------------------------------------------------------------------------------------------- |
@@ -102,11 +102,11 @@ For each event, `AuditLogModel` (table `gen_audit_logs`) stores:
 
 ## User Detection (Web and API)
 
-Audit mechanism is agnostic to request origin. Method `getCurrentUserId()` resolves actor identity as follows:
+The audit mechanism does not depend on where the request comes from. The `getCurrentUserId()` method resolves the user's identity as follows:
 
-1. **Web Session:** Checks if CodeIgniter session active (`session()->get('usu_id')`).
-2. **API Token:** If API call, inspects `Authorization` header. Extracts Bearer token and looks up user in `gen_usuarios`.
-3. **Fallback:** If user not identified, logs ID `0` (System/Anonymous).
+1. **Web Session:** It checks whether there is an active CodeIgniter session (`session()->get('usu_id')`).
+2. **API Token:** For API calls, it inspects the `Authorization` header, extracts the Bearer token, and looks up the user in `gen_usuarios`.
+3. **Fallback:** If the user cannot be identified, it logs ID `0` (System/Anonymous).
 
 ## Querying a Record's History (API)
 
