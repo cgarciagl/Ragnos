@@ -326,9 +326,17 @@ Descomenta y configura las credenciales de tu base de datos:</p>
 <p class="admonition-title">¿Usas HeidiSQL o phpMyAdmin?</p>
 <p>Selecciona la base de datos y usa <em>Archivo → Cargar archivo SQL</em> (HeidiSQL) o la pestaña <em>Importar</em> (phpMyAdmin). Los scripts no fijan el nombre de la base, así que se importan en la que tengas seleccionada.</p>
 </div>
+<div class="admonition tip">
+<p class="admonition-title">¿Usas Laragon en Windows?</p>
+<p>Abre la terminal desde el botón <em>Terminal</em> de Laragon: ya incluye <code>mysql</code> en el PATH (el usuario <code>root</code> no tiene contraseña; puedes omitir <code>-p</code>).</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Scripts de instalación</p>
+<p>Ambos scripts eliminan y vuelven a crear sus tablas. Úsalos para instalar, nunca sobre una base con datos que quieras conservar.</p>
+</div>
 <div class="admonition info">
 <p class="admonition-title">Con o sin demo</p>
-<p>Sin la demo, Ragnos arranca con un panel de inicio del sistema (usuarios, grupos y actividad reciente) y el menú solo muestra <em>Inicio</em> y <em>Administración</em>. Al importar <code>demo_classicmodels.sql</code> aparecen automáticamente los menús <em>Catálogos</em>, <em>Reportes</em> y <em>Procesos</em>, y el panel de ventas de la tienda. No hace falta cambiar ninguna configuración.</p>
+<p>Sin la demo, Ragnos arranca con un panel de inicio del sistema (usuarios, grupos y actividad reciente) y el menú solo muestra <em>Inicio</em> y <em>Administración</em>. Al importar <code>demo_classicmodels.sql</code> aparecen automáticamente los menús <em>Catálogos</em>, <em>Reportes</em> y <em>Procesos</em>, y el panel de ventas de la tienda. No hace falta cambiar ninguna configuración ni reiniciar: puedes cargar la demo en cualquier momento.</p>
 </div>
 <h3 id="4-verificar-permisos">4. Verificar Permisos</h3>
 <p>Asegúrate de que la carpeta <code>writable/</code> y sus subcarpetas tengan permisos de escritura por parte del servidor web.</p>

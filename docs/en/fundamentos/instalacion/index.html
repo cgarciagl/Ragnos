@@ -326,9 +326,17 @@ Uncomment and configure your database credentials:</p>
 <p class="admonition-title">Using HeidiSQL or phpMyAdmin?</p>
 <p>Select the database and use <em>File → Load SQL file</em> (HeidiSQL) or the <em>Import</em> tab (phpMyAdmin). The scripts don't hard-code the database name, so they import into whichever one is selected.</p>
 </div>
+<div class="admonition tip">
+<p class="admonition-title">Using Laragon on Windows?</p>
+<p>Open the terminal from Laragon's <em>Terminal</em> button: it already has <code>mysql</code> on the PATH (the <code>root</code> user has no password; you can omit <code>-p</code>).</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Installation scripts</p>
+<p>Both scripts drop and recreate their tables. Use them to install, never on a database with data you want to keep.</p>
+</div>
 <div class="admonition info">
 <p class="admonition-title">With or without the demo</p>
-<p>Without the demo, Ragnos starts with a system home panel (users, groups and recent activity) and the menu only shows <em>Home</em> and <em>Administration</em>. Importing <code>demo_classicmodels.sql</code> automatically brings up the <em>Catalogs</em>, <em>Reports</em> and <em>Processes</em> menus and the store's sales dashboard. No configuration change is needed.</p>
+<p>Without the demo, Ragnos starts with a system home panel (users, groups and recent activity) and the menu only shows <em>Home</em> and <em>Administration</em>. Importing <code>demo_classicmodels.sql</code> automatically brings up the <em>Catalogs</em>, <em>Reports</em> and <em>Processes</em> menus and the store's sales dashboard. No configuration change or restart is needed: you can load the demo at any time.</p>
 </div>
 <h3 id="4-verify-permissions">4. Verify Permissions</h3>
 <p>Ensure that the <code>writable/</code> folder and its subfolders have write permissions by the web server.</p>
