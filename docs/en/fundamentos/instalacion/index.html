@@ -205,6 +205,10 @@
               <ul class="nav flex-column">
               </ul>
             </li>
+            <li class="nav-item" data-bs-level="2"><a href="#migrating-from-earlier-versions-appthirdpartyragnos" class="nav-link">Migrating from Earlier Versions (app/ThirdParty/Ragnos)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
               </ul>
             </li>
         </ul>
@@ -213,11 +217,12 @@
                     <div class="col-md-9" role="main">
 
 <h1 id="installation-of-ragnos">Installation of Ragnos</h1>
-<p>This guide describes how to install Ragnos Framework from a distributed ZIP file.</p>
+<p>This guide describes how to install Ragnos Framework by cloning the repository (or downloading the ZIP) and installing its dependencies with Composer.</p>
 <h2 id="server-requirements">Server Requirements</h2>
 <p>Ragnos is based on <strong>CodeIgniter 4</strong>, so it shares its minimum requirements:</p>
 <ul>
-<li><strong>PHP</strong>: Version 8.2 or higher.</li>
+<li><strong>PHP</strong>: Version 8.1 or higher.</li>
+<li><strong>Composer</strong> 2.x.</li>
 <li><strong>PHP Extensions</strong>:</li>
 <li>intl</li>
 <li>mbstring</li>
@@ -228,35 +233,54 @@
 <li><strong>Database</strong>: MySQL (5.1+) or MariaDB.</li>
 </ul>
 <h2 id="installation-steps">Installation Steps</h2>
-<h3 id="1-download-and-extraction">1. Download and Extraction</h3>
+<h3 id="1-get-the-code-and-install-dependencies">1. Get the Code and Install Dependencies</h3>
 <ol>
-<li>Download the <a href="https://github.com/cgarciagl/Ragnos/archive/refs/heads/main.zip">.zip</a> file with the latest version of Ragnos.</li>
-<li>Extract the content into your web server directory (e.g., <code>c:\laragon\www\my-project</code> or <code>/var/www/html/my-project</code>).</li>
-<li>Verify that the <code>vendor</code> folder exists and contains dependencies. Ragnos already includes all necessary libraries.</li>
-</ol>
-<h3 id="2-environment-configuration">2. Environment Configuration</h3>
-<ol>
-<li>Locate the <code>env</code> file in the project root.</li>
-<li>Rename or copy it to <code>.env</code>.</li>
-<li>Open the <code>.env</code> file and adjust the following variables:</li>
+<li>
+<p>Clone the repository into your web server directory (e.g., <code>c:\laragon\www\my-project</code> or <code>/var/www/html/my-project</code>):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/cgarciagl/Ragnos.git<span class="w"> </span>my-project
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">cd</span><span class="w"> </span>my-project
+</code></pre></div>
+<p>If you prefer not to use Git, download the <a href="https://github.com/cgarciagl/Ragnos/archive/refs/heads/main.zip">.zip</a> and extract it in the same location.</p>
+</li>
+<li>
+<p>Install the dependencies (including CodeIgniter 4) with Composer:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>composer<span class="w"> </span>install
+</code></pre></div>
+<p>This step creates the <code>vendor/</code> folder. CodeIgniter is no longer copied into the repository; it is installed as a dependency, so you get its security patches with a simple <code>composer update</code>.</p>
+</li>
 </ol>
 <div class="admonition note">
-<p class="admonition-title">Watch the dot</p>
-<p>Make sure the file is named exactly <code>.env</code> (with the dot at the beginning) and not just <code>env</code>.</p>
+<p class="admonition-title">Where is the Ragnos core?</p>
+<p>The framework code lives in the <code>src/</code> folder under the <code>Ragnos\</code> namespace (for example, <code>Ragnos\Controllers\RDatasetController</code>). Your application stays in <code>app/</code>.</p>
+</div>
+<h3 id="2-environment-configuration">2. Environment Configuration</h3>
+<ol>
+<li>
+<p>Copy the <code>.env.example</code> template in the project root to <code>.env</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>cp<span class="w"> </span>.env.example<span class="w"> </span>.env
+</code></pre></div>
+</li>
+<li>
+<p>Open the <code>.env</code> file and adjust the following variables:</p>
+</li>
+</ol>
+<div class="admonition warning">
+<p class="admonition-title">Don't commit your <code>.env</code></p>
+<p>The <code>.env</code> file contains credentials and is excluded in <code>.gitignore</code>. Only version <code>.env.example</code>, without real passwords.</p>
 </div>
 <p><strong>Environment:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="na">CI_ENVIRONMENT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">development</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="na">CI_ENVIRONMENT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">development</span>
 </code></pre></div>
 <p><strong>Base URL:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="na">app.baseURL</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">'http://localhost/my-project/'</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="na">app.baseURL</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">'http://localhost/my-project/'</span>
 </code></pre></div>
 <p><strong>Database:</strong>
 Uncomment and configure your database credentials:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="na">database.default.hostname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">localhost</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="na">database.default.database</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">your_db_name</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="na">database.default.username</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">your_user</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="na">database.default.password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">your_password</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="na">database.default.DBDriver</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">MySQLi</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="na">database.default.hostname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">localhost</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="na">database.default.database</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">your_db_name</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="na">database.default.username</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">your_user</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="na">database.default.password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">your_password</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="na">database.default.DBDriver</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">MySQLi</span>
 </code></pre></div>
 <h3 id="3-import-database">3. Import Database</h3>
 <p>Ragnos requires certain base tables to function (users, sessions, permissions).</p>
@@ -277,7 +301,19 @@ Uncomment and configure your database credentials:</p>
 </div>
 <p>You should see the login screen.</p>
 <h3 id="6-access-and-demo-data">6. Access and Demo Data</h3>
-<p>To obtain default access credentials and learn more about the included sample data (<strong>Classicmodels</strong>), please refer to the <a href="../demo_database/">Demo Database</a> section.</p></div>
+<p>To obtain default access credentials and learn more about the included sample data (<strong>Classicmodels</strong>), please refer to the <a href="../demo_database/">Demo Database</a> section.</p>
+<h2 id="migrating-from-earlier-versions-appthirdpartyragnos">Migrating from Earlier Versions (<code>app/ThirdParty/Ragnos</code>)</h2>
+<p>If your project was created with an earlier Ragnos version, the core lived in <code>app/ThirdParty/Ragnos</code> under the <code>App\ThirdParty\Ragnos</code> namespace, and CodeIgniter was copied into <code>system/</code>. To upgrade:</p>
+<ol>
+<li>Replace the <code>app/ThirdParty/Ragnos</code> folder with the new <code>src/</code> folder and delete <code>system/</code>.</li>
+<li>Copy the changes from <code>composer.json</code> (the <code>codeigniter4/framework</code> dependency and the <code>"Ragnos\\": "src/"</code> autoload), <code>app/Config/Paths.php</code> and <code>app/Config/Autoload.php</code>, then run <code>composer install</code>.</li>
+<li>Search and replace <code>App\ThirdParty\Ragnos\</code> with <code>Ragnos\</code> in your code.</li>
+<li>If your <code>.env</code> was committed, remove it from the repository with <code>git rm --cached .env</code> and rotate any password that was ever pushed.</li>
+</ol>
+<div class="admonition info">
+<p class="admonition-title">Temporary compatibility</p>
+<p>Ragnos ships an alias loader (<code>src/Compat/legacy_namespace.php</code>) so existing <code>use App\ThirdParty\Ragnos\...</code> statements keep working while you migrate. It is deprecated and will be removed in a future major version.</p>
+</div></div>
             </div>
         </div>
 

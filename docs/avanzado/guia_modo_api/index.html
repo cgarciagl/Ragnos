@@ -365,7 +365,7 @@
 <li><code>start</code>: El índice de desplazamiento (Offset). Indica desde qué registro empezar (ej. <code>0</code> para la página 1, <code>10</code> para la página 2 si el límite es 10).</li>
 <li><code>length</code>: El número de registros a traer (Límite). Por defecto es 10.</li>
 <li><strong>Búsqueda:</strong></li>
-<li><code>search[value]</code>: Cadena de texto para realizar una búsqueda global en todos los campos habilitados del controlador.</li>
+<li><code>search[value]</code>: Cadena de texto para realizar una búsqueda global en todos los campos habilitados del controlador. Los caracteres <code>%</code> y <code>_</code> se buscan de forma literal (no actúan como comodines SQL).</li>
 <li><strong>Ordenamiento:</strong></li>
 <li><code>order[0][name]</code>: (Recomendado) El nombre de la columna por la cual deseas ordenar (ej. <code>fecha</code>, <code>nombre</code>, <code>id</code>).</li>
 <li><code>order[0][dir]</code>: La dirección del ordenamiento, ya sea <code>asc</code> (ascendente) o <code>desc</code> (descendente).</li>

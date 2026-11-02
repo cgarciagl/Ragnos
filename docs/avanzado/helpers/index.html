@@ -412,7 +412,7 @@
 <a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="x">{</span>
 <a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="x">    public function exportarExcel()</span>
 <a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="x">    {</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="x">        helper('App\ThirdParty\Ragnos\Helpers\xlsxfiles_helper');</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="x">        helper('Ragnos\Helpers\xlsxfiles_helper');</span>
 <a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
 <a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="x">        $db = \Config\Database::connect();</span>
 <a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="x">        $ventas = $db-&gt;table('orders')</span>
@@ -426,7 +426,7 @@
 <a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="x">}</span>
 </code></pre></div>
 <h5 id="2-guardar-en-servidor-local-para-adjuntar-a-un-email-o-proceso-batch">2. Guardar en Servidor Local (para adjuntar a un Email o proceso Batch)</h5>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="x">helper('App\ThirdParty\Ragnos\Helpers\xlsxfiles_helper');</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="x">helper('Ragnos\Helpers\xlsxfiles_helper');</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="x">$datos = [</span>
 <a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="x">    ['id' =&gt; 101, 'producto' =&gt; 'Monitor 4K', 'precio' =&gt; 450.00, 'stock' =&gt; 12, 'codigo' =&gt; '00123'],</span>
@@ -441,7 +441,7 @@
 <a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="x">}</span>
 </code></pre></div>
 <h5 id="3-opciones-avanzadas-de-estilos-y-filtros">3. Opciones Avanzadas de Estilos y Filtros</h5>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="x">helper('App\ThirdParty\Ragnos\Helpers\xlsxfiles_helper');</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="x">helper('Ragnos\Helpers\xlsxfiles_helper');</span>
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
 <a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="x">$clientes = [</span>
 <a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="x">    ['id' =&gt; 1, 'nombre' =&gt; 'Acme Corp', 'saldo' =&gt; 15200.75, 'activo' =&gt; true],</span>
@@ -574,9 +574,9 @@
 </table>
 <h4 id="ejemplos-de-uso_1">Ejemplos de Uso</h4>
 <h5 id="1-exportar-un-reporte-rsimplelevelreport-directamente">1. Exportar un Reporte RSimpleLevelReport Directamente</h5>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="x">helper('App\ThirdParty\Ragnos\Helpers\xlsxfiles_helper');</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="x">helper('Ragnos\Helpers\xlsxfiles_helper');</span>
 <a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="x">$reporte = new \App\ThirdParty\Ragnos\Controllers\RSimpleLevelReport();</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="x">$reporte = new \Ragnos\Controllers\RSimpleLevelReport();</span>
 <a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="x">$reporte-&gt;quickSetup('Mejores Empleados', $datos, ['employeeNumber', 'Empleado', 'TotalVentasTrimestre'], ['Oficina' =&gt; ['label' =&gt; 'Oficina']]);</span>
 <a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
 <a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="x">// Generar el HTML del reporte y convertirlo a un archivo .xlsx real</span>
@@ -585,7 +585,7 @@
 </code></pre></div>
 <h5 id="2-exportacion-nativa-desde-la-instancia-de-rsimplelevelreport">2. Exportación Nativa desde la Instancia de RSimpleLevelReport</h5>
 <p>El objeto <code>RSimpleLevelReport</code> incluye el método directo <code>exportToXLSX()</code>:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="x">$reporte = new \App\ThirdParty\Ragnos\Controllers\RSimpleLevelReport();</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="x">$reporte = new \Ragnos\Controllers\RSimpleLevelReport();</span>
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="x">$reporte-&gt;quickSetup('Margen por Línea', $datos, ['productLine', 'MargenTotal']);</span>
 <a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
 <a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="x">// Descarga directa en el navegador</span>
@@ -678,7 +678,7 @@
 </tbody>
 </table>
 <h4 id="ejemplo-de-uso_1">Ejemplo de Uso</h4>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="x">helper('App\ThirdParty\Ragnos\Helpers\csvfiles_helper');</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="x">helper('Ragnos\Helpers\csvfiles_helper');</span>
 <a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>
 <a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="x">$productos = [</span>
 <a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="x">    ['id' =&gt; 1, 'nombre' =&gt; 'Laptop Gamer', 'precio' =&gt; 1200.00],</span>

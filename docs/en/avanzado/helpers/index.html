@@ -412,7 +412,7 @@
 <a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="x">{</span>
 <a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="x">    public function exportExcel()</span>
 <a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="x">    {</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="x">        helper('App\ThirdParty\Ragnos\Helpers\xlsxfiles_helper');</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="x">        helper('Ragnos\Helpers\xlsxfiles_helper');</span>
 <a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
 <a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="x">        $db = \Config\Database::connect();</span>
 <a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="x">        $orders = $db-&gt;table('orders')</span>
@@ -426,7 +426,7 @@
 <a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="x">}</span>
 </code></pre></div>
 <h5 id="2-save-on-server-storage-for-email-attachments-or-batch-jobs">2. Save on Server Storage (for Email Attachments or Batch Jobs)</h5>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="x">helper('App\ThirdParty\Ragnos\Helpers\xlsxfiles_helper');</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="x">helper('Ragnos\Helpers\xlsxfiles_helper');</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="x">$data = [</span>
 <a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="x">    ['id' =&gt; 101, 'product' =&gt; '4K Monitor', 'price' =&gt; 450.00, 'stock' =&gt; 12, 'code' =&gt; '00123'],</span>
@@ -441,7 +441,7 @@
 <a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="x">}</span>
 </code></pre></div>
 <h5 id="3-advanced-styling-and-filter-options">3. Advanced Styling and Filter Options</h5>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="x">helper('App\ThirdParty\Ragnos\Helpers\xlsxfiles_helper');</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="x">helper('Ragnos\Helpers\xlsxfiles_helper');</span>
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
 <a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="x">$clients = [</span>
 <a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="x">    ['id' =&gt; 1, 'name' =&gt; 'Acme Corp', 'balance' =&gt; 15200.75, 'active' =&gt; true],</span>
@@ -574,9 +574,9 @@
 </table>
 <h4 id="usage-examples_1">Usage Examples</h4>
 <h5 id="1-export-an-rsimplelevelreport-directly">1. Export an RSimpleLevelReport Directly</h5>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="x">helper('App\ThirdParty\Ragnos\Helpers\xlsxfiles_helper');</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="x">helper('Ragnos\Helpers\xlsxfiles_helper');</span>
 <a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="x">$reporte = new \App\ThirdParty\Ragnos\Controllers\RSimpleLevelReport();</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="x">$reporte = new \Ragnos\Controllers\RSimpleLevelReport();</span>
 <a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="x">$reporte-&gt;quickSetup('Top Employees', $datos, ['employeeNumber', 'Empleado', 'TotalVentasTrimestre'], ['Oficina' =&gt; ['label' =&gt; 'Office']]);</span>
 <a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
 <a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="x">// Generate HTML and convert directly into a real .xlsx file</span>
@@ -585,7 +585,7 @@
 </code></pre></div>
 <h5 id="2-native-export-via-rsimplelevelreport-instance">2. Native Export via RSimpleLevelReport Instance</h5>
 <p>The <code>RSimpleLevelReport</code> object provides the direct <code>exportToXLSX()</code> method:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="x">$reporte = new \App\ThirdParty\Ragnos\Controllers\RSimpleLevelReport();</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="x">$reporte = new \Ragnos\Controllers\RSimpleLevelReport();</span>
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="x">$reporte-&gt;quickSetup('Margin by Line', $datos, ['productLine', 'MargenTotal']);</span>
 <a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
 <a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="x">// Direct download to user browser</span>
@@ -678,7 +678,7 @@
 </tbody>
 </table>
 <h4 id="usage-example_1">Usage Example</h4>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="x">helper('App\ThirdParty\Ragnos\Helpers\csvfiles_helper');</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="x">helper('Ragnos\Helpers\csvfiles_helper');</span>
 <a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>
 <a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="x">$products = [</span>
 <a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="x">    ['id' =&gt; 1, 'name' =&gt; 'Gaming Laptop', 'price' =&gt; 1200.00],</span>

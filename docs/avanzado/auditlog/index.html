@@ -265,7 +265,7 @@
 </code></pre></div>
 <p>Al habilitar esta propiedad, todas las operaciones de inserción, actualización y eliminación realizadas a través del controlador/modelo serán interceptadas y registradas automáticamente sin necesidad de código adicional en sus controladores.</p>
 <h2 id="funcionamiento-interno">Funcionamiento Interno</h2>
-<p>El sistema funciona a través de <code>App\ThirdParty\Ragnos\Models\Traits\CrudOperationsTrait</code>. Cuando se ejecuta una acción de escritura, el sistema realiza los siguientes pasos de manera transparente:</p>
+<p>El sistema funciona a través de <code>Ragnos\Models\Traits\CrudOperationsTrait</code>. Cuando se ejecuta una acción de escritura, el sistema realiza los siguientes pasos de manera transparente:</p>
 <h3 id="1-insercion-insert">1. Inserción (INSERT)</h3>
 <ul>
 <li>Se ejecuta después de que el registro ha sido guardado exitosamente.</li>

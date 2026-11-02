@@ -365,7 +365,7 @@
 <li><code>start</code>: The starting offset index to fetch records from (e.g., <code>0</code> for page 1, <code>10</code> for page 2 if the limit is 10).</li>
 <li><code>length</code>: The number of records to fetch per page (Limit). The default is 10.</li>
 <li><strong>Search:</strong></li>
-<li><code>search[value]</code>: A text string to search for matches across all enabled fields in the controller.</li>
+<li><code>search[value]</code>: A text string to search for matches across all enabled fields in the controller. The <code>%</code> and <code>_</code> characters are matched literally (they do not act as SQL wildcards).</li>
 <li><strong>Sorting:</strong></li>
 <li><code>order[0][name]</code>: (Recommended) The name of the database column to sort by (e.g., <code>date</code>, <code>name</code>, <code>id</code>).</li>
 <li><code>order[0][dir]</code>: The sorting direction, either <code>asc</code> (ascending) or <code>desc</code> (descending).</li>

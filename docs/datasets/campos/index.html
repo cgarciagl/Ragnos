@@ -328,8 +328,8 @@ Cada campo es una <strong>descripción declarativa</strong> de cómo un atributo
 </table>
 <div class="admonition tip">
 <p class="admonition-title">Uso del Enum <code>RFieldType</code> (PHP 8.1+)</p>
-<p>Además de utilizar cadenas de texto (ej. <code>'type' =&gt; 'select'</code>), Ragnos soporta el Enum respaldado <code>App\ThirdParty\Ragnos\Models\Fields\RFieldType</code> para asignación de tipos con autocompletado en IDEs:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="x">use App\ThirdParty\Ragnos\Models\Fields\RFieldType;</span>
+<p>Además de utilizar cadenas de texto (ej. <code>'type' =&gt; 'select'</code>), Ragnos soporta el Enum respaldado <code>Ragnos\Models\Fields\RFieldType</code> para asignación de tipos con autocompletado en IDEs:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="x">use Ragnos\Models\Fields\RFieldType;</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="x">$this-&gt;addField('status', [</span>
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="x">    'label'   =&gt; 'Estado',</span>
@@ -677,7 +677,7 @@ Simplemente agrega la clave <code>tab</code> al array de configuracion del campo
 <p>Edita <code>app/Config/Validation.php</code> para incluir tu nueva clase en el array <code>$ruleSets</code>:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="x">public array $ruleSets = [</span>
 <a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="x">    // ... reglas de CodeIgniter existentes</span>
-<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="x">    \App\ThirdParty\Ragnos\Controllers\RagnosRules::class, // No la quites: implementa 'readonly'</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="x">    \Ragnos\Controllers\RagnosRules::class, // No la quites: implementa 'readonly'</span>
 <a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="x">    \App\Validation\MyCustomRules::class,</span>
 <a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="x">];</span>
 </code></pre></div>

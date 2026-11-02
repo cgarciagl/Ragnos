@@ -265,7 +265,7 @@
 </code></pre></div>
 <p>By enabling this property, all insert, update, delete operations via controller/model will be intercepted and logged automatically without extra code in controllers.</p>
 <h2 id="internal-functioning">Internal Functioning</h2>
-<p>System works via <code>App\ThirdParty\Ragnos\Models\Traits\CrudOperationsTrait</code>. When write action executes, system performs steps transparently:</p>
+<p>System works via <code>Ragnos\Models\Traits\CrudOperationsTrait</code>. When write action executes, system performs steps transparently:</p>
 <h3 id="1-insertion-insert">1. Insertion (INSERT)</h3>
 <ul>
 <li>Executed after record saved successfully.</li>

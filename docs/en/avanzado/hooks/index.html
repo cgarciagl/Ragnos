@@ -315,6 +315,10 @@ Are main mechanism to <strong>extend behavior</strong> without breaking declarat
 </tr>
 </tbody>
 </table>
+<div class="admonition tip">
+<p class="admonition-title">Newly inserted ID in <code>_afterInsert()</code></p>
+<p>After an insert, <code>newValue('&lt;primary key&gt;')</code> returns the generated ID. Ragnos exposes it through the <code>setInputOverride()</code> helper instead of writing to <code>$_POST</code>. If your own hooks need to share a computed value with the rest of the save, use <code>setInputOverride('field', $value)</code>; values are cleared at the start of every save.</p>
+</div>
 <h3 id="3-change-detection-fieldhaschanged">3. Change Detection: <code>fieldHasChanged()</code></h3>
 <p>Especially useful in updates to execute actions only if specific field modified.</p>
 <div class="highlight"><pre><span></span><code><a href="#__codelineno-1-1" id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="x">if (fieldHasChanged('status')) {</span>
