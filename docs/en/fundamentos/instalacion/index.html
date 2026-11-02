@@ -282,15 +282,54 @@ Uncomment and configure your database credentials:</p>
 <a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="na">database.default.password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">your_password</span>
 <a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="na">database.default.DBDriver</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">MySQLi</span>
 </code></pre></div>
-<h3 id="3-import-database">3. Import Database</h3>
-<p>Ragnos requires certain base tables to function (users, sessions, permissions).</p>
+<h3 id="3-create-the-database">3. Create the Database</h3>
+<p>Ragnos splits its tables into two scripts inside <code>sampledatabase/</code>:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Script</th>
+<th style="text-align: left;">Contents</th>
+<th style="text-align: center;">Required?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>ragnos_base.sql</code></td>
+<td style="text-align: left;">System tables: users, groups, audit log and sessions. Includes the <code>admin</code> user.</td>
+<td style="text-align: center;">✅</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>demo_classicmodels.sql</code></td>
+<td style="text-align: left;">Scale-model store demo (<strong>Classicmodels</strong>): catalogs, reports and sales dashboard.</td>
+<td style="text-align: center;">Optional</td>
+</tr>
+</tbody>
+</table>
 <ol>
-<li>Create an empty database in your manager (phpMyAdmin, HeidiSQL, etc.).</li>
-<li>Import the SQL files located in the <code>sampledatabase/</code> folder:</li>
-<li>Run <code>ragnos_mariadb.sql</code> first (or the main dump containing the base structure).</li>
-<li>Run <code>ci_sessions.sql</code> for the sessions table.</li>
-<li>(Optional) Run <code>mysqlsampledatabase.sql</code> if you want to load the <strong>Classicmodels</strong> sample data. See <a href="../demo_database/">Demo Database</a> for more details.</li>
+<li>
+<p>Create an empty database with the same name you set in <code>database.default.database</code> (<code>ragnos</code> by default):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">ragnos</span><span class="w"> </span><span class="nb">CHARACTER</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">utf8mb4</span><span class="w"> </span><span class="k">COLLATE</span><span class="w"> </span><span class="n">utf8mb4_unicode_ci</span><span class="p">;</span>
+</code></pre></div>
+</li>
+<li>
+<p>Import the system tables:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>mysql<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>ragnos<span class="w"> </span>&lt;<span class="w"> </span>sampledatabase/ragnos_base.sql
+</code></pre></div>
+</li>
+<li>
+<p>(Optional) Import the demo to explore Ragnos with real data. See <a href="../demo_database/">Demo Database</a> for its structure.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>mysql<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>ragnos<span class="w"> </span>&lt;<span class="w"> </span>sampledatabase/demo_classicmodels.sql
+</code></pre></div>
+</li>
 </ol>
+<div class="admonition tip">
+<p class="admonition-title">Using HeidiSQL or phpMyAdmin?</p>
+<p>Select the database and use <em>File → Load SQL file</em> (HeidiSQL) or the <em>Import</em> tab (phpMyAdmin). The scripts don't hard-code the database name, so they import into whichever one is selected.</p>
+</div>
+<div class="admonition info">
+<p class="admonition-title">With or without the demo</p>
+<p>Without the demo, Ragnos starts with a system home panel (users, groups and recent activity) and the menu only shows <em>Home</em> and <em>Administration</em>. Importing <code>demo_classicmodels.sql</code> automatically brings up the <em>Catalogs</em>, <em>Reports</em> and <em>Processes</em> menus and the store's sales dashboard. No configuration change is needed.</p>
+</div>
 <h3 id="4-verify-permissions">4. Verify Permissions</h3>
 <p>Ensure that the <code>writable/</code> folder and its subfolders have write permissions by the web server.</p>
 <h3 id="5-run">5. Run</h3>

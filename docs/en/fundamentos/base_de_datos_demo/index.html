@@ -155,6 +155,10 @@
 <ul class="nav flex-column">
 <li class="nav-item" data-bs-level="1"><a class="nav-link" href="#base-de-datos-demo-classicmodels">Base de Datos Demo (Classicmodels)</a>
 <ul class="nav flex-column">
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#instalacion">📥 Instalación</a>
+<ul class="nav flex-column">
+</ul>
+</li>
 <li class="nav-item" data-bs-level="2"><a class="nav-link" href="#estructura-de-la-base-de-datos">📊 Estructura de la Base de Datos</a>
 <ul class="nav flex-column">
 </ul>
@@ -176,6 +180,15 @@
 <h1 id="base-de-datos-demo-classicmodels">Base de Datos Demo (Classicmodels)</h1>
 <p>Ragnos incluye la base de datos de ejemplo <strong>Classicmodels</strong>, una implementación estándar conocida en el mundo del desarrollo para probar funcionalidades de bases de datos relacionales.</p>
 <p>Esta base de datos modela un negocio de <strong>venta de modelos a escala de coches clásicos</strong>. Contiene información típica de un negocio: clientes, productos, pedidos, pagos, empleados y oficinas.</p>
+<h2 id="instalacion">📥 Instalación</h2>
+<p>La demo es opcional y se instala sobre las tablas del sistema (<code>ragnos_base.sql</code>):</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-0-1" id="__codelineno-0-1" name="__codelineno-0-1"></a>mysql<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>ragnos<span class="w"> </span>&lt;<span class="w"> </span>sampledatabase/demo_classicmodels.sql
+</code></pre></div>
+<p>Ragnos detecta las tablas automáticamente: al recargar la aplicación aparecen los menús <em>Catálogos</em>, <em>Reportes</em> y <em>Procesos</em> y el panel de ventas. El script incluye las columnas <code>idPayment</code> (en <code>payments</code>) e <code>idDetail</code> (en <code>orderdetails</code>), que los controladores de la demo usan como llave.</p>
+<div class="admonition warning">
+<p class="admonition-title">Solo para desarrollo</p>
+<p>El script elimina y vuelve a crear las tablas de la demo. No lo ejecutes sobre una base con datos que quieras conservar.</p>
+</div>
 <h2 id="estructura-de-la-base-de-datos">📊 Estructura de la Base de Datos</h2>
 <p>La base de datos consta de 8 tablas relacionadas entre sí. A continuación se presenta un diagrama Entidad-Relación (ER) que ilustra la estructura:</p>
 <div class="mermaid">erDiagram

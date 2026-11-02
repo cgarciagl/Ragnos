@@ -165,6 +165,10 @@
 <ul class="nav flex-column">
 <li class="nav-item" data-bs-level="1"><a class="nav-link" href="#demo-database-classicmodels">Demo Database (Classicmodels)</a>
 <ul class="nav flex-column">
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#installation">📥 Installation</a>
+<ul class="nav flex-column">
+</ul>
+</li>
 <li class="nav-item" data-bs-level="2"><a class="nav-link" href="#database-structure">📊 Database Structure</a>
 <ul class="nav flex-column">
 </ul>
@@ -186,6 +190,15 @@
 <h1 id="demo-database-classicmodels">Demo Database (Classicmodels)</h1>
 <p>Ragnos includes the <strong>Classicmodels</strong> sample database, a well-known standard implementation in the development world for testing relational database functionalities.</p>
 <p>This database models a <strong>retailer of scale models of classic cars</strong>. It contains typical business information: customers, products, orders, payments, employees, and offices.</p>
+<h2 id="installation">📥 Installation</h2>
+<p>The demo is optional and is installed on top of the system tables (<code>ragnos_base.sql</code>):</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-0-1" id="__codelineno-0-1" name="__codelineno-0-1"></a>mysql<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>ragnos<span class="w"> </span>&lt;<span class="w"> </span>sampledatabase/demo_classicmodels.sql
+</code></pre></div>
+<p>Ragnos detects the tables automatically: after reloading the application, the <em>Catalogs</em>, <em>Reports</em> and <em>Processes</em> menus and the sales dashboard appear. The script includes the <code>idPayment</code> (in <code>payments</code>) and <code>idDetail</code> (in <code>orderdetails</code>) columns that the demo controllers use as keys.</p>
+<div class="admonition warning">
+<p class="admonition-title">Development only</p>
+<p>The script drops and recreates the demo tables. Don't run it against a database with data you want to keep.</p>
+</div>
 <h2 id="database-structure">📊 Database Structure</h2>
 <p>The database consists of 8 related tables. Below is an Entity-Relationship (ER) diagram illustrating the structure:</p>
 <div class="mermaid">erDiagram
