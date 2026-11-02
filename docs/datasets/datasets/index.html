@@ -237,10 +237,6 @@
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#relaciones-entre-datasets" class="nav-link">Relaciones entre datasets</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
             <li class="nav-item" data-bs-level="2"><a href="#relaciones-entre-datasets-addsearch" class="nav-link">Relaciones entre datasets (addSearch)</a>
               <ul class="nav flex-column">
               </ul>
@@ -258,6 +254,10 @@
               </ul>
             </li>
             <li class="nav-item" data-bs-level="2"><a href="#que-no-se-escribe-en-ragnos" class="nav-link">Qué NO se escribe en Ragnos</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#buenas-practicas-y-recomendaciones" class="nav-link">Buenas Prácticas y Recomendaciones</a>
               <ul class="nav flex-column">
               </ul>
             </li>
@@ -459,10 +459,6 @@ Para una referencia completa de todas las opciones y tipos de campo, consulta la
 <li>Readonly / Hidden: visible en grilla, no editable.</li>
 <li>Calculado: <code>query =&gt; "concat(...)"</code> (no se persiste).</li>
 </ul>
-<h2 id="relaciones-entre-datasets">Relaciones entre datasets</h2>
-<ul>
-<li>Para relaciones más complejas tipo cabecera-lineas, consulta la guía de <a href="../maestro-detalle/">Maestro-Detalle</a>.</li>
-</ul>
 <h2 id="relaciones-entre-datasets-addsearch">Relaciones entre datasets (<code>addSearch</code>)</h2>
 <ul>
 <li>Para relaciones más complejas tipo cabecera-lineas, consulta la guía de <a href="../maestro-detalle/">Maestro-Detalle</a>.</li>
@@ -508,10 +504,10 @@ Si en el dataset de <strong>Clientes</strong> (<code>Tienda/Clientes</code>) def
 </div>
 <ul>
 <li>Puede incluir campos virtuales y etiquetas.</li>
-<li><code>setSortingFields([...])</code> para ordenar por defecto.</li>
+<li><code>setSortingField('campo', 'desc')</code> define el ordenamiento inicial.</li>
 </ul>
 <h2 id="ciclo-de-vida-hooks">Ciclo de vida (Hooks)</h2>
-<p>Puedes intervenir en el ciclo de vida de los datos y de la interfaz mediante métodos protegidos.</p>
+<p>Puedes intervenir en el ciclo de vida de los datos y de la interfaz mediante hooks: métodos públicos como <code>_beforeInsert()</code>, <code>_afterUpdate()</code> o <code>_filters()</code> que defines en tu dataset.</p>
 <p>👉 <strong><a href="../../avanzado/hooks/">Ver la Guía Completa de Hooks y Eventos</a></strong></p>
 <h2 id="tipos-de-campo-soportados-resumen">Tipos de campo soportados (resumen)</h2>
 <ul>
@@ -521,27 +517,24 @@ Si en el dataset de <strong>Clientes</strong> (<code>Tienda/Clientes</code>) def
 <h2 id="que-no-se-escribe-en-ragnos">Qué NO se escribe en Ragnos</h2>
 <p>Con <code>RDatasetController</code> no necesitas:</p>
 <ul>
-<li>Modelos CRUD manuales</li>
-<li>Controladores con SQL explícito</li>
-<li>
-<p>Formularios y validaciones duplicadas
-  Todo se genera desde la metadata del dataset.
-  Buenas Prácticas y Recomendaciones</p>
-</li>
-<li>
-<p><strong>Diseño First</strong>: Diseña primero la base de datos de manera sólida.</p>
-</li>
+<li>Modelos CRUD manuales.</li>
+<li>Controladores con SQL explícito.</li>
+<li>Formularios y validaciones duplicadas.</li>
+</ul>
+<p>Todo se genera desde la metadata del dataset.</p>
+<h2 id="buenas-practicas-y-recomendaciones">Buenas Prácticas y Recomendaciones</h2>
+<ul>
+<li><strong>Diseño First</strong>: Diseña primero la base de datos de manera sólida.</li>
 <li><strong>Un dataset = una tabla</strong>: Cada dataset debe gestionar una tabla principal. Si necesitas vistas complejas, crea un <code>RQueryController</code>.</li>
 <li><strong>Campos Virtuales</strong>: Usa <code>query</code> en <code>addField</code> para conciliar columnas (ej. nombre completo) en buscar/listar sin desnormalizar la BD.</li>
 <li><strong>Centralización</strong>: Si una validación es regla de negocio, ponla en <code>rules</code> del dataset, no en el cliente.</li>
-<li><strong>Desacoplamiento</strong>: Usa los hooks para limpiar caché o loguear, pero evita poner lógica de negocio pesada directamente en el controlador; llama a Servicios o Libreríaa relaciones reutilizables.</li>
-<li>Centraliza lógica en hooks.</li>
+<li><strong>Desacoplamiento</strong>: Usa los hooks para limpiar caché o registrar eventos, pero evita poner lógica de negocio pesada directamente en el controlador; llama a servicios o librerías reutilizables.</li>
 </ul>
 <h2 id="proximos-pasos">Próximos pasos</h2>
 <ul>
 <li>Crear nuevos datasets siguiendo este patrón.</li>
 <li>Extender validadores y tipos.</li>
-<li>Integrar reportes y optimizar cache por eventos.</li>
+<li>Integrar reportes y optimizar caché por eventos.</li>
 <li>Mantener la metadata consistente para escalabilidad.</li>
 </ul></div>
             </div>

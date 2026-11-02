@@ -245,6 +245,26 @@
               <ul class="nav flex-column">
               </ul>
             </li>
+            <li class="nav-item" data-bs-level="2"><a href="#lifecycle-hooks" class="nav-link">Lifecycle (Hooks)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#supported-field-types-summary" class="nav-link">Supported Field Types (Summary)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#what-you-do-not-write-in-ragnos" class="nav-link">What You Do NOT Write in Ragnos</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#best-practices-and-recommendations" class="nav-link">Best Practices and Recommendations</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#next-steps" class="nav-link">Next Steps</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
               </ul>
             </li>
         </ul>
@@ -272,11 +292,11 @@
 <h2 id="create-a-dataset">Create a Dataset</h2>
 <p>A dataset is a controller that extends <code>RDatasetController</code>. All configuration is done in the constructor.</p>
 <h3 id="minimal-example">Minimal Example</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="x">namespace App\Controllers\Store;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="x">namespace App\Controllers\Tienda;</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="x">use Ragnos\Controllers\RDatasetController;</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="x">class Customers extends RDatasetController</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="x">class Clientes extends RDatasetController</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="x">{</span>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="x">    public function __construct()</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="x">    {</span>
@@ -298,7 +318,7 @@
 <a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="x">        ]);</span>
 <a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>
 <a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="x">        // Calculated field</span>
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="x">        $this-&gt;addField('Contact', [</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="x">        $this-&gt;addField('Contacto', [</span>
 <a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="x">            'label' =&gt; 'Contact',</span>
 <a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="x">            'rules' =&gt; 'readonly',</span>
 <a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="x">            'query' =&gt; "concat(contactLastName, ', ', contactFirstName)",</span>
@@ -306,12 +326,12 @@
 <a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a><span class="x">        ]);</span>
 <a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>
 <a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a><span class="x">        // Relationships</span>
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a><span class="x">        $this-&gt;addSearch('salesRepEmployeeNumber', 'Store\\Employees');</span>
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a><span class="x">        $this-&gt;addSearch('salesRepEmployeeNumber', 'Tienda\\Empleados');</span>
 <a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>
 <a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a><span class="x">        // Grid</span>
 <a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a><span class="x">        $this-&gt;setTableFields([</span>
 <a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a><span class="x">            'customerName',</span>
-<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a><span class="x">            'Contact',</span>
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a><span class="x">            'Contacto',</span>
 <a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a><span class="x">            'salesRepEmployeeNumber'</span>
 <a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a><span class="x">        ]);</span>
 <a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a><span class="x">    }</span>
@@ -427,6 +447,17 @@ For a complete reference of all options and field types, consult the <a href="..
 <p>Common options:</p>
 <ul>
 <li><code>label</code>: visible text.</li>
+<li><code>rules</code>: validation rules (CI4 + Ragnos validators such as <code>money</code>, <code>readonly</code>).</li>
+<li><code>type</code>: <code>text</code>, <code>hidden</code>, etc.</li>
+<li><code>query</code>: SQL expression for virtual fields.</li>
+</ul>
+<p>Examples:</p>
+<ul>
+<li>Simple field: required, text.</li>
+<li>Numeric field: <code>numeric</code>.</li>
+<li>Money: <code>rules =&gt; 'required|money'</code>.</li>
+<li>Readonly / Hidden: visible in the grid, not editable.</li>
+<li>Calculated: <code>query =&gt; "concat(...)"</code> (not persisted).</li>
 </ul>
 <h2 id="relationships-between-datasets-addsearch">Relationships between Datasets (<code>addSearch</code>)</h2>
 <ul>
@@ -436,18 +467,18 @@ For a complete reference of all options and field types, consult the <a href="..
 <h3 id="intelligent-contextual-search">Intelligent Contextual Search</h3>
 <p>By linking a field to another dataset, Ragnos automatically enables <strong>contextual searches</strong>. This means the search criteria is not limited to just the ID or the main field, but extends to <strong>all visible fields</strong> defined in the <code>setTableFields()</code> of the related dataset.</p>
 <p><strong>Example:</strong>
-Imagine you are in the <strong>Payments</strong> module (<code>Store/Payments</code>) and need to select a <strong>Customer</strong>.
-If in the <strong>Customers</strong> dataset (<code>Store/Customers</code>) you defined:</p>
+Imagine you are in the <strong>Payments</strong> module (<code>Tienda/Pagos</code>) and need to select a <strong>Customer</strong>.
+If in the <strong>Customers</strong> dataset (<code>Tienda/Clientes</code>) you defined:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="x">$this-&gt;setTableFields([</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="x">    'customerName',</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="x">    'Contact', // Calculated field: concat(contactLastName, ', ', contactFirstName)</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="x">    'Contacto', // Calculated field: concat(contactLastName, ', ', contactFirstName)</span>
 <a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="x">    'salesRepEmployeeNumber' // Sales Rep</span>
 <a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="x">]);</span>
 </code></pre></div>
 <p>When searching for a customer from the Payments form, you can type:</p>
 <ul>
 <li>Part of the <strong>Company Name</strong> (<code>customerName</code>).</li>
-<li>The <strong>Contact Name</strong> (<code>Contact</code>).</li>
+<li>The <strong>Contact Name</strong> (<code>Contacto</code>).</li>
 <li>Or even the <strong>Sales Rep Name</strong>.</li>
 </ul>
 <p>Ragnos will search for matches in any of those fields defined in the target dataset, offering a much more flexible and powerful user experience without writing additional SQL.</p>
@@ -469,11 +500,42 @@ If in the <strong>Customers</strong> dataset (<code>Store/Customers</code>) you 
 </ul>
 <div class="admonition info">
 <p class="admonition-title">Importance of the first field</p>
-<p>The <strong>first field</strong> added in <code>setTableFields()</code> is very relevant, as it is the field that will be used as the <strong>"description" of the record</strong>. This is the text that appears when selecting the record in search controls, or in dropdowns associated with this catalog. Therefore, it is important to select it very well. It can be a calculated field that combines two or more fields, as in the case of the "employees" catalog where <code>fullName</code> (or <code>nombreCompleto</code>) is used as the first field.</p>
+<p>The <strong>first field</strong> added in <code>setTableFields()</code> is very relevant, as it is the field that will be used as the <strong>"description" of the record</strong>. This is the text that appears when selecting the record in search controls, or in dropdowns associated with this catalog. Therefore, it is important to select it very well. It can be a calculated field that combines two or more fields, as in the case of the "employees" catalog where <code>nombreCompleto</code> (full name) is used as the first field.</p>
 </div>
 <ul>
 <li>Can include virtual fields and labels.</li>
-<li><code>setSortingFields([...])</code> for default sorting.</li>
+<li><code>setSortingField('field', 'desc')</code> sets the initial sorting.</li>
+</ul>
+<h2 id="lifecycle-hooks">Lifecycle (Hooks)</h2>
+<p>You can step into the data and interface lifecycle through hooks: public methods such as <code>_beforeInsert()</code>, <code>_afterUpdate()</code>, or <code>_filters()</code> that you define in your dataset.</p>
+<p>👉 <strong><a href="../../avanzado/hooks/">See the Complete Hooks and Events Guide</a></strong></p>
+<h2 id="supported-field-types-summary">Supported Field Types (Summary)</h2>
+<ul>
+<li>Text, Numeric, Money (<code>money</code> validator), Readonly, Hidden, Calculated (<code>query</code>), Relationship (via <code>addSearch</code>), Primary key.</li>
+<li>Fields with <code>query</code> or without a physical column are not inserted or updated; they are only calculated when reading.</li>
+</ul>
+<h2 id="what-you-do-not-write-in-ragnos">What You Do NOT Write in Ragnos</h2>
+<p>With <code>RDatasetController</code> you do not need:</p>
+<ul>
+<li>Manual CRUD models.</li>
+<li>Controllers with explicit SQL.</li>
+<li>Duplicated forms and validations.</li>
+</ul>
+<p>Everything is generated from the dataset metadata.</p>
+<h2 id="best-practices-and-recommendations">Best Practices and Recommendations</h2>
+<ul>
+<li><strong>Design First</strong>: Design the database solidly first.</li>
+<li><strong>One dataset = one table</strong>: Each dataset should manage one main table. If you need complex views, create an <code>RQueryController</code>.</li>
+<li><strong>Virtual Fields</strong>: Use <code>query</code> in <code>addField</code> to combine columns (e.g. full name) for searching/listing without denormalizing the database.</li>
+<li><strong>Centralization</strong>: If a validation is a business rule, put it in the dataset's <code>rules</code>, not on the client.</li>
+<li><strong>Decoupling</strong>: Use hooks to clear caches or log events, but avoid putting heavy business logic directly in the controller; call reusable services or libraries.</li>
+</ul>
+<h2 id="next-steps">Next Steps</h2>
+<ul>
+<li>Create new datasets following this pattern.</li>
+<li>Extend validators and types.</li>
+<li>Integrate reports and optimize caching by events.</li>
+<li>Keep metadata consistent for scalability.</li>
 </ul></div>
             </div>
         </div>

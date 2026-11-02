@@ -246,7 +246,7 @@
 <h2 id="prerequisites">📋 Prerequisites</h2>
 <ol>
 <li><strong>Access Token:</strong> Must have valid <code>api_token</code> assigned to user in database.</li>
-<li><strong>Endpoint:</strong> URL is same as used in browser (e.g. <code>https://your-site.com/store/products</code>).</li>
+<li><strong>Endpoint:</strong> URL is same as used in browser (e.g. <code>https://your-site.com/tienda/productos</code>).</li>
 </ol>
 <hr />
 <h2 id="authenticate-with-api-mode-and-get-token">Authenticate with API Mode and get token</h2>
@@ -338,11 +338,11 @@
 </code></pre></div>
 <hr />
 <h2 id="endpoints-and-operations">📡 Endpoints and Operations</h2>
-<p>Assume controller is <code>Store/Products</code>.</p>
+<p>Assume your controller is <code>Tienda/Productos</code> (the demo store's products controller).</p>
 <h3 id="1-list-records-get">1. List Records (GET)</h3>
 <p>Gets list of data applying grid filters.</p>
 <p><strong>Request:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="err">GET /store/products</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="err">GET /tienda/productos</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="err">Headers:</span>
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="err">  Accept: application/json</span>
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="err">  Authorization: Bearer xyz123</span>
@@ -388,7 +388,7 @@
 <a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
 <a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="c1">// Convert object to Query String</span>
 <a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="kd">const</span><span class="w"> </span><span class="nx">queryString</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">URLSearchParams</span><span class="p">(</span><span class="nx">params</span><span class="p">).</span><span class="nx">toString</span><span class="p">();</span>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="kd">const</span><span class="w"> </span><span class="nx">url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sb">`/store/products?</span><span class="si">${</span><span class="nx">queryString</span><span class="si">}</span><span class="sb">`</span><span class="p">;</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="kd">const</span><span class="w"> </span><span class="nx">url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sb">`/tienda/productos?</span><span class="si">${</span><span class="nx">queryString</span><span class="si">}</span><span class="sb">`</span><span class="p">;</span>
 <a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>
 <a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="kd">const</span><span class="w"> </span><span class="nx">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">fetch</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
 <a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="w">    </span><span class="nx">headers</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
@@ -404,7 +404,7 @@
 <hr />
 <h3 id="2-create-record-post">2. Create Record (POST)</h3>
 <p><strong>Request:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="err">POST /store/products/save</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="err">POST /tienda/productos/save</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="err">Headers:</span>
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="err">  Content-Type: application/json</span>
 <a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="err">  Accept: application/json</span>
@@ -430,7 +430,7 @@
 <h3 id="3-update-record-postput">3. Update Record (POST/PUT)</h3>
 <p>In Ragnos, update handled in same <code>save</code> endpoint. Difference is <strong>must include ID</strong> (primary key).</p>
 <p><strong>Request:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="err">POST /store/products/save</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="err">POST /tienda/productos/save</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="err">Headers: ...</span>
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
 <a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="err">Body (JSON):</span>
@@ -460,10 +460,10 @@
 <hr />
 <h3 id="4-delete-record-postdelete">4. Delete Record (POST/DELETE)</h3>
 <p>Can send ID in URL or JSON body.</p>
-<p><strong>Option A (URL):</strong> <code>POST /store/products/delete/15</code></p>
+<p><strong>Option A (URL):</strong> <code>POST /tienda/productos/delete/15</code></p>
 <p><strong>Option B (JSON Body):</strong></p>
 <p><strong>Request:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="err">POST /store/products/delete</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="err">POST /tienda/productos/delete</span>
 <a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="err">Headers: ...</span>
 <a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
 <a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="err">Body (JSON):</span>
@@ -502,7 +502,7 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">token</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"YOUR_API_TOKEN"</span><span class="p">;</span>
 <a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>
 <a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="c1">// Example: Save product</span>
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="nx">fetch</span><span class="p">(</span><span class="s2">"https://yoursite.com/store/products/save"</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="nx">fetch</span><span class="p">(</span><span class="s2">"https://yoursite.com/tienda/productos/save"</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
 <a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="w">  </span><span class="nx">method</span><span class="o">:</span><span class="w"> </span><span class="s2">"POST"</span><span class="p">,</span>
 <a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="w">  </span><span class="nx">headers</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
 <a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="w">    </span><span class="s2">"Content-Type"</span><span class="o">:</span><span class="w"> </span><span class="s2">"application/json"</span><span class="p">,</span>
@@ -519,7 +519,7 @@
 <a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a><span class="w">  </span><span class="p">.</span><span class="k">catch</span><span class="p">((</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">"Error:"</span><span class="p">,</span><span class="w"> </span><span class="nx">error</span><span class="p">));</span>
 </code></pre></div>
 <h3 id="curl-terminal">cURL (Terminal)</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span>https://yoursite.com/store/products<span class="w">   </span>-H<span class="w"> </span><span class="s2">"Accept: application/json"</span><span class="w">   </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer YOUR_API_TOKEN"</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span>https://yoursite.com/tienda/productos<span class="w">   </span>-H<span class="w"> </span><span class="s2">"Accept: application/json"</span><span class="w">   </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer YOUR_API_TOKEN"</span>
 </code></pre></div>
 <h2 id="openapi-documentation">OpenAPI documentation</h2>
 <p>Ragnos generates an OpenAPI 3.1 specification from the controllers registered in <code>RagnosConfig</code>:</p>
@@ -534,7 +534,7 @@
 <a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="x">{</span>
 <a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="x">    return [</span>
 <a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="x">        'paths' =&gt; [</span>
-<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="x">            '/store/products' =&gt; [</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="x">            '/tienda/productos' =&gt; [</span>
 <a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="x">                'get' =&gt; [</span>
 <a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="x">                    'description' =&gt; 'List of available products.',</span>
 <a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="x">                ],</span>

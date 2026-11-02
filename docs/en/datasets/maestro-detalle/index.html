@@ -169,15 +169,19 @@
 <ul class="nav flex-column">
 </ul>
 </li>
-<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#1-configuring-the-master-orders-controller">1. Configuring the Master (Orders Controller)</a>
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#1-configuring-the-master-ordenes-controller">1. Configuring the Master (Ordenes Controller)</a>
 <ul class="nav flex-column">
 </ul>
 </li>
-<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#2-configuring-the-detail-orderdetails-controller">2. Configuring the Detail (OrderDetails Controller)</a>
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#2-configuring-the-detail-ordenesdetalles-controller">2. Configuring the Detail (Ordenesdetalles Controller)</a>
 <ul class="nav flex-column">
 </ul>
 </li>
 <li class="nav-item" data-bs-level="2"><a class="nav-link" href="#custom-javascript-hooks-optional">Custom JavaScript Hooks (Optional)</a>
+<ul class="nav flex-column">
+</ul>
+</li>
+<li class="nav-item" data-bs-level="2"><a class="nav-link" href="#workflow-summary">Workflow Summary</a>
 <ul class="nav flex-column">
 </ul>
 </li>
@@ -191,7 +195,7 @@
 <p>This guide explains how to create a screen where you have a main record (like a <strong>Purchase Order</strong>) and a list of related items (the <strong>Details</strong> or products of that order).</p>
 <h2 id="relationship-architecture">Relationship Architecture</h2>
 <div class="mermaid">graph TD
-    User["User"] --&gt;|Opens Screen| Master["Master Controller<br/>(Orders)"]
+    User["User"] --&gt;|Opens Screen| Master["Master Controller<br/>(Ordenes)"]
     Master --&gt;|Renders| View["Main View"]
     View --&gt;|Contains| Form["Master Form"]
 
@@ -202,7 +206,7 @@
         Logic -- "YES (ID=100)" --&gt; LoadDetails["Load Detail Controller"]
     end
 
-    LoadDetails --&gt;|"Injects ID=100 as $this-&gt;master"| Detail["Detail Controller<br/>(OrderDetails)"]
+    LoadDetails --&gt;|"Injects ID=100 as $this-&gt;master"| Detail["Detail Controller<br/>(Ordenesdetalles)"]
 
     subgraph Detail ["Detail Zone"]
         direction TB
@@ -223,11 +227,12 @@
 </div>
 <p>The basic idea is to have two controllers:</p>
 <ol>
-<li><strong>The Master (Orders):</strong> Controls general information (date, customer, total).</li>
-<li><strong>The Detail (OrderDetails):</strong> Controls the list of products within that order.</li>
+<li><strong>The Master (Ordenes):</strong> Controls general information (date, customer, total).</li>
+<li><strong>The Detail (Ordenesdetalles):</strong> Controls the list of products within that order.</li>
 </ol>
+<p>The demo store controllers keep their original Spanish names in the code (<code>Tienda\Ordenes</code>, <code>Tienda\Ordenesdetalles</code>), so this guide uses those exact names.</p>
 <hr/>
-<h2 id="1-configuring-the-master-orders-controller">1. Configuring the Master (<code>Orders</code> Controller)</h2>
+<h2 id="1-configuring-the-master-ordenes-controller">1. Configuring the Master (<code>Ordenes</code> Controller)</h2>
 <p>This is the "parent" of the relationship. Here we define the invoice header.</p>
 <ul>
 <li><strong>Basic Configuration:</strong> We tell Ragnos to use the <code>orders</code> table and that the primary key is <code>orderNumber</code>.</li>
@@ -237,18 +242,18 @@
   There is a key line you must add to your master controller to warn that it will have "children". You can pass a single controller or an array of multiple controllers to automatically create tabs:</li>
 </ul>
 <p><strong>For a single detail:</strong></p>
-<div class="highlight"><pre><span></span><code><a href="#__codelineno-0-1" id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="x">$this-&gt;setDetailsController('Store\OrderDetails');</span>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-0-1" id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="x">$this-&gt;setDetailsController('Tienda\Ordenesdetalles');</span>
 </code></pre></div>
-<p>This tells Ragnos that the <code>OrderDetails</code> controller will handle the details related to each order.</p>
+<p>This tells Ragnos that the <code>Ordenesdetalles</code> controller will handle the details related to each order.</p>
 <p><strong>For multiple details (Tabs):</strong>
   If your main record has multiple types of details (e.g., products and a history log), you can pass an array of controllers. Ragnos will automatically generate a tabbed interface (nav-tabs) to display each detail separately:</p>
 <div class="highlight"><pre><span></span><code><a href="#__codelineno-1-1" id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="x">$this-&gt;setDetailsController([</span>
-<a href="#__codelineno-1-2" id="__codelineno-1-2" name="__codelineno-1-2"></a><span class="x">    'Store\OrderDetails',</span>
-<a href="#__codelineno-1-3" id="__codelineno-1-3" name="__codelineno-1-3"></a><span class="x">    'Store\OrderHistory'</span>
+<a href="#__codelineno-1-2" id="__codelineno-1-2" name="__codelineno-1-2"></a><span class="x">    'Tienda\Ordenesdetalles',</span>
+<a href="#__codelineno-1-3" id="__codelineno-1-3" name="__codelineno-1-3"></a><span class="x">    'Tienda\Ordeneshistorial'</span>
 <a href="#__codelineno-1-4" id="__codelineno-1-4" name="__codelineno-1-4"></a><span class="x">]);</span>
 </code></pre></div>
 <p>The relationship is based on the <code>orderNumber</code> field in these controllers being the same, and this is the primary key in the master.</p>
-<h2 id="2-configuring-the-detail-orderdetails-controller">2. Configuring the Detail (<code>OrderDetails</code> Controller)</h2>
+<h2 id="2-configuring-the-detail-ordenesdetalles-controller">2. Configuring the Detail (<code>Ordenesdetalles</code> Controller)</h2>
 <p>This is the "child". It controls each product line.</p>
 <ul>
 <li><strong>The Hidden Field Trick:</strong>
@@ -274,13 +279,31 @@
 <p>The following function has been added to the custom.js file:</p>
 <div class="highlight"><pre><span></span><code><a href="#__codelineno-3-1" id="__codelineno-3-1" name="__codelineno-3-1"></a><span class="c1">// with every change in the order details table</span>
 <a href="#__codelineno-3-2" id="__codelineno-3-2" name="__codelineno-3-2"></a><span class="c1">// recalculate the order total</span>
-<a href="#__codelineno-3-3" id="__codelineno-3-3" name="__codelineno-3-3"></a><span class="kd">function</span><span class="w"> </span><span class="nx">_OrderDetailsOnChange</span><span class="p">(</span><span class="nx">table</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a href="#__codelineno-3-3" id="__codelineno-3-3" name="__codelineno-3-3"></a><span class="kd">function</span><span class="w"> </span><span class="nx">_OrdenesdetallesOnChange</span><span class="p">(</span><span class="nx">table</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <a href="#__codelineno-3-4" id="__codelineno-3-4" name="__codelineno-3-4"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">order</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">"input[name='orderNumber']"</span><span class="p">).</span><span class="nx">value</span><span class="p">;</span>
-<a href="#__codelineno-3-5" id="__codelineno-3-5" name="__codelineno-3-5"></a><span class="w">  </span><span class="nx">getObject</span><span class="p">(</span><span class="s2">"store/orders/calculatetotal"</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">order</span><span class="o">:</span><span class="w"> </span><span class="nx">order</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="p">(</span><span class="nx">data</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a href="#__codelineno-3-5" id="__codelineno-3-5" name="__codelineno-3-5"></a><span class="w">  </span><span class="nx">getObject</span><span class="p">(</span><span class="s2">"tienda/ordenes/calculatotal"</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">orden</span><span class="o">:</span><span class="w"> </span><span class="nx">order</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="p">(</span><span class="nx">data</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <a href="#__codelineno-3-6" id="__codelineno-3-6" name="__codelineno-3-6"></a><span class="w">    </span><span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s1">'input[name="total"]'</span><span class="p">).</span><span class="nx">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">data</span><span class="p">.</span><span class="nx">total</span><span class="p">;</span>
 <a href="#__codelineno-3-7" id="__codelineno-3-7" name="__codelineno-3-7"></a><span class="w">  </span><span class="p">});</span>
 <a href="#__codelineno-3-8" id="__codelineno-3-8" name="__codelineno-3-8"></a><span class="p">}</span>
-</code></pre></div></div>
+</code></pre></div>
+<p>This function runs every time there is a change in the order details table. What it does is:</p>
+<ol>
+<li>Gets the current order number from the hidden field.</li>
+<li>Calls an endpoint (<code>tienda/ordenes/calculatotal</code>) to recalculate the order total.</li>
+<li>Updates the <code>total</code> field on screen with the new value.</li>
+</ol>
+<p>This way, the total is always up to date every time a product is added, modified, or deleted in the order.</p>
+<p>This function is linked automatically thanks to the naming convention: <code>_ControllerNameOnChange</code>, where the controller name is the short name of the PHP class, respecting upper and lower case.</p>
+<h2 id="workflow-summary">Workflow Summary</h2>
+<ol>
+<li><strong>You open an Order:</strong> You see the general data (Master).</li>
+<li><strong>The system checks:</strong> Does this order already exist?</li>
+<li><strong>Yes:</strong> It automatically loads the table of related products at the bottom of the screen.</li>
+<li><strong>No:</strong> It hides the products section until you save the order for the first time.</li>
+<li><strong>You add a product:</strong> When creating a line in the details table, the system invisibly attaches the parent order number.</li>
+<li><strong>You save:</strong> When the detail is saved, the system updates the totals and everything stays in sync.</li>
+</ol>
+<p>And that's it! With these steps, two tables work as a single integrated screen.</p></div>
 </div>
 </div>
 <footer class="col-md-12">

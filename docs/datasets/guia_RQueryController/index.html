@@ -292,10 +292,18 @@
 <li>Debe estar presente en el <code>SELECT</code> de <code>setQuery</code>.</li>
 </ul>
 <h3 id="addfieldstring-name-array-config"><code>addField(string $name, array $config)</code></h3>
-<p>Funciona igual que en <code>RDatasetController</code>, pero aquí se usa principalmente para <strong>generar los filtros de búsqueda</strong>.</p>
+<p>Funciona igual que en <code>RDatasetController</code>: da etiqueta y formato a las columnas del resultado.</p>
 <ul>
-<li>Si defines un campo como <code>'type' =&gt; 'dropdown'</code>, Ragnos creará un <code>&lt;select&gt;</code> en la barra de búsqueda avanzada.</li>
+<li><code>'type' =&gt; 'money'</code> presenta la columna con formato de moneda.</li>
+<li><code>'type' =&gt; 'dropdown'</code> traduce los valores a sus descripciones (por ejemplo, <code>S</code> → <code>SI</code>) y permite que la búsqueda de la grilla encuentre los registros escribiendo esa descripción.</li>
 </ul>
+<h3 id="_filters"><code>_filters()</code></h3>
+<p>Ragnos envuelve tu consulta en una CTE y construye la consulta de la grilla sobre su resultado. Por eso, en <code>_filters()</code> puedes filtrar cualquier columna del resultado, incluidas las agregadas, con un <code>WHERE</code> normal (sin <code>HAVING</code>):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="x">public function _filters()</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="x">{</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="x">    $this-&gt;modelo-&gt;builder()-&gt;where('Activo', 'S');</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="x">}</span>
+</code></pre></div>
 <h3 id="addsearchstring-field-string-controller"><code>addSearch(string $field, string $controller)</code></h3>
 <p>Permite vincular una columna de tu consulta con otro controlador Ragnos.</p>
 <ul>
@@ -347,18 +355,18 @@
 <li>
 <p><strong>Campos Calculados:</strong>
     Puedes crear columnas "virtuales" en el SQL y usarlas en la grilla:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="x">$this-&gt;setQuery("SELECT id, precio * cantidad AS Total, ... FROM ventas");</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="x">$this-&gt;setTableFields(['id', 'Total']);</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="x">$this-&gt;setQuery("SELECT id, precio * cantidad AS Total, ... FROM ventas");</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="x">$this-&gt;setTableFields(['id', 'Total']);</span>
 </code></pre></div>
 </li>
 <li>
 <p><strong>Uniones (JOINs):</strong>
     Ideal para mostrar nombres en lugar de IDs sin configurar <code>addSearch</code> visualmente:
-    <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="x">$this-&gt;setQuery("</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="x">    SELECT p.nombre, c.categoria_nombre</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="x">    FROM productos p</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="x">    JOIN categorias c ON p.cat_id = c.id</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="x">");</span>
+    <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="x">$this-&gt;setQuery("</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="x">    SELECT p.nombre, c.categoria_nombre</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="x">    FROM productos p</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="x">    JOIN categorias c ON p.cat_id = c.id</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="x">");</span>
 </code></pre></div></p>
 </li>
 </ol></div>

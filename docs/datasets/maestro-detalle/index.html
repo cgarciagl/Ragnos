@@ -206,7 +206,7 @@
         Logic -- "SI (ID=100)" --&gt; LoadDetails["Carga Controlador Detalle"]
     end
 
-    LoadDetails --&gt;|"Inyecta ID=100 como $this-&gt;master"| Detail["Controlador Detalle<br/>(OrdenesDetalles)"]
+    LoadDetails --&gt;|"Inyecta ID=100 como $this-&gt;master"| Detail["Controlador Detalle<br/>(Ordenesdetalles)"]
 
     subgraph Detalle ["Zona del Detalle"]
         direction TB
@@ -228,7 +228,7 @@
 <p>La idea básica es tener dos controladores:</p>
 <ol>
 <li><strong>El Maestro (Ordenes):</strong> Controla la información general (fecha, cliente, total).</li>
-<li><strong>El Detalle (OrdenesDetalles):</strong> Controla la lista de productos dentro de esa orden.</li>
+<li><strong>El Detalle (Ordenesdetalles):</strong> Controla la lista de productos dentro de esa orden.</li>
 </ol>
 <hr/>
 <h2 id="1-configurando-el-maestro-controlador-ordenes">1. Configurando el Maestro (Controlador <code>Ordenes</code>)</h2>
@@ -291,8 +291,8 @@
 <li>Llama a un endpoint (<code>tienda/ordenes/calculatotal</code>) para recalcular el total de la orden.</li>
 <li>Actualiza el campo <code>total</code> en la pantalla con el nuevo valor.</li>
 </ol>
-<p>de este modo, el total siempre estará actualizado, cada que se agregue, modifique o elimine un producto en la orden.</p>
-<p>Esta función se enlaza automáticamente gracias a la convención de nombres: <code>_NombreDelControladorOnChange</code>.</p>
+<p>De este modo, el total siempre estará actualizado, cada que se agregue, modifique o elimine un producto en la orden.</p>
+<p>Esta función se enlaza automáticamente gracias a la convención de nombres: <code>_NombreDelControladorOnChange</code>, donde el nombre del controlador es el nombre corto de la clase PHP, respetando mayúsculas y minúsculas.</p>
 <h2 id="resumen-del-flujo-de-trabajo">Resumen del flujo de trabajo</h2>
 <ol>
 <li><strong>Abres una Orden:</strong> Ves los datos generales (Maestro).</li>

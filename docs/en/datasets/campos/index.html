@@ -465,8 +465,8 @@ Simply add the <code>tab</code> key to the field configuration array with the de
 </ul>
 <hr />
 <h2 id="7-readonly-field">7. Readonly Field</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="x">$this-&gt;addField('Contact', [</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="x">    'label' =&gt; 'Contact',</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="x">$this-&gt;addField('Contacto', [</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="x">    'label' =&gt; 'Contacto',</span>
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="x">    'rules' =&gt; 'readonly'</span>
 <a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="x">]);</span>
 </code></pre></div>
@@ -477,8 +477,8 @@ Simply add the <code>tab</code> key to the field configuration array with the de
 <p><strong>How does it work?</strong> Ragnos translates <code>readonly</code> into the internal rule <code>readonly_Ragnos[field]</code>, defined in the <code>RagnosRules</code> class. On save, it compares the received value with the record's original value (<code>fieldHasChanged()</code>); if someone altered it (for example, by tampering with the form or sending it through the API), validation fails with the message <em>"The field can not be modified."</em>. So <code>readonly</code> is not just visual: it is also enforced on the server.</p>
 <hr />
 <h2 id="8-hidden-field">8. Hidden Field</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="x">$this-&gt;addField('Contact', [</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="x">    'label' =&gt; 'Contact',</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="x">$this-&gt;addField('Contacto', [</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="x">    'label' =&gt; 'Contacto',</span>
 <a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="x">    'rules' =&gt; 'readonly',</span>
 <a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="x">    'type'  =&gt; 'hidden'</span>
 <a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="x">]);</span>
@@ -489,8 +489,8 @@ Simply add the <code>tab</code> key to the field configuration array with the de
 </ul>
 <hr />
 <h2 id="9-calculated-field-query">9. Calculated Field (<code>query</code>)</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="x">$this-&gt;addField('fullName', [</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="x">    'label' =&gt; 'Full Name',</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="x">$this-&gt;addField('Contacto', [</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="x">    'label' =&gt; 'Contacto',</span>
 <a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="x">    'rules' =&gt; 'readonly',</span>
 <a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="x">    'query' =&gt; "concat(contactLastName, ', ', contactFirstName)",</span>
 <a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="x">    'type'  =&gt; 'hidden'</span>
@@ -504,7 +504,7 @@ Simply add the <code>tab</code> key to the field configuration array with the de
 <hr />
 <h2 id="10-related-field-addsearch">10. Related Field (<code>addSearch</code>)</h2>
 <p>Links a field to another controller for selection (Foreign Key).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="x">$this-&gt;addSearch('salesRepEmployeeNumber', 'Shop\\Employees');</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="x">$this-&gt;addSearch('salesRepEmployeeNumber', 'Tienda\\Empleados');</span>
 </code></pre></div>
 <ul>
 <li>Logical foreign key</li>
