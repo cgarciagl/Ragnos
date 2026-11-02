@@ -262,6 +262,10 @@
 <p class="admonition-title">Contraseñas de versiones anteriores</p>
 <p>Si tu base viene de una versión de Ragnos que guardaba contraseñas con md5, no hace falta restablecerlas: cada usuario sigue entrando con su clave y Ragnos actualiza su hash a <code>password_hash()</code> en ese primer inicio de sesión (requiere haber ejecutado <code>php spark migrate</code>).</p>
 </div>
+<div class="admonition success">
+<p class="admonition-title">Administra la base de producción con PyroStudio</p>
+<p>En un hosting compartido el puerto de MySQL casi nunca está abierto. <a href="https://github.com/cgarciagl/PyroStudio"><strong>PyroStudio</strong></a>, el cliente de escritorio del mismo autor de Ragnos, se conecta mediante un <strong>túnel HTTP</strong>: subes <code>tunnel/pyro_tunnel.php</code> junto a tu aplicación y administras la base por HTTPS, sin abrir puertos. El túnel exige un token secreto y solo se conecta a bases en <code>localhost</code>. Marca la conexión como <em>Production</em> para que su Safe Mode pida confirmación ante sentencias destructivas, y usa <em>Respaldar / Restaurar</em> para respaldar antes de cada despliegue.</p>
+</div>
 <h2 id="4-carpeta-publica-y-servidor-web">4. Carpeta pública y servidor web</h2>
 <p>Apunta el <em>Document Root</em> del servidor a la carpeta pública de Ragnos (<code>content</code>). Si tu hosting exige otro nombre (<code>public_html</code>, <code>www</code>), renómbrala y actualiza <code>$publicDirectory</code> en <code>app/Config/Paths.php</code>; consulta <a href="../../fundamentos/configuracion/#carpeta-publica-content">Configuración</a>.</p>
 <p>Para mayor seguridad puedes desactivar el Auto Routing (<code>$autoRoute = false</code>): Ragnos registrará rutas explícitas solo para sus acciones. Consulta <a href="../../fundamentos/configuracion/#trabajar-sin-auto-routing-rutas-explicitas">Trabajar sin Auto Routing</a>.</p>

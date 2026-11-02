@@ -262,6 +262,10 @@
 <p class="admonition-title">Passwords from earlier versions</p>
 <p>If your database comes from a Ragnos version that stored md5 passwords, there's no need to reset them: each user keeps logging in with their password, and Ragnos upgrades its hash to <code>password_hash()</code> on that first login (requires having run <code>php spark migrate</code>).</p>
 </div>
+<div class="admonition success">
+<p class="admonition-title">Manage the production database with PyroStudio</p>
+<p>On shared hosting, the MySQL port is almost never open. <a href="https://github.com/cgarciagl/PyroStudio"><strong>PyroStudio</strong></a>, the desktop client by the author of Ragnos, connects through an <strong>HTTP tunnel</strong>: upload <code>tunnel/pyro_tunnel.php</code> next to your application and manage the database over HTTPS, without opening ports. The tunnel requires a secret token and only connects to databases on <code>localhost</code>. Mark the connection as <em>Production</em> so its Safe Mode asks for confirmation before destructive statements, and use <em>Backup / Restore</em> to back up before each deployment.</p>
+</div>
 <h2 id="4-public-folder-and-web-server">4. Public Folder and Web Server</h2>
 <p>Point the server's <em>Document Root</em> to the Ragnos public folder (<code>content</code>). If your hosting requires another name (<code>public_html</code>, <code>www</code>), rename it and update <code>$publicDirectory</code> in <code>app/Config/Paths.php</code>; see <a href="../../fundamentos/configuracion/#public-folder-content">Configuration</a>.</p>
 <p>For extra security you can disable Auto Routing (<code>$autoRoute = false</code>): Ragnos will register explicit routes for its actions only. See <a href="../../fundamentos/configuracion/#working-without-auto-routing-explicit-routes">Working Without Auto Routing</a>.</p>
