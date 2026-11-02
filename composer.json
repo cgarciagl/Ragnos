@@ -72,6 +72,9 @@
     },
     "exclude-from-classmap": [
       "**/Database/Migrations/**"
+    ],
+    "files": [
+      "src/Compat/legacy_namespace.php"
     ]
   },
   "autoload-dev": {

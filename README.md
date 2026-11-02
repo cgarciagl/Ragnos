@@ -96,7 +96,7 @@ php spark ragnos:make Modules/Tasks -table tasks
 ```php
 namespace App\Controllers\Modules;
 
-use App\ThirdParty\Ragnos\Controllers\RDatasetController;
+use Ragnos\Controllers\RDatasetController;
 
 class Tasks extends RDatasetController
 {

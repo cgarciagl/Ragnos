@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use App\ThirdParty\Ragnos\Controllers\BaseController;
+use Ragnos\Controllers\BaseController;
 
 class Catalogos extends BaseController
 {

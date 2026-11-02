@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Ragnos\Auth;
 
-use App\ThirdParty\Ragnos\Auth\Drivers\NativeAuthDriver;
-use App\ThirdParty\Ragnos\Auth\RagnosAuthInterface;
+use Ragnos\Auth\Drivers\NativeAuthDriver;
+use Ragnos\Auth\RagnosAuthInterface;
 use Tests\Ragnos\RagnosTestCase;
 
 /**

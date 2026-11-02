@@ -4,7 +4,7 @@ namespace Tests\Ragnos\Controllers;
 
 use CodeIgniter\Test\CIUnitTestCase;
 use Tests\Support\RequestSimulator;
-use App\ThirdParty\Ragnos\Controllers\RagnosRules;
+use Ragnos\Controllers\RagnosRules;
 
 /**
  * Pruebas para RagnosRules::readonly_Ragnos.

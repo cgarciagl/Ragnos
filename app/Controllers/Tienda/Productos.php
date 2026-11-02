@@ -2,7 +2,7 @@
 
 namespace App\Controllers\Tienda;
 
-use App\ThirdParty\Ragnos\Controllers\RDatasetController;
+use Ragnos\Controllers\RDatasetController;
 
 class Productos extends RDatasetController
 {

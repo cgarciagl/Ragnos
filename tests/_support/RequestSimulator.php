@@ -66,8 +66,8 @@ trait RequestSimulator
     protected function loadRagnosHelpers(): void
     {
         helper([
-            'App\ThirdParty\Ragnos\Helpers\utiles_helper',
-            'App\ThirdParty\Ragnos\Helpers\ragnos_helper',
+            'Ragnos\Helpers\utiles_helper',
+            'Ragnos\Helpers\ragnos_helper',
             'text',
         ]);
     }

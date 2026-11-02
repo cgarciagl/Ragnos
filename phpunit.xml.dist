@@ -35,9 +35,11 @@
     <source>
         <include>
             <directory suffix=".php">./app</directory>
+            <directory suffix=".php">./src</directory>
         </include>
         <exclude>
             <directory suffix=".php">./app/Views</directory>
+            <directory suffix=".php">./src/Views</directory>
             <file>./app/Config/Routes.php</file>
         </exclude>
     </source>

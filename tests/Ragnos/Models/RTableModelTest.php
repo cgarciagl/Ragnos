@@ -3,7 +3,7 @@
 namespace Tests\Ragnos\Models;
 
 use Tests\Ragnos\RagnosTestCase;
-use App\ThirdParty\Ragnos\Models\RTableModel;
+use Ragnos\Models\RTableModel;
 
 /**
  * Modelo concreto para probar RTableModel.

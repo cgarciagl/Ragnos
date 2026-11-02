@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Tests\Ragnos\Auth;
 
 use App\Services\Admin_aut;
-use App\ThirdParty\Ragnos\Auth\Drivers\NativeAuthDriver;
-use App\ThirdParty\Ragnos\Auth\Drivers\ShieldAuthDriver;
-use App\ThirdParty\Ragnos\Auth\RagnosAuthInterface;
+use Ragnos\Auth\Drivers\NativeAuthDriver;
+use Ragnos\Auth\Drivers\ShieldAuthDriver;
+use Ragnos\Auth\RagnosAuthInterface;
 use Config\Services;
 use Tests\Ragnos\RagnosTestCase;
 

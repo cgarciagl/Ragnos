@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use App\ThirdParty\Ragnos\Controllers\RProcessController;
+use Ragnos\Controllers\RProcessController;
 
 class Proceso extends RProcessController
 {

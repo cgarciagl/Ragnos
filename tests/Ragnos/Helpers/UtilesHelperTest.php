@@ -5,7 +5,7 @@ namespace Tests\Ragnos\Helpers;
 use Tests\Ragnos\RagnosTestCase;
 
 /**
- * Pruebas funcionales para app/ThirdParty/Ragnos/Helpers/utiles_helper.php.
+ * Pruebas funcionales para src/Helpers/utiles_helper.php.
  * Las funciones son globales: se invocan con prefijo `\` para evitar
  * la resolución en el namespace local cuando los tests corren aislados.
  */
@@ -15,8 +15,8 @@ class UtilesHelperTest extends RagnosTestCase
     {
         parent::setUp();
         helper([
-            'App\ThirdParty\Ragnos\Helpers\utiles_helper',
-            'App\ThirdParty\Ragnos\Helpers\ragnos_helper',
+            'Ragnos\Helpers\utiles_helper',
+            'Ragnos\Helpers\ragnos_helper',
         ]);
     }
 

@@ -2,7 +2,7 @@
 
 namespace Tests\Ragnos\Controllers;
 
-use App\ThirdParty\Ragnos\Controllers\BaseController;
+use Ragnos\Controllers\BaseController;
 use Tests\Ragnos\RagnosTestCase;
 
 class BaseControllerTest extends RagnosTestCase

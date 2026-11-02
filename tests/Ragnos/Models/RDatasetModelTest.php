@@ -3,9 +3,9 @@
 namespace Tests\Ragnos\Models;
 
 use Tests\Ragnos\RagnosTestCase;
-use App\ThirdParty\Ragnos\Models\RConcreteDatasetModel;
-use App\ThirdParty\Ragnos\Models\Fields\RSimpleTextField;
-use App\ThirdParty\Ragnos\Models\Fields\RIdField;
+use Ragnos\Models\RConcreteDatasetModel;
+use Ragnos\Models\Fields\RSimpleTextField;
+use Ragnos\Models\Fields\RIdField;
 
 /**
  * Pruebas para RDatasetModel:

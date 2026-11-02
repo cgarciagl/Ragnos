@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use App\ThirdParty\Ragnos\Controllers\RDatasetController;
+use Ragnos\Controllers\RDatasetController;
 
 class Gruposdeusuarios extends RDatasetController
 {

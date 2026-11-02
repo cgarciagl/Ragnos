@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use App\ThirdParty\Ragnos\Controllers\RQueryController;
+use Ragnos\Controllers\RQueryController;
 
 class Searchusuarios extends RQueryController
 {

@@ -2,9 +2,9 @@
 
 namespace App\Controllers;
 
-use App\ThirdParty\Ragnos\Controllers\BaseController;
-use App\ThirdParty\Ragnos\OpenApi\OpenApiGenerator;
-use App\ThirdParty\Ragnos\OpenApi\OpenApiRegistry;
+use Ragnos\Controllers\BaseController;
+use Ragnos\OpenApi\OpenApiGenerator;
+use Ragnos\OpenApi\OpenApiRegistry;
 use Symfony\Component\Yaml\Yaml;
 
 final class OpenApi extends BaseController

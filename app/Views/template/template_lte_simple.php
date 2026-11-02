@@ -4,7 +4,7 @@
 <head>
     <?php
 
-    use App\ThirdParty\Ragnos\Controllers\Ragnos;
+    use Ragnos\Controllers\Ragnos;
 
     ?>
     <title><?= Ragnos::config()->Ragnos_application_title; ?></title>

@@ -3,11 +3,11 @@
 namespace Tests\Ragnos\Controllers;
 
 use Tests\Ragnos\RagnosTestCase;
-use App\ThirdParty\Ragnos\Controllers\RDataset;
-use App\ThirdParty\Ragnos\Controllers\Ragnos;
-use App\ThirdParty\Ragnos\Models\RConcreteDatasetModel;
-use App\ThirdParty\Ragnos\Models\Fields\RSearchField;
-use App\ThirdParty\Ragnos\Models\Fields\RSimpleTextField;
+use Ragnos\Controllers\RDataset;
+use Ragnos\Controllers\Ragnos;
+use Ragnos\Models\RConcreteDatasetModel;
+use Ragnos\Models\Fields\RSearchField;
+use Ragnos\Models\Fields\RSimpleTextField;
 
 /**
  * Pruebas reales para RDataset (controlador base de datasets).

@@ -3,10 +3,10 @@
 namespace Tests\Ragnos\Models\Fields;
 
 use CodeIgniter\Test\CIUnitTestCase;
-use App\ThirdParty\Ragnos\Models\Fields\RSimpleTextField;
-use App\ThirdParty\Ragnos\Models\Fields\RSwitchField;
-use App\ThirdParty\Ragnos\Models\Fields\RPillboxField;
-use App\ThirdParty\Ragnos\Models\Fields\RIdField;
+use Ragnos\Models\Fields\RSimpleTextField;
+use Ragnos\Models\Fields\RSwitchField;
+use Ragnos\Models\Fields\RPillboxField;
+use Ragnos\Models\Fields\RIdField;
 
 /**
  * Pruebas para RField y sus subclases.
@@ -83,9 +83,9 @@ class RFieldTest extends CIUnitTestCase
     public function testSetTypeConRFieldTypeEnum(): void
     {
         $field = new RSimpleTextField('campo');
-        $field->setType(\App\ThirdParty\Ragnos\Models\Fields\RFieldType::SWITCH);
+        $field->setType(\Ragnos\Models\Fields\RFieldType::SWITCH);
         $this->assertSame('switch', $field->getType());
-        $this->assertSame(\App\ThirdParty\Ragnos\Models\Fields\RFieldType::SWITCH , $field->getFieldTypeEnum());
+        $this->assertSame(\Ragnos\Models\Fields\RFieldType::SWITCH , $field->getFieldTypeEnum());
     }
 
     public function testSetOptionsYGetOptions(): void

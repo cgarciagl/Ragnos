@@ -4,7 +4,7 @@ namespace Tests\Ragnos\Integration;
 
 use Tests\Ragnos\RagnosTestCase;
 use Tests\Support\RequestSimulator;
-use App\ThirdParty\Ragnos\Models\RDatasetModel;
+use Ragnos\Models\RDatasetModel;
 
 class ArticuloSearchModel extends RDatasetModel
 {
@@ -80,6 +80,20 @@ class SearchAndFilterTest extends RagnosTestCase
     {
         $this->setGet(['search' => ['value' => 'Widget']]);
         $this->assertSame(3, $this->model->getCountForSearch());
+    }
+
+    public function testBusquedaGlobalTrataComodinLikeComoTextoLiteral(): void
+    {
+        // Ningún nombre contiene "%": antes de escapar comodines coincidían los 10.
+        $this->setGet(['search' => ['value' => '%']]);
+        $this->assertSame(0, $this->model->getCountForSearch());
+    }
+
+    public function testBusquedaGlobalTrataGuionBajoComoTextoLiteral(): void
+    {
+        // "_" ya no actúa como comodín de un carácter ("Widget Alpha" no coincide).
+        $this->setGet(['search' => ['value' => 'Widget_Alpha']]);
+        $this->assertSame(0, $this->model->getCountForSearch());
     }
 
     public function testBusquedaGlobalEnCategoriaEncuentraCoincidencias(): void

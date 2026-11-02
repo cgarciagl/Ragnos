@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\ThirdParty\Ragnos\Auth\RagnosAuthInterface;
+use Ragnos\Auth\RagnosAuthInterface;
 use CodeIgniter\Config\BaseService;
 
 /**

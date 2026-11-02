@@ -4,7 +4,7 @@ namespace Tests\Ragnos\Models\Traits;
 
 use Tests\Ragnos\RagnosTestCase;
 use Tests\Support\RequestSimulator;
-use App\ThirdParty\Ragnos\Models\RDatasetModel;
+use Ragnos\Models\RDatasetModel;
 
 /**
  * Modelo concreto para SearchFilterTrait sobre tabla 'productos'.

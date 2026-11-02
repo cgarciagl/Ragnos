@@ -2,7 +2,7 @@
 
 namespace Tests\App\Commands;
 
-use App\ThirdParty\Ragnos\Generators\ControllerGenerator;
+use Ragnos\Generators\ControllerGenerator;
 use CodeIgniter\Test\CIUnitTestCase;
 use InvalidArgumentException;
 

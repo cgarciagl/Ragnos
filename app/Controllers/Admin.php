@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use App\ThirdParty\Ragnos\Controllers\BaseController;
+use Ragnos\Controllers\BaseController;
 
 
 class Admin extends BaseController
@@ -10,13 +10,13 @@ class Admin extends BaseController
 
     function __construct()
     {
-        helper(['form', 'App\ThirdParty\Ragnos\Helpers\ragnos_helper']);
+        helper(['form', 'Ragnos\Helpers\ragnos_helper']);
     }
 
     public function index()
     {
         //cargar el helper utiles
-        helper('App\ThirdParty\Ragnos\Helpers\ragnos_helper');
+        helper('Ragnos\Helpers\ragnos_helper');
         $this->checkLogin();
         $model                                            = new \App\Models\Dashboard();
         $data['ventasultimos12meses']                     = $model->ventasultimos12meses();

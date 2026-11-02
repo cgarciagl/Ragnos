@@ -384,7 +384,7 @@
 
         let ventasporlinea = <?= json_encode($ventasporlinea) ?>;
 
-        <?php use App\ThirdParty\Ragnos\Controllers\Ragnos; ?>
+        <?php use Ragnos\Controllers\Ragnos; ?>
         let currency = '<?= Ragnos::config()->currency ?? 'USD' ?>';
 
         // Procesamiento de datos para Ventas por Línea

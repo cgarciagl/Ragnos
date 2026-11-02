@@ -2,8 +2,8 @@
 
 namespace App\Commands;
 
-use App\ThirdParty\Ragnos\OpenApi\OpenApiGenerator;
-use App\ThirdParty\Ragnos\OpenApi\OpenApiRegistry;
+use Ragnos\OpenApi\OpenApiGenerator;
+use Ragnos\OpenApi\OpenApiRegistry;
 use CodeIgniter\CLI\BaseCommand;
 use CodeIgniter\CLI\CLI;
 use Symfony\Component\Yaml\Yaml;

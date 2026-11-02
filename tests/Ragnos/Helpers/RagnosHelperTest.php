@@ -5,8 +5,8 @@ namespace Tests\Ragnos\Helpers;
 use CodeIgniter\Test\CIUnitTestCase;
 
 /**
- * Pruebas funcionales para app/ThirdParty/Ragnos/Helpers/ragnos_helper.php
- * y app/ThirdParty/Ragnos/Helpers/utiles_helper.php (startsWith/endsWith viven ahí).
+ * Pruebas funcionales para src/Helpers/ragnos_helper.php
+ * y src/Helpers/utiles_helper.php (startsWith/endsWith viven ahí).
  *
  * Las funciones son globales (sin namespace), por eso se invocan con prefijo `\`
  * para no resolverse en el namespace del test cuando se ejecuta en aislamiento.
@@ -17,8 +17,8 @@ class RagnosHelperTest extends CIUnitTestCase
     {
         parent::setUp();
         helper([
-            'App\ThirdParty\Ragnos\Helpers\utiles_helper',
-            'App\ThirdParty\Ragnos\Helpers\ragnos_helper',
+            'Ragnos\Helpers\utiles_helper',
+            'Ragnos\Helpers\ragnos_helper',
         ]);
         \setOldRecordCache(null);
     }
@@ -162,5 +162,19 @@ class RagnosHelperTest extends CIUnitTestCase
         \setOldRecordCache(['estado' => null]);
         // newValue('estado') retorna null si no hay input; oldValue retorna null del cache
         $this->assertFalse(\fieldHasChanged('estado'));
+    }
+
+    public function testSetInputOverrideTienePrioridadSobreLaPeticion(): void
+    {
+        \setInputOverride('id_override_test', 99);
+        $this->assertSame(99, \getInputValue('id_override_test'));
+
+        \setInputOverride(null, null, true);
+        $this->assertNull(\getInputValue('id_override_test'));
+    }
+
+    public function testGuardadoNoEscribeEnSuperglobalPost(): void
+    {
+        $this->assertArrayNotHasKey('id_override_test', $_POST);
     }
 }

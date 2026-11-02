@@ -4,7 +4,7 @@ namespace App\Commands;
 
 use CodeIgniter\CLI\BaseCommand;
 use CodeIgniter\CLI\CLI;
-use App\ThirdParty\Ragnos\Generators\ControllerGenerator;
+use Ragnos\Generators\ControllerGenerator;
 
 class MakeQuery extends BaseCommand
 {

@@ -3,8 +3,8 @@
 namespace Tests\Ragnos\Controllers;
 
 use CodeIgniter\Test\CIUnitTestCase;
-use App\ThirdParty\Ragnos\Controllers\RController;
-use App\ThirdParty\Ragnos\Controllers\Ragnos;
+use Ragnos\Controllers\RController;
+use Ragnos\Controllers\Ragnos;
 
 /**
  * Pruebas para RController:

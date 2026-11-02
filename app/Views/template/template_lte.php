@@ -8,7 +8,7 @@ $lang         = explode('_', $ragnosConfig->locale)[0];
 <head>
     <?php
 
-    use App\ThirdParty\Ragnos\Controllers\Ragnos;
+    use Ragnos\Controllers\Ragnos;
 
     ?>
     <title>

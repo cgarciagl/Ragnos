@@ -2,7 +2,7 @@
 
 namespace Tests\Support\Controllers;
 
-use App\ThirdParty\Ragnos\Controllers\RDataset;
+use Ragnos\Controllers\RDataset;
 
 /**
  * Stub concreto de RDataset para usar en tests.

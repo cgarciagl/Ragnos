@@ -11,15 +11,15 @@ class ViewSecurityTest extends RagnosTestCase
         parent::setUp();
         helper([
             'url',
-            'App\ThirdParty\Ragnos\Helpers\ragnos_helper',
-            'App\ThirdParty\Ragnos\Helpers\utiles_helper',
+            'Ragnos\Helpers\ragnos_helper',
+            'Ragnos\Helpers\utiles_helper',
         ]);
     }
 
     public function testHtmlTextareaEscapaCierreDeEtiqueta(): void
     {
         $payload = '</textarea><script>alert(1)</script>';
-        $html    = view('App\ThirdParty\Ragnos\Views\rfield\htmltextareafield', [
+        $html    = view('Ragnos\Views\rfield\htmltextareafield', [
             'name'  => 'descripcion',
             'label' => 'Descripción',
             'value' => $payload,
@@ -32,7 +32,7 @@ class ViewSecurityTest extends RagnosTestCase
     public function testMasterSeSerializaComoJsonSeguroParaJavaScript(): void
     {
         $payload = "x';</script><script>alert(1)</script>";
-        $html    = view('App\ThirdParty\Ragnos\Views\rdatasetcontroller\table_view_js', [
+        $html    = view('Ragnos\Views\rdatasetcontroller\table_view_js', [
             'controllerUniqueID' => 'testController',
             'controller_name'    => 'TestController',
             'tableController'    => 'TestController',

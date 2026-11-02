@@ -8,7 +8,7 @@ final class FrontendDependencyTest extends CIUnitTestCase
 {
     public function testFrontendLoadsLocalDependencies(): void
     {
-        $scripts = file_get_contents(HOMEPATH . 'app/ThirdParty/Ragnos/Views/ragnos/scriptfiles.php');
+        $scripts = file_get_contents(HOMEPATH . 'src/Views/ragnos/scriptfiles.php');
 
         $this->assertIsString($scripts);
         $this->assertStringNotContainsString('jquery.min.js', strtolower($scripts));
@@ -36,7 +36,7 @@ final class FrontendDependencyTest extends CIUnitTestCase
     public function testDataTableConfigurationPreservesCoreGridFeatures(): void
     {
         $template = file_get_contents(
-            HOMEPATH . 'app/ThirdParty/Ragnos/Views/rdatasetcontroller/datatable_init.php',
+            HOMEPATH . 'src/Views/rdatasetcontroller/datatable_init.php',
         );
 
         $this->assertIsString($template);
@@ -68,7 +68,7 @@ final class FrontendDependencyTest extends CIUnitTestCase
     public function testDataTableInitialSearchIsAlwaysAString(): void
     {
         $template = file_get_contents(
-            HOMEPATH . 'app/ThirdParty/Ragnos/Views/rdatasetcontroller/datatable_init.php',
+            HOMEPATH . 'src/Views/rdatasetcontroller/datatable_init.php',
         );
 
         $this->assertIsString($template);
@@ -80,7 +80,7 @@ final class FrontendDependencyTest extends CIUnitTestCase
     {
         $directories = [
             HOMEPATH . 'app/Views',
-            HOMEPATH . 'app/ThirdParty/Ragnos/Views',
+            HOMEPATH . 'src/Views',
             HOMEPATH . 'content/assets/js',
         ];
 

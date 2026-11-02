@@ -2,7 +2,7 @@
 
 namespace Tests\Support\Models;
 
-use App\ThirdParty\Ragnos\Models\RDatasetModel;
+use Ragnos\Models\RDatasetModel;
 
 /**
  * Modelo base reutilizable para tests CRUD con tabla en memoria.

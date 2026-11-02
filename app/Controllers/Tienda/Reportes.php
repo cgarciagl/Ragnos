@@ -2,8 +2,8 @@
 
 namespace App\Controllers\Tienda;
 
-use App\ThirdParty\Ragnos\Controllers\BaseController;
-use App\ThirdParty\Ragnos\Controllers\RSimpleLevelReport;
+use Ragnos\Controllers\BaseController;
+use Ragnos\Controllers\RSimpleLevelReport;
 
 class Reportes extends BaseController
 {
@@ -20,7 +20,7 @@ class Reportes extends BaseController
     {
         $this->checkLogin();
         //cargar el helper utiles
-        helper('App\ThirdParty\Ragnos\Helpers\ragnos_helper');
+        helper('Ragnos\Helpers\ragnos_helper');
         $model = new \App\Models\Dashboard();
         $datos = $model->ventasultimos12meses();
         //recorremos los datos y formateamos como moneda el Total
@@ -37,7 +37,7 @@ class Reportes extends BaseController
     function estadosdecuenta()
     {
         $this->checkLogin();
-        helper('App\ThirdParty\Ragnos\Helpers\ragnos_helper');
+        helper('Ragnos\Helpers\ragnos_helper');
         $model = new \App\Models\Dashboard();
         $datos = $model->estadosDeCuenta();
 
@@ -58,7 +58,7 @@ class Reportes extends BaseController
     function ventasporlinea()
     {
         $this->checkLogin();
-        helper('App\ThirdParty\Ragnos\Helpers\ragnos_helper');
+        helper('Ragnos\Helpers\ragnos_helper');
         $model = new \App\Models\Dashboard();
         $datos = $model->ventasPorLinea();
 
@@ -81,7 +81,7 @@ class Reportes extends BaseController
     function mejoresempleados()
     {
         $this->checkLogin();
-        helper('App\ThirdParty\Ragnos\Helpers\ragnos_helper');
+        helper('Ragnos\Helpers\ragnos_helper');
         $model = new \App\Models\Dashboard();
         $datos = $model->empleadosConMasVentasEnElUltimoTrimestre();
 
@@ -104,7 +104,7 @@ class Reportes extends BaseController
     function menorrotacion()
     {
         $this->checkLogin();
-        helper('App\ThirdParty\Ragnos\Helpers\ragnos_helper');
+        helper('Ragnos\Helpers\ragnos_helper');
         $model = new \App\Models\Dashboard();
         $datos = $model->productosConMenorRotacion();
 
@@ -123,7 +123,7 @@ class Reportes extends BaseController
     function margenporlinea()
     {
         $this->checkLogin();
-        helper('App\ThirdParty\Ragnos\Helpers\ragnos_helper');
+        helper('Ragnos\Helpers\ragnos_helper');
         $model = new \App\Models\Dashboard();
         $datos = $model->margenDeGananciaPorLinea();
 
@@ -143,7 +143,7 @@ class Reportes extends BaseController
     {
         $this->checkLogin();
         //cargar el helper utiles
-        helper('App\ThirdParty\Ragnos\Helpers\ragnos_helper');
+        helper('Ragnos\Helpers\ragnos_helper');
         $model               = new \App\Models\Dashboard();
         $data['mapa_ventas'] = $model->ventasPorPais();
         return view('admin/ventas_por_pais', $data);

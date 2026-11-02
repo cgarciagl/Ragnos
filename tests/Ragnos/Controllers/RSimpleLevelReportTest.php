@@ -2,7 +2,7 @@
 
 namespace Tests\Ragnos\Controllers;
 
-use App\ThirdParty\Ragnos\Controllers\RSimpleLevelReport;
+use Ragnos\Controllers\RSimpleLevelReport;
 use Tests\Ragnos\RagnosTestCase;
 use ZipArchive;
 

@@ -7,7 +7,7 @@ use CodeIgniter\Validation\StrictRules\CreditCardRules;
 use CodeIgniter\Validation\StrictRules\FileRules;
 use CodeIgniter\Validation\StrictRules\FormatRules;
 use CodeIgniter\Validation\StrictRules\Rules;
-use App\ThirdParty\Ragnos\Controllers\RagnosRules;
+use Ragnos\Controllers\RagnosRules;
 
 class Validation extends BaseConfig
 {

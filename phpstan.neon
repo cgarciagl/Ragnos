@@ -3,8 +3,10 @@ parameters:
     reportUnmatchedIgnoredErrors: false
     paths:
         - app
+        - src
         - tests
-        - system
+    scanDirectories:
+        - vendor/codeigniter4/framework/system
     ignoreErrors:
         # Los helpers globales de Ragnos no tienen type hints
         - '/Function startsWith not found/'

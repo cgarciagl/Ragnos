@@ -3,10 +3,10 @@
 namespace Tests\Ragnos\Models\Traits;
 
 use Tests\Ragnos\RagnosTestCase;
-use App\ThirdParty\Ragnos\Models\RConcreteDatasetModel;
-use App\ThirdParty\Ragnos\Models\Fields\RSimpleTextField;
-use App\ThirdParty\Ragnos\Models\Fields\RSwitchField;
-use App\ThirdParty\Ragnos\Models\Fields\RPillboxField;
+use Ragnos\Models\RConcreteDatasetModel;
+use Ragnos\Models\Fields\RSimpleTextField;
+use Ragnos\Models\Fields\RSwitchField;
+use Ragnos\Models\Fields\RPillboxField;
 
 /**
  * Pruebas de comportamiento real para FieldManagementTrait.
@@ -21,8 +21,8 @@ class FieldManagementTraitTest extends RagnosTestCase
     {
         parent::setUp();
         helper([
-            'App\ThirdParty\Ragnos\Helpers\utiles_helper',
-            'App\ThirdParty\Ragnos\Helpers\ragnos_helper',
+            'Ragnos\Helpers\utiles_helper',
+            'Ragnos\Helpers\ragnos_helper',
             'text',
         ]);
         $this->model = new RConcreteDatasetModel();

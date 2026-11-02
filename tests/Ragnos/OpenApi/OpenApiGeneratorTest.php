@@ -2,9 +2,9 @@
 
 namespace Tests\Ragnos\OpenApi;
 
-use App\ThirdParty\Ragnos\Controllers\RDatasetController;
-use App\ThirdParty\Ragnos\OpenApi\OpenApiGenerator;
-use App\ThirdParty\Ragnos\OpenApi\OpenApiRegistry;
+use Ragnos\Controllers\RDatasetController;
+use Ragnos\OpenApi\OpenApiGenerator;
+use Ragnos\OpenApi\OpenApiRegistry;
 use CodeIgniter\Test\CIUnitTestCase;
 use Symfony\Component\Yaml\Yaml;
 

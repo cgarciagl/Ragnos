@@ -4,8 +4,8 @@ namespace Tests\Ragnos\Models\Traits;
 
 use Tests\Ragnos\RagnosTestCase;
 use Tests\Support\RequestSimulator;
-use App\ThirdParty\Ragnos\Models\RDatasetModel;
-use App\ThirdParty\Ragnos\Models\RConcreteDatasetModel;
+use Ragnos\Models\RDatasetModel;
+use Ragnos\Models\RConcreteDatasetModel;
 
 /**
  * Modelo concreto para JsonResultTrait.

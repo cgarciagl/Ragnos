@@ -4,7 +4,7 @@ namespace Tests\Support;
 
 use Tests\Support\Controllers\TestRDataset;
 use Tests\Support\Models\CrudTestModel;
-use App\ThirdParty\Ragnos\Controllers\Ragnos;
+use Ragnos\Controllers\Ragnos;
 
 /**
  * Trait que centraliza la configuración de tests CRUD e Integración.

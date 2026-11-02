@@ -7,8 +7,8 @@ use DOMDocument;
 use ZipArchive;
 
 /**
- * Pruebas unitarias para app/ThirdParty/Ragnos/Helpers/xlsxfiles_helper.php
- * y app/ThirdParty/Ragnos/Helpers/csvfiles_helper.php.
+ * Pruebas unitarias para src/Helpers/xlsxfiles_helper.php
+ * y src/Helpers/csvfiles_helper.php.
  */
 class XlsxHelperTest extends CIUnitTestCase
 {
@@ -18,8 +18,8 @@ class XlsxHelperTest extends CIUnitTestCase
     {
         parent::setUp();
         helper([
-            'App\ThirdParty\Ragnos\Helpers\xlsxfiles_helper',
-            'App\ThirdParty\Ragnos\Helpers\csvfiles_helper',
+            'Ragnos\Helpers\xlsxfiles_helper',
+            'Ragnos\Helpers\csvfiles_helper',
         ]);
     }
 
@@ -271,9 +271,9 @@ class XlsxHelperTest extends CIUnitTestCase
 
     public function testHtmlToXlsxPreservesReportStructureAndFormatting(): void
     {
-        helper('App\ThirdParty\Ragnos\Helpers\ragnos_helper');
+        helper('Ragnos\Helpers\ragnos_helper');
 
-        $reporte = new \App\ThirdParty\Ragnos\Controllers\RSimpleLevelReport();
+        $reporte = new \Ragnos\Controllers\RSimpleLevelReport();
         $datos = [
             ['Oficina' => 'Boston', 'employeeNumber' => 1188, 'Empleado' => 'Julie Firrelli', 'TotalVentasTrimestre' => '$ 485,320.00'],
             ['Oficina' => 'Boston', 'employeeNumber' => 1216, 'Empleado' => 'Steve Patterson', 'TotalVentasTrimestre' => '$ 505,875.50'],
@@ -338,9 +338,9 @@ class XlsxHelperTest extends CIUnitTestCase
 
     public function testRSimpleLevelReportExportToXlsxMethod(): void
     {
-        helper('App\ThirdParty\Ragnos\Helpers\ragnos_helper');
+        helper('Ragnos\Helpers\ragnos_helper');
 
-        $reporte = new \App\ThirdParty\Ragnos\Controllers\RSimpleLevelReport();
+        $reporte = new \Ragnos\Controllers\RSimpleLevelReport();
         $datos = [
             ['employeeNumber' => 101, 'Empleado' => 'Test User', 'Total' => 100.50],
         ];
