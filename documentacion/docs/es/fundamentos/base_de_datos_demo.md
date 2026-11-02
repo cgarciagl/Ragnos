@@ -4,6 +4,20 @@ Ragnos incluye la base de datos de ejemplo **Classicmodels**, una implementació
 
 Esta base de datos modela un negocio de **venta de modelos a escala de coches clásicos**. Contiene información típica de un negocio: clientes, productos, pedidos, pagos, empleados y oficinas.
 
+## 📥 Instalación
+
+La demo es opcional y se instala sobre las tablas del sistema (`ragnos_base.sql`):
+
+```bash
+mysql -u root -p ragnos < sampledatabase/demo_classicmodels.sql
+```
+
+Ragnos detecta las tablas automáticamente: al recargar la aplicación aparecen los menús *Catálogos*, *Reportes* y *Procesos* y el panel de ventas. El script incluye las columnas `idPayment` (en `payments`) e `idDetail` (en `orderdetails`), que los controladores de la demo usan como llave.
+
+!!! warning "Solo para desarrollo"
+
+    El script elimina y vuelve a crear las tablas de la demo. No lo ejecutes sobre una base con datos que quieras conservar.
+
 ## 📊 Estructura de la Base de Datos
 
 La base de datos consta de 8 tablas relacionadas entre sí. A continuación se presenta un diagrama Entidad-Relación (ER) que ilustra la estructura:

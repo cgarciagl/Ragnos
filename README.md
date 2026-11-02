@@ -66,13 +66,17 @@ Instead of writing boilerplate code, you define your data structure and business
 3. **Configure** the environment:
    - Copy `.env.example` to `.env` (never commit `.env`)
    - Update database credentials and base URL
-4. **Import** the database:
-   - Create a new database
-   - Import `sampledatabase/ragnos_mariadb.sql`
-   - Import `sampledatabase/ci_sessions.sql`
-5. **Access** your application at the configured URL (e.g., `http://localhost/mi-proyecto/content`)
+4. **Create** the database (named as in your `.env`, `ragnos` by default) and import the system tables:
+   ```bash
+   mysql -u root -p ragnos < sampledatabase/ragnos_base.sql
+   ```
+5. *(Optional)* **Load the demo** — a scale-model store with catalogs, reports and a sales dashboard:
+   ```bash
+   mysql -u root -p ragnos < sampledatabase/demo_classicmodels.sql
+   ```
+6. **Access** your application at the configured URL (e.g., `http://localhost/mi-proyecto/content`) and sign in with `admin` / `admin`
 
-> For detailed installation instructions, see the [Official Documentation](https://leanpub.com/ragnosfromzerotopro)
+> For detailed installation instructions, see the [Official Documentation](https://ragnos.build/docs/) or the book [Ragnos from Zero to Pro](https://leanpub.com/ragnosfromzerotopro)
 
 ### Create Your First Dataset
 

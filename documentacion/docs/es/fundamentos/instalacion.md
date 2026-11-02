@@ -79,15 +79,40 @@ database.default.password = tu_contraseña
 database.default.DBDriver = MySQLi
 ```
 
-### 3. Importar Base de Datos
+### 3. Crear la Base de Datos
 
-Ragnos requiere ciertas tablas base para funcionar (usuarios, sesiones, permisos).
+Ragnos separa sus tablas en dos scripts dentro de `sampledatabase/`:
 
-1. Crea una base de datos vacía en tu gestor (phpMyAdmin, HeidiSQL, etc.).
-2. Importa los archivos SQL ubicados en la carpeta `sampledatabase/`:
-   - Ejecuta primero `ragnos_mariadb.sql` (o el dump principal que contenga la estructura base).
-   - Ejecuta `ci_sessions.sql` para la tabla de sesiones.
-   - (Opcional) Ejecuta `mysqlsampledatabase.sql` si deseas cargar los datos de ejemplo **Classicmodels**. Consulta [Base de Datos Demo](base_de_datos_demo.md) para más detalles.
+| Script | Contenido | ¿Obligatorio? |
+| :----- | :-------- | :-----------: |
+| `ragnos_base.sql` | Tablas del sistema: usuarios, grupos, bitácora de auditoría y sesiones. Incluye el usuario `admin`. | ✅ |
+| `demo_classicmodels.sql` | Demo de la tienda de modelos a escala (**Classicmodels**): catálogos, reportes y panel de ventas. | Opcional |
+
+1. Crea una base de datos vacía con el mismo nombre que pusiste en `database.default.database` (por defecto, `ragnos`):
+
+    ```sql
+    CREATE DATABASE ragnos CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+    ```
+
+2. Importa las tablas del sistema:
+
+    ```bash
+    mysql -u root -p ragnos < sampledatabase/ragnos_base.sql
+    ```
+
+3. (Opcional) Importa la demo para explorar Ragnos con datos reales. Consulta [Base de Datos Demo](base_de_datos_demo.md) para conocer su estructura.
+
+    ```bash
+    mysql -u root -p ragnos < sampledatabase/demo_classicmodels.sql
+    ```
+
+!!! tip "¿Usas HeidiSQL o phpMyAdmin?"
+
+    Selecciona la base de datos y usa *Archivo → Cargar archivo SQL* (HeidiSQL) o la pestaña *Importar* (phpMyAdmin). Los scripts no fijan el nombre de la base, así que se importan en la que tengas seleccionada.
+
+!!! info "Con o sin demo"
+
+    Sin la demo, Ragnos arranca con un panel de inicio del sistema (usuarios, grupos y actividad reciente) y el menú solo muestra *Inicio* y *Administración*. Al importar `demo_classicmodels.sql` aparecen automáticamente los menús *Catálogos*, *Reportes* y *Procesos*, y el panel de ventas de la tienda. No hace falta cambiar ninguna configuración.
 
 ### 4. Verificar Permisos
 

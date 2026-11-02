@@ -4,6 +4,20 @@ Ragnos includes the **Classicmodels** sample database, a well-known standard imp
 
 This database models a **retailer of scale models of classic cars**. It contains typical business information: customers, products, orders, payments, employees, and offices.
 
+## 📥 Installation
+
+The demo is optional and is installed on top of the system tables (`ragnos_base.sql`):
+
+```bash
+mysql -u root -p ragnos < sampledatabase/demo_classicmodels.sql
+```
+
+Ragnos detects the tables automatically: after reloading the application, the *Catalogs*, *Reports* and *Processes* menus and the sales dashboard appear. The script includes the `idPayment` (in `payments`) and `idDetail` (in `orderdetails`) columns that the demo controllers use as keys.
+
+!!! warning "Development only"
+
+    The script drops and recreates the demo tables. Don't run it against a database with data you want to keep.
+
 ## 📊 Database Structure
 
 The database consists of 8 related tables. Below is an Entity-Relationship (ER) diagram illustrating the structure:

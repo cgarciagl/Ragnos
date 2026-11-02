@@ -79,15 +79,40 @@ database.default.password = your_password
 database.default.DBDriver = MySQLi
 ```
 
-### 3. Import Database
+### 3. Create the Database
 
-Ragnos requires certain base tables to function (users, sessions, permissions).
+Ragnos splits its tables into two scripts inside `sampledatabase/`:
 
-1. Create an empty database in your manager (phpMyAdmin, HeidiSQL, etc.).
-2. Import the SQL files located in the `sampledatabase/` folder:
-   - Run `ragnos_mariadb.sql` first (or the main dump containing the base structure).
-   - Run `ci_sessions.sql` for the sessions table.
-   - (Optional) Run `mysqlsampledatabase.sql` if you want to load the **Classicmodels** sample data. See [Demo Database](demo_database.md) for more details.
+| Script | Contents | Required? |
+| :----- | :------- | :-------: |
+| `ragnos_base.sql` | System tables: users, groups, audit log and sessions. Includes the `admin` user. | ✅ |
+| `demo_classicmodels.sql` | Scale-model store demo (**Classicmodels**): catalogs, reports and sales dashboard. | Optional |
+
+1. Create an empty database with the same name you set in `database.default.database` (`ragnos` by default):
+
+    ```sql
+    CREATE DATABASE ragnos CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+    ```
+
+2. Import the system tables:
+
+    ```bash
+    mysql -u root -p ragnos < sampledatabase/ragnos_base.sql
+    ```
+
+3. (Optional) Import the demo to explore Ragnos with real data. See [Demo Database](demo_database.md) for its structure.
+
+    ```bash
+    mysql -u root -p ragnos < sampledatabase/demo_classicmodels.sql
+    ```
+
+!!! tip "Using HeidiSQL or phpMyAdmin?"
+
+    Select the database and use *File → Load SQL file* (HeidiSQL) or the *Import* tab (phpMyAdmin). The scripts don't hard-code the database name, so they import into whichever one is selected.
+
+!!! info "With or without the demo"
+
+    Without the demo, Ragnos starts with a system home panel (users, groups and recent activity) and the menu only shows *Home* and *Administration*. Importing `demo_classicmodels.sql` automatically brings up the *Catalogs*, *Reports* and *Processes* menus and the store's sales dashboard. No configuration change is needed.
 
 ### 4. Verify Permissions
 
