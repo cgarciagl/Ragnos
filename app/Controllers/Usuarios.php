@@ -80,13 +80,13 @@ class Usuarios extends RDatasetController
         if ($id == 1) {
             raise('No puede modificar al superusuario...');
         } elseif (fieldHasChanged('usu_pword')) {
-            $userData['usu_pword'] = md5(strtoupper($userData['usu_pword']));
+            $userData['usu_pword'] = \App\Libraries\Passwords::hash((string) $userData['usu_pword']);
         }
     }
 
     public function _beforeInsert(&$userData)
     {
-        $userData['usu_pword'] = md5(strtoupper($userData['usu_pword']));
+        $userData['usu_pword'] = \App\Libraries\Passwords::hash((string) $userData['usu_pword']);
     }
 
 }

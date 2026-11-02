@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Libraries\Passwords;
 use Ragnos\Controllers\BaseController;
 
 
@@ -77,27 +78,36 @@ class Admin extends BaseController
                 static function ($value, $data, &$error, $field) {
                     $request  = request();
                     $session  = session();
-                    $usuario  = strtoupper(getInputValue('usuario'));
-                    $password = md5(strtoupper(getInputValue('pword')));
+                    $usuario  = strtoupper((string) getInputValue('usuario'));
+                    $password = (string) getInputValue('pword');
                     $db       = db_connect();
                     $query    = $db->table('gen_usuarios')
-                        ->select('usu_id, usu_nombre, gru_nombre')
+                        ->select('usu_id, usu_nombre, usu_pword, gru_nombre')
                         ->join('gen_gruposdeusuarios', 'usu_grupo=gru_id', 'inner')
-                        ->where(['usu_login' => $usuario, 'usu_pword' => $password, 'usu_activo' => 'S'])
+                        ->where(['usu_login' => $usuario, 'usu_activo' => 'S'])
                         ->get();
-                    if ($query->getNumRows() == 0) {
+                    $cuenta = $query->getFirstRow('array');
+
+                    if ($cuenta === null || ! Passwords::verify($password, (string) $cuenta['usu_pword'])) {
                         $error = 'Usuario ó contraseña incorrectos!';
                         return false;
-                    } else {
-                        $r = $query->getFirstRow('array');
-                        $session->set('usu_id', $r['usu_id']);
-                        $session->set('usu_nombre', $r['usu_nombre']);
-                        $session->set('gru_nombre', $r['gru_nombre']);
-                        $token = bin2hex(random_bytes(32)); // Genera un token seguro de 64 caracteres
-                        $session->set('usu_token', $token);
-                        $db->table('gen_usuarios')->update(['usu_token' => $token], ['usu_id' => $r['usu_id']]);
-                        return true;
                     }
+
+                    // Migra en silencio los hashes antiguos (md5) a password_hash().
+                    if (Passwords::needsRehash((string) $cuenta['usu_pword']) && Passwords::storageSupportsModernHashes()) {
+                        $db->table('gen_usuarios')->update(['usu_pword' => Passwords::hash($password)], ['usu_id' => $cuenta['usu_id']]);
+                    }
+
+                    // Nuevo identificador de sesión al autenticarse (evita la fijación de sesión).
+                    $session->regenerate();
+                    $session->set('usu_id', $cuenta['usu_id']);
+                    $session->set('usu_nombre', $cuenta['usu_nombre']);
+                    $session->set('gru_nombre', $cuenta['gru_nombre']);
+                    $token = bin2hex(random_bytes(32)); // Genera un token seguro de 64 caracteres
+                    $session->set('usu_token', $token);
+                    $db->table('gen_usuarios')->update(['usu_token' => $token], ['usu_id' => $cuenta['usu_id']]);
+
+                    return true;
                 },
             ]
         );
@@ -198,7 +208,7 @@ class Admin extends BaseController
         $db = db_connect();
         $db->table('gen_usuarios')
             ->where('usu_id', $id)
-            ->update(['usu_pword' => md5(strtoupper($password))]);
+            ->update(['usu_pword' => Passwords::hash((string) $password)]);
 
         returnAsJSON(['result' => 'ok']);
     }

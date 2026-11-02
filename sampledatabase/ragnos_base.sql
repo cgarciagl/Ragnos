@@ -14,7 +14,6 @@
 --  ⚠ Fresh-install script: it drops and recreates these tables.
 -- =============================================================================
 
-/*M!999999\- enable the sandbox mode */ 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -49,7 +48,7 @@ DROP TABLE IF EXISTS `gen_usuarios`;
 CREATE TABLE `gen_usuarios` (
   `usu_id` int(11) NOT NULL AUTO_INCREMENT,
   `usu_login` varchar(50) NOT NULL,
-  `usu_pword` varchar(50) NOT NULL,
+  `usu_pword` varchar(255) NOT NULL,
   `usu_nombre` varchar(100) NOT NULL,
   `usu_activo` varchar(1) NOT NULL DEFAULT 'S',
   `usu_grupo` int(11) DEFAULT NULL,
@@ -64,7 +63,7 @@ CREATE TABLE `gen_usuarios` (
 
 /*!40000 ALTER TABLE `gen_usuarios` DISABLE KEYS */;
 INSERT INTO `gen_usuarios` VALUES
-(1,'ADMIN','73acd9a5972130b75066c82595a1fae3','Administrador','S',1,NULL,NULL);
+(1,'ADMIN','$2y$10$3fZ/HriMoOJgqGcnlsEDhe/KSE87.KIinYP2MVCwsfCi0L/XIEASu','Administrador','S',1,NULL,NULL);
 /*!40000 ALTER TABLE `gen_usuarios` ENABLE KEYS */;
 DROP TABLE IF EXISTS `gen_audit_logs`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
