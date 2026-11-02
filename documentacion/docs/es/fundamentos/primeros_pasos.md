@@ -68,7 +68,7 @@ class Tareas extends RDatasetController
 
         $this->addField('estado', [
             'label' => 'Estado Actual',
-            'type'  => 'select', // O 'enum'
+            'type'  => 'dropdown',
             'options' => [
                 'pendiente' => 'Pendiente',
                 'en_progreso' => 'En Progreso',

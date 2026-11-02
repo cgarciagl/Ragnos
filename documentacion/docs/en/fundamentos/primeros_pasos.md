@@ -68,7 +68,7 @@ class Tasks extends RDatasetController
 
         $this->addField('status', [
             'label' => 'Current Status',
-            'type'  => 'select', // Or 'enum'
+            'type'  => 'dropdown',
             'options' => [
                 'pending' => 'Pending',
                 'in_progress' => 'In Progress',

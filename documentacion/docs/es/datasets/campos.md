@@ -35,7 +35,7 @@ $this->addField('nombreCampo', [
 
 !!! tip "Uso del Enum `RFieldType` (PHP 8.1+)"
 
-    Además de utilizar cadenas de texto (ej. `'type' => 'select'`), Ragnos soporta el Enum respaldado `Ragnos\Models\Fields\RFieldType` para asignación de tipos con autocompletado en IDEs:
+    Además de utilizar cadenas de texto (ej. `'type' => 'dropdown'`), Ragnos soporta el Enum respaldado `Ragnos\Models\Fields\RFieldType` para asignación de tipos con autocompletado en IDEs:
 
     ```php
     use Ragnos\Models\Fields\RFieldType;
@@ -46,6 +46,17 @@ $this->addField('nombreCampo', [
         'options' => ['A' => 'Activo', 'I' => 'Inactivo']
     ]);
     ```
+
+    Algunos casos del Enum conservan un nombre distinto al tipo de texto equivalente; Ragnos hace la conversión por ti:
+
+    | Enum                         | Equivale a                                |
+    | :--------------------------- | :---------------------------------------- |
+    | `RFieldType::SELECT`         | `'dropdown'`                              |
+    | `RFieldType::CHECKBOX`       | `'switch'`                                |
+    | `RFieldType::FILE`           | `'fileupload'`                            |
+    | `RFieldType::IMAGE`          | `'imageupload'`                           |
+    | `RFieldType::MONEY`          | `'text'` más la regla `money`             |
+    | Los demás (`TEXT`, `DATE`…)  | El mismo nombre en minúsculas             |
 
 !!! tip "Reglas de Validación"
 

@@ -13,7 +13,8 @@ trait FieldManagementTrait
     }
     function addFieldFromArray($fieldName, $array)
     {
-        $type     = trim($array['type'] ?? 'text');
+        $array    = $this->normalizeFieldType($array);
+        $type     = $array['type'];
         $classMap = [
             'switch'      => \Ragnos\Models\Fields\RSwitchField::class,
             'pillbox'     => \Ragnos\Models\Fields\RPillboxField::class,
@@ -32,6 +33,38 @@ trait FieldManagementTrait
         $this->ofieldlist[$fieldName]->loadFromArray($array);
         $this->ofieldlist[$fieldName]->setDefaults();
         return $this->ofieldlist[$fieldName];
+    }
+
+    /**
+     * Normaliza la clave 'type' de la configuración de un campo:
+     * acepta el enum RFieldType (convirtiéndolo al tipo interno de Ragnos)
+     * y traduce el tipo 'money' a la regla 'money', que es la que da formato de moneda.
+     */
+    private function normalizeFieldType(array $array): array
+    {
+        $type = $array['type'] ?? 'text';
+
+        if ($type instanceof \Ragnos\Models\Fields\RFieldType) {
+            $isMoney = ($type === \Ragnos\Models\Fields\RFieldType::MONEY);
+            $type    = $type->fieldType();
+        } else {
+            $type    = trim((string) $type);
+            $isMoney = ($type === 'money');
+            if ($isMoney) {
+                $type = 'text';
+            }
+        }
+
+        if ($isMoney) {
+            $rules = array_filter(explode('|', (string) ($array['rules'] ?? '')));
+            if (!in_array('money', $rules, true)) {
+                $rules[] = 'money';
+            }
+            $array['rules'] = implode('|', $rules);
+        }
+
+        $array['type'] = $type;
+        return $array;
     }
 
     function completeFieldList()

@@ -87,7 +87,7 @@ abstract class RField
     public function setType(string|RFieldType $type): void
     {
         if ($type instanceof RFieldType) {
-            $this->type = $type->value;
+            $this->type = $type->fieldType();
         } else {
             $this->type = trim($type);
         }
