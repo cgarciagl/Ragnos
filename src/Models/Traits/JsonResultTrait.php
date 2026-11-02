@@ -7,9 +7,9 @@ trait JsonResultTrait
     function getTableAjax()
     {
         if ($this->table) {
-            $count = $this->getCountForSearch();
-            $this->checkRelations();
-            $this->performSearchForJson();
+            // Contar sin reiniciar el Query Builder: los filtros previos
+            // también deben limitar las filas, no solo el conteo.
+            $count = $this->getCountForSearch(false);
             $this->setLimitForJsonResult();
             $this->setOrderByForJsonResult();
             $query = $this->builder()->get();
@@ -21,9 +21,7 @@ trait JsonResultTrait
     function getTableAjaxBySQL($sql)
     {
         if ($this->table) {
-            $count = $this->getCountForSearchSQL($sql);
-            $this->checkRelations();
-            $this->performSearchForJson();
+            $count = $this->getCountForSearchSQL($sql, false);
             $this->setLimitForJsonResult();
             $this->setOrderByForJsonResult();
             $sqlCompiled = $this->builder()->getCompiledSelect();
@@ -39,9 +37,7 @@ trait JsonResultTrait
     {
         if ($this->table) {
             if (!empty($this->baseQuerySQL)) {
-                $count = $this->getCountForSearchSQL($this->baseQuerySQL);
-                $this->checkRelations();
-                $this->performSearchForJson();
+                $count = $this->getCountForSearchSQL($this->baseQuerySQL, false);
                 $this->setLimitForJsonResult();
                 $this->setOrderByForJsonResult();
                 $sqlCompiled = $this->builder()->getCompiledSelect();
@@ -49,9 +45,7 @@ trait JsonResultTrait
                 $db          = db_connect();
                 $query       = $db->query($sqlCompiled);
             } else {
-                $count = $this->getCountForSearch();
-                $this->checkRelations();
-                $this->performSearchForJson();
+                $count = $this->getCountForSearch(false);
                 $this->setLimitForJsonResult();
                 $this->setOrderByForJsonResult();
                 $query = $this->builder()->get();

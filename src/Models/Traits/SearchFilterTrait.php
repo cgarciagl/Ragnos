@@ -140,21 +140,27 @@ trait SearchFilterTrait
         }
     }
 
-    function getCountForSearch()
+    /**
+     * Prepara la consulta (relaciones y búsqueda) y cuenta los registros.
+     * Con $reset = false el Query Builder conserva su estado, de modo que la
+     * consulta de datos que sigue respeta los filtros previos (_filters(),
+     * maestro-detalle, borrado lógico) y no hace falta prepararla de nuevo.
+     */
+    function getCountForSearch(bool $reset = true)
     {
         $this->completeFieldList();
         $this->checkRelations();
         $this->performSearchForJson();
-        return $this->builder()->countAllResults(true);
+        return $this->builder()->countAllResults($reset);
     }
 
 
-    function getCountForSearchSQL($sql)
+    function getCountForSearchSQL($sql, bool $reset = true)
     {
         $this->completeFieldList();
         $this->checkRelations();
         $this->performSearchForJson();
-        $sqlCompiled = $this->builder()->getCompiledSelect();
+        $sqlCompiled = $this->builder()->getCompiledSelect($reset);
         $sqlCompiled = " WITH {$this->table} AS ({$sql})  " . $sqlCompiled;
         $db          = db_connect();
         $query       = $db->query($sqlCompiled);
