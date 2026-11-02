@@ -14,7 +14,7 @@ mysql -u root -p ragnos < sampledatabase/demo_classicmodels.sql   # opcional / o
 - Los scripts no fijan el nombre de la base: se importan en la seleccionada. / The scripts don't hard-code the database name.
 - Ambos eliminan y recrean sus tablas: úsalos solo para instalar. / Both drop and recreate their tables: use them only to install.
 - Ragnos detecta la demo automáticamente (menús, panel y reportes). / Ragnos detects the demo automatically.
-- Con interfaz gráfica, recomendamos [PyroStudio](https://github.com/cgarciagl/PyroStudio), del mismo autor de Ragnos: clic derecho en la base → *Respaldar / Restaurar* → *Restaurar en BD Existente*. / With a GUI, we recommend [PyroStudio](https://github.com/cgarciagl/PyroStudio), by the author of Ragnos.
+- Con interfaz gráfica, recomendamos [PyroStudio](https://github.com/cgarciagl/PyroStudio), del mismo autor de Ragnos: clic derecho en la base → *Respaldar / Restaurar* → *Restaurar en BD Existente*. / With a GUI, we recommend [PyroStudio](https://github.com/cgarciagl/PyroStudio), by the author of Ragnos: right-click the database → *Backup / Restore* → *Restore into Existing DB*.
 - `esquema.png`: diagrama entidad-relación de Classicmodels. / Classicmodels ER diagram.
 
 Documentación / Docs: <https://ragnos.build/docs/fundamentos/instalacion/>

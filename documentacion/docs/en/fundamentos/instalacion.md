@@ -110,7 +110,7 @@ Ragnos splits its tables into two scripts inside `sampledatabase/`:
 
     [**PyroStudio**](https://github.com/cgarciagl/PyroStudio) is the desktop client for **MariaDB, MySQL and SQLite** created by the author of Ragnos, designed to work hand in hand with the framework. It's free (MIT), native and ultralight (Tauri + Rust, no Electron or Java) and runs on Windows, macOS and Linux.
 
-    To load the scripts: right-click the `ragnos` database → *Respaldar / Restaurar* (Backup / Restore) → *Restaurar* (Restore) tab → *Restaurar en BD Existente* (Restore into existing DB), and choose `ragnos_base.sql` first, then `demo_classicmodels.sql`.
+    To load the scripts: right-click the `ragnos` database → *Backup / Restore* → *Restore* tab → *Restore into Existing DB*, and choose `ragnos_base.sql` first, then `demo_classicmodels.sql`.
 
     It also includes a **PHP HTTP tunnel** to manage the database of a shared hosting that doesn't expose the MySQL port (exactly where Ragnos is often deployed), **Safe Mode** that asks for confirmation before destructive statements, and encrypted credentials.
 

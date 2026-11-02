@@ -52,6 +52,10 @@ Antes de abrir el sistema, cambia la contraseña de `admin` desde el menú de us
 
     Si tu base viene de una versión de Ragnos que guardaba contraseñas con md5, no hace falta restablecerlas: cada usuario sigue entrando con su clave y Ragnos actualiza su hash a `password_hash()` en ese primer inicio de sesión (requiere haber ejecutado `php spark migrate`).
 
+!!! success "Administra la base de producción con PyroStudio"
+
+    En un hosting compartido el puerto de MySQL casi nunca está abierto. [**PyroStudio**](https://github.com/cgarciagl/PyroStudio), el cliente de escritorio del mismo autor de Ragnos, se conecta mediante un **túnel HTTP**: subes `tunnel/pyro_tunnel.php` junto a tu aplicación y administras la base por HTTPS, sin abrir puertos. El túnel exige un token secreto y solo se conecta a bases en `localhost`. Marca la conexión como *Production* para que su Safe Mode pida confirmación ante sentencias destructivas, y usa *Respaldar / Restaurar* para respaldar antes de cada despliegue.
+
 ## 4. Carpeta pública y servidor web
 
 Apunta el *Document Root* del servidor a la carpeta pública de Ragnos (`content`). Si tu hosting exige otro nombre (`public_html`, `www`), renómbrala y actualiza `$publicDirectory` en `app/Config/Paths.php`; consulta [Configuración](../fundamentos/configuracion.md#carpeta-publica-content).

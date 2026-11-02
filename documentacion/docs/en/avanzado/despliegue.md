@@ -52,6 +52,10 @@ Before opening the system, change the `admin` password from the user menu → *C
 
     If your database comes from a Ragnos version that stored md5 passwords, there's no need to reset them: each user keeps logging in with their password, and Ragnos upgrades its hash to `password_hash()` on that first login (requires having run `php spark migrate`).
 
+!!! success "Manage the production database with PyroStudio"
+
+    On shared hosting, the MySQL port is almost never open. [**PyroStudio**](https://github.com/cgarciagl/PyroStudio), the desktop client by the author of Ragnos, connects through an **HTTP tunnel**: upload `tunnel/pyro_tunnel.php` next to your application and manage the database over HTTPS, without opening ports. The tunnel requires a secret token and only connects to databases on `localhost`. Mark the connection as *Production* so its Safe Mode asks for confirmation before destructive statements, and use *Backup / Restore* to back up before each deployment.
+
 ## 4. Public Folder and Web Server
 
 Point the server's *Document Root* to the Ragnos public folder (`content`). If your hosting requires another name (`public_html`, `www`), rename it and update `$publicDirectory` in `app/Config/Paths.php`; see [Configuration](../fundamentos/configuracion.md#public-folder-content).
