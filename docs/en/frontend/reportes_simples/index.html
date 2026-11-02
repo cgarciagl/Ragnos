@@ -225,51 +225,51 @@
                     <div class="col-md-9" role="main">
 
 <h1 id="simple-report-generation-rsimplelevelreport">📊 Simple Report Generation (RSimpleLevelReport)</h1>
-<p>The <code>RSimpleLevelReport</code> class allows generating reports in HTML table format quickly and structured directly from a data array. Ideal for displaying lists, financial summaries or any dataset requiring tabular presentation, with support for grouping levels (control breaks).</p>
+<p>The <code>RSimpleLevelReport</code> class lets you generate well-structured HTML table reports quickly, directly from a data array. It is ideal for displaying lists, financial summaries, or any data set that needs a tabular presentation, with support for grouping levels (control breaks).</p>
 <h2 id="main-features">Main Features</h2>
 <ul>
-<li>Automatic HTML table generation with professional design.</li>
+<li>Automatic generation of professionally styled HTML tables.</li>
 <li>Support for multiple grouping levels (headers per group).</li>
-<li>Automatic record total calculation.</li>
+<li>Automatic calculation of record totals.</li>
 <li><strong>Detection and calculation of sums for numeric columns (subtotals and grand totals).</strong></li>
 <li>Easy integration with Ragnos views.</li>
 </ul>
 <h2 id="basic-usage-flow">Basic Usage Flow</h2>
 <ol>
-<li>Get data (usually from Model).</li>
+<li>Get the data (usually from a model).</li>
 <li>Instantiate <code>Ragnos\Controllers\RSimpleLevelReport</code>.</li>
-<li>Configure report using <code>quickSetup</code>.</li>
-<li>Render report and pass to view.</li>
+<li>Configure the report with <code>quickSetup</code>.</li>
+<li>Render the report and pass it to a view.</li>
 </ol>
 <h2 id="class-api">Class API</h2>
 <h3 id="quicksetuptitle-data-listfields-groups-desc_filter"><code>quickSetup($title, $data, $listfields, $groups = [], $desc_filter = '')</code></h3>
-<p>Configures main report parameters at once.</p>
+<p>Configures the main report parameters in a single call.</p>
 <ul>
-<li><strong><code>$title</code></strong> (string): Main report title.</li>
-<li><strong><code>$data</code></strong> (array): Data set (array of associative arrays).</li>
-<li><strong><code>$listfields</code></strong> (array): List of fields to show.</li>
-<li>If simple array <code>['Field1', 'Field2']</code>, keys are searched in <code>$data</code>.</li>
-<li>Recommended for names to match data array keys.</li>
-<li><strong><code>$groups</code></strong> (array): (Optional) Grouping configuration.</li>
+<li><strong><code>$title</code></strong> (string): The main report title.</li>
+<li><strong><code>$data</code></strong> (array): The data set (an array of associative arrays).</li>
+<li><strong><code>$listfields</code></strong> (array): The list of fields to show.</li>
+<li>If it is a simple array such as <code>['Field1', 'Field2']</code>, those keys are looked up in <code>$data</code>.</li>
+<li>The names should match the keys of the data array.</li>
+<li><strong><code>$groups</code></strong> (array): (Optional) The grouping configuration.</li>
 <li>Format: <code>['grouping_field' =&gt; ['label' =&gt; 'Group Label']]</code>.</li>
-<li><strong><code>$desc_filter</code></strong> (string): (Optional) Subtitle or description of applied filters.</li>
+<li><strong><code>$desc_filter</code></strong> (string): (Optional) A subtitle or description of the applied filters.</li>
 </ul>
 <h3 id="setshowtotalsbool-showtotals"><code>setShowTotals(bool $showTotals)</code></h3>
-<p>Enables or disables totals display (record count and financial sums) at the end of each group and report (default <code>true</code>).</p>
+<p>Enables or disables the totals (record count and sums) at the end of each group and of the report (default <code>true</code>).</p>
 <h3 id="setsummablefieldsarray-fields"><code>setSummableFields(array $fields)</code></h3>
-<p>Explicitly defines which fields should be mathematically summed in table footers.</p>
+<p>Explicitly defines which fields are summed in the table footers.</p>
 <ul>
-<li><strong><code>$fields</code></strong> (array): List of field names (labels) containing numeric values.</li>
-<li><em>Note:</em> If this method is not used, the class attempts to automatically detect summable fields by looking for names like 'Total', 'Price', 'Balance', 'Debt', etc.</li>
+<li><strong><code>$fields</code></strong> (array): The names (labels) of the fields that contain numeric values.</li>
+<li><em>Note:</em> If you do not call this method, the class tries to detect summable fields by comparing the exact name of each column (case-sensitive) against a fixed list, for example <code>Total</code>, <code>Monto</code>, <code>Precio</code>, <code>Saldo</code>, <code>Deuda</code>, <code>amount</code>, or <code>MSRP</code>. If your columns have other names, list them with this method.</li>
 </ul>
 <h3 id="renderreturnroute-adminindex"><code>render($returnRoute = 'admin/index')</code></h3>
-<p>Returns rendered report HTML inside standard report view. Useful embedding in existing layouts.</p>
+<p>Returns the rendered report HTML inside the standard report view. Useful for embedding it in existing layouts.</p>
 <h3 id="generate"><code>generate()</code></h3>
-<p>Returns only HTML of table and headers, without full view wrapper. Useful for AJAX injections or custom views.</p>
+<p>Returns only the HTML of the table and its headers, without the full view wrapper. Useful for AJAX injection or custom views.</p>
 <hr />
 <h2 id="implementation-examples">Implementation Examples</h2>
 <h3 id="1-simple-report-flat-list">1. Simple Report (Flat List)</h3>
-<p>Example showing monthly sales list without grouping.</p>
+<p>An example that shows a list of monthly sales without grouping.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="cp">&lt;?php</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="k">namespace</span> <span class="nx">App\Controllers\Tienda</span><span class="p">;</span>
@@ -307,8 +307,8 @@
 </code></pre></div>
 <p>This example follows the real <code>Tienda\Reportes</code> controller of the demo store, so its methods, columns, and view keep their original Spanish names.</p>
 <h3 id="2-grouped-report-control-break">2. Grouped Report (Control Break)</h3>
-<p>Example generates product list grouped by <strong>Category</strong>. Every time category changes, new header is generated.</p>
-<p><strong>Important Requirement</strong>: For grouping to work correctly, <strong>input data must be sorted</strong> by grouping field.</p>
+<p>This example generates a list of products grouped by <strong>Category</strong>. Every time the category changes, a new header is generated.</p>
+<p><strong>Important Requirement</strong>: For grouping to work correctly, <strong>the input data must be sorted</strong> by the grouping field.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="cp">&lt;?php</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="k">namespace</span> <span class="nx">App\Controllers\Tienda</span><span class="p">;</span>
@@ -350,7 +350,7 @@
 <a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a><span class="p">}</span>
 </code></pre></div>
 <h3 id="3-multi-level-report">3. Multi-Level Report</h3>
-<p>Possible to group by multiple levels (e.g. Country -&gt; State -&gt; City).</p>
+<p>You can group by multiple levels (e.g. Country -&gt; State -&gt; City).</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="x">$groups = [</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="x">    'country' =&gt; ['label' =&gt; 'Country'],</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="x">    'state'   =&gt; ['label' =&gt; 'State/Province']</span>
@@ -371,22 +371,23 @@
 <a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="x">$report = new RSimpleLevelReport();</span>
 <a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="x">$report-&gt;quickSetup('Commission Report', $data, ['salesperson', 'sale', 'commission']);</span>
 <a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="x">// Optional: Force which fields to sum (if not automatically detected)</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="x">// $report-&gt;setSummableFields(['sale', 'commission']);</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="x">// Rendering will generate:</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="x">// - A table with the data.</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="x">// - A "GRAND TOTAL" footer aligned correctly.</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="x">// - The 'sale' column will sum to 450.50</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="x">// - The 'commission' column will sum to 45</span>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="x">return $report-&gt;render();</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="x">// 'sale' and 'commission' are not among the names detected automatically,</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="x">// so they are listed explicitly</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="x">$report-&gt;setSummableFields(['sale', 'commission']);</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="x">// Rendering will generate:</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="x">// - A table with the data.</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="x">// - A "GRAND TOTAL" footer aligned correctly.</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="x">// - The 'sale' column will sum to 450.50</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="x">// - The 'commission' column will sum to 45</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="x">return $report-&gt;render();</span>
 </code></pre></div>
 <h2 id="common-applications">Common Applications</h2>
 <ul>
 <li><strong>Inventory Lists</strong>: Grouped by warehouse or category.</li>
 <li><strong>Sales Reports</strong>: Daily, monthly or grouped by salesperson.</li>
-<li><strong>Audit</strong>: System log lists.</li>
-<li><strong>Financial Summaries</strong>: Simple income/expense lists formatted.</li>
+<li><strong>Audit</strong>: Lists of system logs.</li>
+<li><strong>Financial Summaries</strong>: Simple, formatted income and expense lists.</li>
 </ul></div>
             </div>
         </div>

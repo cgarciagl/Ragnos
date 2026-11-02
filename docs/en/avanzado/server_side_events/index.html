@@ -225,80 +225,80 @@
                     <div class="col-md-9" role="main">
 
 <h1 id="long-running-processes-with-server-side-events-sse">⏳ Long Running Processes with Server-Side Events (SSE)</h1>
-<p>Ragnos framework includes implementation for handling long-running processes on server, allowing real-time progress updates to user browser using <strong>Server-Side Events (SSE)</strong>.</p>
-<p>Ideal for tasks exceeding usual HTTP request timeout or where user needs visual feedback of progress (progress bars).</p>
+<p>The Ragnos framework includes an implementation for handling long-running processes on the server, sending real-time progress updates to the user's browser through <strong>Server-Side Events (SSE)</strong>.</p>
+<p>This is ideal for tasks that exceed the usual HTTP request timeout, or where the user needs visual feedback on progress (progress bars).</p>
 <div class="admonition warning">
 <p class="admonition-title">PHP Time Limits</p>
-<p>Although SSE keeps connection open, web server or PHP config (<code>max_execution_time</code>) might kill process if too long. Ensure <code>set_time_limit(0)</code> in logic if expecting very long processes.</p>
+<p>Although SSE keeps the connection open, the web server or the PHP configuration (<code>max_execution_time</code>) might kill the process if it runs too long. Make sure your logic calls <code>set_time_limit(0)</code> if you expect very long processes.</p>
 </div>
 <h2 id="architecture">Architecture</h2>
-<p>System based on two main components:</p>
+<p>The system is based on two main components:</p>
 <ol>
-<li><strong><code>Ragnos\Controllers\RProcessController</code></strong>: Base class for controllers executing processes.</li>
-<li><strong><code>process_helper.php</code></strong>: Helper containing functions managing SSE event flow (headers, sending data, buffer control, etc.).</li>
+<li><strong><code>Ragnos\Controllers\RProcessController</code></strong>: A base class for the controllers that run processes.</li>
+<li><strong><code>process_helper.php</code></strong>: A helper with the functions that manage the SSE event flow (headers, sending data, buffer control, etc.).</li>
 </ol>
 <h3 id="workflow">Workflow</h3>
 <ol>
-<li>User accesses controller action rendering progress view (method <code>showProgress</code>).</li>
-<li>View connects via JavaScript (<code>EventSource</code>) to <code>start</code> method of same controller.</li>
-<li><code>start</code> method executes heavy logic, sending progress events periodically via helper functions.</li>
-<li>Upon completion, server sends finish event and closes connection.</li>
+<li>The user opens the controller action that renders the progress view (the <code>showProgress</code> method).</li>
+<li>The view connects through JavaScript (<code>EventSource</code>) to the <code>start</code> method of the same controller.</li>
+<li>The <code>start</code> method runs the heavy logic, periodically sending progress events through the helper functions.</li>
+<li>When it finishes, the server sends a completion event and closes the connection.</li>
 </ol>
 <hr />
 <h2 id="rprocesscontroller-class">RProcessController Class</h2>
-<p>To create new process, must create controller extending <code>RProcessController</code>.</p>
-<p><strong>Location</strong>: <code>App\Controllers\</code> or any subfolder, provided namespace correct.</p>
+<p>To create a new process, create a controller that extends <code>RProcessController</code>.</p>
+<p><strong>Location</strong>: <code>App\Controllers\</code> or any subfolder, as long as the namespace is correct.</p>
 <h3 id="main-methods-and-properties">Main Methods and Properties</h3>
 <ul>
 <li><strong><code>$requireConfirmation</code></strong>: Boolean property (default <code>false</code>). If set to <code>true</code>, a confirmation dialog will appear before the process starts, warning the user.</li>
-<li><strong><code>$confirmationMessage</code></strong>: String property to set a custom message for the confirmation dialog if <code>$requireConfirmation</code> is <code>true</code>. Defaults to a generic framework defined message.</li>
-<li><strong><code>__construct()</code></strong>: Automatically loads <code>process_helper</code>.</li>
-<li><strong><code>showProgress()</code></strong>: Shows UI with progress bar. Automatically calculates URL of <code>start</code> endpoint based on class name.</li>
-<li><strong><code>start()</code></strong>: <strong>Must be overridden</strong>. Logic of long running process resides here.</li>
+<li><strong><code>$confirmationMessage</code></strong>: String property to set a custom message for the confirmation dialog if <code>$requireConfirmation</code> is <code>true</code>. By default, it uses a generic message defined in the framework's language files.</li>
+<li><strong><code>__construct()</code></strong>: Loads <code>process_helper</code> automatically.</li>
+<li><strong><code>showProgress()</code></strong>: Shows the user interface with the progress bar. It works out the URL of the <code>start</code> endpoint automatically from the class name.</li>
+<li><strong><code>start()</code></strong>: <strong>Must be overridden</strong>. This is where the logic of the long-running process lives.</li>
 </ul>
 <hr />
 <h2 id="helper-functions-process_helper">Helper Functions (process_helper)</h2>
-<p>These functions available automatically inside extended controller.</p>
+<p>These functions are available automatically inside any controller that extends <code>RProcessController</code>.</p>
 <h3 id="processstarttitle-processing"><code>processStart($title = 'Processing...')</code></h3>
-<p>Initializes SSE process.</p>
+<p>Initializes the SSE process.</p>
 <ul>
-<li>Clears output buffers and sets <code>text/event-stream</code> headers.</li>
-<li>Disables time limits (<code>set_time_limit(0)</code>) and memory in PHP to avoid timeouts.</li>
-<li>Sends process title to client.</li>
+<li>Clears the output buffers and sets the <code>text/event-stream</code> headers.</li>
+<li>Disables PHP's time limit (<code>set_time_limit(0)</code>) and adjusts the memory settings to avoid timeouts.</li>
+<li>Sends the process title to the client.</li>
 </ul>
 <h3 id="setprogresspercentage"><code>setProgress($percentage)</code></h3>
-<p>Updates progress bar to indicated percentage.</p>
+<p>Moves the progress bar to the given percentage.</p>
 <ul>
-<li><code>$percentage</code>: Integer (0-100).</li>
+<li><code>$percentage</code>: An integer (0-100).</li>
 </ul>
 <h3 id="setprogresstexttext"><code>setProgressText($text)</code></h3>
-<p>Updates descriptive text below progress bar. Useful to inform user what exactly is being done (e.g. "Processing row 45...").</p>
+<p>Updates the descriptive text below the progress bar. It is useful for telling the user exactly what is happening (e.g. "Processing row 45...").</p>
 <h3 id="setprogressofcurrentstep-total"><code>setProgressOf($currentStep, $total)</code></h3>
-<p>Utility function calculating percentage automatically and calling <code>setProgress</code>.</p>
+<p>A utility function that calculates the percentage automatically and calls <code>setProgress</code>.</p>
 <ul>
-<li><code>$currentStep</code>: Current step (iterator).</li>
-<li><code>$total</code>: Total steps to perform.</li>
+<li><code>$currentStep</code>: The current step (iterator).</li>
+<li><code>$total</code>: The total number of steps.</li>
 </ul>
 <h3 id="endprocessadditionaldata-null"><code>endProcess($additionalData = null)</code></h3>
-<p>Finalizes process.</p>
+<p>Ends the process.</p>
 <ul>
-<li>Calculates total execution time.</li>
-<li>Sends finish event to client with optional data.</li>
-<li>Ends script execution (<code>exit</code>).</li>
+<li>Calculates the total execution time.</li>
+<li>Sends the completion event to the client, with optional data.</li>
+<li>Ends the script execution (<code>exit</code>).</li>
 </ul>
 <hr />
 <h2 id="common-applications">Common Applications</h2>
-<p>Useful for:</p>
+<p>This functionality is useful for:</p>
 <ul>
-<li><strong>Bulk Imports</strong>: Uploading Excel/CSV files with thousands of records to DB.</li>
-<li><strong>Report Generation</strong>: Creating complex PDFs or large excels.</li>
-<li><strong>Maintenance</strong>: Cleanup tasks, price recalculation, cache or image regeneration.</li>
-<li><strong>Mass Emails</strong>: Sending newsletters requiring feedback per sent block.</li>
+<li><strong>Bulk Imports</strong>: Loading Excel/CSV files with thousands of records into the database.</li>
+<li><strong>Report Generation</strong>: Creating complex PDFs or large Excel files.</li>
+<li><strong>Maintenance</strong>: Cleanup tasks, price recalculation, or regenerating caches and images.</li>
+<li><strong>Mass Emails</strong>: Sending newsletters that report progress for each block sent.</li>
 </ul>
 <hr />
 <h2 id="implementation-examples">Implementation Examples</h2>
 <h3 id="example-1-price-recalculation-basic">Example 1: Price Recalculation (Basic)</h3>
-<p>Simulates process iterating over 100 items.</p>
+<p>This example simulates a process that iterates over 100 items.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="cp">&lt;?php</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="k">namespace</span> <span class="nx">App\Controllers</span><span class="p">;</span>
@@ -339,7 +339,7 @@
 <a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a><span class="p">}</span>
 </code></pre></div>
 <h3 id="example-2-user-import-with-validation">Example 2: User Import (With Validation)</h3>
-<p>More complex example simulating import where info validated.</p>
+<p>A more complex example that simulates an import where the data is validated.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="cp">&lt;?php</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="k">namespace</span> <span class="nx">App\Controllers</span><span class="p">;</span>

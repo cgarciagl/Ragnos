@@ -221,10 +221,10 @@
                     <div class="col-md-9" role="main">
 
 <h1 id="php-helpers-and-utilities">PHP Helpers and Utilities</h1>
-<p>Ragnos includes a collection of global helper functions designed to speed up common tasks and improve application performance. Available throughout the framework automatically.</p>
+<p>Ragnos includes a collection of global helper functions designed to speed up common tasks and improve application performance. They are available automatically throughout the framework.</p>
 <h2 id="database-and-cache-management">Database and Cache Management</h2>
 <h3 id="getcacheddata"><code>getCachedData()</code></h3>
-<p>Executes a raw SQL query and stores the result in the CodeIgniter 4 cache system. Ideal for heavy queries or reports not needing real-time data.</p>
+<p>Executes a raw SQL query and stores the result in the CodeIgniter 4 cache system. It is ideal for heavy queries or reports that do not need real-time data.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="x">function getCachedData(string $sql, array $params = [], ?string $cacheKey = null, int $ttl = 86400): array</span>
 </code></pre></div>
 <h4 id="parameters">Parameters</h4>
@@ -260,7 +260,7 @@
 </tbody>
 </table>
 <h4 id="return">Return</h4>
-<p>Returns an associative <code>array</code> with query results.</p>
+<p>Returns an associative <code>array</code> with the query results.</p>
 <h4 id="usage-example">Usage Example</h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="x">// In Model or Controller</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
@@ -279,9 +279,9 @@
 </code></pre></div>
 <h4 id="warnings-and-considerations">⚠️ Warnings and Considerations</h4>
 <ol>
-<li><strong>Real Time Data:</strong> Do not use for critical data changing constantly (e.g. real time inventory with high concurrency, bank balances). Data served can be up to <code>$ttl</code> seconds old.</li>
-<li><strong>Cache Invalidation:</strong> If using custom <code>$cacheKey</code> (like <code>'dashboard_metrics'</code>), you can manually clear that cache when data changes using <code>cache()-&gt;delete('dashboard_metrics')</code>. Automatic keys are harder to manually invalidate.</li>
-<li><strong>Dev Environment:</strong> Remember if developing and changing data, you might see old data until cache is cleared (<code>php spark cache:clear</code>).</li>
+<li><strong>Real-Time Data:</strong> Do not use it for critical data that changes constantly (e.g. real-time inventory with high concurrency, bank balances). The data served can be up to <code>$ttl</code> seconds old.</li>
+<li><strong>Cache Invalidation:</strong> If you use a custom <code>$cacheKey</code> (like <code>'dashboard_metrics'</code>), you can manually clear that cache when data changes using <code>cache()-&gt;delete('dashboard_metrics')</code>. Automatic keys are harder to manually invalidate.</li>
+<li><strong>Development Environment:</strong> Remember that while you develop and change data, you might see old data until the cache is cleared (<code>php spark cache:clear</code>).</li>
 </ol>
 <h3 id="querytoassocarray"><code>queryToAssocArray()</code></h3>
 <p>Executes a SQL query and transforms the result directly into an associative array <code>[id =&gt; value]</code>. Extremely useful for populating dropdowns (<code>&lt;select&gt;</code>).</p>
@@ -691,7 +691,7 @@
 <hr />
 <h2 id="debugging-and-diagnostics">Debugging and Diagnostics</h2>
 <h3 id="dbgconsola"><code>dbgConsola()</code></h3>
-<p>Sends PHP data directly to developer browser console. Uses <code>console.log</code> via script injection. <strong>Only works in <code>development</code> environment.</strong></p>
+<p>Sends PHP data directly to the developer's browser console. Uses <code>console.log</code> via script injection. <strong>Only works in <code>development</code> environment.</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="x">function dbgConsola($data, string $label = 'dbgConsola')</span>
 </code></pre></div>
 <h4 id="example_1">Example</h4>
@@ -700,13 +700,13 @@
 <a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="x">// Check Chrome/Firefox console (F12)</span>
 </code></pre></div>
 <h3 id="dbgdie"><code>dbgDie()</code></h3>
-<p>Kills script execution and returns provided data in JSON format. Perfect for debugging API/AJAX calls.</p>
+<p>Stops the script and returns the provided data in JSON format. Perfect for debugging API/AJAX calls.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="x">function dbgDie($data, int $statusCode = 200): never</span>
 </code></pre></div>
 <hr />
 <h2 id="format-and-ui">Format and UI</h2>
 <h3 id="currency"><code>currency()</code></h3>
-<p>Formats numbers as currency respecting regional config (<code>locale</code>) without complex extensions.</p>
+<p>Formats numbers as currency according to the regional configuration (<code>locale</code>), without complex extensions.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="x">function currency(float|int $number, bool $includeSymbol = true): string</span>
 </code></pre></div>
 <h4 id="example_2">Example</h4>

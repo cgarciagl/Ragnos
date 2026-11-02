@@ -214,7 +214,7 @@
 <h1 id="hooks-y-ciclo-de-vida-en-ragnos">Hooks y ciclo de vida en Ragnos</h1>
 <p>En Ragnos, los <strong>hooks</strong> permiten ejecutar lógica personalizada en distintos momentos del ciclo de vida de un dataset.
 Son el mecanismo principal para <strong>extender comportamiento</strong> sin romper el modelo declarativo.</p>
-<p>Los hooks se definen como métodos protegidos dentro del controlador que extiende <code>RDatasetController</code>.</p>
+<p>Los hooks se definen como métodos públicos dentro del controlador que extiende <code>RDatasetController</code>, igual que en la clase base. Si los declaras <code>protected</code>, PHP detiene la aplicación con un error fatal, porque un método heredado no puede ser menos visible que el original.</p>
 <div class="admonition info">
 <p class="admonition-title">Concepto Clave</p>
 <p>El controlador <strong>no implementa el CRUD</strong> manualmente. Ragnos se encarga de la operación de base de datos, y tú solo "te enganchas" (hook) en los puntos clave para inyectar tu lógica de negocio.</p>
@@ -280,7 +280,7 @@ Son el mecanismo principal para <strong>extender comportamiento</strong> sin rom
 <h3 id="1-estructura-basica">1. Estructura básica</h3>
 <p>Los hooks de tipo <code>_before*</code> (Insert y Update) reciben por referencia el array <code>$data</code>, permitiendo modificar los valores antes de que lleguen a la base de datos. Si no necesitas modificar datos, en algunos casos puedes omitir el argumento o no usarlo.</p>
 <div class="highlight"><pre><span></span><code><a href="#__codelineno-0-1" id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="x">// Hook con manipulación de datos (por referencia)</span>
-<a href="#__codelineno-0-2" id="__codelineno-0-2" name="__codelineno-0-2"></a><span class="x">protected function _beforeInsert(&amp;$data)</span>
+<a href="#__codelineno-0-2" id="__codelineno-0-2" name="__codelineno-0-2"></a><span class="x">public function _beforeInsert(&amp;$data)</span>
 <a href="#__codelineno-0-3" id="__codelineno-0-3" name="__codelineno-0-3"></a><span class="x">{</span>
 <a href="#__codelineno-0-4" id="__codelineno-0-4" name="__codelineno-0-4"></a><span class="x">    $data['creado_el'] = date('Y-m-d');</span>
 <a href="#__codelineno-0-5" id="__codelineno-0-5" name="__codelineno-0-5"></a><span class="x">}</span>
@@ -327,7 +327,7 @@ Son el mecanismo principal para <strong>extender comportamiento</strong> sin rom
 </code></pre></div>
 <h3 id="4-interrupcion-segura-raise">4. Interrupción segura: <code>raise()</code></h3>
 <p>Si necesitas detener una operación debido a una regla de negocio, usa <code>raise()</code>. Esto detiene el proceso y muestra un mensaje de error al usuario, evitando que la operación CRUD continúe.</p>
-<div class="highlight"><pre><span></span><code><a href="#__codelineno-2-1" id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="x">if (oldValue('locked') === true) {</span>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-2-1" id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="x">if (oldValue('locked') == 1) {</span>
 <a href="#__codelineno-2-2" id="__codelineno-2-2" name="__codelineno-2-2"></a><span class="x">    raise('No se puede modificar un registro bloqueado.');</span>
 <a href="#__codelineno-2-3" id="__codelineno-2-3" name="__codelineno-2-3"></a><span class="x">}</span>
 </code></pre></div>
@@ -350,7 +350,7 @@ Son el mecanismo principal para <strong>extender comportamiento</strong> sin rom
 <li>Normalizar datos (mayúsculas, formatos).</li>
 <li>Validaciones personalizadas del payload.</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a href="#__codelineno-3-1" id="__codelineno-3-1" name="__codelineno-3-1"></a><span class="x">protected function _beforeInsert(&amp;$data)</span>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-3-1" id="__codelineno-3-1" name="__codelineno-3-1"></a><span class="x">public function _beforeInsert(&amp;$data)</span>
 <a href="#__codelineno-3-2" id="__codelineno-3-2" name="__codelineno-3-2"></a><span class="x">{</span>
 <a href="#__codelineno-3-3" id="__codelineno-3-3" name="__codelineno-3-3"></a><span class="x">    // Asignar fecha de creación manual</span>
 <a href="#__codelineno-3-4" id="__codelineno-3-4" name="__codelineno-3-4"></a><span class="x">    $data['created_at'] = date('Y-m-d H:i:s');</span>
@@ -368,10 +368,11 @@ Son el mecanismo principal para <strong>extender comportamiento</strong> sin rom
 <li>Logs de auditoría.</li>
 <li>Envío de notificaciones de bienvenida.</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a href="#__codelineno-4-1" id="__codelineno-4-1" name="__codelineno-4-1"></a><span class="x">protected function _afterInsert()</span>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-4-1" id="__codelineno-4-1" name="__codelineno-4-1"></a><span class="x">public function _afterInsert()</span>
 <a href="#__codelineno-4-2" id="__codelineno-4-2" name="__codelineno-4-2"></a><span class="x">{</span>
-<a href="#__codelineno-4-3" id="__codelineno-4-3" name="__codelineno-4-3"></a><span class="x">    log_message('info', 'Nuevo usuario registrado con ID ' . $this-&gt;insertID());</span>
-<a href="#__codelineno-4-4" id="__codelineno-4-4" name="__codelineno-4-4"></a><span class="x">}</span>
+<a href="#__codelineno-4-3" id="__codelineno-4-3" name="__codelineno-4-3"></a><span class="x">    // newValue() con la llave primaria devuelve el ID recién generado</span>
+<a href="#__codelineno-4-4" id="__codelineno-4-4" name="__codelineno-4-4"></a><span class="x">    log_message('info', 'Nuevo usuario registrado con ID ' . newValue('usu_id'));</span>
+<a href="#__codelineno-4-5" id="__codelineno-4-5" name="__codelineno-4-5"></a><span class="x">}</span>
 </code></pre></div>
 <hr/>
 <h2 id="hooks-de-actualizacion">Hooks de Actualización</h2>
@@ -384,7 +385,7 @@ Son el mecanismo principal para <strong>extender comportamiento</strong> sin rom
 <li>Registrar metadatos de edición (<code>updated_by</code>).</li>
 <li>Protección de campos críticos.</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a href="#__codelineno-5-1" id="__codelineno-5-1" name="__codelineno-5-1"></a><span class="x">protected function _beforeUpdate(&amp;$data)</span>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-5-1" id="__codelineno-5-1" name="__codelineno-5-1"></a><span class="x">public function _beforeUpdate(&amp;$data)</span>
 <a href="#__codelineno-5-2" id="__codelineno-5-2" name="__codelineno-5-2"></a><span class="x">{</span>
 <a href="#__codelineno-5-3" id="__codelineno-5-3" name="__codelineno-5-3"></a><span class="x">    // Registrar quién modificó el registro</span>
 <a href="#__codelineno-5-4" id="__codelineno-5-4" name="__codelineno-5-4"></a><span class="x">    $data['updated_by'] = session('user_id');</span>
@@ -402,7 +403,7 @@ Son el mecanismo principal para <strong>extender comportamiento</strong> sin rom
 <li>Invalidar cache.</li>
 <li>Recalcular datos dependientes en otras tablas.</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a href="#__codelineno-6-1" id="__codelineno-6-1" name="__codelineno-6-1"></a><span class="x">protected function _afterUpdate()</span>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-6-1" id="__codelineno-6-1" name="__codelineno-6-1"></a><span class="x">public function _afterUpdate()</span>
 <a href="#__codelineno-6-2" id="__codelineno-6-2" name="__codelineno-6-2"></a><span class="x">{</span>
 <a href="#__codelineno-6-3" id="__codelineno-6-3" name="__codelineno-6-3"></a><span class="x">    // Si cambió el límite de crédito, invalidar el cache de estados de cuenta</span>
 <a href="#__codelineno-6-4" id="__codelineno-6-4" name="__codelineno-6-4"></a><span class="x">    if (fieldHasChanged('creditLimit')) {</span>
@@ -420,18 +421,22 @@ Son el mecanismo principal para <strong>extender comportamiento</strong> sin rom
 <li>Validar dependencias (integridad referencial manual).</li>
 <li>Evitar borrado de registros del sistema.</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a href="#__codelineno-7-1" id="__codelineno-7-1" name="__codelineno-7-1"></a><span class="x">protected function _beforeDelete()</span>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-7-1" id="__codelineno-7-1" name="__codelineno-7-1"></a><span class="x">public function _beforeDelete()</span>
 <a href="#__codelineno-7-2" id="__codelineno-7-2" name="__codelineno-7-2"></a><span class="x">{</span>
 <a href="#__codelineno-7-3" id="__codelineno-7-3" name="__codelineno-7-3"></a><span class="x">    // Proteger al usuario Administrador (ID 1)</span>
-<a href="#__codelineno-7-4" id="__codelineno-7-4" name="__codelineno-7-4"></a><span class="x">    if (oldValue('user_id') == 1) {</span>
+<a href="#__codelineno-7-4" id="__codelineno-7-4" name="__codelineno-7-4"></a><span class="x">    if (oldValue('usu_id') == 1) {</span>
 <a href="#__codelineno-7-5" id="__codelineno-7-5" name="__codelineno-7-5"></a><span class="x">        raise('No se puede eliminar al usuario administrador principal.');</span>
 <a href="#__codelineno-7-6" id="__codelineno-7-6" name="__codelineno-7-6"></a><span class="x">    }</span>
 <a href="#__codelineno-7-7" id="__codelineno-7-7" name="__codelineno-7-7"></a>
-<a href="#__codelineno-7-8" id="__codelineno-7-8" name="__codelineno-7-8"></a><span class="x">    // Verificar relaciones manualmente</span>
-<a href="#__codelineno-7-9" id="__codelineno-7-9" name="__codelineno-7-9"></a><span class="x">    if ($this-&gt;hasRelations()) {</span>
-<a href="#__codelineno-7-10" id="__codelineno-7-10" name="__codelineno-7-10"></a><span class="x">        raise('No se puede eliminar el registro porque tiene datos asociados.');</span>
-<a href="#__codelineno-7-11" id="__codelineno-7-11" name="__codelineno-7-11"></a><span class="x">    }</span>
-<a href="#__codelineno-7-12" id="__codelineno-7-12" name="__codelineno-7-12"></a><span class="x">}</span>
+<a href="#__codelineno-7-8" id="__codelineno-7-8" name="__codelineno-7-8"></a><span class="x">    // Verificar relaciones manualmente (por ejemplo, pedidos capturados por el usuario)</span>
+<a href="#__codelineno-7-9" id="__codelineno-7-9" name="__codelineno-7-9"></a><span class="x">    $pedidos = db_connect()-&gt;table('pedidos')</span>
+<a href="#__codelineno-7-10" id="__codelineno-7-10" name="__codelineno-7-10"></a><span class="x">        -&gt;where('usuario_id', oldValue('usu_id'))</span>
+<a href="#__codelineno-7-11" id="__codelineno-7-11" name="__codelineno-7-11"></a><span class="x">        -&gt;countAllResults();</span>
+<a href="#__codelineno-7-12" id="__codelineno-7-12" name="__codelineno-7-12"></a>
+<a href="#__codelineno-7-13" id="__codelineno-7-13" name="__codelineno-7-13"></a><span class="x">    if ($pedidos &gt; 0) {</span>
+<a href="#__codelineno-7-14" id="__codelineno-7-14" name="__codelineno-7-14"></a><span class="x">        raise('No se puede eliminar el registro porque tiene datos asociados.');</span>
+<a href="#__codelineno-7-15" id="__codelineno-7-15" name="__codelineno-7-15"></a><span class="x">    }</span>
+<a href="#__codelineno-7-16" id="__codelineno-7-16" name="__codelineno-7-16"></a><span class="x">}</span>
 </code></pre></div>
 <h3 id="_afterdelete"><code>_afterDelete()</code></h3>
 <p>Se ejecuta <strong>después</strong> del DELETE.</p>
@@ -440,7 +445,7 @@ Son el mecanismo principal para <strong>extender comportamiento</strong> sin rom
 <li>Limpieza de archivos adjuntos (imágenes, documentos).</li>
 <li>Logs de actividad.</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a href="#__codelineno-8-1" id="__codelineno-8-1" name="__codelineno-8-1"></a><span class="x">protected function _afterDelete()</span>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-8-1" id="__codelineno-8-1" name="__codelineno-8-1"></a><span class="x">public function _afterDelete()</span>
 <a href="#__codelineno-8-2" id="__codelineno-8-2" name="__codelineno-8-2"></a><span class="x">{</span>
 <a href="#__codelineno-8-3" id="__codelineno-8-3" name="__codelineno-8-3"></a><span class="x">    log_message('info', 'Registro eliminado correctamente.');</span>
 <a href="#__codelineno-8-4" id="__codelineno-8-4" name="__codelineno-8-4"></a><span class="x">}</span>
@@ -471,22 +476,21 @@ Son el mecanismo principal para <strong>extender comportamiento</strong> sin rom
 <hr/>
 <h2 id="hooks-de-interfaz-ui">Hooks de Interfaz (UI)</h2>
 <p>Ragnos permite intervenir también en la interfaz visual generada.</p>
-<h3 id="_customformdatafooter"><code>_customFormDataFooter()</code></h3>
-<p>Inserta HTML o scripts al pie del formulario de edición.</p>
-<div class="highlight"><pre><span></span><code><a href="#__codelineno-10-1" id="__codelineno-10-1" name="__codelineno-10-1"></a><span class="x">function _customFormDataFooter()</span>
+<h3 id="_customformdatafooterid"><code>_customFormDataFooter($id)</code></h3>
+<p>Inserta HTML o scripts al pie del formulario de edición. Recibe el identificador del registro que se está editando.</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-10-1" id="__codelineno-10-1" name="__codelineno-10-1"></a><span class="x">protected function _customFormDataFooter($id)</span>
 <a href="#__codelineno-10-2" id="__codelineno-10-2" name="__codelineno-10-2"></a><span class="x">{</span>
-<a href="#__codelineno-10-3" id="__codelineno-10-3" name="__codelineno-10-3"></a><span class="x">    $id = $this-&gt;request-&gt;getPost($this-&gt;getIdField());</span>
-<a href="#__codelineno-10-4" id="__codelineno-10-4" name="__codelineno-10-4"></a>
-<a href="#__codelineno-10-5" id="__codelineno-10-5" name="__codelineno-10-5"></a><span class="x">    // Retornamos una vista parcial</span>
-<a href="#__codelineno-10-6" id="__codelineno-10-6" name="__codelineno-10-6"></a><span class="x">    return view('Tienda/detalle_pedidos', ['orderId' =&gt; $id]);</span>
-<a href="#__codelineno-10-7" id="__codelineno-10-7" name="__codelineno-10-7"></a><span class="x">}</span>
+<a href="#__codelineno-10-3" id="__codelineno-10-3" name="__codelineno-10-3"></a><span class="x">    // Retornamos una vista parcial</span>
+<a href="#__codelineno-10-4" id="__codelineno-10-4" name="__codelineno-10-4"></a><span class="x">    return view('tienda/detalle_pedidos', ['orderId' =&gt; $id]);</span>
+<a href="#__codelineno-10-5" id="__codelineno-10-5" name="__codelineno-10-5"></a><span class="x">}</span>
 </code></pre></div>
 <hr/>
 <h2 id="buenas-practicas">Buenas prácticas</h2>
 <div class="admonition success">
 <p class="admonition-title">Recomendado</p>
 <p><strong>Mantén los hooks pequeños:</strong> La lógica compleja debe ir a Servicios o Librerías.</p>
-<p><strong>Documenta efectos secundarios:</strong> Si un hook altera otra tabla, deja un comentario claro. - <strong>Usa <code>raise()</code></strong> para errores de validación en lugar de excepciones duras.</p>
+<p><strong>Documenta efectos secundarios:</strong> Si un hook altera otra tabla, deja un comentario claro.</p>
+<p><strong>Usa <code>raise()</code></strong> para errores de validación en lugar de excepciones duras.</p>
 </div>
 <div class="admonition fail">
 <p class="admonition-title">A evitar</p>

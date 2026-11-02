@@ -260,7 +260,7 @@
 <p>Define explícitamente qué campos deben ser sumados matemáticamente en los pies de tabla.</p>
 <ul>
 <li><strong><code>$fields</code></strong> (array): Lista de nombres de campos (etiquetas) que contienen valores numéricos.</li>
-<li><em>Nota:</em> Si no se utiliza este método, la clase intentará detectar automáticamente campos sumables buscando nombres como 'Total', 'Precio', 'Saldo', 'Deuda', etc.</li>
+<li><em>Nota:</em> Si no se utiliza este método, la clase intenta detectar los campos sumables comparando el nombre exacto de cada columna (respetando mayúsculas) con una lista fija, por ejemplo <code>Total</code>, <code>Monto</code>, <code>Precio</code>, <code>Saldo</code>, <code>Deuda</code>, <code>amount</code> o <code>MSRP</code>. Si tus columnas tienen otros nombres, indícalos con este método.</li>
 </ul>
 <h3 id="renderrutadevuelta-adminindex"><code>render($rutadevuelta = 'admin/index')</code></h3>
 <p>Retorna el HTML del reporte renderizado dentro de la vista estándar de reportes. Útil para incrustar en layouts existentes.</p>
@@ -370,15 +370,16 @@
 <a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="x">$reporte = new RSimpleLevelReport();</span>
 <a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="x">$reporte-&gt;quickSetup('Reporte de Comisiones', $data, ['vendedor', 'venta', 'comision']);</span>
 <a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="x">// Opcional: Forzar qué campos sumar (si no se detectan automáticamente)</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="x">// $reporte-&gt;setSummableFields(['venta', 'comision']);</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="x">// Al renderizar, se generará:</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="x">// - Una tabla con los datos.</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="x">// - Un pie de tabla "TOTAL GENERAL" alineado.</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="x">// - La columna 'venta' sumará 450.50</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="x">// - La columna 'comision' sumará 45</span>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="x">return $reporte-&gt;render();</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="x">// 'venta' y 'comision' no están entre los nombres que se detectan solos,</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="x">// así que se indican explícitamente</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="x">$reporte-&gt;setSummableFields(['venta', 'comision']);</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="x">// Al renderizar, se generará:</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="x">// - Una tabla con los datos.</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="x">// - Un pie de tabla "TOTAL GENERAL" alineado.</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="x">// - La columna 'venta' sumará 450.50</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="x">// - La columna 'comision' sumará 45</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="x">return $reporte-&gt;render();</span>
 </code></pre></div>
 <h2 id="aplicaciones-comunes">Aplicaciones Comunes</h2>
 <ul>

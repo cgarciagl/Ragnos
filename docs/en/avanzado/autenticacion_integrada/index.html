@@ -196,16 +196,16 @@
 </div></div>
 <div class="col-md-9" role="main">
 <h1 id="integrated-authentication-and-permissions-system">Integrated Authentication and Permissions System</h1>
-<p>Ragnos includes a lightweight flexible authentication system integrated directly into framework core. Handles user sessions, controller protection and Role Based Access Control (RBAC).</p>
-<p>System relies mainly on <code>App\Services\Admin_aut</code> service and <code>BaseController</code> class.</p>
+<p>Ragnos includes a lightweight, flexible authentication system built directly into the framework core. It handles user sessions, controller protection, and Role-Based Access Control (RBAC).</p>
+<p>The system relies mainly on the <code>App\Services\Admin_aut</code> service and the <code>BaseController</code> class.</p>
 <h2 id="database-tables">Database Tables</h2>
-<p>System expects specific database structure:</p>
+<p>The system expects a specific database structure:</p>
 <ul>
-<li><strong><code>gen_usuarios</code></strong>: Users table (<code>usu_id</code>, <code>usu_nombre</code>, <code>usu_login</code>, <code>usu_pword</code>, <code>usu_activo</code>, <code>usu_grupo</code>).</li>
-<li><strong><code>gen_gruposdeusuarios</code></strong>: Roles table (<code>gru_id</code>, <code>gru_nombre</code>).</li>
+<li><strong><code>gen_usuarios</code></strong>: The users table (<code>usu_id</code>, <code>usu_nombre</code>, <code>usu_login</code>, <code>usu_pword</code>, <code>usu_activo</code>, <code>usu_grupo</code>).</li>
+<li><strong><code>gen_gruposdeusuarios</code></strong>: The roles table (<code>gru_id</code>, <code>gru_nombre</code>).</li>
 </ul>
 <h2 id="controller-protection">Controller Protection</h2>
-<p>All controllers extending <code>BaseController</code> (including <a href="../../datasets/datasets/"><code>RDatasetController</code></a>, <a href="../server_side_events/"><code>RProcessController</code></a>, etc.) access simplified protection methods.</p>
+<p>All controllers extending <code>BaseController</code> (including <a href="../../datasets/datasets/"><code>RDatasetController</code></a>, <a href="../server_side_events/"><code>RProcessController</code></a>, etc.) have access to simplified protection methods.</p>
 <h3 id="verification-flow">Verification Flow</h3>
 <div class="mermaid">graph TD
     Req["Incoming Request"] --&gt; Controller["Controller"]
@@ -230,13 +230,13 @@
     style Error403 fill:#f8d7da,stroke:#721c24,stroke-width:2px,color:#721c24
 </div>
 <h3 id="checklogin"><code>checkLogin()</code></h3>
-<p>Verifies if user has active session. If not:</p>
+<p>This method checks whether the user has an active session. If not:</p>
 <ol>
-<li>Web requests: Redirects to login (<code>admin/login</code>).</li>
-<li>API requests: Verifies <code>Authorization</code> header against <code>usu_token</code> in DB. If fails, returns JSON 401 error.</li>
+<li>Web requests: it redirects to the login page (<code>admin/login</code>).</li>
+<li>API requests: it validates the <code>Authorization</code> header against <code>usu_token</code> in the database. If validation fails, it returns a 401 error in JSON.</li>
 </ol>
 <p><strong>Usage:</strong>
-Recommended to call at start of function requiring auth, or in constructor if whole controller private.</p>
+Call it at the start of any function that requires authentication, or in the constructor if the whole controller is private.</p>
 <div class="admonition tip">
 <p class="admonition-title">Public Controllers</p>
 <p>If you have a public controller (e.g. Home page), simply do not call <code>checkLogin()</code>.</p>
@@ -245,28 +245,28 @@ Recommended to call at start of function requiring auth, or in constructor if wh
 <a href="#__codelineno-0-2" id="__codelineno-0-2" name="__codelineno-0-2"></a><span class="x">{</span>
 <a href="#__codelineno-0-3" id="__codelineno-0-3" name="__codelineno-0-3"></a><span class="x">    $this-&gt;checkLogin();</span>
 <a href="#__codelineno-0-4" id="__codelineno-0-4" name="__codelineno-0-4"></a>
-<a href="#__codelineno-0-5" id="__codelineno-0-5" name="__codelineno-0-5"></a><span class="x">    // Rest of code only executes if user logged in</span>
+<a href="#__codelineno-0-5" id="__codelineno-0-5" name="__codelineno-0-5"></a><span class="x">    // The rest of the code only runs if the user is logged in</span>
 <a href="#__codelineno-0-6" id="__codelineno-0-6" name="__codelineno-0-6"></a><span class="x">    return view('my_view');</span>
 <a href="#__codelineno-0-7" id="__codelineno-0-7" name="__codelineno-0-7"></a><span class="x">}</span>
 </code></pre></div>
 <h3 id="checkuseringroupgroups"><code>checkUserInGroup($groups)</code></h3>
-<p>Restricts access exclusively to users belonging to specified groups.</p>
+<p>Restricts access to users who belong to the specified groups.</p>
 <ul>
-<li><strong>Parameter</strong>: Can be <code>string</code> with group name or <code>array</code> of strings for multiple groups.</li>
+<li><strong>Parameter</strong>: A <code>string</code> with the group name, or an <code>array</code> of strings for several groups.</li>
 <li><strong>Behavior</strong>:</li>
-<li>If condition not met, redirects to <code>admin/index</code> (or returns 403/401 if API).</li>
-<li>Internally calls <code>checkLogin()</code>, so calling both is unnecessary.</li>
+<li>If the condition is not met, it redirects to <code>admin/index</code> (or returns 403/401 for API requests).</li>
+<li>It calls <code>checkLogin()</code> internally, so you do not need to call both.</li>
 </ul>
 <p><strong>Usage:</strong></p>
 <div class="highlight"><pre><span></span><code><a href="#__codelineno-1-1" id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="x">public function __construct()</span>
 <a href="#__codelineno-1-2" id="__codelineno-1-2" name="__codelineno-1-2"></a><span class="x">{</span>
-<a href="#__codelineno-1-3" id="__codelineno-1-3" name="__codelineno-1-3"></a><span class="x">    // Only allow Administrator access</span>
+<a href="#__codelineno-1-3" id="__codelineno-1-3" name="__codelineno-1-3"></a><span class="x">    // Only allow access to administrators</span>
 <a href="#__codelineno-1-4" id="__codelineno-1-4" name="__codelineno-1-4"></a><span class="x">    $this-&gt;checkUserInGroup('Administrador');</span>
 <a href="#__codelineno-1-5" id="__codelineno-1-5" name="__codelineno-1-5"></a><span class="x">}</span>
 <a href="#__codelineno-1-6" id="__codelineno-1-6" name="__codelineno-1-6"></a>
 <a href="#__codelineno-1-7" id="__codelineno-1-7" name="__codelineno-1-7"></a><span class="x">public function managementReport()</span>
 <a href="#__codelineno-1-8" id="__codelineno-1-8" name="__codelineno-1-8"></a><span class="x">{</span>
-<a href="#__codelineno-1-9" id="__codelineno-1-9" name="__codelineno-1-9"></a><span class="x">    // Allow Admins or Management</span>
+<a href="#__codelineno-1-9" id="__codelineno-1-9" name="__codelineno-1-9"></a><span class="x">    // Allow administrators or management</span>
 <a href="#__codelineno-1-10" id="__codelineno-1-10" name="__codelineno-1-10"></a><span class="x">    $this-&gt;checkUserInGroup(['Administrador', 'Management']);</span>
 <a href="#__codelineno-1-11" id="__codelineno-1-11" name="__codelineno-1-11"></a>
 <a href="#__codelineno-1-12" id="__codelineno-1-12" name="__codelineno-1-12"></a><span class="x">    // Report logic...</span>
@@ -274,28 +274,28 @@ Recommended to call at start of function requiring auth, or in constructor if wh
 </code></pre></div>
 <hr/>
 <h2 id="admin_aut-service"><code>Admin_aut</code> Service</h2>
-<p>For granular logic inside views/controllers, access auth service directly.</p>
-<p>Ideally invoke via <code>service('Admin_aut')</code>.</p>
+<p>For finer-grained logic inside views or controllers, use the authentication service directly.</p>
+<p>The recommended way to get it is <code>service('Admin_aut')</code>.</p>
 <h3 id="main-functions">Main Functions</h3>
 <h4 id="isloggedin"><code>isLoggedIn()</code></h4>
-<p>Returns <code>true</code> if user logged in, <code>false</code> otherwise.</p>
+<p>Returns <code>true</code> if the user is logged in, and <code>false</code> otherwise.</p>
 <div class="highlight"><pre><span></span><code><a href="#__codelineno-2-1" id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="x">if (service('Admin_aut')-&gt;isLoggedIn()) {</span>
 <a href="#__codelineno-2-2" id="__codelineno-2-2" name="__codelineno-2-2"></a><span class="x">    echo "User connected";</span>
 <a href="#__codelineno-2-3" id="__codelineno-2-3" name="__codelineno-2-3"></a><span class="x">}</span>
 </code></pre></div>
 <h4 id="id"><code>id()</code></h4>
-<p>Returns current user ID (<code>usu_id</code>).</p>
+<p>Returns the current user's ID (<code>usu_id</code>).</p>
 <h4 id="name"><code>name()</code></h4>
-<p>Returns current user full name (<code>usu_nombre</code>).</p>
+<p>Returns the current user's full name (<code>usu_nombre</code>).</p>
 <h4 id="isuseringroupgroup"><code>isUserInGroup($group)</code></h4>
-<p>Evaluates if current user belongs to indicated group. Useful for hiding/showing buttons in views or conditional logic. Case-insensitive.</p>
+<p>Checks whether the current user belongs to the given group. It is useful for showing or hiding buttons in views, or for conditional logic. The comparison is case-insensitive.</p>
 <div class="highlight"><pre><span></span><code><a href="#__codelineno-3-1" id="__codelineno-3-1" name="__codelineno-3-1"></a><span class="x">// In controller or view</span>
 <a href="#__codelineno-3-2" id="__codelineno-3-2" name="__codelineno-3-2"></a><span class="x">if (service('Admin_aut')-&gt;isUserInGroup('Sales')) {</span>
-<a href="#__codelineno-3-3" id="__codelineno-3-3" name="__codelineno-3-3"></a><span class="x">    // Show create order button</span>
+<a href="#__codelineno-3-3" id="__codelineno-3-3" name="__codelineno-3-3"></a><span class="x">    // Show the create order button</span>
 <a href="#__codelineno-3-4" id="__codelineno-3-4" name="__codelineno-3-4"></a><span class="x">}</span>
 </code></pre></div>
 <h4 id="getfieldfieldname"><code>getField($fieldName)</code></h4>
-<p>Gets any field from <code>gen_usuarios</code> table for current user. Info lazily loaded on first request.</p>
+<p>Gets any field of the current user from the <code>gen_usuarios</code> table. The data is loaded lazily on the first request.</p>
 <div class="highlight"><pre><span></span><code><a href="#__codelineno-4-1" id="__codelineno-4-1" name="__codelineno-4-1"></a><span class="x">// Get email or custom field</span>
 <a href="#__codelineno-4-2" id="__codelineno-4-2" name="__codelineno-4-2"></a><span class="x">$email = service('Admin_aut')-&gt;getField('usu_email');</span>
 </code></pre></div>
@@ -305,8 +305,8 @@ Recommended to call at start of function requiring auth, or in constructor if wh
 <h3 id="available-drivers">Available Drivers</h3>
 <ol>
 <li><strong><code>native</code> (Default)</strong>:</li>
-<li>Built on native PHP sessions and tables <code>gen_usuarios</code> and <code>gen_gruposdeusuarios</code>.</li>
-<li>Includes Bearer Token support for REST APIs against <code>usu_token</code>.</li>
+<li>Built on native PHP sessions and the <code>gen_usuarios</code> and <code>gen_gruposdeusuarios</code> tables.</li>
+<li>Includes Bearer token support for REST APIs, validated against <code>usu_token</code>.</li>
 <li>Case-insensitive role comparison.</li>
 <li><strong><code>shield</code></strong>:</li>
 <li>Direct integration with <a href="https://shield.codeigniter.com/">CodeIgniter 4 Shield</a>.</li>
@@ -371,13 +371,13 @@ Recommended to call at start of function requiring auth, or in constructor if wh
 <p>To guarantee 100% backward compatibility, both drivers and the <code>Admin_aut</code> service also support legacy methods: <code>$auth-&gt;isLoggedIn()</code>, <code>$auth-&gt;id()</code>, <code>$auth-&gt;name()</code>, <code>$auth-&gt;getField($field)</code>, and <code>$auth-&gt;checkUserInGroup($grupos)</code>.</p>
 <hr/>
 <h2 id="api-authentication">API Authentication</h2>
-<p>System supports authentication for REST APIs transparently.</p>
+<p>The system supports REST API authentication transparently.</p>
 <ol>
-<li>On login, secure token generated in <code>usu_token</code>.</li>
-<li>Client must send token in <code>Authorization</code> header.</li>
-<li><code>checkLogin()</code> automatically detects API call (<code>isApiCall()</code>) and validates token instead of PHP session.</li>
+<li>On login, a secure token is generated in <code>usu_token</code>.</li>
+<li>The client must send the token in the <code>Authorization</code> header.</li>
+<li><code>checkLogin()</code> automatically detects API calls (<code>isApiCall()</code>) and validates the token instead of the PHP session.</li>
 </ol>
-<p>Allows using same controllers for web interface and mobile apps or decoupled frontends.</p>
+<p>This lets you use the same controllers for the web interface and for mobile apps or decoupled frontends.</p>
 <h2 id="complete-example">Complete Example</h2>
 <div class="highlight"><pre><span></span><code><a href="#__codelineno-7-1" id="__codelineno-7-1" name="__codelineno-7-1"></a><span class="cp">&lt;?php</span>
 <a href="#__codelineno-7-2" id="__codelineno-7-2" name="__codelineno-7-2"></a>
@@ -395,12 +395,12 @@ Recommended to call at start of function requiring auth, or in constructor if wh
 <a href="#__codelineno-7-14" id="__codelineno-7-14" name="__codelineno-7-14"></a>
 <a href="#__codelineno-7-15" id="__codelineno-7-15" name="__codelineno-7-15"></a>    <span class="k">public</span> <span class="k">function</span> <span class="nf">index</span><span class="p">()</span>
 <a href="#__codelineno-7-16" id="__codelineno-7-16" name="__codelineno-7-16"></a>    <span class="p">{</span>
-<a href="#__codelineno-7-17" id="__codelineno-7-17" name="__codelineno-7-17"></a>        <span class="c1">// 1. Ensure logged in</span>
+<a href="#__codelineno-7-17" id="__codelineno-7-17" name="__codelineno-7-17"></a>        <span class="c1">// 1. Make sure the user is logged in</span>
 <a href="#__codelineno-7-18" id="__codelineno-7-18" name="__codelineno-7-18"></a>        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">checkLogin</span><span class="p">();</span>
 <a href="#__codelineno-7-19" id="__codelineno-7-19" name="__codelineno-7-19"></a>
 <a href="#__codelineno-7-20" id="__codelineno-7-20" name="__codelineno-7-20"></a>        <span class="nv">$auth</span> <span class="o">=</span> <span class="nx">service</span><span class="p">(</span><span class="s1">'Admin_aut'</span><span class="p">);</span>
 <a href="#__codelineno-7-21" id="__codelineno-7-21" name="__codelineno-7-21"></a>
-<a href="#__codelineno-7-22" id="__codelineno-7-22" name="__codelineno-7-22"></a>        <span class="c1">// 2. Get user data</span>
+<a href="#__codelineno-7-22" id="__codelineno-7-22" name="__codelineno-7-22"></a>        <span class="c1">// 2. Get the user's data</span>
 <a href="#__codelineno-7-23" id="__codelineno-7-23" name="__codelineno-7-23"></a>        <span class="nv">$data</span><span class="p">[</span><span class="s1">'user'</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$auth</span><span class="o">-&gt;</span><span class="na">name</span><span class="p">();</span>
 <a href="#__codelineno-7-24" id="__codelineno-7-24" name="__codelineno-7-24"></a>        <span class="nv">$data</span><span class="p">[</span><span class="s1">'isAdmin'</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$auth</span><span class="o">-&gt;</span><span class="na">isUserInGroup</span><span class="p">(</span><span class="s1">'Administrador'</span><span class="p">);</span>
 <a href="#__codelineno-7-25" id="__codelineno-7-25" name="__codelineno-7-25"></a>
@@ -409,7 +409,7 @@ Recommended to call at start of function requiring auth, or in constructor if wh
 <a href="#__codelineno-7-28" id="__codelineno-7-28" name="__codelineno-7-28"></a>
 <a href="#__codelineno-7-29" id="__codelineno-7-29" name="__codelineno-7-29"></a>    <span class="k">public</span> <span class="k">function</span> <span class="nf">delete</span><span class="p">(</span><span class="nv">$id</span><span class="p">)</span>
 <a href="#__codelineno-7-30" id="__codelineno-7-30" name="__codelineno-7-30"></a>    <span class="p">{</span>
-<a href="#__codelineno-7-31" id="__codelineno-7-31" name="__codelineno-7-31"></a>        <span class="c1">// 3. Strict restriction: Only Admins can delete</span>
+<a href="#__codelineno-7-31" id="__codelineno-7-31" name="__codelineno-7-31"></a>        <span class="c1">// 3. Strict restriction: only administrators can delete</span>
 <a href="#__codelineno-7-32" id="__codelineno-7-32" name="__codelineno-7-32"></a>        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">checkUserInGroup</span><span class="p">(</span><span class="s1">'Administrador'</span><span class="p">);</span>
 <a href="#__codelineno-7-33" id="__codelineno-7-33" name="__codelineno-7-33"></a>
 <a href="#__codelineno-7-34" id="__codelineno-7-34" name="__codelineno-7-34"></a>        <span class="nv">$model</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\App\Models\OrdersModel</span><span class="p">();</span>

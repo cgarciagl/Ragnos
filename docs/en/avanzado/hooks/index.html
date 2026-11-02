@@ -212,84 +212,84 @@
 </div></div>
 <div class="col-md-9" role="main">
 <h1 id="hooks-and-lifecycle-in-ragnos">Hooks and Lifecycle in Ragnos</h1>
-<p>In Ragnos, <strong>hooks</strong> allow executing custom logic at different moments of dataset lifecycle.
-Are main mechanism to <strong>extend behavior</strong> without breaking declarative model.</p>
-<p>Hooks defined as protected methods inside controller extending <code>RDatasetController</code>.</p>
+<p>In Ragnos, <strong>hooks</strong> let you run custom logic at different points in a dataset's lifecycle.
+They are the main mechanism for <strong>extending behavior</strong> without breaking the declarative model.</p>
+<p>Hooks are defined as public methods inside the controller that extends <code>RDatasetController</code>, just as in the base class. If you declare them <code>protected</code>, PHP stops the application with a fatal error, because an inherited method cannot be less visible than the original.</p>
 <div class="admonition info">
 <p class="admonition-title">Key Concept</p>
-<p>Controller <strong>does not implement CRUD</strong> manually. Ragnos handles database operation, you just "hook" into key points to inject business logic.</p>
+<p>The controller <strong>does not implement CRUD</strong> by hand. Ragnos takes care of the database operation, and you simply "hook" into key points to inject your business logic.</p>
 </div>
 <hr/>
 <h2 id="visual-lifecycle">Visual Lifecycle</h2>
-<p>Understanding flow is crucial to know where to place logic.</p>
+<p>Understanding the execution flow is essential to know where to place your logic.</p>
 <div class="mermaid">graph TD
     A["User Request"] --&gt; B{"Field Validation"}
-    B -- Fail --&gt; Z["Show Error"]
-    B -- Success --&gt; C{"Exists Hook _before*?"}
-    C -- Yes --&gt; D["Execute _before*( )"]
+    B -- Failure --&gt; Z["Show Error"]
+    B -- Success --&gt; C{"Does a _before* hook exist?"}
+    C -- Yes --&gt; D["Run _before*( )"]
     D -- "raise( )" --&gt; Z
-    C -- No --&gt; E["DB Operation"]
+    C -- No --&gt; E["Database Operation"]
     D -- Success --&gt; E
-    E --&gt; F{"Operation Successful?"}
+    E --&gt; F{"Was the operation successful?"}
     F -- No --&gt; Z
-    F -- Yes --&gt; G{"Exists Hook _after*?"}
-    G -- Yes --&gt; H["Execute _after*( )"]
+    F -- Yes --&gt; G{"Does an _after* hook exist?"}
+    G -- Yes --&gt; H["Run _after*( )"]
     G -- No --&gt; I["Success Response"]
     H --&gt; I
 </div>
 <hr/>
 <h2 id="available-hooks">Available Hooks</h2>
-<p>Ragnos exposes following hooks, all optional:</p>
+<p>Ragnos exposes the following hooks, all of them optional:</p>
 <table>
 <thead>
 <tr>
 <th>Hook</th>
-<th>Execution Moment</th>
+<th>When it runs</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>_beforeInsert()</code></td>
-<td>Before inserting record</td>
+<td>Before inserting a record</td>
 </tr>
 <tr>
 <td><code>_afterInsert()</code></td>
-<td>After inserting record</td>
+<td>After inserting a record</td>
 </tr>
 <tr>
 <td><code>_beforeUpdate()</code></td>
-<td>Before updating record</td>
+<td>Before updating a record</td>
 </tr>
 <tr>
 <td><code>_afterUpdate()</code></td>
-<td>After updating record</td>
+<td>After updating a record</td>
 </tr>
 <tr>
 <td><code>_beforeDelete()</code></td>
-<td>Before deleting record</td>
+<td>Before deleting a record</td>
 </tr>
 <tr>
 <td><code>_afterDelete()</code></td>
-<td>After deleting record</td>
+<td>After deleting a record</td>
 </tr>
 </tbody>
 </table>
 <hr/>
 <h2 id="fundamental-tools-and-concepts">Fundamental Tools and Concepts</h2>
-<p>Before writing specific functions, important to know tools Ragnos provides inside hooks to interact with data and app flow.</p>
+<p>Before writing specific functions, it is important to know the tools Ragnos provides inside hooks to work with the data and the application flow.</p>
 <h3 id="1-basic-structure">1. Basic Structure</h3>
-<p>Hooks of type <code>_before*</code> (Insert and Update) receive <code>$data</code> array by reference, allowing value modification before reaching DB. If modification not needed, argument can be omitted.</p>
-<div class="highlight"><pre><span></span><code><a href="#__codelineno-0-1" id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="x">// Hook with data manipulation (by reference)</span>
-<a href="#__codelineno-0-2" id="__codelineno-0-2" name="__codelineno-0-2"></a><span class="x">protected function _beforeInsert(&amp;$data)</span>
+<p>The <code>_before*</code> hooks (Insert and Update) receive the <code>$data</code> array by reference, so you can modify values before they reach the database. If you do not need to modify any data, in some cases you can omit the argument or simply not use it.</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-0-1" id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="x">// Hook that manipulates data (by reference)</span>
+<a href="#__codelineno-0-2" id="__codelineno-0-2" name="__codelineno-0-2"></a><span class="x">public function _beforeInsert(&amp;$data)</span>
 <a href="#__codelineno-0-3" id="__codelineno-0-3" name="__codelineno-0-3"></a><span class="x">{</span>
-<a href="#__codelineno-0-4" id="__codelineno-0-4" name="__codelineno-0-4"></a><span class="x">    $data['created_at'] = date('Y-m-d');</span>
+<a href="#__codelineno-0-4" id="__codelineno-0-4" name="__codelineno-0-4"></a><span class="x">    $data['creado_el'] = date('Y-m-d');</span>
 <a href="#__codelineno-0-5" id="__codelineno-0-5" name="__codelineno-0-5"></a><span class="x">}</span>
 </code></pre></div>
-<h3 id="2-value-access-newvalue-and-oldvalue">2. Value Access: <code>newValue()</code> and <code>oldValue()</code></h3>
-<p>To facilitate business logic, Ragnos provides helper functions to inspect data state:</p>
+<h3 id="2-accessing-values-newvalue-and-oldvalue">2. Accessing Values: <code>newValue()</code> and <code>oldValue()</code></h3>
+<p>To make business logic easier, Ragnos provides helper functions to inspect the state of the data:</p>
 <ul>
-<li><strong><code>newValue('field')</code></strong>: Value trying to be saved (request payload).</li>
-<li><strong><code>oldValue('field')</code></strong>: Original value existing in database (before modification).</li>
+<li><strong><code>newValue('field')</code></strong>: The value being saved (the request payload).</li>
+<li><strong><code>oldValue('field')</code></strong>: The original value already stored in the database (before the change).</li>
 </ul>
 <table>
 <thead>
@@ -319,142 +319,147 @@ Are main mechanism to <strong>extend behavior</strong> without breaking declarat
 <p class="admonition-title">Newly inserted ID in <code>_afterInsert()</code></p>
 <p>After an insert, <code>newValue('&lt;primary key&gt;')</code> returns the generated ID. Ragnos exposes it through the <code>setInputOverride()</code> helper instead of writing to <code>$_POST</code>. If your own hooks need to share a computed value with the rest of the save, use <code>setInputOverride('field', $value)</code>; values are cleared at the start of every save.</p>
 </div>
-<h3 id="3-change-detection-fieldhaschanged">3. Change Detection: <code>fieldHasChanged()</code></h3>
-<p>Especially useful in updates to execute actions only if specific field modified.</p>
+<h3 id="3-detecting-changes-fieldhaschanged">3. Detecting Changes: <code>fieldHasChanged()</code></h3>
+<p>This is especially useful in updates, to run an action only when a specific field has actually been modified.</p>
 <div class="highlight"><pre><span></span><code><a href="#__codelineno-1-1" id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="x">if (fieldHasChanged('status')) {</span>
-<a href="#__codelineno-1-2" id="__codelineno-1-2" name="__codelineno-1-2"></a><span class="x">    // Send status change notification</span>
+<a href="#__codelineno-1-2" id="__codelineno-1-2" name="__codelineno-1-2"></a><span class="x">    // Send a status change notification</span>
 <a href="#__codelineno-1-3" id="__codelineno-1-3" name="__codelineno-1-3"></a><span class="x">}</span>
 </code></pre></div>
 <h3 id="4-safe-interruption-raise">4. Safe Interruption: <code>raise()</code></h3>
-<p>If need to stop operation due to business rule, use <code>raise()</code>. Stops process and shows error message to user, preventing CRUD operation.</p>
-<div class="highlight"><pre><span></span><code><a href="#__codelineno-2-1" id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="x">if (oldValue('locked') === true) {</span>
-<a href="#__codelineno-2-2" id="__codelineno-2-2" name="__codelineno-2-2"></a><span class="x">    raise('Cannot modify locked record.');</span>
+<p>If you need to stop an operation because of a business rule, use <code>raise()</code>. It stops the process and shows an error message to the user, preventing the CRUD operation from continuing.</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-2-1" id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="x">if (oldValue('locked') == 1) {</span>
+<a href="#__codelineno-2-2" id="__codelineno-2-2" name="__codelineno-2-2"></a><span class="x">    raise('A locked record cannot be modified.');</span>
 <a href="#__codelineno-2-3" id="__codelineno-2-3" name="__codelineno-2-3"></a><span class="x">}</span>
 </code></pre></div>
 <div class="admonition tip">
 <p class="admonition-title">Design Note</p>
-<p><code>raise()</code> preferable to <code>throw new Exception</code> for logic validation errors ("Soft errors") that user must correct.</p>
+<p><code>raise()</code> is preferable to <code>throw new Exception</code> for logical validation errors ("soft errors") that the user must correct.</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Refactoring and Organization</p>
-<p>Although Ragnos <strong>does not force</strong> you to create external classes for hook functions (you can write logic directly in the controller), if <strong>business rules are sufficiently complex</strong>, it is convenient and recommended to refactor them into dedicated <strong>Models</strong>, <strong>Libraries</strong>, or <strong>Services</strong>. This helps keep code organized, reusable, and easier to maintain.</p>
+<p>Although Ragnos <strong>does not force</strong> you to create external classes for hook logic (you can write it directly in the controller), when <strong>business rules become complex enough</strong>, it is advisable to refactor them into dedicated <strong>Models</strong>, <strong>Libraries</strong>, or <strong>Services</strong>. This keeps your code organized, reusable, and easier to maintain.</p>
 </div>
 <hr/>
 <h2 id="insertion-hooks">Insertion Hooks</h2>
-<p>Executed during creation of new records.</p>
+<p>These hooks run while new records are being created.</p>
 <h3 id="_beforeinsertdata"><code>_beforeInsert(&amp;$data)</code></h3>
-<p>Executed <strong>before</strong> INSERT. Receives <code>$data</code> by reference.</p>
+<p>Runs <strong>before</strong> the INSERT. It receives <code>$data</code> by reference.</p>
 <p><strong>Common uses:</strong></p>
 <ul>
-<li>Initialize automatic values (dates, UUIDs).</li>
-<li>Normalize data (uppercase, formats).</li>
-<li>Custom payload validations.</li>
+<li>Initializing automatic values (dates, UUIDs).</li>
+<li>Normalizing data (uppercase, formats).</li>
+<li>Custom validations on the payload.</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a href="#__codelineno-3-1" id="__codelineno-3-1" name="__codelineno-3-1"></a><span class="x">protected function _beforeInsert(&amp;$data)</span>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-3-1" id="__codelineno-3-1" name="__codelineno-3-1"></a><span class="x">public function _beforeInsert(&amp;$data)</span>
 <a href="#__codelineno-3-2" id="__codelineno-3-2" name="__codelineno-3-2"></a><span class="x">{</span>
-<a href="#__codelineno-3-3" id="__codelineno-3-3" name="__codelineno-3-3"></a><span class="x">    // Assign manual creation date</span>
+<a href="#__codelineno-3-3" id="__codelineno-3-3" name="__codelineno-3-3"></a><span class="x">    // Set the creation date manually</span>
 <a href="#__codelineno-3-4" id="__codelineno-3-4" name="__codelineno-3-4"></a><span class="x">    $data['created_at'] = date('Y-m-d H:i:s');</span>
 <a href="#__codelineno-3-5" id="__codelineno-3-5" name="__codelineno-3-5"></a>
-<a href="#__codelineno-3-6" id="__codelineno-3-6" name="__codelineno-3-6"></a><span class="x">    // Force uppercase in RFC</span>
+<a href="#__codelineno-3-6" id="__codelineno-3-6" name="__codelineno-3-6"></a><span class="x">    // Force the RFC (tax ID) to uppercase</span>
 <a href="#__codelineno-3-7" id="__codelineno-3-7" name="__codelineno-3-7"></a><span class="x">    if (isset($data['rfc'])) {</span>
 <a href="#__codelineno-3-8" id="__codelineno-3-8" name="__codelineno-3-8"></a><span class="x">        $data['rfc'] = strtoupper($data['rfc']);</span>
 <a href="#__codelineno-3-9" id="__codelineno-3-9" name="__codelineno-3-9"></a><span class="x">    }</span>
 <a href="#__codelineno-3-10" id="__codelineno-3-10" name="__codelineno-3-10"></a><span class="x">}</span>
 </code></pre></div>
 <h3 id="_afterinsert"><code>_afterInsert()</code></h3>
-<p>Executed <strong>after</strong> successful INSERT.</p>
+<p>Runs <strong>after</strong> a successful INSERT.</p>
 <p><strong>Common uses:</strong></p>
 <ul>
 <li>Audit logs.</li>
-<li>Welcome notifications sending.</li>
+<li>Sending welcome notifications.</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a href="#__codelineno-4-1" id="__codelineno-4-1" name="__codelineno-4-1"></a><span class="x">protected function _afterInsert()</span>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-4-1" id="__codelineno-4-1" name="__codelineno-4-1"></a><span class="x">public function _afterInsert()</span>
 <a href="#__codelineno-4-2" id="__codelineno-4-2" name="__codelineno-4-2"></a><span class="x">{</span>
-<a href="#__codelineno-4-3" id="__codelineno-4-3" name="__codelineno-4-3"></a><span class="x">    log_message('info', 'New user registered with ID ' . $this-&gt;insertID());</span>
-<a href="#__codelineno-4-4" id="__codelineno-4-4" name="__codelineno-4-4"></a><span class="x">}</span>
+<a href="#__codelineno-4-3" id="__codelineno-4-3" name="__codelineno-4-3"></a><span class="x">    // newValue() with the primary key returns the newly generated ID</span>
+<a href="#__codelineno-4-4" id="__codelineno-4-4" name="__codelineno-4-4"></a><span class="x">    log_message('info', 'New user registered with ID ' . newValue('usu_id'));</span>
+<a href="#__codelineno-4-5" id="__codelineno-4-5" name="__codelineno-4-5"></a><span class="x">}</span>
 </code></pre></div>
 <hr/>
 <h2 id="update-hooks">Update Hooks</h2>
-<p>Manage modification of existing records. Where most complex business logic resides.</p>
+<p>These hooks handle changes to existing records. This is where most complex business logic lives.</p>
 <h3 id="_beforeupdatedata"><code>_beforeUpdate(&amp;$data)</code></h3>
-<p>Executed <strong>before</strong> UPDATE. Receives <code>$data</code> with fields to update.</p>
+<p>Runs <strong>before</strong> the UPDATE. It receives <code>$data</code> with the fields to update.</p>
 <p><strong>Common uses:</strong></p>
 <ul>
-<li>State transition validations.</li>
-<li>Register edit metadata (<code>updated_by</code>).</li>
-<li>Critical field protection.</li>
+<li>Validating state transitions.</li>
+<li>Recording edit metadata (<code>updated_by</code>).</li>
+<li>Protecting critical fields.</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a href="#__codelineno-5-1" id="__codelineno-5-1" name="__codelineno-5-1"></a><span class="x">protected function _beforeUpdate(&amp;$data)</span>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-5-1" id="__codelineno-5-1" name="__codelineno-5-1"></a><span class="x">public function _beforeUpdate(&amp;$data)</span>
 <a href="#__codelineno-5-2" id="__codelineno-5-2" name="__codelineno-5-2"></a><span class="x">{</span>
-<a href="#__codelineno-5-3" id="__codelineno-5-3" name="__codelineno-5-3"></a><span class="x">    // Register who modified</span>
+<a href="#__codelineno-5-3" id="__codelineno-5-3" name="__codelineno-5-3"></a><span class="x">    // Record who modified the record</span>
 <a href="#__codelineno-5-4" id="__codelineno-5-4" name="__codelineno-5-4"></a><span class="x">    $data['updated_by'] = session('user_id');</span>
 <a href="#__codelineno-5-5" id="__codelineno-5-5" name="__codelineno-5-5"></a>
-<a href="#__codelineno-5-6" id="__codelineno-5-6" name="__codelineno-5-6"></a><span class="x">    // Validate business rule: Cannot reopen completed tasks</span>
+<a href="#__codelineno-5-6" id="__codelineno-5-6" name="__codelineno-5-6"></a><span class="x">    // Business rule: completed tasks cannot be reopened</span>
 <a href="#__codelineno-5-7" id="__codelineno-5-7" name="__codelineno-5-7"></a><span class="x">    if (oldValue('status') === 'completed' &amp;&amp; newValue('status') === 'pending') {</span>
-<a href="#__codelineno-5-8" id="__codelineno-5-8" name="__codelineno-5-8"></a><span class="x">        raise('Cannot reopen completed task.');</span>
+<a href="#__codelineno-5-8" id="__codelineno-5-8" name="__codelineno-5-8"></a><span class="x">        raise('A completed task cannot be reopened.');</span>
 <a href="#__codelineno-5-9" id="__codelineno-5-9" name="__codelineno-5-9"></a><span class="x">    }</span>
 <a href="#__codelineno-5-10" id="__codelineno-5-10" name="__codelineno-5-10"></a><span class="x">}</span>
 </code></pre></div>
 <h3 id="_afterupdate"><code>_afterUpdate()</code></h3>
-<p>Executed <strong>after</strong> successful UPDATE.</p>
+<p>Runs <strong>after</strong> a successful UPDATE.</p>
 <p><strong>Common uses:</strong></p>
 <ul>
-<li>Invalidate cache.</li>
-<li>Recalculate dependent data in other tables.</li>
+<li>Invalidating caches.</li>
+<li>Recalculating dependent data in other tables.</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a href="#__codelineno-6-1" id="__codelineno-6-1" name="__codelineno-6-1"></a><span class="x">protected function _afterUpdate()</span>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-6-1" id="__codelineno-6-1" name="__codelineno-6-1"></a><span class="x">public function _afterUpdate()</span>
 <a href="#__codelineno-6-2" id="__codelineno-6-2" name="__codelineno-6-2"></a><span class="x">{</span>
-<a href="#__codelineno-6-3" id="__codelineno-6-3" name="__codelineno-6-3"></a><span class="x">    // If credit limit changed, invalidate statement cache</span>
+<a href="#__codelineno-6-3" id="__codelineno-6-3" name="__codelineno-6-3"></a><span class="x">    // If the credit limit changed, invalidate the account statements cache</span>
 <a href="#__codelineno-6-4" id="__codelineno-6-4" name="__codelineno-6-4"></a><span class="x">    if (fieldHasChanged('creditLimit')) {</span>
-<a href="#__codelineno-6-5" id="__codelineno-6-5" name="__codelineno-6-5"></a><span class="x">        \Config\Services::cache()-&gt;delete('accountstatements');</span>
+<a href="#__codelineno-6-5" id="__codelineno-6-5" name="__codelineno-6-5"></a><span class="x">        \Config\Services::cache()-&gt;delete('estadosdecuenta');</span>
 <a href="#__codelineno-6-6" id="__codelineno-6-6" name="__codelineno-6-6"></a><span class="x">    }</span>
 <a href="#__codelineno-6-7" id="__codelineno-6-7" name="__codelineno-6-7"></a><span class="x">}</span>
 </code></pre></div>
 <hr/>
 <h2 id="deletion-hooks">Deletion Hooks</h2>
-<p>Manage information deletion.</p>
+<p>These hooks handle the removal of information.</p>
 <h3 id="_beforedelete"><code>_beforeDelete()</code></h3>
-<p>Executed <strong>before</strong> DELETE.</p>
+<p>Runs <strong>before</strong> the DELETE.</p>
 <p><strong>Common uses:</strong></p>
 <ul>
-<li>Validate dependencies (manual referential integrity).</li>
-<li>Prevent system record deletion.</li>
+<li>Validating dependencies (manual referential integrity).</li>
+<li>Preventing system records from being deleted.</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a href="#__codelineno-7-1" id="__codelineno-7-1" name="__codelineno-7-1"></a><span class="x">protected function _beforeDelete()</span>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-7-1" id="__codelineno-7-1" name="__codelineno-7-1"></a><span class="x">public function _beforeDelete()</span>
 <a href="#__codelineno-7-2" id="__codelineno-7-2" name="__codelineno-7-2"></a><span class="x">{</span>
-<a href="#__codelineno-7-3" id="__codelineno-7-3" name="__codelineno-7-3"></a><span class="x">    // Protect Administrator user (ID 1)</span>
-<a href="#__codelineno-7-4" id="__codelineno-7-4" name="__codelineno-7-4"></a><span class="x">    if (oldValue('user_id') == 1) {</span>
-<a href="#__codelineno-7-5" id="__codelineno-7-5" name="__codelineno-7-5"></a><span class="x">        raise('Cannot delete main admin user.');</span>
+<a href="#__codelineno-7-3" id="__codelineno-7-3" name="__codelineno-7-3"></a><span class="x">    // Protect the Administrator user (ID 1)</span>
+<a href="#__codelineno-7-4" id="__codelineno-7-4" name="__codelineno-7-4"></a><span class="x">    if (oldValue('usu_id') == 1) {</span>
+<a href="#__codelineno-7-5" id="__codelineno-7-5" name="__codelineno-7-5"></a><span class="x">        raise('The main administrator user cannot be deleted.');</span>
 <a href="#__codelineno-7-6" id="__codelineno-7-6" name="__codelineno-7-6"></a><span class="x">    }</span>
 <a href="#__codelineno-7-7" id="__codelineno-7-7" name="__codelineno-7-7"></a>
-<a href="#__codelineno-7-8" id="__codelineno-7-8" name="__codelineno-7-8"></a><span class="x">    // Verify relations manually</span>
-<a href="#__codelineno-7-9" id="__codelineno-7-9" name="__codelineno-7-9"></a><span class="x">    if ($this-&gt;hasRelations()) {</span>
-<a href="#__codelineno-7-10" id="__codelineno-7-10" name="__codelineno-7-10"></a><span class="x">        raise('Cannot delete record because has associated data.');</span>
-<a href="#__codelineno-7-11" id="__codelineno-7-11" name="__codelineno-7-11"></a><span class="x">    }</span>
-<a href="#__codelineno-7-12" id="__codelineno-7-12" name="__codelineno-7-12"></a><span class="x">}</span>
+<a href="#__codelineno-7-8" id="__codelineno-7-8" name="__codelineno-7-8"></a><span class="x">    // Check relationships manually (for example, orders entered by the user)</span>
+<a href="#__codelineno-7-9" id="__codelineno-7-9" name="__codelineno-7-9"></a><span class="x">    $orders = db_connect()-&gt;table('orders_log')</span>
+<a href="#__codelineno-7-10" id="__codelineno-7-10" name="__codelineno-7-10"></a><span class="x">        -&gt;where('user_id', oldValue('usu_id'))</span>
+<a href="#__codelineno-7-11" id="__codelineno-7-11" name="__codelineno-7-11"></a><span class="x">        -&gt;countAllResults();</span>
+<a href="#__codelineno-7-12" id="__codelineno-7-12" name="__codelineno-7-12"></a>
+<a href="#__codelineno-7-13" id="__codelineno-7-13" name="__codelineno-7-13"></a><span class="x">    if ($orders &gt; 0) {</span>
+<a href="#__codelineno-7-14" id="__codelineno-7-14" name="__codelineno-7-14"></a><span class="x">        raise('This record cannot be deleted because it has associated data.');</span>
+<a href="#__codelineno-7-15" id="__codelineno-7-15" name="__codelineno-7-15"></a><span class="x">    }</span>
+<a href="#__codelineno-7-16" id="__codelineno-7-16" name="__codelineno-7-16"></a><span class="x">}</span>
 </code></pre></div>
 <h3 id="_afterdelete"><code>_afterDelete()</code></h3>
-<p>Executed <strong>after</strong> DELETE.</p>
+<p>Runs <strong>after</strong> the DELETE.</p>
 <p><strong>Common uses:</strong></p>
 <ul>
-<li>Cleanup attachments (images, docs).</li>
+<li>Cleaning up attachments (images, documents).</li>
 <li>Activity logs.</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a href="#__codelineno-8-1" id="__codelineno-8-1" name="__codelineno-8-1"></a><span class="x">protected function _afterDelete()</span>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-8-1" id="__codelineno-8-1" name="__codelineno-8-1"></a><span class="x">public function _afterDelete()</span>
 <a href="#__codelineno-8-2" id="__codelineno-8-2" name="__codelineno-8-2"></a><span class="x">{</span>
 <a href="#__codelineno-8-3" id="__codelineno-8-3" name="__codelineno-8-3"></a><span class="x">    log_message('info', 'Record deleted successfully.');</span>
 <a href="#__codelineno-8-4" id="__codelineno-8-4" name="__codelineno-8-4"></a><span class="x">}</span>
 </code></pre></div>
 <hr/>
 <h2 id="case-study-password-hashing">Case Study: Password Hashing</h2>
-<p>Real example combining hooks to manage user passwords securely.</p>
-<div class="highlight"><pre><span></span><code><a href="#__codelineno-9-1" id="__codelineno-9-1" name="__codelineno-9-1"></a><span class="x">// On create, ALWAYS hash password</span>
+<p>This real example shows how to combine hooks to manage user passwords securely.</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-9-1" id="__codelineno-9-1" name="__codelineno-9-1"></a><span class="x">// On create, the password is ALWAYS hashed</span>
 <a href="#__codelineno-9-2" id="__codelineno-9-2" name="__codelineno-9-2"></a><span class="x">public function _beforeInsert(&amp;$userData)</span>
 <a href="#__codelineno-9-3" id="__codelineno-9-3" name="__codelineno-9-3"></a><span class="x">{</span>
 <a href="#__codelineno-9-4" id="__codelineno-9-4" name="__codelineno-9-4"></a><span class="x">    $userData['usu_pword'] = \App\Libraries\Passwords::hash($userData['usu_pword']);</span>
 <a href="#__codelineno-9-5" id="__codelineno-9-5" name="__codelineno-9-5"></a><span class="x">}</span>
 <a href="#__codelineno-9-6" id="__codelineno-9-6" name="__codelineno-9-6"></a>
-<a href="#__codelineno-9-7" id="__codelineno-9-7" name="__codelineno-9-7"></a><span class="x">// On edit, ONLY hash if user wrote new password</span>
+<a href="#__codelineno-9-7" id="__codelineno-9-7" name="__codelineno-9-7"></a><span class="x">// On edit, it is hashed ONLY if the user typed a new password</span>
 <a href="#__codelineno-9-8" id="__codelineno-9-8" name="__codelineno-9-8"></a><span class="x">public function _beforeUpdate(&amp;$userData)</span>
 <a href="#__codelineno-9-9" id="__codelineno-9-9" name="__codelineno-9-9"></a><span class="x">{</span>
 <a href="#__codelineno-9-10" id="__codelineno-9-10" name="__codelineno-9-10"></a><span class="x">    if (fieldHasChanged('usu_pword')) {</span>
@@ -464,46 +469,45 @@ Are main mechanism to <strong>extend behavior</strong> without breaking declarat
 </code></pre></div>
 <p><strong>Explanation:</strong></p>
 <ol>
-<li>In <code>_beforeInsert</code>, password always comes plaintext, so hash unconditionally.</li>
-<li>In <code>_beforeUpdate</code>, use <code>fieldHasChanged</code> to detect if user entered new key. If check skipped, existing hash re-hashed, corrupting password.</li>
-<li><code>Passwords::hash()</code> uses PHP's <code>password_hash()</code> (bcrypt). Accounts created with earlier Ragnos versions (md5) keep working, and their hash is upgraded automatically on their next login.</li>
+<li>In <code>_beforeInsert</code>, the password always arrives as plain text, so it is hashed unconditionally.</li>
+<li>In <code>_beforeUpdate</code>, we use <code>fieldHasChanged</code> to detect whether the user entered a new password. Without this check, the existing hash could be hashed again, corrupting the password.</li>
+<li><code>Passwords::hash()</code> uses PHP's <code>password_hash()</code> (bcrypt). Accounts created with earlier versions of Ragnos (md5) keep working, and their hash is upgraded automatically on their next login.</li>
 </ol>
 <hr/>
 <h2 id="ui-hooks">UI Hooks</h2>
-<p>Ragnos allows intervention in generated visual interface too.</p>
-<h3 id="_customformdatafooter"><code>_customFormDataFooter()</code></h3>
-<p>Inserts HTML or scripts at footer of edit form.</p>
-<div class="highlight"><pre><span></span><code><a href="#__codelineno-10-1" id="__codelineno-10-1" name="__codelineno-10-1"></a><span class="x">function _customFormDataFooter()</span>
+<p>Ragnos also lets you step into the generated user interface.</p>
+<h3 id="_customformdatafooterid"><code>_customFormDataFooter($id)</code></h3>
+<p>Inserts HTML or scripts at the bottom of the edit form. It receives the identifier of the record being edited.</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-10-1" id="__codelineno-10-1" name="__codelineno-10-1"></a><span class="x">protected function _customFormDataFooter($id)</span>
 <a href="#__codelineno-10-2" id="__codelineno-10-2" name="__codelineno-10-2"></a><span class="x">{</span>
-<a href="#__codelineno-10-3" id="__codelineno-10-3" name="__codelineno-10-3"></a><span class="x">    $id = $this-&gt;request-&gt;getPost($this-&gt;getIdField());</span>
-<a href="#__codelineno-10-4" id="__codelineno-10-4" name="__codelineno-10-4"></a>
-<a href="#__codelineno-10-5" id="__codelineno-10-5" name="__codelineno-10-5"></a><span class="x">    // Return partial view</span>
-<a href="#__codelineno-10-6" id="__codelineno-10-6" name="__codelineno-10-6"></a><span class="x">    return view('Store/order_detail', ['orderId' =&gt; $id]);</span>
-<a href="#__codelineno-10-7" id="__codelineno-10-7" name="__codelineno-10-7"></a><span class="x">}</span>
+<a href="#__codelineno-10-3" id="__codelineno-10-3" name="__codelineno-10-3"></a><span class="x">    // Return a partial view</span>
+<a href="#__codelineno-10-4" id="__codelineno-10-4" name="__codelineno-10-4"></a><span class="x">    return view('tienda/detalle_pedidos', ['orderId' =&gt; $id]);</span>
+<a href="#__codelineno-10-5" id="__codelineno-10-5" name="__codelineno-10-5"></a><span class="x">}</span>
 </code></pre></div>
 <hr/>
 <h2 id="best-practices">Best Practices</h2>
 <div class="admonition success">
 <p class="admonition-title">Recommended</p>
-<p><strong>Keep hooks small:</strong> Complex logic goes to Services or Libraries.</p>
-<p><strong>Document side effects:</strong> If hook alters other table, leave clear comment. - <strong>Usa <code>raise()</code></strong> for validation errors instead of hard exceptions.</p>
+<p><strong>Keep hooks small:</strong> Complex logic belongs in Services or Libraries.</p>
+<p><strong>Document side effects:</strong> If a hook changes another table, leave a clear comment.</p>
+<p><strong>Use <code>raise()</code></strong> for validation errors instead of hard exceptions.</p>
 </div>
 <div class="admonition fail">
 <p class="admonition-title">To Avoid</p>
-<p><strong>Do not replace controller:</strong> Hooks are to <em>extend</em>, not rewrite CRUD flow.</p>
-<p><strong>Careful with manual SQL:</strong> Try to use models whenever possible.</p>
+<p><strong>Do not replace the controller:</strong> Hooks are meant to <em>extend</em> the CRUD flow, not to rewrite it.</p>
+<p><strong>Be careful with manual SQL:</strong> Use models whenever possible.</p>
 </div>
 <hr/>
 <h2 id="philosophy">Philosophy</h2>
-<p>Hooks in Ragnos allow <strong>extending without breaking</strong>:</p>
+<p>Hooks in Ragnos let you <strong>extend without breaking</strong>:</p>
 <ul>
-<li><strong>Decoupling:</strong> Do not couple hard business logic to generic CRUD mechanism.</li>
-<li><strong>Declarative:</strong> Keep config over programming approach.</li>
-<li><strong>Maintainability:</strong> Clearly separate "What to save" from "What to do when saving".</li>
+<li><strong>Decoupling:</strong> They keep hard business logic out of the generic CRUD mechanism.</li>
+<li><strong>Declarative:</strong> They preserve the configuration-over-programming approach.</li>
+<li><strong>Maintainability:</strong> They clearly separate "what to save" from "what to do when saving".</li>
 </ul>
 <div class="admonition quote">
 <p class="admonition-title">Ragnos Philosophy</p>
-<p><strong>In Ragnos, hooks don't control flow: they react to domain.</strong></p>
+<p><strong>In Ragnos, hooks don't control the flow: they react to the domain.</strong></p>
 </div></div>
 </div>
 </div>

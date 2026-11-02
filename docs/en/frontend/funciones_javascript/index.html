@@ -423,7 +423,7 @@
 <h3 id="hook-naming-convention">Hook Naming Convention</h3>
 <p>System automatically detects global functions with specific naming patterns to execute actions after events.</p>
 <h4 id="1-search-hooks-_fieldnameonsearch">1. Search Hooks (<code>_FieldNameOnSearch</code>)</h4>
-<p>Executed automatically after a <code>RagnosSearch</code> control completes a selection.</p>
+<p>It runs automatically after a <code>RagnosSearch</code> control completes a selection.</p>
 <ul>
 <li><strong>Pattern:</strong> <code>_{input_id}OnSearch</code></li>
 <li><strong>Parameter:</strong> Receives the control's DOM element (input).</li>
@@ -443,7 +443,7 @@ When a product is selected in <code>productCode</code> input, this function find
 <a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="p">}</span>
 </code></pre></div>
 <h4 id="2-table-change-hooks-_tablenameonchange">2. Table Change Hooks (<code>_TableNameOnChange</code>)</h4>
-<p>Executed when a managed table changes (e.g. adding/editing rows in detail table).</p>
+<p>It runs when a managed table changes (e.g. when rows are added or edited in a detail table).</p>
 <ul>
 <li><strong>Pattern:</strong> <code>_{table_id}OnChange</code></li>
 <li><strong>Parameter:</strong> Receives table object or change context.</li>
