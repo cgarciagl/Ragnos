@@ -68,6 +68,7 @@
   "autoload": {
     "psr-4": {
       "App\\": "app/",
+      "Config\\": "app/Config/",
       "Ragnos\\": "src/"
     },
     "exclude-from-classmap": [
