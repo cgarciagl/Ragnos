@@ -285,9 +285,11 @@
 <p><strong>Environment:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="na">CI_ENVIRONMENT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">development</span>
 </code></pre></div>
-<p><strong>Base URL:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="na">app.baseURL</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">'http://localhost/my-project/'</span>
+<p><strong>Base URL:</strong>
+Set the access URL for your application, always ending with a trailing <code>/</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="na">app.baseURL</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">'http://localhost/my-project/public/'</span>
 </code></pre></div>
+<p><em>(Use <code>'http://my-project.test/'</code> if you configured a Virtual Host pointing directly to the public folder, or substitute <code>public</code> with <code>content</code> if you renamed the public directory).</em></p>
 <p><strong>Database:</strong>
 Uncomment and configure your database credentials:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="na">database.default.hostname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">localhost</span>
@@ -367,9 +369,13 @@ Uncomment and configure your database credentials:</p>
 <p class="admonition-title">Public folder change</p>
 <p>The public folder is called <code>public</code> by default. If your server requires another name (for example, <code>content</code> or <code>public_html</code>), you can change it; see <a href="../configuracion/#public-folder-public">Public Folder</a> for the steps.</p>
 </div>
-<p>You should see the login screen.</p>
+<p>You should see the login screen. Sign in with the default credentials:</p>
+<ul>
+<li><strong>Username:</strong> <code>admin</code></li>
+<li><strong>Password:</strong> <code>admin</code></li>
+</ul>
 <h3 id="6-access-and-demo-data">6. Access and Demo Data</h3>
-<p>To obtain default access credentials and learn more about the included sample data (<strong>Classicmodels</strong>), please refer to the <a href="../demo_database/">Demo Database</a> section.</p>
+<p>To learn more about default user permissions and explore the included sample data (<strong>Classicmodels</strong>), please refer to the <a href="../demo_database/">Demo Database</a> section.</p>
 <h2 id="migrating-from-earlier-versions-appthirdpartyragnos">Migrating from Earlier Versions (<code>app/ThirdParty/Ragnos</code>)</h2>
 <p>If your project was created with an earlier Ragnos version, the core lived in <code>app/ThirdParty/Ragnos</code> under the <code>App\ThirdParty\Ragnos</code> namespace, and CodeIgniter was copied into <code>system/</code>. To upgrade:</p>
 <ol>
