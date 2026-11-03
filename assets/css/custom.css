@@ -1,0 +1,244 @@
+.post:not(:first-of-type) {
+  margin-top: 15px;
+}
+
+.post .direct-chat-img {
+  margin: 0.5em;
+}
+
+.post .username {
+  font-weight: bold;
+}
+.post .description {
+  font-style: italic;
+}
+
+.main-header {
+  border-top-right-radius: 8px;
+}
+
+.main-sidebar {
+  border-top-left-radius: 8px;
+}
+
+.app-main .app-content-header {
+  padding: 0;
+}
+
+/* ==========================================================================
+   Top Navigation Layout & Modern UI Styles
+   ========================================================================== */
+
+/* Sticky Topbar con sutil efecto backdrop-filter */
+.layout-top-nav .app-header {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
+  z-index: 1030;
+}
+
+[data-bs-theme="light"] .layout-top-nav .app-header {
+  background-color: rgba(255, 255, 255, 0.92) !important;
+  border-bottom-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-bs-theme="dark"] .layout-top-nav .app-header {
+  background-color: rgba(33, 37, 41, 0.92) !important;
+  border-bottom-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Navbar Brand & Links */
+.navbar-brand {
+  letter-spacing: -0.02em;
+  transition: transform 0.2s ease;
+}
+
+.navbar-brand:hover {
+  transform: scale(1.02);
+}
+
+.navbar-nav .nav-link {
+  font-weight: 500;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link:focus {
+  background-color: rgba(var(--bs-primary-rgb), 0.08);
+  color: var(--bs-primary) !important;
+}
+
+/* Dropdown Menus Elegantes */
+.navbar-nav .dropdown-menu {
+  border-radius: 0.75rem;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow:
+    0 10px 25px -5px rgba(0, 0, 0, 0.1),
+    0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  animation: fadeInDown 0.2s ease-out;
+  padding: 0.4rem;
+}
+
+[data-bs-theme="dark"] .navbar-nav .dropdown-menu {
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+}
+
+.dropdown-item {
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.85rem;
+  font-weight: 450;
+  transition: all 0.15s ease-in-out;
+}
+
+.dropdown-item:hover {
+  background-color: rgba(var(--bs-primary-rgb), 0.1);
+  color: var(--bs-primary);
+  transform: translateX(3px);
+}
+
+/* Footer Styling */
+.app-footer {
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
+}
+
+/* ==========================================================================
+   Global Dark Mode Support (DataTables, SweetAlert2, Cards)
+   ========================================================================== */
+
+/* DataTables en Modo Oscuro */
+[data-bs-theme="dark"] .dt-container {
+  color: var(--bs-body-color);
+}
+
+[data-bs-theme="dark"] .dt-container .dt-search input,
+[data-bs-theme="dark"] .dt-container .dt-length select {
+  background-color: var(--bs-body-bg);
+  border-color: var(--bs-border-color);
+  color: var(--bs-body-color);
+}
+
+[data-bs-theme="dark"] .dt-container .dt-paging .dt-paging-button {
+  color: var(--bs-body-color) !important;
+}
+
+[data-bs-theme="dark"] .dt-container .dt-paging .dt-paging-button.current,
+[data-bs-theme="dark"]
+  .dt-container
+  .dt-paging
+  .dt-paging-button.current:hover {
+  background: var(--bs-primary) !important;
+  color: #fff !important;
+  border-color: var(--bs-primary) !important;
+}
+
+[data-bs-theme="dark"] .dt-container .dt-paging .dt-paging-button:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: var(--bs-primary) !important;
+  border-color: transparent !important;
+}
+
+[data-bs-theme="dark"] table.dataTable {
+  border-color: var(--bs-border-color) !important;
+}
+
+[data-bs-theme="dark"] table.dataTable tbody tr {
+  background-color: transparent;
+  color: var(--bs-body-color);
+}
+/* SweetAlert2 en Modo Oscuro */
+[data-bs-theme="dark"] .swal2-popup {
+  background: #212529 !important;
+  color: #f8fafc !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+
+[data-bs-theme="dark"] .swal2-title {
+  color: #f8fafc !important;
+}
+
+[data-bs-theme="dark"] .swal2-html-container {
+  color: #cbd5e1 !important;
+}
+
+[data-bs-theme="dark"] .swal2-input,
+[data-bs-theme="dark"] .swal2-file,
+[data-bs-theme="dark"] .swal2-textarea,
+[data-bs-theme="dark"] .swal2-select {
+  background: #111827 !important;
+  border-color: #374151 !important;
+  color: #f8fafc !important;
+}
+
+/* Reportes y contenedores imprimibles en Modo Oscuro */
+[data-bs-theme="dark"] .ragnos-report-container {
+  background-color: var(--bs-body-bg) !important;
+  border-color: var(--bs-border-color) !important;
+  color: var(--bs-body-color) !important;
+}
+
+/* Enlaces y botones de texto en Modo Oscuro */
+[data-bs-theme="dark"]
+  a:not(.btn):not(.dropdown-item):not(.nav-link):not(.navbar-brand),
+[data-bs-theme="dark"] .link-primary,
+[data-bs-theme="dark"] .btn-link {
+  color: #60a5fa !important;
+}
+
+[data-bs-theme="dark"]
+  a:not(.btn):not(.dropdown-item):not(.nav-link):not(.navbar-brand):hover,
+[data-bs-theme="dark"] .link-primary:hover,
+[data-bs-theme="dark"] .btn-link:hover {
+  color: #93c5fd !important;
+}
+
+/* Input Groups & Addons en Modo Oscuro */
+[data-bs-theme="dark"] .input-group > .input-group-text {
+  background-color: var(--bs-body-secondary) !important;
+  border-color: var(--bs-border-color) !important;
+  color: var(--bs-body-color) !important;
+}
+
+[data-bs-theme="dark"] .input-group-text .bi-cash-coin,
+[data-bs-theme="dark"] .input-group-text .bi-currency-dollar {
+  color: #4ade80 !important;
+}
+
+[data-bs-theme="dark"] .input-group-text .bi-calendar-event {
+  color: #60a5fa !important;
+}
+
+/* Animaciones suaves */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20%,
+  60% {
+    transform: translateX(-10px);
+  }
+  40%,
+  80% {
+    transform: translateX(10px);
+  }
+}
+.shake {
+  animation: shake 0.4s;
+}

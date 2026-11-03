@@ -596,7 +596,7 @@
 </code></pre></div></p>
 <h5 id="3-descarga-directa-via-parametro-get">3. Descarga Directa Vía Parámetro GET</h5>
 <p>Cualquier controlador que invoque <code>$reporte-&gt;render()</code> soporta exportación inmediata a <code>.xlsx</code> simplemente añadiendo <code>?export=xlsx</code> a la URL:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>http://localhost/ragnos/content/index.php/tienda/reportes/mejoresempleados?export=xlsx
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>http://localhost/ragnos/public/index.php/tienda/reportes/mejoresempleados?export=xlsx
 </code></pre></div></p>
 <h3 id="buildzippackage"><code>buildZipPackage()</code></h3>
 <p>Empaqueta una colección de archivos o contenidos en un archivo ZIP/XLSX estándar. Utiliza la extensión nativa <code>\ZipArchive</code> si está disponible en PHP; de lo contrario, conmuta de forma transparente a un empaquetador ZIP nativo escrito en PHP puro (aprovechando <code>gzdeflate</code> de la extensión <code>zlib</code> incorporada en PHP). Esto garantiza que la generación de hojas de cálculo <code>.xlsx</code> funcione al 100% sin importar si la extensión compilada <code>php-zip</code> está presente o no.</p>

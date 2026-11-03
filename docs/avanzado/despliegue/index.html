@@ -247,7 +247,7 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>chmod<span class="w"> </span>-R<span class="w"> </span><span class="m">775</span><span class="w"> </span>writable/
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>chown<span class="w"> </span>-R<span class="w"> </span>www-data:www-data<span class="w"> </span>writable/
 </code></pre></div>
-<p>Las demás carpetas (<code>app</code>, <code>src</code>, <code>vendor</code> y la carpeta pública <code>content</code>) deben ser de solo lectura para el servidor web por motivos de seguridad, a menos que tengas necesidades específicas.</p>
+<p>Las demás carpetas (<code>app</code>, <code>src</code>, <code>vendor</code> y la carpeta pública <code>public</code>) deben ser de solo lectura para el servidor web por motivos de seguridad, a menos que tengas necesidades específicas.</p>
 <h2 id="3-base-de-datos">3. Base de Datos</h2>
 <p>Actualiza las credenciales de conexión en el archivo <code>.env</code> apuntando a tu base de datos de producción.</p>
 <p>Asegúrate de que <code>app.baseURL</code> esté configurado correctamente con el dominio real (HTTPS recomendado).</p>
@@ -267,7 +267,7 @@
 <p>En un hosting compartido el puerto de MySQL casi nunca está abierto. <a href="https://github.com/cgarciagl/PyroStudio"><strong>PyroStudio</strong></a>, el cliente de escritorio del mismo autor de Ragnos, se conecta mediante un <strong>túnel HTTP</strong>: subes <code>tunnel/pyro_tunnel.php</code> junto a tu aplicación y administras la base por HTTPS, sin abrir puertos. El túnel exige un token secreto y solo se conecta a bases en <code>localhost</code>. Marca la conexión como <em>Production</em> para que su Safe Mode pida confirmación ante sentencias destructivas, y usa <em>Respaldar / Restaurar</em> para respaldar antes de cada despliegue.</p>
 </div>
 <h2 id="4-carpeta-publica-y-servidor-web">4. Carpeta pública y servidor web</h2>
-<p>Apunta el <em>Document Root</em> del servidor a la carpeta pública de Ragnos (<code>content</code>). Si tu hosting exige otro nombre (<code>public_html</code>, <code>www</code>), renómbrala y actualiza <code>$publicDirectory</code> en <code>app/Config/Paths.php</code>; consulta <a href="../../fundamentos/configuracion/#carpeta-publica-content">Configuración</a>.</p>
+<p>Apunta el <em>Document Root</em> del servidor a la carpeta pública de Ragnos (<code>public</code>). Si tu hosting exige otro nombre (<code>content</code>, <code>public_html</code>, <code>www</code>), renómbrala y actualiza <code>$publicDirectory</code> en <code>app/Config/Paths.php</code>; consulta <a href="../../fundamentos/configuracion/#carpeta-publica-public">Configuración</a>.</p>
 <p>Para mayor seguridad puedes desactivar el Auto Routing (<code>$autoRoute = false</code>): Ragnos registrará rutas explícitas solo para sus acciones. Consulta <a href="../../fundamentos/configuracion/#trabajar-sin-auto-routing-rutas-explicitas">Trabajar sin Auto Routing</a>.</p>
 <h2 id="5-eliminar-archivos-de-desarrollo">5. Eliminar archivos de desarrollo</h2>
 <p>Se recomienda no subir archivos innecesarios al servidor de producción:</p>
@@ -280,7 +280,7 @@
 <h2 id="solucion-de-problemas-comunes">Solución de Problemas Comunes</h2>
 <p><strong>Error 404 en todas las páginas excepto el Home:</strong>
 Esto suele ser un problema de configuración del servidor web (Apache/Nginx) que no está redirigiendo las peticiones a <code>index.php</code>.
-Asegúrate de que el archivo <code>.htaccess</code> de la carpeta pública (<code>content/.htaccess</code>) esté presente y que el módulo <code>mod_rewrite</code> esté activo en Apache.</p>
+Asegúrate de que el archivo <code>.htaccess</code> de la carpeta pública (<code>public/.htaccess</code>) esté presente y que el módulo <code>mod_rewrite</code> esté activo en Apache.</p>
 <p><strong>Página en blanco o Error 500:</strong>
 Verifica los logs en <code>writable/logs/</code> para ver el error real, ya que en modo producción no se muestran en pantalla.</p></div>
             </div>

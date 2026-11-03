@@ -209,7 +209,7 @@
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#carpeta-publica-content" class="nav-link">Carpeta pública (content)</a>
+            <li class="nav-item" data-bs-level="2"><a href="#carpeta-publica-public" class="nav-link">Carpeta pública (public)</a>
               <ul class="nav flex-column">
               </ul>
             </li>
@@ -341,20 +341,25 @@
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="x">RagnosRoutes::process($routes, 'proceso', \App\Controllers\Proceso::class);</span>
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="x">RagnosRoutes::controller($routes, 'admin', \App\Controllers\Admin::class);</span>
 </code></pre></div>
-<h2 id="carpeta-publica-content">Carpeta pública (<code>content</code>)</h2>
-<p>CodeIgniter llama <code>public</code> a la carpeta raíz del sitio web; Ragnos la llama <code>content</code> porque muchos servidores exigen un nombre distinto. Puedes usar el que necesites (<code>public</code>, <code>public_html</code>, <code>www</code>, …):</p>
+<h2 id="carpeta-publica-public">Carpeta pública (<code>public</code>)</h2>
+<p>Por defecto, la carpeta raíz del sitio web se llama <code>public</code>, igual que en CodeIgniter 4. Si tu servidor o hosting exige otro nombre (<code>content</code>, <code>public_html</code>, <code>www</code>, …) o simplemente prefieres uno distinto, puedes cambiarlo así:</p>
 <ol>
-<li>Renombra la carpeta.</li>
+<li>Renombra la carpeta (por ejemplo, de <code>public</code> a <code>content</code>).</li>
 <li>
 <p>Actualiza la ruta en <code>app/Config/Paths.php</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="x">public string $publicDirectory = __DIR__ . '/../../public_html';</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="x">public string $publicDirectory = __DIR__ . '/../../content';</span>
 </code></pre></div>
 </li>
 <li>
 <p>Apunta el <em>Document Root</em> de tu servidor web a la carpeta renombrada.</p>
 </li>
+<li>Ajusta las rutas que mencionen el nombre anterior: la URL de acceso (<code>app.baseURL</code> en <code>.env</code>), la línea de <code>.gitignore</code> que excluye las imágenes subidas por los usuarios (<code>public/assets/img/usuarios/*</code>) y, si usas el probador de API, <code>apitest/config.js</code> y <code>apitest/app.js</code> (apuntan a <code>../public/index.php</code>).</li>
 </ol>
 <p>El navegador entra por el <code>index.php</code> de esa carpeta, que no necesita cambios. <code>$publicDirectory</code> lo usan <code>php spark</code> (incluido <code>php spark serve</code>) y las pruebas automatizadas.</p>
+<div class="admonition note">
+<p class="admonition-title">Nombres de carpeta en esta documentación</p>
+<p>En todos los ejemplos de esta documentación la carpeta pública se llama <code>public</code> (por ejemplo, <code>public/assets/js/custom.js</code>). Si la renombraste, sustituye mentalmente <code>public</code> por el nombre que elegiste.</p>
+</div>
 <h2 id="otras-configuraciones-codeigniter">Otras Configuraciones (CodeIgniter)</h2>
 <p>Recuerda que Ragnos respeta la configuración nativa de CI4. Archivos importantes en <code>app/Config/</code>:</p>
 <ul>

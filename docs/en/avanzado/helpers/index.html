@@ -596,7 +596,7 @@
 </code></pre></div></p>
 <h5 id="3-direct-download-via-get-parameter">3. Direct Download via GET Parameter</h5>
 <p>Any controller invoking <code>$reporte-&gt;render()</code> automatically supports instant <code>.xlsx</code> download by appending <code>?export=xlsx</code> to the URL:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>http://localhost/ragnos/content/index.php/tienda/reportes/mejoresempleados?export=xlsx
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>http://localhost/ragnos/public/index.php/tienda/reportes/mejoresempleados?export=xlsx
 </code></pre></div></p>
 <h3 id="buildzippackage"><code>buildZipPackage()</code></h3>
 <p>Packages a collection of files or string contents into a standard ZIP/XLSX file. Uses the native <code>\ZipArchive</code> extension if installed and enabled; otherwise, seamlessly falls back to a pure PHP ZIP packager (leveraging <code>gzdeflate</code> from PHP's built-in <code>zlib</code> extension). This ensures that <code>.xlsx</code> generation works 100% reliably regardless of whether the compiled <code>php-zip</code> extension is installed.</p>

@@ -209,7 +209,7 @@
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#public-folder-content" class="nav-link">Public Folder (content)</a>
+            <li class="nav-item" data-bs-level="2"><a href="#public-folder-public" class="nav-link">Public Folder (public)</a>
               <ul class="nav flex-column">
               </ul>
             </li>
@@ -341,20 +341,25 @@
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="x">RagnosRoutes::process($routes, 'proceso', \App\Controllers\Proceso::class);</span>
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="x">RagnosRoutes::controller($routes, 'admin', \App\Controllers\Admin::class);</span>
 </code></pre></div>
-<h2 id="public-folder-content">Public Folder (<code>content</code>)</h2>
-<p>CodeIgniter calls the website root folder <code>public</code>; Ragnos calls it <code>content</code> because many servers require a different name. You can use whichever you need (<code>public</code>, <code>public_html</code>, <code>www</code>, …):</p>
+<h2 id="public-folder-public">Public Folder (<code>public</code>)</h2>
+<p>By default, the website root folder is called <code>public</code>, just like in CodeIgniter 4. If your server or hosting requires a different name (<code>content</code>, <code>public_html</code>, <code>www</code>, …) or you simply prefer another one, you can change it like this:</p>
 <ol>
-<li>Rename the folder.</li>
+<li>Rename the folder (for example, from <code>public</code> to <code>content</code>).</li>
 <li>
 <p>Update the path in <code>app/Config/Paths.php</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="x">public string $publicDirectory = __DIR__ . '/../../public_html';</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="x">public string $publicDirectory = __DIR__ . '/../../content';</span>
 </code></pre></div>
 </li>
 <li>
 <p>Point your web server's <em>Document Root</em> to the renamed folder.</p>
 </li>
+<li>Adjust any path that mentions the old name: the access URL (<code>app.baseURL</code> in <code>.env</code>), the <code>.gitignore</code> line that excludes user-uploaded images (<code>public/assets/img/usuarios/*</code>) and, if you use the API tester, <code>apitest/config.js</code> and <code>apitest/app.js</code> (they point to <code>../public/index.php</code>).</li>
 </ol>
 <p>The browser enters through that folder's <code>index.php</code>, which needs no changes. <code>$publicDirectory</code> is used by <code>php spark</code> (including <code>php spark serve</code>) and the automated tests.</p>
+<div class="admonition note">
+<p class="admonition-title">Folder names in this documentation</p>
+<p>Every example in this documentation uses <code>public</code> as the public folder name (for example, <code>public/assets/js/custom.js</code>). If you renamed it, mentally replace <code>public</code> with the name you chose.</p>
+</div>
 <h2 id="other-configurations-codeigniter">Other Configurations (CodeIgniter)</h2>
 <p>Remember that Ragnos respects the native CI4 configuration. Important files in <code>app/Config/</code>:</p>
 <ul>
