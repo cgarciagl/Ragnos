@@ -13,6 +13,6 @@ phpunit.xml
 build/*
 .phpunit*
 .vscode/*
-content/assets/img/usuarios/*
+public/assets/img/usuarios/*
 vendor/*
 .env

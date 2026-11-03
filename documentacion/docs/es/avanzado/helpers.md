@@ -240,7 +240,7 @@ $reporte->exportToXLSX(WRITEPATH . 'reportes/margen.xlsx', false);
 ##### 3. Descarga Directa Vía Parámetro GET
 Cualquier controlador que invoque `$reporte->render()` soporta exportación inmediata a `.xlsx` simplemente añadiendo `?export=xlsx` a la URL:
 ```text
-http://localhost/ragnos/content/index.php/tienda/reportes/mejoresempleados?export=xlsx
+http://localhost/ragnos/public/index.php/tienda/reportes/mejoresempleados?export=xlsx
 ```
 
 

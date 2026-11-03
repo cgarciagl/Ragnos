@@ -82,20 +82,25 @@ RagnosRoutes::process($routes, 'proceso', \App\Controllers\Proceso::class);
 RagnosRoutes::controller($routes, 'admin', \App\Controllers\Admin::class);
 ```
 
-## Carpeta pública (`content`)
+## Carpeta pública (`public`)
 
-CodeIgniter llama `public` a la carpeta raíz del sitio web; Ragnos la llama `content` porque muchos servidores exigen un nombre distinto. Puedes usar el que necesites (`public`, `public_html`, `www`, …):
+Por defecto, la carpeta raíz del sitio web se llama `public`, igual que en CodeIgniter 4. Si tu servidor o hosting exige otro nombre (`content`, `public_html`, `www`, …) o simplemente prefieres uno distinto, puedes cambiarlo así:
 
-1. Renombra la carpeta.
+1. Renombra la carpeta (por ejemplo, de `public` a `content`).
 2. Actualiza la ruta en `app/Config/Paths.php`:
 
     ```php
-    public string $publicDirectory = __DIR__ . '/../../public_html';
+    public string $publicDirectory = __DIR__ . '/../../content';
     ```
 
 3. Apunta el *Document Root* de tu servidor web a la carpeta renombrada.
+4. Ajusta las rutas que mencionen el nombre anterior: la URL de acceso (`app.baseURL` en `.env`), la línea de `.gitignore` que excluye las imágenes subidas por los usuarios (`public/assets/img/usuarios/*`) y, si usas el probador de API, `apitest/config.js` y `apitest/app.js` (apuntan a `../public/index.php`).
 
 El navegador entra por el `index.php` de esa carpeta, que no necesita cambios. `$publicDirectory` lo usan `php spark` (incluido `php spark serve`) y las pruebas automatizadas.
+
+!!! note "Nombres de carpeta en esta documentación"
+
+    En todos los ejemplos de esta documentación la carpeta pública se llama `public` (por ejemplo, `public/assets/js/custom.js`). Si la renombraste, sustituye mentalmente `public` por el nombre que elegiste.
 
 ## Otras Configuraciones (CodeIgniter)
 

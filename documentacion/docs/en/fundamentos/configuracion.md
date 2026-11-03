@@ -82,20 +82,25 @@ RagnosRoutes::process($routes, 'proceso', \App\Controllers\Proceso::class);
 RagnosRoutes::controller($routes, 'admin', \App\Controllers\Admin::class);
 ```
 
-## Public Folder (`content`)
+## Public Folder (`public`)
 
-CodeIgniter calls the website root folder `public`; Ragnos calls it `content` because many servers require a different name. You can use whichever you need (`public`, `public_html`, `www`, …):
+By default, the website root folder is called `public`, just like in CodeIgniter 4. If your server or hosting requires a different name (`content`, `public_html`, `www`, …) or you simply prefer another one, you can change it like this:
 
-1. Rename the folder.
+1. Rename the folder (for example, from `public` to `content`).
 2. Update the path in `app/Config/Paths.php`:
 
     ```php
-    public string $publicDirectory = __DIR__ . '/../../public_html';
+    public string $publicDirectory = __DIR__ . '/../../content';
     ```
 
 3. Point your web server's *Document Root* to the renamed folder.
+4. Adjust any path that mentions the old name: the access URL (`app.baseURL` in `.env`), the `.gitignore` line that excludes user-uploaded images (`public/assets/img/usuarios/*`) and, if you use the API tester, `apitest/config.js` and `apitest/app.js` (they point to `../public/index.php`).
 
 The browser enters through that folder's `index.php`, which needs no changes. `$publicDirectory` is used by `php spark` (including `php spark serve`) and the automated tests.
+
+!!! note "Folder names in this documentation"
+
+    Every example in this documentation uses `public` as the public folder name (for example, `public/assets/js/custom.js`). If you renamed it, mentally replace `public` with the name you chose.
 
 ## Other Configurations (CodeIgniter)
 

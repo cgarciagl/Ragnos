@@ -140,11 +140,11 @@ Ensure that the `writable/` folder and its subfolders have write permissions by 
 
 ### 5. Run
 
-Access your browser at the configured URL (e.g., `http://localhost/my-project/content` or simply `http://my-project.test` if using Laragon).
+Access your browser at the configured URL (e.g., `http://localhost/my-project/public` or simply `http://my-project.test` if using Laragon).
 
 !!! note "Public folder change"
 
-    In the source code, the `public` folder has been renamed to `content`. However, it is fine to rename it to whatever suits your server best.
+    The public folder is called `public` by default. If your server requires another name (for example, `content` or `public_html`), you can change it; see [Public Folder](configuracion.md#public-folder-public) for the steps.
 
 You should see the login screen.
 

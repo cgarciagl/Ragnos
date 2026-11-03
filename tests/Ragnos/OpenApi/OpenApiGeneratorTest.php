@@ -42,7 +42,7 @@ final class OpenApiGeneratorTest extends CIUnitTestCase
         $this->assertNotEmpty($registry->all());
         $document = (new OpenApiGenerator(new OpenApiRegistry([
             ['id' => 'fixture', 'class' => OpenApiFixtureController::class, 'path' => '/fixture', 'tag' => 'Fixture'],
-        ])))->generate('http://localhost/content');
+        ])))->generate('http://localhost/public');
 
         $this->assertSame('3.1.0', $document['openapi']);
         $this->assertSame($config->Ragnos_openapi_title, $document['info']['title']);
@@ -57,7 +57,7 @@ final class OpenApiGeneratorTest extends CIUnitTestCase
     {
         $document = (new OpenApiGenerator(new OpenApiRegistry([
             ['id' => 'fixture', 'class' => OpenApiFixtureController::class, 'path' => '/fixture', 'tag' => 'Fixture'],
-        ])))->generate('http://localhost/content');
+        ])))->generate('http://localhost/public');
 
         $list = $document['paths']['/fixture']['get'];
         $parameterNames = array_column($list['parameters'], 'name');
@@ -82,7 +82,7 @@ final class OpenApiGeneratorTest extends CIUnitTestCase
     {
         $document = (new OpenApiGenerator(new OpenApiRegistry([
             ['id' => 'fixture', 'class' => OpenApiFixtureController::class, 'path' => '/fixture', 'tag' => 'Fixture'],
-        ])))->generate('http://localhost/content');
+        ])))->generate('http://localhost/public');
         $yaml = Yaml::dump($document, 12, 2, Yaml::DUMP_OBJECT_AS_MAP);
         $decoded = Yaml::parse($yaml);
 

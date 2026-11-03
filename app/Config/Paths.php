@@ -48,15 +48,17 @@ class Paths
      * ---------------------------------------------------------------
      *
      * Carpeta pública: la raíz web que contiene index.php y assets/.
-     * CodeIgniter la llama "public"; Ragnos usa "content". Puedes ponerle
-     * cualquier nombre: renombra la carpeta y actualiza esta ruta. La usan
+     * Por defecto se llama "public" (igual que en CodeIgniter). Si tu servidor
+     * exige otro nombre ("content", "public_html", "www"…): renombra la
+     * carpeta y actualiza esta ruta. La usan
      * spark (php spark serve y los comandos) y las pruebas; el navegador
      * entra por el index.php de la carpeta, que no necesita cambios.
      *
-     * The web root that holds index.php and assets/. Rename the folder
-     * and update this path.
+     * The web root that holds index.php and assets/. Named "public" by
+     * default. To use another name (e.g. "content"), rename the folder and
+     * update this path.
      */
-    public string $publicDirectory = __DIR__ . '/../../content';
+    public string $publicDirectory = __DIR__ . '/../../public';
 
     /**
      * ---------------------------------------------------------------

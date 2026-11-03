@@ -3,7 +3,7 @@
     const configuredBase = window.RAGNOS_API_BASE;
     const apiBase = configuredBase
         ? configuredBase.replace(/\/$/, '')
-        : new URL('../content/index.php', document.baseURI).toString().replace(/\/$/, '');
+        : new URL('../public/index.php', document.baseURI).toString().replace(/\/$/, '');
 
     window.RAGNOS_API_CONFIG = Object.freeze({
         apiBase,

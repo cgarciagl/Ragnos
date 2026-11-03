@@ -63,8 +63,8 @@ require __DIR__ . '/app/Config/Paths.php';
 
 $paths = new Config\Paths();
 
-// Path to the front controller. Ragnos names the public folder "content";
-// rename it freely and update $publicDirectory in app/Config/Paths.php.
+// Path to the front controller. Ragnos names the public folder "public" by default;
+// rename it freely (e.g. "content") and update $publicDirectory in app/Config/Paths.php.
 define('FCPATH', rtrim(realpath($paths->publicDirectory) ?: $paths->publicDirectory, '\\/ ') . DIRECTORY_SEPARATOR);
 
 // Ensure the current directory is pointing to the front controller's directory

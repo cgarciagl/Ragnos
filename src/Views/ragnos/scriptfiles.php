@@ -1,4 +1,4 @@
-<?php /* Librerías de terceros servidas localmente: ver content/assets/lib/README.md */ ?>
+<?php /* Librerías de terceros servidas localmente: ver public/assets/lib/README.md */ ?>
 <script src="<?= base_url('assets/lib/popper/popper.min.js') ?>?v=2.11.8"></script>
 <script src="<?= base_url('assets/lib/bootstrap/bootstrap.min.js') ?>?v=5.3.2"></script>
 <link rel="stylesheet" href="<?= base_url('assets/lib/bootstrap-icons/bootstrap-icons.min.css') ?>?v=1.11.0">

@@ -26,7 +26,7 @@ chmod -R 775 writable/
 chown -R www-data:www-data writable/
 ```
 
-For security, the other folders (`app`, `src`, `vendor`, and the public folder `content`) should be read-only for the web server, unless you have specific needs.
+For security, the other folders (`app`, `src`, `vendor`, and the public folder `public`) should be read-only for the web server, unless you have specific needs.
 
 ## 3. Database
 
@@ -58,7 +58,7 @@ Before opening the system, change the `admin` password from the user menu → *C
 
 ## 4. Public Folder and Web Server
 
-Point the server's *Document Root* to the Ragnos public folder (`content`). If your hosting requires another name (`public_html`, `www`), rename it and update `$publicDirectory` in `app/Config/Paths.php`; see [Configuration](../fundamentos/configuracion.md#public-folder-content).
+Point the server's *Document Root* to the Ragnos public folder (`public`). If your hosting requires another name (`content`, `public_html`, `www`), rename it and update `$publicDirectory` in `app/Config/Paths.php`; see [Configuration](../fundamentos/configuracion.md#public-folder-public).
 
 For extra security you can disable Auto Routing (`$autoRoute = false`): Ragnos will register explicit routes for its actions only. See [Working Without Auto Routing](../fundamentos/configuracion.md#working-without-auto-routing-explicit-routes).
 
@@ -75,7 +75,7 @@ We recommend not uploading files that are unnecessary in production:
 
 **404 Error on all pages except Home:**
 This is usually because the web server (Apache/Nginx) is not routing requests to `index.php`.
-Make sure the public folder's `.htaccess` file (`content/.htaccess`) is present and that `mod_rewrite` is enabled in Apache.
+Make sure the public folder's `.htaccess` file (`public/.htaccess`) is present and that `mod_rewrite` is enabled in Apache.
 
 **Blank Page or 500 Error:**
 Check the logs in `writable/logs/` for the real error, since production mode hides it.

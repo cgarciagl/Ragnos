@@ -140,11 +140,11 @@ Asegúrate de que la carpeta `writable/` y sus subcarpetas tengan permisos de es
 
 ### 5. Ejecutar
 
-Accede a tu navegador en la URL configurada (ej. `http://localhost/mi-proyecto/content` o simplemente `http://mi-proyecto.test` si usas Laragon).
+Accede a tu navegador en la URL configurada (ej. `http://localhost/mi-proyecto/public` o simplemente `http://mi-proyecto.test` si usas Laragon).
 
 !!! note "Cambio de carpeta pública"
 
-    En el código fuente, la carpeta `public` ha sido renombrada a `content`. Sin embargo, no hay problema en cambiarle el nombre al que mejor convenga para tu servidor.
+    La carpeta pública se llama `public` por defecto. Si tu servidor exige otro nombre (por ejemplo, `content` o `public_html`), puedes cambiarlo; consulta [Carpeta pública](configuracion.md#carpeta-publica-public) para ver los pasos.
 
 Deberías ver la pantalla de inicio de sesión.
 

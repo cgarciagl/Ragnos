@@ -384,7 +384,7 @@ The repository includes, in the `apitest/` folder, a small web app (HTML + JavaS
 - Lets you list with pagination and search, create, edit, delete and query the history (`history/{id}`) of records.
 - Keeps the latest requests so you can review them.
 
-Open it in the browser at `http://localhost/your-project/apitest/`. By default it points to `../content/index.php`; if your API lives at another URL, edit `apitest/config.js` or define `window.RAGNOS_API_BASE` before loading it:
+Open it in the browser at `http://localhost/your-project/apitest/`. By default it points to `../public/index.php`; if your API lives at another URL, edit `apitest/config.js` or define `window.RAGNOS_API_BASE` before loading it:
 
 ```html
 <script>window.RAGNOS_API_BASE = 'https://api.my-domain.com';</script>

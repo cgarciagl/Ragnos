@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![Image](https://github.com/cgarciagl/Ragnos/blob/main/content/img/logo.webp?raw=true)
+![Image](https://github.com/cgarciagl/Ragnos/blob/main/public/img/logo.webp?raw=true)
 
 **⚡ The Declarative PHP Framework for Modern Development**
 
@@ -75,7 +75,7 @@ Instead of writing boilerplate code, you define your data structure and business
    ```bash
    mysql -u root -p ragnos < sampledatabase/demo_classicmodels.sql
    ```
-6. **Access** your application at the configured URL (e.g., `http://localhost/mi-proyecto/content`) and sign in with `admin` / `admin`
+6. **Access** your application at the configured URL (e.g., `http://localhost/mi-proyecto/public`) and sign in with `admin` / `admin`
 
 > For detailed installation instructions, see the [Official Documentation](https://ragnos.build/docs/) or the book [Ragnos from Zero to Pro](https://leanpub.com/ragnosfromzerotopro)
 
@@ -141,7 +141,7 @@ class Tasks extends RDatasetController
 }
 ```
 
-4. **Access in your browser** at `http://localhost/mi-proyecto/content/modules/tasks`
+4. **Access in your browser** at `http://localhost/mi-proyecto/public/modules/tasks`
 
 **That's it!** Ragnos automatically generates:
 

@@ -7,8 +7,8 @@
 
 // ── Configuration ───────────────────────────────────────────────
 const API_CONFIG = window.RAGNOS_API_CONFIG || {
-    apiBase: '../content/index.php',
-    openApiUrl: '../content/index.php/api/openapi.json',
+    apiBase: '../public/index.php',
+    openApiUrl: '../public/index.php/api/openapi.json',
     pageSize: 10,
     requestHistoryLimit: 20
 };

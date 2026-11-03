@@ -384,7 +384,7 @@ El repositorio incluye en la carpeta `apitest/` una pequeña aplicación web (HT
 - Permite listar con paginación y búsqueda, crear, editar, eliminar y consultar el historial (`history/{id}`) de los registros.
 - Guarda las últimas peticiones realizadas para revisarlas.
 
-Ábrela desde el navegador en `http://localhost/tu-proyecto/apitest/`. Por defecto apunta a `../content/index.php`; si tu API vive en otra URL, edita `apitest/config.js` o define `window.RAGNOS_API_BASE` antes de cargarlo:
+Ábrela desde el navegador en `http://localhost/tu-proyecto/apitest/`. Por defecto apunta a `../public/index.php`; si tu API vive en otra URL, edita `apitest/config.js` o define `window.RAGNOS_API_BASE` antes de cargarlo:
 
 ```html
 <script>window.RAGNOS_API_BASE = 'https://api.mi-dominio.com';</script>

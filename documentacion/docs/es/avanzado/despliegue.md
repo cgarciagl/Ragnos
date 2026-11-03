@@ -26,7 +26,7 @@ chmod -R 775 writable/
 chown -R www-data:www-data writable/
 ```
 
-Las demás carpetas (`app`, `src`, `vendor` y la carpeta pública `content`) deben ser de solo lectura para el servidor web por motivos de seguridad, a menos que tengas necesidades específicas.
+Las demás carpetas (`app`, `src`, `vendor` y la carpeta pública `public`) deben ser de solo lectura para el servidor web por motivos de seguridad, a menos que tengas necesidades específicas.
 
 ## 3. Base de Datos
 
@@ -58,7 +58,7 @@ Antes de abrir el sistema, cambia la contraseña de `admin` desde el menú de us
 
 ## 4. Carpeta pública y servidor web
 
-Apunta el *Document Root* del servidor a la carpeta pública de Ragnos (`content`). Si tu hosting exige otro nombre (`public_html`, `www`), renómbrala y actualiza `$publicDirectory` en `app/Config/Paths.php`; consulta [Configuración](../fundamentos/configuracion.md#carpeta-publica-content).
+Apunta el *Document Root* del servidor a la carpeta pública de Ragnos (`public`). Si tu hosting exige otro nombre (`content`, `public_html`, `www`), renómbrala y actualiza `$publicDirectory` en `app/Config/Paths.php`; consulta [Configuración](../fundamentos/configuracion.md#carpeta-publica-public).
 
 Para mayor seguridad puedes desactivar el Auto Routing (`$autoRoute = false`): Ragnos registrará rutas explícitas solo para sus acciones. Consulta [Trabajar sin Auto Routing](../fundamentos/configuracion.md#trabajar-sin-auto-routing-rutas-explicitas).
 
@@ -75,7 +75,7 @@ Se recomienda no subir archivos innecesarios al servidor de producción:
 
 **Error 404 en todas las páginas excepto el Home:**
 Esto suele ser un problema de configuración del servidor web (Apache/Nginx) que no está redirigiendo las peticiones a `index.php`.
-Asegúrate de que el archivo `.htaccess` de la carpeta pública (`content/.htaccess`) esté presente y que el módulo `mod_rewrite` esté activo en Apache.
+Asegúrate de que el archivo `.htaccess` de la carpeta pública (`public/.htaccess`) esté presente y que el módulo `mod_rewrite` esté activo en Apache.
 
 **Página en blanco o Error 500:**
 Verifica los logs en `writable/logs/` para ver el error real, ya que en modo producción no se muestran en pantalla.
