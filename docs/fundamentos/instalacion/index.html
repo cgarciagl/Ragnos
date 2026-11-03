@@ -217,12 +217,12 @@
                     <div class="col-md-9" role="main">
 
 <h1 id="instalacion-de-ragnos">Instalación de Ragnos</h1>
-<p>Esta guía describe cómo instalar Ragnos Framework clonando el repositorio (o descargando el ZIP) e instalando sus dependencias con Composer.</p>
+<p>Esta guía describe cómo instalar Ragnos Framework. Puedes elegir entre dos métodos: la <strong>descarga directa del paquete ZIP listo para usar</strong> (sin necesidad de Composer ni Git) o la instalación mediante <strong>Git y Composer</strong> (recomendada para desarrollo activo).</p>
 <h2 id="requisitos-del-servidor">Requisitos del Servidor</h2>
 <p>Ragnos está basado en <strong>CodeIgniter 4</strong>, por lo que comparte sus requisitos mínimos:</p>
 <ul>
 <li><strong>PHP</strong>: Versión 8.1 o superior.</li>
-<li><strong>Composer</strong> 2.x.</li>
+<li><strong>Composer 2.x</strong> (solo si instalas mediante Git o planeas gestionar paquetes manualmente).</li>
 <li><strong>Extensiones PHP obligatorias</strong>:</li>
 <li>intl</li>
 <li>mbstring</li>
@@ -235,20 +235,32 @@
 <li><strong>Base de Datos</strong>: MariaDB 10.2.1 o superior, o MySQL 8.0 o superior. Los datasets comunes funcionan con versiones anteriores, pero <code>RQueryController</code> usa expresiones de tabla comunes (<code>WITH</code>), que esas versiones mínimas fueron las primeras en soportar.</li>
 </ul>
 <h2 id="pasos-de-instalacion">Pasos de Instalación</h2>
-<h3 id="1-obtener-el-codigo-e-instalar-dependencias">1. Obtener el código e instalar dependencias</h3>
+<h3 id="1-obtener-el-codigo">1. Obtener el código</h3>
+<p>Elige la opción que mejor se adapte a tus necesidades y entorno de trabajo:</p>
+<h4 id="opcion-a-paquete-zip-standalone-instalacion-rapida-sin-composer">Opción A: Paquete ZIP Standalone (Instalación rápida sin Composer)</h4>
+<p>Ideal para servidores de hosting compartido (cPanel, Plesk), entornos de prueba rápida o si prefieres no utilizar la terminal ni Composer:</p>
+<ol>
+<li>Descarga el paquete compilado <a href="https://github.com/cgarciagl/Ragnos/releases/latest/download/ragnos.zip">ragnos.zip</a> desde la última versión en GitHub Releases.</li>
+<li>Descomprime su contenido directamente en el directorio de tu servidor web (por ejemplo, <code>c:\laragon\www\mi-proyecto</code> o <code>/var/www/html/mi-proyecto</code>).</li>
+</ol>
+<div class="admonition success">
+<p class="admonition-title">Todo incluido</p>
+<p>Este archivo ZIP ya incluye el núcleo de Ragnos, CodeIgniter 4 y todas las dependencias necesarias dentro de la carpeta <code>vendor/</code>. No necesitas ejecutar <code>composer install</code>.</p>
+</div>
+<h4 id="opcion-b-mediante-git-y-composer-recomendada-para-desarrollo">Opción B: Mediante Git y Composer (Recomendada para desarrollo)</h4>
+<p>Recomendada si trabajas con control de versiones y deseas actualizar dependencias con <code>composer update</code>:</p>
 <ol>
 <li>
-<p>Clona el repositorio en el directorio de tu servidor web (por ejemplo, <code>c:\laragon\www\mi-proyecto</code> o <code>/var/www/html/mi-proyecto</code>):</p>
+<p>Clona el repositorio en el directorio de tu servidor web:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/cgarciagl/Ragnos.git<span class="w"> </span>mi-proyecto
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">cd</span><span class="w"> </span>mi-proyecto
 </code></pre></div>
-<p>Si prefieres no usar Git, descarga el <a href="https://github.com/cgarciagl/Ragnos/archive/refs/heads/main.zip">.zip</a> y extráelo en la misma ubicación.</p>
 </li>
 <li>
 <p>Instala las dependencias (incluido CodeIgniter 4) con Composer:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>composer<span class="w"> </span>install
 </code></pre></div>
-<p>Este paso crea la carpeta <code>vendor/</code>. CodeIgniter ya no se incluye copiado dentro del repositorio; se instala como dependencia, así que recibes sus parches de seguridad con un simple <code>composer update</code>.</p>
+<p>Este paso crea la carpeta <code>vendor/</code>. CodeIgniter se instala como dependencia, así que recibes sus parches de seguridad con un simple <code>composer update</code>.</p>
 </li>
 </ol>
 <div class="admonition note">
