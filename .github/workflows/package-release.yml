@@ -1,0 +1,74 @@
+name: Publicar Paquete Standalone (Release)
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Construir y Publicar ZIP
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout del repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: intl, json, mbstring
+          tools: composer
+
+      - name: Instalar dependencias de producción
+        run: composer install --no-dev --optimize-autoloader --prefer-dist --no-progress
+
+      - name: Preparar archivos y empaquetar ZIP
+        run: |
+          mkdir -p dist
+          cp -r app public sampledatabase src vendor writable dist/
+          cp .env.example composer.json composer.lock LICENSE preload.php README.md spark dist/
+          cd dist
+          zip -r ../ragnos.zip .
+          cd ..
+
+      - name: Determinar metadatos de la versión
+        id: vars
+        run: |
+          if [[ "${{ github.ref_type }}" == "tag" ]]; then
+            echo "tag_name=${{ github.ref_name }}" >> $GITHUB_OUTPUT
+            echo "release_name=Ragnos ${{ github.ref_name }}" >> $GITHUB_OUTPUT
+          else
+            echo "tag_name=latest" >> $GITHUB_OUTPUT
+            echo "release_name=Ragnos Standalone (Última versión)" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Publicar o actualizar Release en GitHub
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.vars.outputs.tag_name }}
+          name: ${{ steps.vars.outputs.release_name }}
+          body: |
+            ### 🚀 Ragnos Framework — Paquete Standalone Listo para Usar
+
+            Este paquete ZIP incluye **Ragnos Framework**, **CodeIgniter 4** y todas las dependencias necesarias en la carpeta `vendor/`.
+            
+            **No requiere Composer ni Git.** Ideal para hosting compartido (cPanel, Plesk) o para iniciar rápidamente en entornos locales.
+
+            #### Pasos rápidos de instalación:
+            1. Descomprime el contenido en la raíz de tu proyecto web (ej. `public_html/` o `c:\laragon\www\mi-proyecto`).
+            2. Copia `.env.example` como `.env` y configura tus credenciales de base de datos y `app.baseURL`.
+            3. Importa `sampledatabase/ragnos_base.sql` en tu base de datos MariaDB/MySQL.
+            4. *(Opcional)* Importa `sampledatabase/demo_classicmodels.sql` si deseas explorar el catálogo y dashboard de ejemplo.
+            5. Abre tu navegador e inicia sesión con el usuario `admin` y contraseña `admin`.
+          files: ragnos.zip
+          make_latest: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+

@@ -1,13 +1,13 @@
 # Installation of Ragnos
 
-This guide describes how to install Ragnos Framework by cloning the repository (or downloading the ZIP) and installing its dependencies with Composer.
+This guide describes how to install Ragnos Framework. You can choose between two methods: the **direct download of the ready-to-run standalone ZIP package** (no Composer or Git required) or installation via **Git and Composer** (recommended for active development).
 
 ## Server Requirements
 
 Ragnos is based on **CodeIgniter 4**, so it shares its minimum requirements:
 
 - **PHP**: Version 8.1 or higher.
-- **Composer** 2.x.
+- **Composer 2.x** (only if installing via Git or planning to manage packages manually).
 - **Required PHP Extensions**:
   - intl
   - mbstring
@@ -21,24 +21,38 @@ Ragnos is based on **CodeIgniter 4**, so it shares its minimum requirements:
 
 ## Installation Steps
 
-### 1. Get the Code and Install Dependencies
+### 1. Get the Code
 
-1. Clone the repository into your web server directory (e.g., `c:\laragon\www\my-project` or `/var/www/html/my-project`):
+Choose the option that best fits your needs and work environment:
+
+#### Option A: Standalone ZIP Package (Quick installation without Composer)
+
+Ideal for shared hosting (cPanel, Plesk), quick testing environments, or if you prefer not to use the terminal or Composer:
+
+1. Download the pre-packaged [ragnos.zip](https://github.com/cgarciagl/Ragnos/releases/latest/download/ragnos.zip) from the latest release on GitHub Releases.
+2. Extract its contents directly into your web server directory (e.g., `c:\laragon\www\my-project` or `/var/www/html/my-project`).
+
+!!! success "All-in-one"
+    This ZIP archive already bundles the Ragnos core, CodeIgniter 4, and all required dependencies inside the `vendor/` folder. You do not need to run `composer install`.
+
+#### Option B: Via Git and Composer (Recommended for development)
+
+Recommended if you work with version control and want to manage and update dependencies with `composer update`:
+
+1. Clone the repository into your web server directory:
 
     ```bash
     git clone https://github.com/cgarciagl/Ragnos.git my-project
     cd my-project
     ```
 
-    If you prefer not to use Git, download the [.zip](https://github.com/cgarciagl/Ragnos/archive/refs/heads/main.zip) and extract it in the same location.
-
-2. Install the dependencies (including CodeIgniter 4) with Composer:
+2. Install dependencies (including CodeIgniter 4) with Composer:
 
     ```bash
     composer install
     ```
 
-    This step creates the `vendor/` folder. CodeIgniter is no longer copied into the repository; it is installed as a dependency, so you get its security patches with a simple `composer update`.
+    This step creates the `vendor/` folder. CodeIgniter is installed as a dependency, so you receive security patches with a simple `composer update`.
 
 !!! note "Where is the Ragnos core?"
 
