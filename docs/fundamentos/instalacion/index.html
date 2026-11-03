@@ -223,14 +223,16 @@
 <ul>
 <li><strong>PHP</strong>: Versión 8.1 o superior.</li>
 <li><strong>Composer</strong> 2.x.</li>
-<li><strong>Extensiones PHP</strong>:</li>
+<li><strong>Extensiones PHP obligatorias</strong>:</li>
 <li>intl</li>
 <li>mbstring</li>
-<li>json</li>
-<li>mysqlnd (si usas MySQL/MariaDB)</li>
-<li>curl</li>
-<li>gd (opcional, para manipulación de imágenes)</li>
-<li><strong>Base de Datos</strong>: MySQL (5.1+) o MariaDB.</li>
+<li>json (en PHP 8 siempre viene incluida)</li>
+<li>mysqli (el driver <code>MySQLi</code> con el que CodeIgniter se conecta a MySQL y MariaDB)</li>
+<li><strong>Extensiones PHP opcionales</strong>:</li>
+<li>curl (solo si consumes servicios externos con la clase <code>CURLRequest</code> de CodeIgniter)</li>
+<li>fileinfo (recomendada si usas campos de carga de archivos: mejora la detección del tipo MIME)</li>
+<li>gd (solo si usas la clase <code>Image</code> de CodeIgniter para manipular imágenes)</li>
+<li><strong>Base de Datos</strong>: MariaDB 10.2.1 o superior, o MySQL 8.0 o superior. Los datasets comunes funcionan con versiones anteriores, pero <code>RQueryController</code> usa expresiones de tabla comunes (<code>WITH</code>), que esas versiones mínimas fueron las primeras en soportar.</li>
 </ul>
 <h2 id="pasos-de-instalacion">Pasos de Instalación</h2>
 <h3 id="1-obtener-el-codigo-e-instalar-dependencias">1. Obtener el código e instalar dependencias</h3>

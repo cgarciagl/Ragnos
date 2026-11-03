@@ -223,14 +223,16 @@
 <ul>
 <li><strong>PHP</strong>: Version 8.1 or higher.</li>
 <li><strong>Composer</strong> 2.x.</li>
-<li><strong>PHP Extensions</strong>:</li>
+<li><strong>Required PHP Extensions</strong>:</li>
 <li>intl</li>
 <li>mbstring</li>
-<li>json</li>
-<li>mysqlnd (if using MySQL/MariaDB)</li>
-<li>curl</li>
-<li>gd (optional, for image manipulation)</li>
-<li><strong>Database</strong>: MySQL (5.1+) or MariaDB.</li>
+<li>json (always included in PHP 8)</li>
+<li>mysqli (the <code>MySQLi</code> driver CodeIgniter uses to connect to MySQL and MariaDB)</li>
+<li><strong>Optional PHP Extensions</strong>:</li>
+<li>curl (only if you call external services through CodeIgniter's <code>CURLRequest</code> class)</li>
+<li>fileinfo (recommended if you use file upload fields: it improves MIME type detection)</li>
+<li>gd (only if you use CodeIgniter's <code>Image</code> class to manipulate images)</li>
+<li><strong>Database</strong>: MariaDB 10.2.1 or later, or MySQL 8.0 or later. Regular datasets work with earlier versions, but <code>RQueryController</code> uses common table expressions (<code>WITH</code>), which those minimum versions were the first to support.</li>
 </ul>
 <h2 id="installation-steps">Installation Steps</h2>
 <h3 id="1-get-the-code-and-install-dependencies">1. Get the Code and Install Dependencies</h3>
