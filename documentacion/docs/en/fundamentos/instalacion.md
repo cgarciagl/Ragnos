@@ -8,14 +8,16 @@ Ragnos is based on **CodeIgniter 4**, so it shares its minimum requirements:
 
 - **PHP**: Version 8.1 or higher.
 - **Composer** 2.x.
-- **PHP Extensions**:
+- **Required PHP Extensions**:
   - intl
   - mbstring
-  - json
-  - mysqlnd (if using MySQL/MariaDB)
-  - curl
-  - gd (optional, for image manipulation)
-- **Database**: MySQL (5.1+) or MariaDB.
+  - json (always included in PHP 8)
+  - mysqli (the `MySQLi` driver CodeIgniter uses to connect to MySQL and MariaDB)
+- **Optional PHP Extensions**:
+  - curl (only if you call external services through CodeIgniter's `CURLRequest` class)
+  - fileinfo (recommended if you use file upload fields: it improves MIME type detection)
+  - gd (only if you use CodeIgniter's `Image` class to manipulate images)
+- **Database**: MariaDB 10.2.1 or later, or MySQL 8.0 or later. Regular datasets work with earlier versions, but `RQueryController` uses common table expressions (`WITH`), which those minimum versions were the first to support.
 
 ## Installation Steps
 

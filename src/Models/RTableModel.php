@@ -116,6 +116,11 @@ abstract class RTableModel extends Model
     function setUseSoftDeletes($value)
     {
         $this->useSoftDeletes = (bool) $value;
+        // CodeIgniter copia useSoftDeletes en tempUseSoftDeletes al construir el
+        // modelo y la usa en la siguiente consulta. Como Ragnos activa el borrado
+        // lógico después, hay que sincronizarla para que la primera find()/findAll()
+        // ya excluya los registros marcados.
+        $this->tempUseSoftDeletes = $this->useSoftDeletes;
     }
 
     function usesSoftDeletes(): bool

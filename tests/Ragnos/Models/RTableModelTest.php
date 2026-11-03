@@ -196,6 +196,49 @@ class RTableModelTest extends RagnosTestCase
         $this->assertTrue($ref->getValue($this->model));
     }
 
+    public function testFindExcluyeBorradosDesdeLaPrimeraConsulta(): void
+    {
+        // Ragnos activa el borrado lógico después de construir el modelo
+        $this->createTestTable('soft_records', [
+            'name'       => ['type' => 'TEXT'],
+            'fecha_baja' => ['type' => 'DATETIME', 'null' => true],
+        ]);
+        $this->insertMultiple('soft_records', [
+            ['name' => 'Activo', 'fecha_baja' => null],
+            ['name' => 'Borrado', 'fecha_baja' => '2026-01-01 00:00:00'],
+        ]);
+
+        $model        = new TestRecordModel($this->db);
+        $model->table = 'soft_records';
+        $model->setUseSoftDeletes(true);
+        $model->setDeletedFieldName('fecha_baja');
+
+        // La primera consulta ya debe excluir el registro marcado
+        $this->assertNull($model->find(2));
+        $this->assertSame('Activo', $model->find(1)['name']);
+        $this->assertCount(1, $model->findAll());
+
+        $this->dropTestTable('soft_records');
+    }
+
+    public function testDesactivarSoftDeletesVuelveAIncluirBorrados(): void
+    {
+        $this->createTestTable('soft_records', [
+            'name'       => ['type' => 'TEXT'],
+            'deleted_at' => ['type' => 'DATETIME', 'null' => true],
+        ]);
+        $this->insertTestData('soft_records', ['name' => 'Borrado', 'deleted_at' => '2026-01-01 00:00:00']);
+
+        $model        = new TestRecordModel($this->db);
+        $model->table = 'soft_records';
+        $model->setUseSoftDeletes(true);
+        $model->setUseSoftDeletes(false);
+
+        $this->assertSame('Borrado', $model->find(1)['name']);
+
+        $this->dropTestTable('soft_records');
+    }
+
     public function testUpdateModificaRegistro(): void
     {
         $id = $this->model->insert(['name' => 'Ana']);

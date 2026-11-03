@@ -161,9 +161,9 @@ class Tasks extends RDatasetController
 
 ## ⚙️ Requirements
 
-- **PHP 8.1** or higher
-- **Composer**
-- **MariaDB/MySQL 5.7** or higher
+- **PHP 8.1** or higher, with the `intl`, `mbstring`, and `mysqli` extensions
+- **Composer** 2.x
+- **MariaDB 10.2.1+** or **MySQL 8.0+** (`RQueryController` relies on common table expressions, `WITH`)
 
 ## 🛠️ Available Commands
 
