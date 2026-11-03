@@ -29,7 +29,7 @@ Elige la opción que mejor se adapte a tus necesidades y entorno de trabajo:
 
 Ideal para servidores de hosting compartido (cPanel, Plesk), entornos de prueba rápida o si prefieres no utilizar la terminal ni Composer:
 
-1. Descarga el paquete compilado [ragnos.zip](https://github.com/cgarciagl/Ragnos/releases/latest/download/ragnos.zip) desde la última versión en GitHub Releases.
+1. Descarga el paquete compilado [ragnos.zip](https://github.com/cgarciagl/Ragnos/releases/download/latest/ragnos.zip) desde la última versión en GitHub Releases.
 2. Descomprime su contenido directamente en el directorio de tu servidor web (por ejemplo, `c:\laragon\www\mi-proyecto` o `/var/www/html/mi-proyecto`).
 
 !!! success "Todo incluido"

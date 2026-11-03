@@ -61,7 +61,7 @@ Instead of writing boilerplate code, you define your data structure and business
 Choose the method that best fits your workflow:
 
 - **Quick Standalone ZIP (No Composer or Git needed)**:  
-  Download the ready-to-use **[ragnos.zip](https://github.com/cgarciagl/Ragnos/releases/latest/download/ragnos.zip)** (includes CodeIgniter 4 and all dependencies pre-installed in `vendor/`) and extract it into your web server directory.
+  Download the ready-to-use **[ragnos.zip](https://github.com/cgarciagl/Ragnos/releases/download/latest/ragnos.zip)** (includes CodeIgniter 4 and all dependencies pre-installed in `vendor/`) and extract it into your web server directory.
 
 - **Via Git & Composer (Recommended for active development)**:  
   ```bash

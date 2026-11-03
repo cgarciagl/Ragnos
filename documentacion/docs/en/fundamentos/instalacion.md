@@ -29,7 +29,7 @@ Choose the option that best fits your needs and work environment:
 
 Ideal for shared hosting (cPanel, Plesk), quick testing environments, or if you prefer not to use the terminal or Composer:
 
-1. Download the pre-packaged [ragnos.zip](https://github.com/cgarciagl/Ragnos/releases/latest/download/ragnos.zip) from the latest release on GitHub Releases.
+1. Download the pre-packaged [ragnos.zip](https://github.com/cgarciagl/Ragnos/releases/download/latest/ragnos.zip) from the latest release on GitHub Releases.
 2. Extract its contents directly into your web server directory (e.g., `c:\laragon\www\my-project` or `/var/www/html/my-project`).
 
 !!! success "All-in-one"
