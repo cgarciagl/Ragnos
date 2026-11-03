@@ -79,10 +79,13 @@ CI_ENVIRONMENT = development
 ```
 
 **URL Base:**
+Configura la URL de acceso a tu aplicación, terminando siempre con `/`:
 
 ```ini
-app.baseURL = 'http://localhost/mi-proyecto/'
+app.baseURL = 'http://localhost/mi-proyecto/public/'
 ```
+
+*(Usa `'http://mi-proyecto.test/'` si configuraste un Virtual Host que apunte directo a la carpeta pública, o sustituye `public` por `content` si renombraste la carpeta pública).*
 
 **Base de Datos:**
 Descomenta y configura las credenciales de tu base de datos:
@@ -160,11 +163,14 @@ Accede a tu navegador en la URL configurada (ej. `http://localhost/mi-proyecto/p
 
     La carpeta pública se llama `public` por defecto. Si tu servidor exige otro nombre (por ejemplo, `content` o `public_html`), puedes cambiarlo; consulta [Carpeta pública](configuracion.md#carpeta-publica-public) para ver los pasos.
 
-Deberías ver la pantalla de inicio de sesión.
+Deberías ver la pantalla de inicio de sesión. Inicia sesión con el usuario predeterminado:
+
+- **Usuario:** `admin`
+- **Contraseña:** `admin`
 
 ### 6. Acceso y Datos Demo
 
-Para obtener las credenciales de acceso predeterminadas y conocer más sobre los datos de ejemplo incluidos (**Classicmodels**), consulta la sección [Base de Datos Demo](base_de_datos_demo.md).
+Para conocer más sobre los permisos de usuario predeterminados y explorar los datos de ejemplo incluidos (**Classicmodels**), consulta la sección [Base de Datos Demo](base_de_datos_demo.md).
 
 ## Migrar desde versiones anteriores (`app/ThirdParty/Ragnos`)
 

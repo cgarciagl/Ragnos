@@ -79,10 +79,13 @@ CI_ENVIRONMENT = development
 ```
 
 **Base URL:**
+Set the access URL for your application, always ending with a trailing `/`:
 
 ```ini
-app.baseURL = 'http://localhost/my-project/'
+app.baseURL = 'http://localhost/my-project/public/'
 ```
+
+*(Use `'http://my-project.test/'` if you configured a Virtual Host pointing directly to the public folder, or substitute `public` with `content` if you renamed the public directory).*
 
 **Database:**
 Uncomment and configure your database credentials:
@@ -160,11 +163,14 @@ Access your browser at the configured URL (e.g., `http://localhost/my-project/pu
 
     The public folder is called `public` by default. If your server requires another name (for example, `content` or `public_html`), you can change it; see [Public Folder](configuracion.md#public-folder-public) for the steps.
 
-You should see the login screen.
+You should see the login screen. Sign in with the default credentials:
+
+- **Username:** `admin`
+- **Password:** `admin`
 
 ### 6. Access and Demo Data
 
-To obtain default access credentials and learn more about the included sample data (**Classicmodels**), please refer to the [Demo Database](demo_database.md) section.
+To learn more about default user permissions and explore the included sample data (**Classicmodels**), please refer to the [Demo Database](demo_database.md) section.
 
 ## Migrating from Earlier Versions (`app/ThirdParty/Ragnos`)
 
