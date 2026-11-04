@@ -1,13 +1,13 @@
 # Installation of Ragnos
 
-This guide describes how to install Ragnos Framework. You can choose between two methods: the **direct download of the ready-to-run standalone ZIP package** (no Composer or Git required) or installation via **Git and Composer** (recommended for active development).
+This guide describes how to install Ragnos Framework to build applications. You can choose between two official methods: **Composer create-project** (recommended for terminal-based development) or the **direct download of the ready-to-run standalone ZIP package** (no Composer or terminal required).
 
 ## Server Requirements
 
 Ragnos is based on **CodeIgniter 4**, so it shares its minimum requirements:
 
 - **PHP**: Version 8.1 or higher.
-- **Composer 2.x** (only if installing via Git or planning to manage packages manually).
+- **Composer 2.x** (only if installing via Composer or planning to manage packages manually).
 - **Required PHP Extensions**:
   - intl
   - mbstring
@@ -25,7 +25,20 @@ Ragnos is based on **CodeIgniter 4**, so it shares its minimum requirements:
 
 Choose the option that best fits your needs and work environment:
 
-#### Option A: Standalone ZIP Package (Quick installation without Composer)
+#### Option A: Via Composer (Recommended for new projects)
+
+The standard and fastest way to start a new application with all dependencies resolved:
+
+1. Run the `create-project` command in your terminal within your web server directory (for example, in Laragon `c:\laragon\www` or on Linux `/var/www/html`):
+
+    ```bash
+    composer create-project cgarciagl/ragnos my-project
+    cd my-project
+    ```
+
+    This command downloads the latest stable release of Ragnos (automatically excluding internal documentation and website files), installs CodeIgniter 4 and its dependencies in `vendor/`, automatically generates the `.env` file from `.env.example`, and creates a unique cryptographic encryption key (`encryption.key`).
+
+#### Option B: Standalone ZIP Package (Quick installation without Composer)
 
 Ideal for shared hosting (cPanel, Plesk), quick testing environments, or if you prefer not to use the terminal or Composer:
 
@@ -33,26 +46,7 @@ Ideal for shared hosting (cPanel, Plesk), quick testing environments, or if you 
 2. Extract its contents directly into your web server directory (e.g., `c:\laragon\www\my-project` or `/var/www/html/my-project`).
 
 !!! success "All-in-one"
-    This ZIP archive already bundles the Ragnos core, CodeIgniter 4, and all required dependencies inside the `vendor/` folder. You do not need to run `composer install`.
-
-#### Option B: Via Git and Composer (Recommended for development)
-
-Recommended if you work with version control and want to manage and update dependencies with `composer update`:
-
-1. Clone the repository into your web server directory:
-
-    ```bash
-    git clone https://github.com/cgarciagl/Ragnos.git my-project
-    cd my-project
-    ```
-
-2. Install dependencies (including CodeIgniter 4) with Composer:
-
-    ```bash
-    composer install
-    ```
-
-    This step creates the `vendor/` folder. CodeIgniter is installed as a dependency, so you receive security patches with a simple `composer update`.
+    This ZIP archive already bundles the Ragnos core, CodeIgniter 4, and all required dependencies inside the `vendor/` folder, without documentation or website files. You do not need to run `composer install`.
 
 !!! note "Where is the Ragnos core?"
 
@@ -60,11 +54,13 @@ Recommended if you work with version control and want to manage and update depen
 
 ### 2. Environment Configuration
 
-1. Copy the `.env.example` template in the project root to `.env`:
+1. If you installed via the **standalone ZIP package**, copy the `.env.example` template in the project root to `.env`:
 
     ```bash
     cp .env.example .env
     ```
+
+    *(If you used `composer create-project`, this step has already been executed automatically along with the encryption key generation).*
 
 2. Open the `.env` file and adjust the following variables:
 
@@ -185,3 +181,17 @@ If your project was created with an earlier Ragnos version, the core lived in `a
 !!! info "Temporary compatibility"
 
     Ragnos ships an alias loader (`src/Compat/legacy_namespace.php`) so existing `use App\ThirdParty\Ragnos\...` statements keep working while you migrate. It is deprecated and will be removed in a future major version.
+
+---
+
+## Contributing to Ragnos
+
+If your goal is not building an application but contributing to the framework core, improving the documentation, or updating the official website, clone the full repository from GitHub:
+
+```bash
+git clone https://github.com/cgarciagl/Ragnos.git
+cd Ragnos
+composer install
+```
+
+*(Note: Cloning via Git downloads the entire repository, including internal documentation, the official website, and test suites).*

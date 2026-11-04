@@ -1,13 +1,13 @@
 # Instalación de Ragnos
 
-Esta guía describe cómo instalar Ragnos Framework. Puedes elegir entre dos métodos: la **descarga directa del paquete ZIP listo para usar** (sin necesidad de Composer ni Git) o la instalación mediante **Git y Composer** (recomendada para desarrollo activo).
+Esta guía describe cómo instalar Ragnos Framework para crear aplicaciones. Puedes elegir entre dos métodos oficiales: **Composer create-project** (recomendado para desarrollo con terminal) o la **descarga directa del paquete ZIP listo para usar** (sin necesidad de Composer ni terminal).
 
 ## Requisitos del Servidor
 
 Ragnos está basado en **CodeIgniter 4**, por lo que comparte sus requisitos mínimos:
 
 - **PHP**: Versión 8.1 o superior.
-- **Composer 2.x** (solo si instalas mediante Git o planeas gestionar paquetes manualmente).
+- **Composer 2.x** (solo si instalas mediante Composer o planeas gestionar paquetes manualmente).
 - **Extensiones PHP obligatorias**:
   - intl
   - mbstring
@@ -25,7 +25,20 @@ Ragnos está basado en **CodeIgniter 4**, por lo que comparte sus requisitos mí
 
 Elige la opción que mejor se adapte a tus necesidades y entorno de trabajo:
 
-#### Opción A: Paquete ZIP Standalone (Instalación rápida sin Composer)
+#### Opción A: Mediante Composer (Recomendada para nuevos proyectos)
+
+La forma estándar y más rápida de iniciar una nueva aplicación con todas las dependencias:
+
+1. Ejecuta el comando `create-project` en la terminal dentro del directorio de tu servidor web (por ejemplo, en Laragon `c:\laragon\www` o en Linux `/var/www/html`):
+
+    ```bash
+    composer create-project cgarciagl/ragnos mi-proyecto
+    cd mi-proyecto
+    ```
+
+    Este comando descarga la última versión estable de Ragnos (excluyendo automáticamente la documentación y la web del framework), instala CodeIgniter 4 y sus dependencias en `vendor/`, genera automáticamente el archivo `.env` a partir de `.env.example` y crea una clave criptográfica de cifrado única (`encryption.key`).
+
+#### Opción B: Paquete ZIP Standalone (Instalación rápida sin Composer)
 
 Ideal para servidores de hosting compartido (cPanel, Plesk), entornos de prueba rápida o si prefieres no utilizar la terminal ni Composer:
 
@@ -33,26 +46,7 @@ Ideal para servidores de hosting compartido (cPanel, Plesk), entornos de prueba 
 2. Descomprime su contenido directamente en el directorio de tu servidor web (por ejemplo, `c:\laragon\www\mi-proyecto` o `/var/www/html/mi-proyecto`).
 
 !!! success "Todo incluido"
-    Este archivo ZIP ya incluye el núcleo de Ragnos, CodeIgniter 4 y todas las dependencias necesarias dentro de la carpeta `vendor/`. No necesitas ejecutar `composer install`.
-
-#### Opción B: Mediante Git y Composer (Recomendada para desarrollo)
-
-Recomendada si trabajas con control de versiones y deseas actualizar dependencias con `composer update`:
-
-1. Clona el repositorio en el directorio de tu servidor web:
-
-    ```bash
-    git clone https://github.com/cgarciagl/Ragnos.git mi-proyecto
-    cd mi-proyecto
-    ```
-
-2. Instala las dependencias (incluido CodeIgniter 4) con Composer:
-
-    ```bash
-    composer install
-    ```
-
-    Este paso crea la carpeta `vendor/`. CodeIgniter se instala como dependencia, así que recibes sus parches de seguridad con un simple `composer update`.
+    Este archivo ZIP ya incluye el núcleo de Ragnos, CodeIgniter 4 y todas las dependencias necesarias dentro de la carpeta `vendor/`, sin incluir archivos de documentación ni sitios web adicionales. No necesitas ejecutar `composer install`.
 
 !!! note "¿Dónde está el núcleo de Ragnos?"
 
@@ -60,11 +54,13 @@ Recomendada si trabajas con control de versiones y deseas actualizar dependencia
 
 ### 2. Configuración del Entorno
 
-1. Copia la plantilla `.env.example` de la raíz del proyecto a `.env`:
+1. Si descargaste el **paquete ZIP**, copia la plantilla `.env.example` de la raíz del proyecto a `.env`:
 
     ```bash
     cp .env.example .env
     ```
+
+    *(Si utilizaste `composer create-project`, este paso ya se realizó automáticamente junto con la generación de la clave de cifrado).*
 
 2. Abre el archivo `.env` y ajusta las siguientes variables:
 
@@ -185,3 +181,17 @@ Si tu proyecto se creó con una versión anterior de Ragnos, el núcleo vivía e
 !!! info "Compatibilidad temporal"
 
     Ragnos incluye un cargador de alias (`src/Compat/legacy_namespace.php`) para que los `use App\ThirdParty\Ragnos\...` existentes sigan funcionando mientras migras. Está marcado como obsoleto y se eliminará en una versión mayor futura.
+
+---
+
+## ¿Deseas colaborar en el desarrollo de Ragnos?
+
+Si tu objetivo no es crear una aplicación sino colaborar en el desarrollo del núcleo del framework, mejorar la documentación o la web oficial, clona el repositorio completo de GitHub:
+
+```bash
+git clone https://github.com/cgarciagl/Ragnos.git
+cd Ragnos
+composer install
+```
+
+*(Nota: Al clonar directamente con Git se descargan también la documentación interna, el sitio web oficial y el suite completo de pruebas).*

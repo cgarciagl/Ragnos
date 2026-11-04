@@ -60,18 +60,18 @@ Instead of writing boilerplate code, you define your data structure and business
 
 Choose the method that best fits your workflow:
 
+- **Via Composer (Recommended for new projects)**:  
+  ```bash
+  composer create-project cgarciagl/ragnos mi-proyecto
+  cd mi-proyecto
+  ```
+
 - **Quick Standalone ZIP (No Composer or Git needed)**:  
   Download the ready-to-use **[ragnos.zip](https://github.com/cgarciagl/Ragnos/releases/download/latest/ragnos.zip)** (includes CodeIgniter 4 and all dependencies pre-installed in `vendor/`) and extract it into your web server directory.
 
-- **Via Git & Composer (Recommended for active development)**:  
-  ```bash
-  git clone https://github.com/cgarciagl/Ragnos.git mi-proyecto && cd mi-proyecto
-  composer install
-  ```
-
 ### Configuration & Database
 3. **Configure** the environment:
-   - Copy `.env.example` to `.env` (never commit `.env`)
+   - Copy `.env.example` to `.env` (automatically copied and encryption key generated if installed via `composer create-project`; never commit `.env`)
    - Update database credentials and base URL
 4. **Create** the database (named as in your `.env`, `ragnos` by default) and import the system tables:
    ```bash

@@ -89,6 +89,11 @@
     "sort-packages": true
   },
   "scripts": {
-    "test": "phpunit"
+    "test": "phpunit",
+    "post-create-project-cmd": [
+      "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
+      "@php spark key:generate --force",
+      "@php -r \"echo PHP_EOL . '🚀 Ragnos project created successfully!' . PHP_EOL . '👉 Next steps: Configure .env and import sampledatabase/ragnos_base.sql' . PHP_EOL . PHP_EOL;\""
+    ]
   }
 }
