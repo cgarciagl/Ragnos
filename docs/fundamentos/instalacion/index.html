@@ -209,6 +209,10 @@
               <ul class="nav flex-column">
               </ul>
             </li>
+            <li class="nav-item" data-bs-level="2"><a href="#deseas-colaborar-en-el-desarrollo-de-ragnos" class="nav-link">¿Deseas colaborar en el desarrollo de Ragnos?</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
               </ul>
             </li>
         </ul>
@@ -217,12 +221,12 @@
                     <div class="col-md-9" role="main">
 
 <h1 id="instalacion-de-ragnos">Instalación de Ragnos</h1>
-<p>Esta guía describe cómo instalar Ragnos Framework. Puedes elegir entre dos métodos: la <strong>descarga directa del paquete ZIP listo para usar</strong> (sin necesidad de Composer ni Git) o la instalación mediante <strong>Git y Composer</strong> (recomendada para desarrollo activo).</p>
+<p>Esta guía describe cómo instalar Ragnos Framework para crear aplicaciones. Puedes elegir entre dos métodos oficiales: <strong>Composer create-project</strong> (recomendado para desarrollo con terminal) o la <strong>descarga directa del paquete ZIP listo para usar</strong> (sin necesidad de Composer ni terminal).</p>
 <h2 id="requisitos-del-servidor">Requisitos del Servidor</h2>
 <p>Ragnos está basado en <strong>CodeIgniter 4</strong>, por lo que comparte sus requisitos mínimos:</p>
 <ul>
 <li><strong>PHP</strong>: Versión 8.1 o superior.</li>
-<li><strong>Composer 2.x</strong> (solo si instalas mediante Git o planeas gestionar paquetes manualmente).</li>
+<li><strong>Composer 2.x</strong> (solo si instalas mediante Composer o planeas gestionar paquetes manualmente).</li>
 <li><strong>Extensiones PHP obligatorias</strong>:</li>
 <li>intl</li>
 <li>mbstring</li>
@@ -237,7 +241,18 @@
 <h2 id="pasos-de-instalacion">Pasos de Instalación</h2>
 <h3 id="1-obtener-el-codigo">1. Obtener el código</h3>
 <p>Elige la opción que mejor se adapte a tus necesidades y entorno de trabajo:</p>
-<h4 id="opcion-a-paquete-zip-standalone-instalacion-rapida-sin-composer">Opción A: Paquete ZIP Standalone (Instalación rápida sin Composer)</h4>
+<h4 id="opcion-a-mediante-composer-recomendada-para-nuevos-proyectos">Opción A: Mediante Composer (Recomendada para nuevos proyectos)</h4>
+<p>La forma estándar y más rápida de iniciar una nueva aplicación con todas las dependencias:</p>
+<ol>
+<li>
+<p>Ejecuta el comando <code>create-project</code> en la terminal dentro del directorio de tu servidor web (por ejemplo, en Laragon <code>c:\laragon\www</code> o en Linux <code>/var/www/html</code>):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>composer<span class="w"> </span>create-project<span class="w"> </span>cgarciagl/ragnos<span class="w"> </span>mi-proyecto
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">cd</span><span class="w"> </span>mi-proyecto
+</code></pre></div>
+<p>Este comando descarga la última versión estable de Ragnos (excluyendo automáticamente la documentación y la web del framework), instala CodeIgniter 4 y sus dependencias en <code>vendor/</code>, genera automáticamente el archivo <code>.env</code> a partir de <code>.env.example</code> y crea una clave criptográfica de cifrado única (<code>encryption.key</code>).</p>
+</li>
+</ol>
+<h4 id="opcion-b-paquete-zip-standalone-instalacion-rapida-sin-composer">Opción B: Paquete ZIP Standalone (Instalación rápida sin Composer)</h4>
 <p>Ideal para servidores de hosting compartido (cPanel, Plesk), entornos de prueba rápida o si prefieres no utilizar la terminal ni Composer:</p>
 <ol>
 <li>Descarga el paquete compilado <a href="https://github.com/cgarciagl/Ragnos/releases/download/latest/ragnos.zip">ragnos.zip</a> desde la última versión en GitHub Releases.</li>
@@ -245,24 +260,8 @@
 </ol>
 <div class="admonition success">
 <p class="admonition-title">Todo incluido</p>
-<p>Este archivo ZIP ya incluye el núcleo de Ragnos, CodeIgniter 4 y todas las dependencias necesarias dentro de la carpeta <code>vendor/</code>. No necesitas ejecutar <code>composer install</code>.</p>
+<p>Este archivo ZIP ya incluye el núcleo de Ragnos, CodeIgniter 4 y todas las dependencias necesarias dentro de la carpeta <code>vendor/</code>, sin incluir archivos de documentación ni sitios web adicionales. No necesitas ejecutar <code>composer install</code>.</p>
 </div>
-<h4 id="opcion-b-mediante-git-y-composer-recomendada-para-desarrollo">Opción B: Mediante Git y Composer (Recomendada para desarrollo)</h4>
-<p>Recomendada si trabajas con control de versiones y deseas actualizar dependencias con <code>composer update</code>:</p>
-<ol>
-<li>
-<p>Clona el repositorio en el directorio de tu servidor web:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/cgarciagl/Ragnos.git<span class="w"> </span>mi-proyecto
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">cd</span><span class="w"> </span>mi-proyecto
-</code></pre></div>
-</li>
-<li>
-<p>Instala las dependencias (incluido CodeIgniter 4) con Composer:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>composer<span class="w"> </span>install
-</code></pre></div>
-<p>Este paso crea la carpeta <code>vendor/</code>. CodeIgniter se instala como dependencia, así que recibes sus parches de seguridad con un simple <code>composer update</code>.</p>
-</li>
-</ol>
 <div class="admonition note">
 <p class="admonition-title">¿Dónde está el núcleo de Ragnos?</p>
 <p>El código del framework vive en la carpeta <code>src/</code> bajo el namespace <code>Ragnos\</code> (por ejemplo, <code>Ragnos\Controllers\RDatasetController</code>). Tu aplicación sigue en <code>app/</code>.</p>
@@ -270,9 +269,10 @@
 <h3 id="2-configuracion-del-entorno">2. Configuración del Entorno</h3>
 <ol>
 <li>
-<p>Copia la plantilla <code>.env.example</code> de la raíz del proyecto a <code>.env</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>cp<span class="w"> </span>.env.example<span class="w"> </span>.env
+<p>Si descargaste el <strong>paquete ZIP</strong>, copia la plantilla <code>.env.example</code> de la raíz del proyecto a <code>.env</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>cp<span class="w"> </span>.env.example<span class="w"> </span>.env
 </code></pre></div>
+<p><em>(Si utilizaste <code>composer create-project</code>, este paso ya se realizó automáticamente junto con la generación de la clave de cifrado).</em></p>
 </li>
 <li>
 <p>Abre el archivo <code>.env</code> y ajusta las siguientes variables:</p>
@@ -283,20 +283,20 @@
 <p>El archivo <code>.env</code> contiene credenciales y está excluido en <code>.gitignore</code>. Versiona solo <code>.env.example</code>, sin contraseñas reales.</p>
 </div>
 <p><strong>Entorno:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="na">CI_ENVIRONMENT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">development</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="na">CI_ENVIRONMENT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">development</span>
 </code></pre></div>
 <p><strong>URL Base:</strong>
 Configura la URL de acceso a tu aplicación, terminando siempre con <code>/</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="na">app.baseURL</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">'http://localhost/mi-proyecto/public/'</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="na">app.baseURL</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">'http://localhost/mi-proyecto/public/'</span>
 </code></pre></div>
 <p><em>(Usa <code>'http://mi-proyecto.test/'</code> si configuraste un Virtual Host que apunte directo a la carpeta pública, o sustituye <code>public</code> por <code>content</code> si renombraste la carpeta pública).</em></p>
 <p><strong>Base de Datos:</strong>
 Descomenta y configura las credenciales de tu base de datos:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="na">database.default.hostname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">localhost</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="na">database.default.database</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">nombre_de_tu_bd</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="na">database.default.username</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">tu_usuario</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="na">database.default.password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">tu_contraseña</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="na">database.default.DBDriver</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">MySQLi</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="na">database.default.hostname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">localhost</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="na">database.default.database</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">nombre_de_tu_bd</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="na">database.default.username</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">tu_usuario</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="na">database.default.password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">tu_contraseña</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="na">database.default.DBDriver</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">MySQLi</span>
 </code></pre></div>
 <h3 id="3-crear-la-base-de-datos">3. Crear la Base de Datos</h3>
 <p>Ragnos separa sus tablas en dos scripts dentro de <code>sampledatabase/</code>:</p>
@@ -324,17 +324,17 @@ Descomenta y configura las credenciales de tu base de datos:</p>
 <ol>
 <li>
 <p>Crea una base de datos vacía con el mismo nombre que pusiste en <code>database.default.database</code> (por defecto, <code>ragnos</code>):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">ragnos</span><span class="w"> </span><span class="nb">CHARACTER</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">utf8mb4</span><span class="w"> </span><span class="k">COLLATE</span><span class="w"> </span><span class="n">utf8mb4_unicode_ci</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">ragnos</span><span class="w"> </span><span class="nb">CHARACTER</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">utf8mb4</span><span class="w"> </span><span class="k">COLLATE</span><span class="w"> </span><span class="n">utf8mb4_unicode_ci</span><span class="p">;</span>
 </code></pre></div>
 </li>
 <li>
 <p>Importa las tablas del sistema:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>mysql<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>ragnos<span class="w"> </span>&lt;<span class="w"> </span>sampledatabase/ragnos_base.sql
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>mysql<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>ragnos<span class="w"> </span>&lt;<span class="w"> </span>sampledatabase/ragnos_base.sql
 </code></pre></div>
 </li>
 <li>
 <p>(Opcional) Importa la demo para explorar Ragnos con datos reales. Consulta <a href="../base_de_datos_demo/">Base de Datos Demo</a> para conocer su estructura.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>mysql<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>ragnos<span class="w"> </span>&lt;<span class="w"> </span>sampledatabase/demo_classicmodels.sql
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>mysql<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>ragnos<span class="w"> </span>&lt;<span class="w"> </span>sampledatabase/demo_classicmodels.sql
 </code></pre></div>
 </li>
 </ol>
@@ -388,7 +388,15 @@ Descomenta y configura las credenciales de tu base de datos:</p>
 <div class="admonition info">
 <p class="admonition-title">Compatibilidad temporal</p>
 <p>Ragnos incluye un cargador de alias (<code>src/Compat/legacy_namespace.php</code>) para que los <code>use App\ThirdParty\Ragnos\...</code> existentes sigan funcionando mientras migras. Está marcado como obsoleto y se eliminará en una versión mayor futura.</p>
-</div></div>
+</div>
+<hr />
+<h2 id="deseas-colaborar-en-el-desarrollo-de-ragnos">¿Deseas colaborar en el desarrollo de Ragnos?</h2>
+<p>Si tu objetivo no es crear una aplicación sino colaborar en el desarrollo del núcleo del framework, mejorar la documentación o la web oficial, clona el repositorio completo de GitHub:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/cgarciagl/Ragnos.git
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">cd</span><span class="w"> </span>Ragnos
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>composer<span class="w"> </span>install
+</code></pre></div>
+<p><em>(Nota: Al clonar directamente con Git se descargan también la documentación interna, el sitio web oficial y el suite completo de pruebas).</em></p></div>
             </div>
         </div>
 
