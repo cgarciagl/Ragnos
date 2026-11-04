@@ -241,15 +241,16 @@
 <h2 id="installation-steps">Installation Steps</h2>
 <h3 id="1-get-the-code">1. Get the Code</h3>
 <p>Choose the option that best fits your needs and work environment:</p>
-<h4 id="option-a-via-composer-recommended-for-new-projects">Option A: Via Composer (Recommended for new projects)</h4>
-<p>The standard and fastest way to start a new application with all dependencies resolved:</p>
+<h4 id="option-a-via-composer-recommended-for-new-projects-ultra-lightweight">Option A: Via Composer (Recommended for new projects — ultra-lightweight)</h4>
+<p>The standard and fastest way to start a new application with minimal disk footprint:</p>
 <ol>
 <li>
-<p>Run the <code>create-project</code> command in your terminal within your web server directory (for example, in Laragon <code>c:\laragon\www</code> or on Linux <code>/var/www/html</code>):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>composer<span class="w"> </span>create-project<span class="w"> </span>cgarciagl/ragnos<span class="w"> </span>my-project
+<p>Run the <code>create-project</code> command with <code>--no-dev</code> in your terminal within your web server directory (for example, in Laragon <code>c:\laragon\www</code> or on Linux <code>/var/www/html</code>):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>composer<span class="w"> </span>create-project<span class="w"> </span>--no-dev<span class="w"> </span>cgarciagl/ragnos<span class="w"> </span>my-project
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">cd</span><span class="w"> </span>my-project
 </code></pre></div>
-<p>This command downloads the latest stable release of Ragnos (automatically excluding internal documentation and website files), installs CodeIgniter 4 and its dependencies in <code>vendor/</code>, automatically generates the <code>.env</code> file from <code>.env.example</code>, and creates a unique cryptographic encryption key (<code>encryption.key</code>).</p>
+<p>This command downloads the latest stable release of Ragnos (automatically excluding internal documentation and website files), installs only essential production runtime dependencies in <code>vendor/</code> (occupying just ~3.9 MB), automatically generates the <code>.env</code> file from <code>.env.example</code>, and creates a unique cryptographic encryption key (<code>encryption.key</code>).</p>
+<p><em>(If you plan to write and run unit tests with PHPUnit in your project, you can omit the <code>--no-dev</code> flag).</em></p>
 </li>
 </ol>
 <h4 id="option-b-standalone-zip-package-quick-installation-without-composer">Option B: Standalone ZIP Package (Quick installation without Composer)</h4>
