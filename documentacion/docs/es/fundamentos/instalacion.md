@@ -25,18 +25,20 @@ Ragnos está basado en **CodeIgniter 4**, por lo que comparte sus requisitos mí
 
 Elige la opción que mejor se adapte a tus necesidades y entorno de trabajo:
 
-#### Opción A: Mediante Composer (Recomendada para nuevos proyectos)
+#### Opción A: Mediante Composer (Recomendada para nuevos proyectos — ultraligera)
 
-La forma estándar y más rápida de iniciar una nueva aplicación con todas las dependencias:
+La forma estándar y más rápida de iniciar una nueva aplicación con el mínimo consumo de espacio:
 
-1. Ejecuta el comando `create-project` en la terminal dentro del directorio de tu servidor web (por ejemplo, en Laragon `c:\laragon\www` o en Linux `/var/www/html`):
+1. Ejecuta el comando `create-project` con `--no-dev` en la terminal dentro del directorio de tu servidor web (por ejemplo, en Laragon `c:\laragon\www` o en Linux `/var/www/html`):
 
     ```bash
-    composer create-project cgarciagl/ragnos mi-proyecto
+    composer create-project --no-dev cgarciagl/ragnos mi-proyecto
     cd mi-proyecto
     ```
 
-    Este comando descarga la última versión estable de Ragnos (excluyendo automáticamente la documentación y la web del framework), instala CodeIgniter 4 y sus dependencias en `vendor/`, genera automáticamente el archivo `.env` a partir de `.env.example` y crea una clave criptográfica de cifrado única (`encryption.key`).
+    Este comando descarga la última versión estable de Ragnos (excluyendo automáticamente la documentación y la web del framework), instala únicamente las dependencias de ejecución esenciales en `vendor/` (ocupando apenas ~3.9 MB), genera automáticamente el archivo `.env` a partir de `.env.example` y crea una clave criptográfica de cifrado única (`encryption.key`).
+
+    *(Si deseas incluir herramientas para pruebas unitarias con PHPUnit en tu proyecto, puedes omitir el flag `--no-dev`).*
 
 #### Opción B: Paquete ZIP Standalone (Instalación rápida sin Composer)
 

@@ -25,18 +25,20 @@ Ragnos is based on **CodeIgniter 4**, so it shares its minimum requirements:
 
 Choose the option that best fits your needs and work environment:
 
-#### Option A: Via Composer (Recommended for new projects)
+#### Option A: Via Composer (Recommended for new projects — ultra-lightweight)
 
-The standard and fastest way to start a new application with all dependencies resolved:
+The standard and fastest way to start a new application with minimal disk footprint:
 
-1. Run the `create-project` command in your terminal within your web server directory (for example, in Laragon `c:\laragon\www` or on Linux `/var/www/html`):
+1. Run the `create-project` command with `--no-dev` in your terminal within your web server directory (for example, in Laragon `c:\laragon\www` or on Linux `/var/www/html`):
 
     ```bash
-    composer create-project cgarciagl/ragnos my-project
+    composer create-project --no-dev cgarciagl/ragnos my-project
     cd my-project
     ```
 
-    This command downloads the latest stable release of Ragnos (automatically excluding internal documentation and website files), installs CodeIgniter 4 and its dependencies in `vendor/`, automatically generates the `.env` file from `.env.example`, and creates a unique cryptographic encryption key (`encryption.key`).
+    This command downloads the latest stable release of Ragnos (automatically excluding internal documentation and website files), installs only essential production runtime dependencies in `vendor/` (occupying just ~3.9 MB), automatically generates the `.env` file from `.env.example`, and creates a unique cryptographic encryption key (`encryption.key`).
+
+    *(If you plan to write and run unit tests with PHPUnit in your project, you can omit the `--no-dev` flag).*
 
 #### Option B: Standalone ZIP Package (Quick installation without Composer)
 

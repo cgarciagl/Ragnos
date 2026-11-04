@@ -60,11 +60,12 @@ Instead of writing boilerplate code, you define your data structure and business
 
 Choose the method that best fits your workflow:
 
-- **Via Composer (Recommended for new projects)**:  
+- **Via Composer (Recommended for new projects — ultra-lightweight)**:  
   ```bash
-  composer create-project cgarciagl/ragnos mi-proyecto
+  composer create-project --no-dev cgarciagl/ragnos mi-proyecto
   cd mi-proyecto
   ```
+  *(Omit `--no-dev` if you plan to write and run unit tests with PHPUnit).*
 
 - **Quick Standalone ZIP (No Composer or Git needed)**:  
   Download the ready-to-use **[ragnos.zip](https://github.com/cgarciagl/Ragnos/releases/download/latest/ragnos.zip)** (includes CodeIgniter 4 and all dependencies pre-installed in `vendor/`) and extract it into your web server directory.
