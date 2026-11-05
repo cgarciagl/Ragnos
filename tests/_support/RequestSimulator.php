@@ -25,10 +25,12 @@ trait RequestSimulator
         }
 
         Services::reset(true);
-        $_POST   = [];
-        $_GET    = [];
-        $_SERVER = self::$cleanServer;
+        $_POST    = [];
+        $_GET     = [];
+        $_REQUEST = [];
+        $_SERVER  = self::$cleanServer;
         \setOldRecordCache([]);
+        \setInputOverride(null, null, true);
     }
 
     /**

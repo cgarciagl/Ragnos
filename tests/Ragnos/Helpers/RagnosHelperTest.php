@@ -3,6 +3,7 @@
 namespace Tests\Ragnos\Helpers;
 
 use CodeIgniter\Test\CIUnitTestCase;
+use Tests\Support\RequestSimulator;
 
 /**
  * Pruebas funcionales para src/Helpers/ragnos_helper.php
@@ -13,14 +14,19 @@ use CodeIgniter\Test\CIUnitTestCase;
  */
 class RagnosHelperTest extends CIUnitTestCase
 {
+    use RequestSimulator;
+
     protected function setUp(): void
     {
         parent::setUp();
-        helper([
-            'Ragnos\Helpers\utiles_helper',
-            'Ragnos\Helpers\ragnos_helper',
-        ]);
-        \setOldRecordCache(null);
+        $this->loadRagnosHelpers();
+        $this->resetRequest();
+    }
+
+    protected function tearDown(): void
+    {
+        $this->resetRequest();
+        parent::tearDown();
     }
 
     public function testStartsWithDetectsPrefix(): void
