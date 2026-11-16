@@ -707,7 +707,7 @@
 <h2 id="format-and-ui">Format and UI</h2>
 <h3 id="currency"><code>currency()</code></h3>
 <p>Formats numbers as currency according to the regional configuration (<code>locale</code>), without complex extensions.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="x">function currency(float|int $number, bool $includeSymbol = true): string</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="x">function currency(float|int $number, bool $includeSymbol = true, ?string $locale = null, ?string $currencyCode = null): string</span>
 </code></pre></div>
 <h4 id="example_2">Example</h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="x">echo currency(1500.50); // Shows "$1,500.50" (depending on config)</span>

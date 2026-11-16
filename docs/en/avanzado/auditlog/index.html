@@ -252,7 +252,7 @@
 </code></pre></div>
 <h3 id="usage-in-manual-models">Usage in Manual Models</h3>
 <p>To enable the audit log in a custom model (one not managed by a dataset), set its <code>$enableAudit</code> property to <code>true</code>. The model must use <code>CrudOperationsTrait</code> (or inherit from a base class that uses it, such as <code>RDatasetModel</code>).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="x">class CustomersModel extends RdatasetModel</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="x">class CustomersModel extends RDatasetModel</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="x">{</span>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="x">    protected $table = 'customers';</span>
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="x">    protected $primaryKey = 'customer_id';</span>

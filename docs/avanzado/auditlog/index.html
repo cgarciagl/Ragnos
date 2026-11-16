@@ -251,8 +251,8 @@
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="x">}</span>
 </code></pre></div>
 <h3 id="uso-en-modelos-manuales">Uso en Modelos Manuales</h3>
-<p>Para activar el registro de auditoría en un modelo personalizado (que no es gestionado por un Dataset), debe establecer la propiedad <code>$enableAudit</code> en <code>true</code>. Este modelo debe estar utilizando el <code>CrudOperationsTrait</code> (o heredar de una clase base que lo use, como <code>RdatasetModel</code>).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="x">class ClientesModel extends RdatasetModel</span>
+<p>Para activar el registro de auditoría en un modelo personalizado (que no es gestionado por un Dataset), debe establecer la propiedad <code>$enableAudit</code> en <code>true</code>. Este modelo debe estar utilizando el <code>CrudOperationsTrait</code> (o heredar de una clase base que lo use, como <code>RDatasetModel</code>).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="x">class ClientesModel extends RDatasetModel</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="x">{</span>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="x">    protected $table = 'clientes';</span>
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="x">    protected $primaryKey = 'id_cliente';</span>
