@@ -337,7 +337,7 @@ function dbgDie($data, int $statusCode = 200): never
 Formatea números como moneda respetando la configuración regional (`locale`) sin necesidad de extensiones complejas.
 
 ```php
-function currency(float|int $number, bool $includeSymbol = true): string
+function currency(float|int $number, bool $includeSymbol = true, ?string $locale = null, ?string $currencyCode = null): string
 ```
 
 #### Ejemplo

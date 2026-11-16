@@ -37,7 +37,7 @@ class TemporaryLogs extends RDatasetController
 To enable the audit log in a custom model (one not managed by a dataset), set its `$enableAudit` property to `true`. The model must use `CrudOperationsTrait` (or inherit from a base class that uses it, such as `RDatasetModel`).
 
 ```php
-class CustomersModel extends RdatasetModel
+class CustomersModel extends RDatasetModel
 {
     protected $table = 'customers';
     protected $primaryKey = 'customer_id';

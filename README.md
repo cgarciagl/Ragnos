@@ -162,6 +162,7 @@ class Tasks extends RDatasetController
 
 ## 📖 Documentation & Resources
 
+- 📖 **[Official Documentation](https://ragnos.build/docs/)** — Guides, API reference, and examples
 - 📚 **[Official Manual](https://leanpub.com/ragnosfromzerotopro)** — Comprehensive guide to mastering Ragnos
 - 🌐 **[Live Demo](https://ragnos.yupii.org/)** — See Ragnos in action
 - 💬 **[Discord Community](https://discord.gg/4z7tCxA4Fp)** — Connect with developers and get support
@@ -184,6 +185,9 @@ php spark ragnos:make Modules/Users -table users
 
 # Generate a Query Controller from SQL query
 php spark ragnos:make:query Dashboard/Reports -query "SELECT * FROM users"
+
+# Validate or export the OpenAPI specification (json or yaml)
+php spark ragnos:openapi --format yaml --output writable/openapi.yaml
 
 # Start development server
 php spark serve

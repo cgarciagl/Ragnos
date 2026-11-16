@@ -34,10 +34,10 @@ class LogsTemporales extends RDatasetController
 
 ### Uso en Modelos Manuales
 
-Para activar el registro de auditoría en un modelo personalizado (que no es gestionado por un Dataset), debe establecer la propiedad `$enableAudit` en `true`. Este modelo debe estar utilizando el `CrudOperationsTrait` (o heredar de una clase base que lo use, como `RdatasetModel`).
+Para activar el registro de auditoría en un modelo personalizado (que no es gestionado por un Dataset), debe establecer la propiedad `$enableAudit` en `true`. Este modelo debe estar utilizando el `CrudOperationsTrait` (o heredar de una clase base que lo use, como `RDatasetModel`).
 
 ```php
-class ClientesModel extends RdatasetModel
+class ClientesModel extends RDatasetModel
 {
     protected $table = 'clientes';
     protected $primaryKey = 'id_cliente';
